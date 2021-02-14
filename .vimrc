@@ -120,5 +120,10 @@ let g:NERDTreeHighlightFoldersFullName = 1
 let g:moonlight_terminal_italics=1
 let g:lightline.colorscheme = 'moonlight'
 
+let s:palette = g:lightline#colorscheme#{g:lightline.colorscheme}#palette
+let s:palette.normal.middle = [ [ 'NONE', 'NONE', 'NONE', 'NONE' ] ]
+let s:palette.inactive.middle = s:palette.normal.middle
+let s:palette.tabline.middle = s:palette.normal.middle
+
 autocmd VimEnter * NERDTree
 au VimEnter * wincmd l
