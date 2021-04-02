@@ -19,6 +19,7 @@ Plug 'scrooloose/syntastic'
 Plug 'lifepillar/vim-mucomplete'
 Plug 'godlygeek/tabular'
 Plug 'plasticboy/vim-markdown'
+Plug 'mengelbrecht/lightline-bufferline'
 call plug#end()
 
 
@@ -57,20 +58,39 @@ set ruler                      " Shows the current line number at the bottom-rig
 set wildmenu                   " Great command-line completion, use `<Tab>` to move
                                " around and `<CR>` to validate.
 set number
+set clipboard=unnamed
+set noshowmode
+set laststatus=2
+set showtabline=2
 
 "lightline setup
 let g:lightline = {
+    \ 'colorscheme': 'molokai',
     \ 'active': {
     \   'left': [ [ 'mode', 'paste' ],
-    \             [ 'gitbranch', 'readonly', 'filename', 'modified', 'wordcount' ] ]
+    \             [ 'gitbranch', 'readonly', 'filename', 'wordcount', ] ]
     \ },
     \ 'component_function': {
     \    'filetype': 'MyFiletype',
     \    'fileformat': 'MyFileformat',
     \    'wordcount': 'WordCount',  
     \    'gitbranch': 'FugitiveHead'
+    \ },
+    \ 'tabline': {
+    \   'left': [ ['buffers'] ],
+    \   'right': [ ['close'] ]
+    \ },
+    \ 'component_expand': {
+    \   'buffers': 'lightline#bufferline#buffers'
+    \ },
+    \ 'component_type': {
+    \   'buffers': 'tabsel'
+    \ },
+    \ 'component': {
+    \   'lineinfo': '%3l:%-2v%<',
     \ }
     \ }
+
 
 "add devicon to lightline
 function! MyFiletype()
@@ -223,7 +243,6 @@ let g:NERDTreeHighlightFoldersFullName = 1
 
 "theme info
 let g:moonlight_terminal_italics=1
-let g:lightline.colorscheme = 'material'
 
 "syntastic info
 set statusline+=%#warningmsg#
@@ -281,6 +300,3 @@ autocmd! User GoyoLeave Limelight!
 
 "if using .md then open goyo
 autocmd BufRead,BufNewFile *.md :Goyo 80
-
-
-
