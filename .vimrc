@@ -1,3 +1,15 @@
+"autoinstall vim plug
+let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
+if empty(glob(data_dir . '/autoload/plug.vim'))
+  silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
+"auto install plugins
+autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
+  \| PlugInstall --sync | source $MYVIMRC
+\| endif
+
 call plug#begin('~/.vim/plugged')
 Plug 'Brettm12345/moonlight.vim'
 Plug 'itchyny/lightline.vim'
@@ -20,6 +32,9 @@ Plug 'lifepillar/vim-mucomplete'
 Plug 'godlygeek/tabular'
 Plug 'plasticboy/vim-markdown'
 Plug 'mengelbrecht/lightline-bufferline'
+Plug 'JamshedVesuna/vim-markdown-preview'
+Plug 'ObserverOfTime/coloresque.vim'
+Plug 'zyedidia/vim-snake'
 call plug#end()
 
 
@@ -57,13 +72,25 @@ set ruler                      " Shows the current line number at the bottom-rig
                                " of the screen.
 set wildmenu                   " Great command-line completion, use `<Tab>` to move
                                " around and `<CR>` to validate.
+                               "show numbers, set clipboard properly, idk,
+                               "show tabs and bottom bar
+"hybrid/number mix
+""set number relativenumber
 set number
+
+""augroup numbertoggle
+""autocmd!
+""autocmd BufEnter,FocusGained,InsertLeave * set relativenumber
+""autocmd BufLeave,FocusLost,InsertEnter   * set norelativenumber
+""augroup END
+
 set clipboard=unnamed
 set noshowmode
 set laststatus=2
 set showtabline=2
 
 "lightline setup
+"colorscheme, bottom bar, coponents, tabs, bottom components
 let g:lightline = {
     \ 'colorscheme': 'molokai',
     \ 'active': {
@@ -160,7 +187,7 @@ inoremap { {}<left>
 inoremap {<CR> {<CR>}<ESC>O
 inoremap {;<CR> {<CR>};<ESC>O
 
-"f5 to run current fil
+"f5 to run current filetype
 map <F5> :call CompileRunGcc()<CR>
 func! CompileRunGcc()
 exec "w"
@@ -176,17 +203,18 @@ exec "!time java -cp %:p:h %:t:r"
 elseif &filetype == 'sh'
 exec "!time bash %"
 elseif &filetype == 'python'
-exec "!time python2.7 %"
+exec "!time python3 %"
 elseif &filetype == 'html'
 exec "!firefox % &"
 elseif &filetype == 'go'
 exec "!go build %<"
 exec "!time go run %"
-elseif &filetype == 'mkd'
-exec "!~/.vim/markdown.pl % > %.html &"
-exec "!firefox %.html &"
 endif
 endfunc
+
+"Same thing but just for markdownown previews
+let vim_markdown_preview_hotkey= '<F5>' 
+let vim_markdown_preview_github=1
 
 "fzf colors
 let g:fzf_colors =
@@ -206,10 +234,10 @@ let g:fzf_colors =
 
 "Autocomplete info
 set completeopt+=menuone
-  set shortmess+=c   " Shut off completion messages
-  set belloff+=ctrlg " If Vim beeps during completion
-  let g:mucomplete#enable_auto_at_startup = 1
-  let g:mucomplete#completion_delay = 1
+set shortmess+=c   " Shut off completion messages
+set belloff+=ctrlg " If Vim beeps during completion
+let g:mucomplete#enable_auto_at_startup = 1
+let g:mucomplete#completion_delay = 1
 
 setlocal dictionary+=spell
 setlocal complete+=k
@@ -273,17 +301,18 @@ set ttyfast
 "make statusline transparent (kindof working)
 autocmd VimEnter * call SetupLightlineColors()
 function SetupLightlineColors() abort
-  " transparent background in statusbar
-  let l:palette = lightline#palette()
+  
+" transparent background in statusbar
+let l:palette = lightline#palette()
 
-  let l:palette.normal.middle = [ [ 'NONE', 'NONE', 'NONE', 'NONE' ] ]
-  let l:palette.insert.middle = l:palette.normal.middle
-  let l:palette.visual.middle = l:palette.normal.middle
-  let l:palette.inactive.middle = l:palette.normal.middle
-  let l:palette.inactive.middle = l:palette.normal.middle
-  let l:palette.tabline.middle = l:palette.normal.middle
+let l:palette.normal.middle = [ [ 'NONE', 'NONE', 'NONE', 'NONE' ] ]
+let l:palette.insert.middle = l:palette.normal.middle
+let l:palette.visual.middle = l:palette.normal.middle
+let l:palette.inactive.middle = l:palette.normal.middle
+let l:palette.inactive.middle = l:palette.normal.middle
+let l:palette.tabline.middle = l:palette.normal.middle
 
-  call lightline#colorscheme()
+call lightline#colorscheme()
 endfunction
 
 "open intro, then nerdtree and minimap
@@ -300,3 +329,7 @@ autocmd! User GoyoLeave Limelight!
 
 "if using .md then open goyo
 autocmd BufRead,BufNewFile *.md :Goyo 80
+
+"make goyo dark background after leaving 
+autocmd! User GoyoLeave
+autocmd  User GoyoLeave nested set background=dark
