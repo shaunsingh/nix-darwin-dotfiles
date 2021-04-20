@@ -13,6 +13,7 @@ autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
 call plug#begin('~/.vim/plugged')
 Plug 'itchyny/lightline.vim'
 Plug 'mengelbrecht/lightline-bufferline'
+""Plug 'akinsho/nvim-bufferline.lua'
 
 Plug 'kyazdani42/nvim-web-devicons' " for file icons
 Plug 'kyazdani42/nvim-tree.lua'
@@ -21,17 +22,22 @@ Plug 'ryanoasis/vim-devicons'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'wfxr/minimap.vim', {'do': ':!cargo install --locked code-minimap'}
-
 Plug 'psliwka/vim-smoothie'
 Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-eunuch'
+Plug 'tpope/vim-eunuch' 
 Plug 'airblade/vim-gitgutter'
+Plug 'voldikss/vim-floaterm'
 
 Plug 'mhinz/vim-startify'
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
-Plug 'sheerun/vim-polyglot'
-Plug 'kaicataldo/material.vim', { 'branch': 'main' }
+""Plug 'sheerun/vim-polyglot'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
+
+""Plug 'kaicataldo/material.vim', { 'branch': 'main' }
+Plug 'arcticicestudio/nord-vim'
+""Plug 'drewtempelmeyer/palenight.vim'
+""Plug 'Brettm12345/moonlight.vim'
 
 Plug 'plasticboy/vim-markdown'
 Plug 'zyedidia/vim-snake'
@@ -59,9 +65,13 @@ endif
 
 "theme info
 "let ayucolor="mirage"
-let g:material_theme_style = 'palenight'
-let g:material_terminal_italics = 1
-colorscheme material
+""let g:material_theme_style = 'palenight'
+""let g:material_terminal_italics = 1
+
+""colorscheme moonlight
+colorscheme nord
+""colorscheme material
+""colorscheme palenight
 syntax on
 
 "set true color
@@ -70,8 +80,10 @@ highlight Normal ctermbg=NONE
 highlight nonText ctermbg=NONE
 
 "tell number row to be transparent
-highlight clear LineNr
+""highlight clear LineNr
 highlight clear SignColumn
+hi VertSplit ctermfg=1 ctermbg=NONE cterm=NONE
+set fillchars+=vert:\ 
 
 "various settings
 set autoindent                 " Minimal automatic indenting for any filetype.
@@ -86,7 +98,6 @@ set wildmenu                   " Great command-line completion, use `<Tab>` to m
                                "show tabs and bottom bar
 set number
 set cursorline
-" Removes the underline causes by enabling cursorline:
 highlight clear CursorLine
 highlight CursorLineNR ctermbg=red    
 
@@ -100,11 +111,13 @@ set clipboard=unnamed
 set noshowmode
 set laststatus=2
 set showtabline=2
+set noswapfile
+set nobackup
 
 "lightline setup
 "colorscheme, bottom bar, coponents, tabs, bottom components
 let g:lightline = {
-    \ 'colorscheme': 'material_vim',
+    \ 'colorscheme': 'nord',
     \ 'active': {
     \   'left': [ [ 'mode', 'paste' ],
     \             [ 'gitbranch', 'readonly', 'filename', 'wordcount', 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_infos', 'linter_ok' ] ]
@@ -175,10 +188,35 @@ function! WordCount()
         call setpos('.', l:old_position)
         return b:wordcount
     else
-        return b:wordcount
+
+let $FZF_DEFAULT_COMMAND =  "find * -path '*/\.*' -prune -o -path 'node_modules/**' -prune -o -path 'target/**' -prune -o -path 'dist/**' -prune -o  -type f -print -o -type l -print 2> /dev/null"
+let $FZF_DEFAULT_OPTS=' --color=dark --color=fg:15,bg:-1,hl:1,fg+:#ffffff,bg+:0,hl+:1 --color=info:0,prompt:0,pointer:12,marker:4,spinner:11,header:-1 --layout=reverse  --margin=1,4'
+let g:fzf_layout = { 'window': 'call FloatingFZF()' }
+
+function! FloatingFZF()
+  let buf = nvim_create_buf(v:false, v:true)
+  call setbufvar(buf, '&signcolumn', 'no')
+
+  let height = float2nr(20)
+  let width = float2nr(100)
+  let horizontal = float2nr((&columns - width) / 2)
+  let vertical = 1
+
+  let opts = {
+        \ 'relative': 'editor',
+        \ 'row': vertical,
+        \ 'col': horizontal,
+        \ 'width': width,
+        \ 'height': height,
+        \ 'style': 'minimal'
+        \ }
+
+  call nvim_open_win(buf, v:true, opts)
+endfunction        return b:wordcount
     endif
 endfunction
 
+nnoremap <silent> <C-p> :call fzf#vim#files('.', {'options': '--prompt ""'})<CR>
 
 "always mouse available
 if has('mouse')
@@ -187,7 +225,6 @@ endif
 
 "binds (indent, fzf, undo, undo)
 map <C-i> gt
-nnoremap <c-p> :Files /Users/shauryasingh/IdeaProjects<CR>
 inoremap <C-Z> <C-O>u
 
 "autoclose
@@ -218,6 +255,8 @@ nnoremap <silent> <C-j> :call WinMove('j')<CR>
 nnoremap <silent> <C-k> :call WinMove('k')<CR>
 nnoremap <silent> <C-l> :call WinMove('l')<CR>
 
+
+
 "f5 to run current filetype
 map <F5> :call CompileRunGcc()<CR>
 func! CompileRunGcc()
@@ -243,28 +282,15 @@ exec "!time go run %"
 endif
 endfunc
 
-"fzf colors
-let g:fzf_colors =
-\ { 'fg':      ['fg', 'Normal'],
-  \ 'bg':      ['bg', 'Normal'],
-  \ 'hl':      ['fg', 'Comment'],
-  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
-  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
-  \ 'hl+':     ['fg', 'Statement'],
-  \ 'info':    ['fg', 'PreProc'],
-  \ 'border':  ['fg', 'Ignore'],
-  \ 'prompt':  ['fg', 'Conditional'],
-  \ 'pointer': ['fg', 'Exception'],
-  \ 'marker':  ['fg', 'Keyword'],
-  \ 'spinner': ['fg', 'Label'],
-  \ 'header':  ['fg', 'Comment'] }
-
 "lightline ale
 let g:lightline#ale#indicator_checking = "\uf110"
 let g:lightline#ale#indicator_infos = "\uf129"
 let g:lightline#ale#indicator_warnings = "\uf071"
 let g:lightline#ale#indicator_errors = "\uf05e"
 let g:lightline#ale#indicator_ok = "\uf00c"
+
+"just ale
+let g:ale_fix_on_save = 1
 
 " vim-devicons for folders
 let g:DevIconsEnableFoldersOpenClose = 1
@@ -324,7 +350,7 @@ let g:startify_custom_header=['     _           _                      _        
 let g:minimap_width = 10
 let g:minimap_auto_start = 1
 let g:minimap_auto_start_win_enter = 1
-let g:lens#disabled_filetypes = ['minimap', 'Minimap', '-MINIMAP-', 'fzf']
+let g:lens#disabled_filetypes = ['minimap', 'Minimap', '-MINIMAP-', 'fzf','nvimtree', 'NvimTree', 'nvim-tree']
 
 "open intro, then nerdtree and minimap
 autocmd vimenter * intro
