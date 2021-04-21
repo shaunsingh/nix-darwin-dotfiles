@@ -11,50 +11,77 @@ autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
 \| endif
 
 call plug#begin('~/.vim/plugged')
+
+"statusline/bufferline
 Plug 'itchyny/lightline.vim'
 Plug 'mengelbrecht/lightline-bufferline'
-""Plug 'akinsho/nvim-bufferline.lua'
 
-Plug 'kyazdani42/nvim-web-devicons' " for file icons
-Plug 'kyazdani42/nvim-tree.lua'
+"icons
 Plug 'ryanoasis/vim-devicons'
+Plug 'bryanmylee/vim-colorscheme-icons'
 
+"fuzzy search
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
+
+"minimap"
 Plug 'wfxr/minimap.vim', {'do': ':!cargo install --locked code-minimap'}
+
+"smooth scroll
 Plug 'psliwka/vim-smoothie'
+
+"git
 Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-eunuch' 
 Plug 'airblade/vim-gitgutter'
+
+"unix commands
+Plug 'tpope/vim-eunuch'
+
+"floating terminal
 Plug 'voldikss/vim-floaterm'
 
-Plug 'mhinz/vim-startify'
+"start dash
+Plug 'glepnir/dashboard-nvim'
+""Plug 'mhinz/vim-startify'
+
+"distraction free/zen mode
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
-""Plug 'sheerun/vim-polyglot'
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
 
+"syntax/themes
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
 ""Plug 'kaicataldo/material.vim', { 'branch': 'main' }
 Plug 'arcticicestudio/nord-vim'
 ""Plug 'drewtempelmeyer/palenight.vim'
 ""Plug 'Brettm12345/moonlight.vim'
-
 Plug 'plasticboy/vim-markdown'
+
+"snake
 Plug 'zyedidia/vim-snake'
 
+"lines on indents
+Plug 'Yggdroot/indentLine'
+
+"linting + lsp
 Plug 'dense-analysis/ale'
 Plug 'maximbaz/lightline-ale'
+if has('nvim')
+  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+else
+  Plug 'Shougo/deoplete.nvim'
+  Plug 'roxma/nvim-yarp'
+  Plug 'roxma/vim-hug-neovim-rpc'
+endif
 
-Plug 'camspiers/animate.vim'
-Plug 'camspiers/lens.vim'
+"animate/adjust
+""Plug 'camspiers/animate.vim'
+""Plug 'camspiers/lens.vim'
+
 call plug#end()
-
-"set theme
-set background=dark
 
 "set true colors for term + vim
 if has('termguicolors')
-set termguicolors
+  set termguicolors
 endif
 if (has("termguicolors") && $TERM_PROGRAM ==# 'iTerm.app')
   set termguicolors
@@ -62,12 +89,18 @@ endif
 if (has('nvim'))
   let $NVIM_TUI_ENABLE_TRUE_COLOR = 1
 endif
+if has("gui_vimr")
+  set termguicolors
+  set background=dark
+  colorscheme nord
+endif
+
+
 
 "theme info
-"let ayucolor="mirage"
+set background=dark
 ""let g:material_theme_style = 'palenight'
 ""let g:material_terminal_italics = 1
-
 ""colorscheme moonlight
 colorscheme nord
 ""colorscheme material
@@ -76,14 +109,18 @@ syntax on
 
 "set true color
 set t_Co=256
-highlight Normal ctermbg=NONE
-highlight nonText ctermbg=NONE
 
-"tell number row to be transparent
-""highlight clear LineNr
+"numrow transparent
 highlight clear SignColumn
 hi VertSplit ctermfg=1 ctermbg=NONE cterm=NONE
-set fillchars+=vert:\ 
+set fillchars+=vert:\
+
+"highlight current number
+set number
+set cursorline
+highlight clear CursorLine
+highlight CursorLineNR ctermbg=red
+
 
 "various settings
 set autoindent                 " Minimal automatic indenting for any filetype.
@@ -96,11 +133,6 @@ set wildmenu                   " Great command-line completion, use `<Tab>` to m
                                " around and `<CR>` to validate.
                                "show numbers, set clipboard properly, idk,
                                "show tabs and bottom bar
-set number
-set cursorline
-highlight clear CursorLine
-highlight CursorLineNR ctermbg=red    
-
 " Indents word-wrapped lines as much as the 'parent' line
 set breakindent
 " Ensures word-wrap does not split words
@@ -125,7 +157,7 @@ let g:lightline = {
     \ 'component_function': {
     \    'filetype': 'MyFiletype',
     \    'fileformat': 'MyFileformat',
-    \    'wordcount': 'WordCount',  
+    \    'wordcount': 'WordCount',
     \    'gitbranch': 'FugitiveHead'
     \ },
     \ 'tabline': {
@@ -189,6 +221,7 @@ function! WordCount()
         return b:wordcount
     else
 
+"Make fzf float
 let $FZF_DEFAULT_COMMAND =  "find * -path '*/\.*' -prune -o -path 'node_modules/**' -prune -o -path 'target/**' -prune -o -path 'dist/**' -prune -o  -type f -print -o -type l -print 2> /dev/null"
 let $FZF_DEFAULT_OPTS=' --color=dark --color=fg:15,bg:-1,hl:1,fg+:#ffffff,bg+:0,hl+:1 --color=info:0,prompt:0,pointer:12,marker:4,spinner:11,header:-1 --layout=reverse  --margin=1,4'
 let g:fzf_layout = { 'window': 'call FloatingFZF()' }
@@ -229,7 +262,7 @@ inoremap <C-Z> <C-O>u
 
 "autoclose
 inoremap " ""<left>
-inoremap ' ''<left>
+""inoremap ' ''<left>
 inoremap ( ()<left>
 inoremap [ []<left>
 inoremap { {}<left>
@@ -254,8 +287,6 @@ nnoremap <silent> <C-h> :call WinMove('h')<CR>
 nnoremap <silent> <C-j> :call WinMove('j')<CR>
 nnoremap <silent> <C-k> :call WinMove('k')<CR>
 nnoremap <silent> <C-l> :call WinMove('l')<CR>
-
-
 
 "f5 to run current filetype
 map <F5> :call CompileRunGcc()<CR>
@@ -290,15 +321,39 @@ let g:lightline#ale#indicator_errors = "\uf05e"
 let g:lightline#ale#indicator_ok = "\uf00c"
 
 "just ale
+let g:ale_sign_error                  = '✘'
+let g:ale_sign_warning                = '⚠'
+highlight ALEErrorSign ctermbg        =NONE ctermfg=red
+highlight ALEWarningSign ctermbg      =NONE ctermfg=yellow
+
+let g:ale_linters = {
+            \   'mail': ['proselint'],
+            \   'markdown': ['proselint'],
+            \   'text': ['proselint'],
+	    \   'python': ['pyls'],
+            \   }
+let g:ale_fixers = {
+\   '*':          ['remove_trailing_lines', 'trim_whitespace'],
+\}
+
+let g:ale_lint_on_text_changed = 'never'
 let g:ale_fix_on_save = 1
+let g:ale_lint_on_save = 1
 
-" vim-devicons for folders
-let g:DevIconsEnableFoldersOpenClose = 1
-""let g:webdevicons_conceal_nerdtree_brackets = 0
-let g:WebDevIconsOS = 'Darwin'
-let g:WebDevIconsUnicodeDecorateFileNodesExtensionSymbols = {}
+"deoplete
+let g:deoplete#enable_at_startup = 1
+" Use ALE and also some plugin 'foobar' as completion sources for all code.
+call deoplete#custom#option('sources', {
+\ '_': ['ale', 'foobar'],
+\})
+set completeopt=menu,menuone,preview,noselect,noinsert
+let g:deoplete#disable_auto_complete = 1
+inoremap <expr> <C-n>  deoplete#manual_complete()
+inoremap <silent><expr> <Tab>
+\ pumvisible() ? "\<C-n>" : "\<TAB>"
+inoremap <silent><expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-TAB>"
 
-"limelight for goyo 
+"limelight for goyo
 let g:limelight_default_coefficient = 0.4
 let g:limelight_conceal_ctermfg = 141
 let g:limelight_paragraph_span = 0
@@ -329,39 +384,59 @@ let l:palette.tabline.middle = l:palette.normal.middle
 call lightline#colorscheme()
 endfunction
 
-"nvim tree
-"let g:nvim_tree_auto_open = 1
-let g:nvim_tree_hide_dotfiles = 1
-let g:nvim_tree_lsp_diagnostics = 1
+"indentline
+let g:indentLine_char_list = ['┊']
+""let g:indentLine_bgcolor_gui = '#FF5F00'
+
+"dashboard
+let g:dashboard_default_executive ='fzf'
+let g:dashboard_custom_header =<< trim END
+=================     ===============     ===============   ========  ========
+\\ . . . . . . .\\   //. . . . . . .\\   //. . . . . . .\\  \\. . .\\// . . //
+||. . ._____. . .|| ||. . ._____. . .|| ||. . ._____. . .|| || . . .\/ . . .||
+|| . .||   ||. . || || . .||   ||. . || || . .||   ||. . || ||. . . . . . . ||
+||. . ||   || . .|| ||. . ||   || . .|| ||. . ||   || . .|| || . | . . . . .||
+|| . .||   ||. _-|| ||-_ .||   ||. . || || . .||   ||. _-|| ||-_.|\ . . . . ||
+||. . ||   ||-'  || ||  `-||   || . .|| ||. . ||   ||-'  || ||  `|\_ . .|. .||
+|| . _||   ||    || ||    ||   ||_ . || || . _||   ||    || ||   |\ `-_/| . ||
+||_-' ||  .|/    || ||    \|.  || `-_|| ||_-' ||  .|/    || ||   | \  / |-_.||
+||    ||_-'      || ||      `-_||    || ||    ||_-'      || ||   | \  / |  `||
+||    `'         || ||         `'    || ||    `'         || ||   | \  / |   ||
+||            .===' `===.         .==='.`===.         .===' /==. |  \/  |   ||
+||         .=='   \_|-_ `===. .==='   _|_   `===. .===' _-|/   `==  \/  |   ||
+||      .=='    _-'    `-_  `='    _-'   `-_    `='  _-'   `-_  /|  \/  |   ||
+||   .=='    _-'          '-__\._-'         '-_./__-'         `' |. /|  |   ||
+||.=='    _-'                                                     `' |  /==.||
+=='    _-'                        N E O V I M                         \/   `==
+\   _-'                                                                `-_   /
+ `''
+END
 
 "startify
-let g:startify_custom_header=['     _           _                      _             ',
-                             \'             ▕                                 ',
-                             \'  ▕ ███       ▕│█     ___   ___                 ',
-                             \'  ▕││███     ▕│███▕│         █   ██      ',
-                             \'  ▕││  ███   ▕│███▕│▕│ ▁ ▕│    ▕│██          ',
-                             \'  ▕││  ▕│███ ▕│███▕│▕│   ▕│    ▕│██  ◢◣  ◢  ',
-                             \'  ▕││  ▕│  ███│███▕│  ▁▁  ▁   ██   ▜█ ██  ',
-                             \'     ▕│    ████      ‾‾    ‾                 ',
-                             \'     ▕│                                        ',
-                             \'                 ‾                      ‾             ']
+""let g:startify_custom_header=['     _           _                      _             ',
+""                             \'             ▕                                 ',
+""                             \'  ▕ ███       ▕│█     ___   ___                 ',
+""                             \'  ▕││███     ▕│███▕│         █   ██      ',
+""                             \'  ▕││  ███   ▕│███▕│▕│ ▁ ▕│    ▕│██          ',
+""                             \'  ▕││  ▕│███ ▕│███▕│▕│   ▕│    ▕│██  ◢◣  ◢  ',
+""                             \'  ▕││  ▕│  ███│███▕│  ▁▁  ▁   ██   ▜█ ██  ',
+""                             \'     ▕│    ████      ‾‾    ‾                 ',
+""                             \'     ▕│                                        ',
+""                             \'                 ‾                      ‾             ']
 
 "minimap
 let g:minimap_width = 10
 let g:minimap_auto_start = 1
 let g:minimap_auto_start_win_enter = 1
-let g:lens#disabled_filetypes = ['minimap', 'Minimap', '-MINIMAP-', 'fzf','nvimtree', 'NvimTree', 'nvim-tree']
+let g:lens#disabled_filetypes = ['minimap', 'Minimap', '-MINIMAP-', 'fzf', 'nvim-tree']
 
 "open intro, then nerdtree and minimap
-autocmd vimenter * intro
+""autocmd vimenter * intro
 
 "limelight +goyo
 autocmd! User GoyoEnter Limelight
 autocmd! User GoyoLeave Limelight!
 
-"if using .md then open goyo
-autocmd BufRead,BufNewFile *.md :Goyo 80
-
-"make goyo dark background after leaving 
+"make goyo dark background after leaving
 autocmd! User GoyoLeave
-autocmd  User GoyoLeave nested set background=dark
+autocmd  User GoyoLeave nested set background=dar
