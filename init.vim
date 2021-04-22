@@ -20,9 +20,11 @@ Plug 'mengelbrecht/lightline-bufferline'
 Plug 'ryanoasis/vim-devicons'
 Plug 'bryanmylee/vim-colorscheme-icons'
 
-"fuzzy search
+"fuzzy search + files
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
+Plug 'preservim/nerdtree'
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 
 "minimap"
 Plug 'wfxr/minimap.vim', {'do': ':!cargo install --locked code-minimap'}
@@ -42,14 +44,13 @@ Plug 'voldikss/vim-floaterm'
 
 "start dash
 Plug 'glepnir/dashboard-nvim'
-""Plug 'mhinz/vim-startify'
 
 "distraction free/zen mode
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
 
 "syntax/themes
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
+Plug 'sheerun/vim-polyglot'
 ""Plug 'kaicataldo/material.vim', { 'branch': 'main' }
 Plug 'arcticicestudio/nord-vim'
 ""Plug 'drewtempelmeyer/palenight.vim'
@@ -57,7 +58,7 @@ Plug 'arcticicestudio/nord-vim'
 Plug 'plasticboy/vim-markdown'
 
 "snake
-Plug 'zyedidia/vim-snake'
+""Plug 'zyedidia/vim-snake'
 
 "lines on indents
 Plug 'Yggdroot/indentLine'
@@ -65,18 +66,13 @@ Plug 'Yggdroot/indentLine'
 "linting + lsp
 Plug 'dense-analysis/ale'
 Plug 'maximbaz/lightline-ale'
-if has('nvim')
-  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-else
-  Plug 'Shougo/deoplete.nvim'
-  Plug 'roxma/nvim-yarp'
-  Plug 'roxma/vim-hug-neovim-rpc'
-endif
 
 "animate/adjust
 ""Plug 'camspiers/animate.vim'
 ""Plug 'camspiers/lens.vim'
 
+"produce visuals
+Plug 'segeljakt/vim-silicon'
 call plug#end()
 
 "set true colors for term + vim
@@ -95,8 +91,6 @@ if has("gui_vimr")
   colorscheme nord
 endif
 
-
-
 "theme info
 set background=dark
 ""let g:material_theme_style = 'palenight'
@@ -110,17 +104,21 @@ syntax on
 "set true color
 set t_Co=256
 
-"numrow transparent
+"Neovide + gui
+set guifont=SFMono\ Nerd\ Font:h13
+let g:neovide_cursor_antialiasing=v:true
+let g:neovide_fullscreen=v:true
+
+"numrow transparent, vert split line transparent.
 highlight clear SignColumn
 hi VertSplit ctermfg=1 ctermbg=NONE cterm=NONE
-set fillchars+=vert:\
+set fillchars+=vert:┊
 
 "highlight current number
 set number
 set cursorline
 highlight clear CursorLine
 highlight CursorLineNR ctermbg=red
-
 
 "various settings
 set autoindent                 " Minimal automatic indenting for any filetype.
@@ -132,7 +130,8 @@ set ruler                      " Shows the current line number at the bottom-rig
 set wildmenu                   " Great command-line completion, use `<Tab>` to move
                                " around and `<CR>` to validate.
                                "show numbers, set clipboard properly, idk,
-                               "show tabs and bottom bar
+                               "show tabs and bottom bar                               "
+set wildmode=longest,list,full
 " Indents word-wrapped lines as much as the 'parent' line
 set breakindent
 " Ensures word-wrap does not split words
@@ -230,10 +229,11 @@ function! FloatingFZF()
   let buf = nvim_create_buf(v:false, v:true)
   call setbufvar(buf, '&signcolumn', 'no')
 
-  let height = float2nr(20)
-  let width = float2nr(100)
+  let height = float2nr(30)
+  let width = float2nr(150)
   let horizontal = float2nr((&columns - width) / 2)
-  let vertical = 1
+  ""let vertical = 1
+  let vertical = 12
 
   let opts = {
         \ 'relative': 'editor',
@@ -268,6 +268,16 @@ inoremap [ []<left>
 inoremap { {}<left>
 inoremap {<CR> {<CR>}<ESC>O
 inoremap {;<CR> {<CR>};<ESC>O
+
+"jk to exit instead
+" esc in insert mode
+inoremap jk <esc>
+
+" esc in command mode
+cnoremap jk <C-C>
+" Note: In command mode mappings to esc run the command for some odd
+" historical vi compatibility reason. We use the alternate method of
+" existing which is Ctrl-C
 
 "basic vim wm
 function! WinMove(key)
@@ -340,19 +350,6 @@ let g:ale_lint_on_text_changed = 'never'
 let g:ale_fix_on_save = 1
 let g:ale_lint_on_save = 1
 
-"deoplete
-let g:deoplete#enable_at_startup = 1
-" Use ALE and also some plugin 'foobar' as completion sources for all code.
-call deoplete#custom#option('sources', {
-\ '_': ['ale', 'foobar'],
-\})
-set completeopt=menu,menuone,preview,noselect,noinsert
-let g:deoplete#disable_auto_complete = 1
-inoremap <expr> <C-n>  deoplete#manual_complete()
-inoremap <silent><expr> <Tab>
-\ pumvisible() ? "\<C-n>" : "\<TAB>"
-inoremap <silent><expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-TAB>"
-
 "limelight for goyo
 let g:limelight_default_coefficient = 0.4
 let g:limelight_conceal_ctermfg = 141
@@ -385,8 +382,16 @@ call lightline#colorscheme()
 endfunction
 
 "indentline
+let g:indentLine_enabled = 0
 let g:indentLine_char_list = ['┊']
-""let g:indentLine_bgcolor_gui = '#FF5F00'
+
+"NERDTree
+let g:webdevicons_enable = 1
+let g:webdevicons_enable_nerdtree = 1
+let g:webdevicons_conceal_nerdtree_brackets = 1
+let g:WebDevIconsNerdTreeGitPluginForceVAlign = 1
+let g:NERDTreeLimitedSyntax = 1
+let g:NERDTreeHighlightCursorline = 0
 
 "dashboard
 let g:dashboard_default_executive ='fzf'
@@ -412,31 +417,19 @@ let g:dashboard_custom_header =<< trim END
  `''
 END
 
-"startify
-""let g:startify_custom_header=['     _           _                      _             ',
-""                             \'             ▕                                 ',
-""                             \'  ▕ ███       ▕│█     ___   ___                 ',
-""                             \'  ▕││███     ▕│███▕│         █   ██      ',
-""                             \'  ▕││  ███   ▕│███▕│▕│ ▁ ▕│    ▕│██          ',
-""                             \'  ▕││  ▕│███ ▕│███▕│▕│   ▕│    ▕│██  ◢◣  ◢  ',
-""                             \'  ▕││  ▕│  ███│███▕│  ▁▁  ▁   ██   ▜█ ██  ',
-""                             \'     ▕│    ████      ‾‾    ‾                 ',
-""                             \'     ▕│                                        ',
-""                             \'                 ‾                      ‾             ']
-
 "minimap
 let g:minimap_width = 10
 let g:minimap_auto_start = 1
 let g:minimap_auto_start_win_enter = 1
 let g:lens#disabled_filetypes = ['minimap', 'Minimap', '-MINIMAP-', 'fzf', 'nvim-tree']
 
-"open intro, then nerdtree and minimap
-""autocmd vimenter * intro
+"limelight
+let g:limelight_default_coefficient = 0.4
+""let g:limelight_conceal_ctermfg = 141
+let g:limelight_paragraph_span = 0
+""let g:limelight_conceal_guifg = '#ECEFF4'
 
 "limelight +goyo
 autocmd! User GoyoEnter Limelight
 autocmd! User GoyoLeave Limelight!
 
-"make goyo dark background after leaving
-autocmd! User GoyoLeave
-autocmd  User GoyoLeave nested set background=dar
