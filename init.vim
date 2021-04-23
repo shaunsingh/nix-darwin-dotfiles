@@ -146,7 +146,9 @@ let g:lightline = {
     \ 'colorscheme': 'ayu_mirage',
     \ 'active': {
     \   'left': [ [ 'mode', 'paste' ],
-    \             ['gitbranch', 'readonly', 'filetype', 'relativepath', 'wordcount', 'modified', 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_infos', 'linter_ok' ] ]
+    \             ['gitbranch', 'readonly', 'filetype', 'relativepath', 'wordcount', 'modified', 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_infos', 'linter_ok' ] ],
+    \   'right': [ [ 'lineinfo' ],
+    \              [ 'percent', 'fileformat', 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_infos', 'linter_ok' ]]
     \ },
     \ 'component_function': {
     \    'filetype': 'MyFiletype',
@@ -174,6 +176,7 @@ let g:lightline = {
     \ 'separator': { 'left': '', 'right': '' },
     \ 'subseparator': { 'left': '', 'right': '' }
     \ }
+
 
 "add devicon to lightline
 function! MyFiletype()
