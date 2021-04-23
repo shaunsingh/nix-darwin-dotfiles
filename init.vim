@@ -1,5 +1,5 @@
 "autoinstall vim plug
-"autoinstall vim plug
+"check for uninstalled plugins
 let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
 if empty(glob(data_dir . '/autoload/plug.vim'))
   silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
@@ -15,7 +15,6 @@ call plug#begin('~/.vim/plugged')
 
 "statusline/bufferline
 Plug 'itchyny/lightline.vim'
-""Plug 'mengelbrecht/lightline-bufferline'
 Plug 'romgrk/barbar.nvim'
 
 "icons
@@ -32,18 +31,12 @@ Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 "minimap"
 Plug 'wfxr/minimap.vim', {'do': ':!cargo install --locked code-minimap'}
 
-"smooth scroll
-""Plug 'psliwka/vim-smoothie'
-
 "git
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 
 "unix commands
 Plug 'tpope/vim-eunuch'
-
-"floating terminal
-Plug 'voldikss/vim-floaterm'
 
 "start dash
 Plug 'glepnir/dashboard-nvim'
@@ -61,22 +54,14 @@ Plug 'sheerun/vim-polyglot'
 Plug 'GustavoPrietoP/doom-one.vim'
 Plug 'plasticboy/vim-markdown'
 
-"snake
-""Plug 'zyedidia/vim-snake'
-
-"lines on indents
+"lines on indents + auto pairs+ multiple cursors
 Plug 'Yggdroot/indentLine'
+"Plug 'jiangmiao/auto-pairs'
+Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 
 "linting + lsp
 Plug 'dense-analysis/ale'
 Plug 'maximbaz/lightline-ale'
-
-"animate/adjust
-""Plug 'camspiers/animate.vim'
-""Plug 'camspiers/lens.vim'
-
-"produce visuals
-""Plug 'segeljakt/vim-silicon'
 
 "rich presence
 Plug 'andweeb/presence.nvim'
@@ -86,16 +71,8 @@ call plug#end()
 if has('termguicolors')
   set termguicolors
 endif
-if (has("termguicolors") && $TERM_PROGRAM ==# 'iTerm.app')
-  set termguicolors
-endif
 if (has('nvim'))
   let $NVIM_TUI_ENABLE_TRUE_COLOR = 1
-endif
-if has("gui_vimr")
-  set termguicolors
-  set background=dark
-  colorscheme nord
 endif
 
 "theme info
@@ -106,9 +83,11 @@ set background=dark
 ""colorscheme nord
 ""colorscheme material
 colorscheme doom-one
+
+"enable syntax
 syntax enable
 
-"set true color
+"set 256 colors
 set t_Co=256
 
 "Neovide + gui
@@ -162,7 +141,7 @@ set noswapfile
 set nobackup
 
 "lightline setup
-"colorscheme, bottom bar, coponents, tabs, bottom components
+"colorscheme, active, components, ale, seperators
 let g:lightline = {
     \ 'colorscheme': 'ayu_mirage',
     \ 'active': {
@@ -262,6 +241,63 @@ endfunction        return b:wordcount
     endif
 endfunction
 
+" Floating Term
+let s:float_term_border_win = 0
+let s:float_term_win = 0
+function! FloatTerm(...)
+  " Configuration
+  let height = float2nr((&lines - 2) * 0.6)
+  let row = float2nr((&lines - height) / 2)
+  let width = float2nr(&columns * 0.6)
+  let col = float2nr((&columns - width) / 2)
+  " Border Window
+  let border_opts = {
+    \ 'relative': 'editor',
+    \ 'row': row - 1,
+    \ 'col': col - 2,
+    \ 'width': width + 4,
+    \ 'height': height + 2,
+    \ 'style': 'minimal'
+    \ }
+  " Terminal Window
+  let opts = {
+    \ 'relative': 'editor',
+    \ 'row': row,
+    \ 'col': col,
+    \ 'width': width,
+    \ 'height': height,
+    \ 'style': 'minimal'
+    \ }
+  let top = "╭" . repeat("─", width + 2) . "╮"
+  let mid = "│" . repeat(" ", width + 2) . "│"
+  let bot = "╰" . repeat("─", width + 2) . "╯"
+  let lines = [top] + repeat([mid], height) + [bot]
+  let bbuf = nvim_create_buf(v:false, v:true)
+
+  call nvim_buf_set_lines(bbuf, 0, -1, v:true, lines)
+    let s:float_term_border_win = nvim_open_win(bbuf, v:true, border_opts)
+    let buf = nvim_create_buf(v:false, v:true)
+    let s:float_term_win = nvim_open_win(buf, v:true, opts)
+
+    " Styling
+  hi FloatWinBorder guifg=#87bb7c
+  call setwinvar(s:float_term_border_win, '&winhl', 'Normal:FloatWinBorder')
+  call setwinvar(s:float_term_win, '&winhl', 'Normal:Normal')
+
+  if a:0 == 0
+    terminal
+  else
+    call termopen(a:1)
+  endif
+
+  startinsert
+  " Close border window when terminal window close
+  autocmd TermClose * ++once :bd! | call nvim_win_close(s:float_term_border_win, v:true)
+endfunction
+
+"map FloatermNew to new terminal
+command FloatermNew call FloatTerm()
+
 "always mouse available
 if has('mouse')
   set mouse=a
@@ -269,14 +305,15 @@ endif
 
 "fzf
 nnoremap <silent> <C-p> :call fzf#vim#files('.', {'options': '--prompt ""'})<CR>
-"autoclose
+
+"basic autopair
 inoremap " ""<left>
-""inoremap ' ''<left>
 inoremap ( ()<left>
 inoremap [ []<left>
 inoremap { {}<left>
 inoremap {<CR> {<CR>}<ESC>O
 inoremap {;<CR> {<CR>};<ESC>O
+
 
 "jk to exit instead
 " esc in insert mode
@@ -394,14 +431,23 @@ let g:indentLine_enabled = 0
 let g:indentLine_char_list = ['┊']
 
 "NERDTree
+"enable icons
 let g:webdevicons_enable = 1
 let g:webdevicons_enable_nerdtree = 1
 let g:webdevicons_conceal_nerdtree_brackets = 1
 let g:WebDevIconsNerdTreeGitPluginForceVAlign = 1
-let g:NERDTreeLimitedSyntax = 1
 let g:NERDTreeHighlightCursorline = 0
+"better ui
+let NERDTreeMinimalUI=1
+let NERDTreeDirArrows=1
+let g:NERDTreeDirArrowExpandable = '»'
+let g:NERDTreeDirArrowCollapsible = '«'
 
-"dashboard
+" If another buffer tries to replace NERDTree, put it in the other window, and bring back NERDTree.
+autocmd BufEnter * if bufname('#') =~ 'NERD_tree_\d\+' && bufname('%') !~ 'NERD_tree_\d\+' && winnr('$') > 1 |
+    \ let buf=bufnr() | buffer# | execute "normal! \<C-W>w" | execute 'buffer'.buf | endif
+
+"dashboard (use fzf + doom logo)
 let g:dashboard_default_executive ='fzf'
 let g:dashboard_custom_header =<< trim END
 =================     ===============     ===============   ========  ========
@@ -422,19 +468,17 @@ let g:dashboard_custom_header =<< trim END
 ||.=='    _-'                                                     `' |  /==.||
 =='    _-'                        N E O V I M                         \/   `==
 \   _-'                                                                `-_   /
- `''
+ `''                                                                      ''`
 END
 
 "minimap
 let g:minimap_width = 10
 let g:minimap_auto_start = 1
 let g:minimap_auto_start_win_enter = 1
-""let g:lens#disabled_filetypes = ['minimap', 'Minimap', '-MINIMAP-', 'fzf', 'nvim-tree']
 
 "limelight
 let g:limelight_default_coefficient = 0.4
 let g:limelight_paragraph_span = 0
-
 
 "discord presence
 let g:presence_auto_update       = 1
@@ -472,9 +516,19 @@ let bufferline.icon_separator_inactive = '▎'
 let bufferline.icon_close_tab = ''
 let bufferline.icon_close_tab_modified = '●'
 
+"Vim multi-cursors
+"map mouse (ctrl click = cursor)
+nmap   <C-LeftMouse>         <Plug>(VM-Mouse-Cursor)
+nmap   <C-RightMouse>        <Plug>(VM-Mouse-Word)
+nmap   <M-C-RightMouse>      <Plug>(VM-Mouse-Column)
+"use alt instead of ctrl
+let g:VM_maps = {}
+let g:VM_default_mappings = 0
+let g:VM_maps["Add Cursor Down"]             = '<A-Down>'
+let g:VM_maps["Add Cursor Up"]               = '<A-Up>'
+
 "Goyo
 let g:goyo_width = 85
-""let g:goyo_height = 80
 
 "limelight +goyo
 autocmd! User GoyoEnter Limelight
