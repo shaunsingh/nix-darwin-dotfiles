@@ -92,8 +92,9 @@ set t_Co=256
 
 "Neovide + gui
 set guifont=SFMono\ Nerd\ Font:h13
-let g:neovide_cursor_antialiasing=v:true
+let g:neovide_cursor_antialiasing=v:false
 let g:neovide_fullscreen=v:true
+let g:neovide_refresh_rate=60
 
 "numrow transparent, vert split line transparent.
 highlight clear SignColumn
@@ -147,8 +148,8 @@ let g:lightline = {
     \ 'active': {
     \   'left': [ [ 'mode', 'paste' ],
     \             ['gitbranch', 'readonly', 'filetype', 'relativepath', 'wordcount', 'modified', 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_infos', 'linter_ok' ] ],
-    \   'right': [ [ 'lineinfo' ],
-    \              [ 'percent', 'fileformat', 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_infos', 'linter_ok' ]]
+    \   'right': [ [ 'lineinfo', 'percent' ],
+    \              [ 'fileformat', 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_infos', 'linter_ok' ]]
     \ },
     \ 'component_function': {
     \    'filetype': 'MyFiletype',
@@ -176,7 +177,6 @@ let g:lightline = {
     \ 'separator': { 'left': '', 'right': '' },
     \ 'subseparator': { 'left': '', 'right': '' }
     \ }
-
 
 "add devicon to lightline
 function! MyFiletype()
