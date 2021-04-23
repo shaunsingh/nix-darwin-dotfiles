@@ -30,7 +30,7 @@ Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'wfxr/minimap.vim', {'do': ':!cargo install --locked code-minimap'}
 
 "smooth scroll
-Plug 'psliwka/vim-smoothie'
+""Plug 'psliwka/vim-smoothie'
 
 "git
 Plug 'tpope/vim-fugitive'
@@ -51,10 +51,10 @@ Plug 'junegunn/limelight.vim'
 
 "syntax/themes
 Plug 'sheerun/vim-polyglot'
-""Plug 'kaicataldo/material.vim', { 'branch': 'main' }
+Plug 'kaicataldo/material.vim', { 'branch': 'main' }
 Plug 'arcticicestudio/nord-vim'
-""Plug 'drewtempelmeyer/palenight.vim'
-""Plug 'Brettm12345/moonlight.vim'
+Plug 'drewtempelmeyer/palenight.vim'
+Plug 'Brettm12345/moonlight.vim'
 Plug 'plasticboy/vim-markdown'
 
 "snake
@@ -72,7 +72,10 @@ Plug 'maximbaz/lightline-ale'
 ""Plug 'camspiers/lens.vim'
 
 "produce visuals
-Plug 'segeljakt/vim-silicon'
+""Plug 'segeljakt/vim-silicon'
+
+"rich presence
+Plug 'andweeb/presence.nvim'
 call plug#end()
 
 "set true colors for term + vim
@@ -93,11 +96,11 @@ endif
 
 "theme info
 set background=dark
-""let g:material_theme_style = 'palenight'
+let g:material_theme_style = 'ocean'
 ""let g:material_terminal_italics = 1
 ""colorscheme moonlight
-colorscheme nord
-""colorscheme material
+""colorscheme nord
+colorscheme material
 ""colorscheme palenight
 syntax on
 
@@ -115,40 +118,49 @@ hi VertSplit ctermfg=1 ctermbg=NONE cterm=NONE
 set fillchars+=vert:┊
 
 "highlight current number
-set number
+""set number
+set number relativenumber
 set cursorline
 highlight clear CursorLine
 highlight CursorLineNR ctermbg=red
 
+"auto switch number depending on mode + show numbers in Goyo command mode
+augroup numbertoggle
+  autocmd!
+  autocmd BufEnter,FocusGained,InsertLeave * set relativenumber
+  autocmd BufLeave,FocusLost,InsertEnter   * set norelativenumber
+augroup END
+
 "various settings
 set autoindent                 " Minimal automatic indenting for any filetype.
 set backspace=indent,eol,start " Proper backspace behavior.
-set hidden                     " Possibility to have more than one unsaved buffers.
+""set hidden                     " Possibility to have more than one unsaved buffers.
 set incsearch                  " Incremental search, hit `<CR>` to stop.
 set ruler                      " Shows the current line number at the bottom-right
-                               " of the screen.
-set wildmenu                   " Great command-line completion, use `<Tab>` to move
-                               " around and `<CR>` to validate.
-                               "show numbers, set clipboard properly, idk,
-                               "show tabs and bottom bar                               "
+set wildmenu                   " Better autcomplete
 set wildmode=longest,list,full
+
 " Indents word-wrapped lines as much as the 'parent' line
 set breakindent
 " Ensures word-wrap does not split words
 set formatoptions=l
 set lbr
 
+"macos clipbard
 set clipboard=unnamed
+"remove insert from bottom left
 set noshowmode
+"always display taline and bufferlie"
 set laststatus=2
 set showtabline=2
+"no swap files, no backus
 set noswapfile
 set nobackup
 
 "lightline setup
 "colorscheme, bottom bar, coponents, tabs, bottom components
 let g:lightline = {
-    \ 'colorscheme': 'nord',
+    \ 'colorscheme': 'material',
     \ 'active': {
     \   'left': [ [ 'mode', 'paste' ],
     \             [ 'gitbranch', 'readonly', 'filename', 'wordcount', 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_infos', 'linter_ok' ] ]
@@ -225,6 +237,7 @@ let $FZF_DEFAULT_COMMAND =  "find * -path '*/\.*' -prune -o -path 'node_modules/
 let $FZF_DEFAULT_OPTS=' --color=dark --color=fg:15,bg:-1,hl:1,fg+:#ffffff,bg+:0,hl+:1 --color=info:0,prompt:0,pointer:12,marker:4,spinner:11,header:-1 --layout=reverse  --margin=1,4'
 let g:fzf_layout = { 'window': 'call FloatingFZF()' }
 
+"hardcoded atm sorry
 function! FloatingFZF()
   let buf = nvim_create_buf(v:false, v:true)
   call setbufvar(buf, '&signcolumn', 'no')
@@ -249,17 +262,13 @@ endfunction        return b:wordcount
     endif
 endfunction
 
-nnoremap <silent> <C-p> :call fzf#vim#files('.', {'options': '--prompt ""'})<CR>
-
 "always mouse available
 if has('mouse')
   set mouse=a
 endif
 
-"binds (indent, fzf, undo, undo)
-map <C-i> gt
-inoremap <C-Z> <C-O>u
-
+"fzf
+nnoremap <silent> <C-p> :call fzf#vim#files('.', {'options': '--prompt ""'})<CR>
 "autoclose
 inoremap " ""<left>
 ""inoremap ' ''<left>
@@ -279,7 +288,7 @@ cnoremap jk <C-C>
 " historical vi compatibility reason. We use the alternate method of
 " existing which is Ctrl-C
 
-"basic vim wm
+"basic vim wm (ctrl + hjkl to move/create)
 function! WinMove(key)
     let t:curwin = winnr()
     exec "wincmd ".a:key
@@ -292,7 +301,6 @@ function! WinMove(key)
         exec "wincmd ".a:key
     endif
 endfunction
-
 nnoremap <silent> <C-h> :call WinMove('h')<CR>
 nnoremap <silent> <C-j> :call WinMove('j')<CR>
 nnoremap <silent> <C-k> :call WinMove('k')<CR>
@@ -330,7 +338,7 @@ let g:lightline#ale#indicator_warnings = "\uf071"
 let g:lightline#ale#indicator_errors = "\uf05e"
 let g:lightline#ale#indicator_ok = "\uf00c"
 
-"just ale
+"just ale icons
 let g:ale_sign_error                  = '✘'
 let g:ale_sign_warning                = '⚠'
 highlight ALEErrorSign ctermbg        =NONE ctermfg=red
@@ -428,6 +436,19 @@ let g:limelight_default_coefficient = 0.4
 ""let g:limelight_conceal_ctermfg = 141
 let g:limelight_paragraph_span = 0
 ""let g:limelight_conceal_guifg = '#ECEFF4'
+
+"drp
+let g:presence_auto_update       = 1
+let g:presence_editing_text      = "Editing %s"
+let g:presence_workspace_text    = "Working on %s"
+let g:presence_neovim_image_text = "The One True Text Editor"
+let g:presence_main_image        = "neovim"
+let g:presence_client_id         = "793271441293967371"
+let g:presence_debounce_timeout  = 15
+
+"Goyo
+let g:goyo_width = 85
+""let g:goyo_height = 80
 
 "limelight +goyo
 autocmd! User GoyoEnter Limelight
