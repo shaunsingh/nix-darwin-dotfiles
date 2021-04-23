@@ -14,11 +14,13 @@ call plug#begin('~/.vim/plugged')
 
 "statusline/bufferline
 Plug 'itchyny/lightline.vim'
-Plug 'mengelbrecht/lightline-bufferline'
+""Plug 'mengelbrecht/lightline-bufferline'
+Plug 'romgrk/barbar.nvim'
 
 "icons
 Plug 'ryanoasis/vim-devicons'
 Plug 'bryanmylee/vim-colorscheme-icons'
+Plug 'kyazdani42/nvim-web-devicons'
 
 "fuzzy search + files
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
@@ -51,10 +53,11 @@ Plug 'junegunn/limelight.vim'
 
 "syntax/themes
 Plug 'sheerun/vim-polyglot'
-Plug 'kaicataldo/material.vim', { 'branch': 'main' }
-Plug 'arcticicestudio/nord-vim'
-Plug 'drewtempelmeyer/palenight.vim'
-Plug 'Brettm12345/moonlight.vim'
+""Plug 'kaicataldo/material.vim', { 'branch': 'main' }
+""Plug 'arcticicestudio/nord-vim'
+""Plug 'drewtempelmeyer/palenight.vim'
+""Plug 'Brettm12345/moonlight.vim'
+Plug 'GustavoPrietoP/doom-one.vim'
 Plug 'plasticboy/vim-markdown'
 
 "snake
@@ -96,13 +99,13 @@ endif
 
 "theme info
 set background=dark
-let g:material_theme_style = 'ocean'
+""let g:material_theme_style = 'ocean'
 ""let g:material_terminal_italics = 1
 ""colorscheme moonlight
 ""colorscheme nord
-colorscheme material
-""colorscheme palenight
-syntax on
+""colorscheme material
+colorscheme doom-one
+syntax enable
 
 "set true color
 set t_Co=256
@@ -160,10 +163,10 @@ set nobackup
 "lightline setup
 "colorscheme, bottom bar, coponents, tabs, bottom components
 let g:lightline = {
-    \ 'colorscheme': 'material',
+    \ 'colorscheme': 'ayu_mirage',
     \ 'active': {
     \   'left': [ [ 'mode', 'paste' ],
-    \             [ 'gitbranch', 'readonly', 'filename', 'wordcount', 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_infos', 'linter_ok' ] ]
+    \             ['gitbranch', 'readonly', 'filetype', 'relativepath', 'wordcount', 'modified', 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_infos', 'linter_ok' ] ]
     \ },
     \ 'component_function': {
     \    'filetype': 'MyFiletype',
@@ -171,12 +174,7 @@ let g:lightline = {
     \    'wordcount': 'WordCount',
     \    'gitbranch': 'FugitiveHead'
     \ },
-    \ 'tabline': {
-    \   'left': [ ['buffers'] ],
-    \   'right': [ ['close'] ]
-    \ },
     \ 'component_expand': {
-    \   'buffers': 'lightline#bufferline#buffers',
     \   'linter_checking': 'lightline#ale#checking',
     \   'linter_infos': 'lightline#ale#infos',
     \   'linter_warnings': 'lightline#ale#warnings',
@@ -184,7 +182,6 @@ let g:lightline = {
     \   'linter_ok': 'lightline#ale#ok',
     \ },
     \ 'component_type': {
-    \   'buffers': 'tabsel',
     \   'linter_checking': 'right',
     \   'linter_infos': 'right',
     \   'linter_warnings': 'warning',
@@ -193,7 +190,9 @@ let g:lightline = {
     \ },
     \ 'component': {
     \   'lineinfo': '%3l:%-2v%<',
-    \ }
+    \ },
+    \ 'separator': { 'left': '', 'right': '' },
+    \ 'subseparator': { 'left': '', 'right': '' }
     \ }
 
 "add devicon to lightline
@@ -429,15 +428,14 @@ END
 let g:minimap_width = 10
 let g:minimap_auto_start = 1
 let g:minimap_auto_start_win_enter = 1
-let g:lens#disabled_filetypes = ['minimap', 'Minimap', '-MINIMAP-', 'fzf', 'nvim-tree']
+""let g:lens#disabled_filetypes = ['minimap', 'Minimap', '-MINIMAP-', 'fzf', 'nvim-tree']
 
 "limelight
 let g:limelight_default_coefficient = 0.4
-""let g:limelight_conceal_ctermfg = 141
 let g:limelight_paragraph_span = 0
-""let g:limelight_conceal_guifg = '#ECEFF4'
 
-"drp
+
+"discord presence
 let g:presence_auto_update       = 1
 let g:presence_editing_text      = "Editing %s"
 let g:presence_workspace_text    = "Working on %s"
@@ -446,6 +444,33 @@ let g:presence_main_image        = "neovim"
 let g:presence_client_id         = "793271441293967371"
 let g:presence_debounce_timeout  = 15
 
+"bufferline
+let bufferline = get(g:, 'bufferline', {})
+" Enable/disable animations
+let bufferline.animation = v:false
+" Enable/disable auto-hiding the tab bar when there is a single buffer
+let bufferline.auto_hide = v:false
+"tabnumber
+let bufferline.tabpages = v:true
+" Enable/disable close button
+let bufferline.closable = v:true
+" Enables/disable clickable tabs
+"  - left-click: go to buffer
+"  - middle-click: delete buffer
+let bufferline.clickable = v:true
+" Enable/disable icons
+" if set to 'numbers', will show buffer index in the tabline
+" if set to 'both', will show buffer index and icons in the tabline
+let bufferline.icons = v:true
+" Sets the icon's highlight group.
+" If false, will use nvim-web-devicons colors
+let bufferline.icon_custom_colors = v:false
+" Configure icons on the bufferline.
+let bufferline.icon_separator_active = '▎'
+let bufferline.icon_separator_inactive = '▎'
+let bufferline.icon_close_tab = ''
+let bufferline.icon_close_tab_modified = '●'
+
 "Goyo
 let g:goyo_width = 85
 ""let g:goyo_height = 80
@@ -453,4 +478,5 @@ let g:goyo_width = 85
 "limelight +goyo
 autocmd! User GoyoEnter Limelight
 autocmd! User GoyoLeave Limelight!
+
 
