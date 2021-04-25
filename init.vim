@@ -1,3 +1,5 @@
+set nocompatible
+
 "autoinstall vim plug
 "check for uninstalled plugins
 let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
@@ -15,7 +17,6 @@ call plug#begin('~/.vim/plugged')
 
 "statusline/bufferline
 Plug 'itchyny/lightline.vim'
-Plug 'romgrk/barbar.nvim'
 
 "icons
 Plug 'ryanoasis/vim-devicons'
@@ -23,48 +24,53 @@ Plug 'bryanmylee/vim-colorscheme-icons'
 Plug 'kyazdani42/nvim-web-devicons'
 
 "fuzzy search + files
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
-Plug 'preservim/nerdtree'
-Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight', { 'on': 'NERDTreeToggle' }
 
-"minimap"
-Plug 'wfxr/minimap.vim', {'do': ':!cargo install --locked code-minimap'}
+"minimap // enable when supported in openGL neovide
+""Plug 'wfxr/minimap.vim', {'do': ':!cargo install --locked code-minimap'}
 
 "git
-Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-fugitive', { 'on': [] }
 Plug 'airblade/vim-gitgutter'
 
 "unix commands
-Plug 'tpope/vim-eunuch'
+""Plug 'tpope/vim-eunuch'
 
 "start dash
 Plug 'glepnir/dashboard-nvim'
 
 "distraction free/zen mode
-Plug 'junegunn/goyo.vim'
-Plug 'junegunn/limelight.vim'
+Plug 'junegunn/goyo.vim', { 'on': 'Goyo'}
+Plug 'junegunn/limelight.vim', { 'on': 'Goyo'}
 
-"syntax/themes
-Plug 'sheerun/vim-polyglot'
+"syntax/themes (treesitter replacing polygot)
+""Plug 'sheerun/vim-polyglot'
+"Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
 ""Plug 'kaicataldo/material.vim', { 'branch': 'main' }
-""Plug 'arcticicestudio/nord-vim'
-""Plug 'drewtempelmeyer/palenight.vim'
+Plug 'arcticicestudio/nord-vim'
+"Plug 'drewtempelmeyer/palenight.vim'
 ""Plug 'Brettm12345/moonlight.vim'
-Plug 'GustavoPrietoP/doom-one.vim'
-Plug 'plasticboy/vim-markdown'
+""Plug 'GustavoPrietoP/doom-one.vim'
+
+"markdown writing
+Plug 'kana/vim-textobj-user', {'for': ['markdown', 'text']}
+Plug 'preservim/vim-textobj-quote', {'for': ['markdown', 'text']}
+Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
 
 "lines on indents + auto pairs+ multiple cursors
-Plug 'Yggdroot/indentLine'
+Plug 'Yggdroot/indentLine', { 'on': 'IndentLinesToggle' }
 "Plug 'jiangmiao/auto-pairs'
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 
 "linting + lsp
-Plug 'dense-analysis/ale'
-Plug 'maximbaz/lightline-ale'
+Plug 'dense-analysis/ale', { 'on':  'ALEToggle' }
+Plug 'maximbaz/lightline-ale', { 'on':  'ALEToggle' }
 
 "rich presence
-Plug 'andweeb/presence.nvim'
+""Plug 'andweeb/presence.nvim'
 call plug#end()
 
 "set true colors for term + vim
@@ -80,18 +86,19 @@ set background=dark
 ""let g:material_theme_style = 'ocean'
 ""let g:material_terminal_italics = 1
 ""colorscheme moonlight
-""colorscheme nord
+colorscheme nord
 ""colorscheme material
-colorscheme doom-one
+""colorscheme doom-one
 
 "enable syntax
-syntax enable
+syntax on
 
 "set 256 colors
 set t_Co=256
 
 "Neovide + gui
 set guifont=SFMono\ Nerd\ Font:h13
+""set guifont=FiraCode\ Nerd\ Font:h13
 let g:neovide_cursor_antialiasing=v:false
 let g:neovide_fullscreen=v:true
 let g:neovide_refresh_rate=60
@@ -102,11 +109,15 @@ hi VertSplit ctermfg=1 ctermbg=NONE cterm=NONE
 set fillchars+=vert:┊
 
 "highlight current number
-""set number
 set number relativenumber
+""set number
 set cursorline
-highlight clear CursorLine
-highlight CursorLineNR ctermbg=red
+highlight CursorLine cterm=NONE ctermbg=NONE ctermfg=NONE guibg=NONE guifg=NONE
+hi clear CursorLine
+"Reset cursorline everytime colorscheme updates because stupid vim
+augroup CLClear
+    autocmd! ColorScheme * hi clear CursorLine
+augroup END
 
 "auto switch number depending on mode + show numbers in Goyo command mode
 augroup numbertoggle
@@ -143,19 +154,23 @@ set nobackup
 
 "lightline setup
 "colorscheme, active, components, ale, seperators
+"Colors, [doom, moonlight = ayu_mirage], [nord = nord], [material ocean =
+"material]
+"
 let g:lightline = {
-    \ 'colorscheme': 'ayu_mirage',
+    \ 'colorscheme': 'nord',
     \ 'active': {
     \   'left': [ [ 'mode', 'paste' ],
-    \             ['gitbranch', 'readonly', 'filetype', 'relativepath', 'wordcount', 'modified', 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_infos', 'linter_ok' ] ],
-    \   'right': [ [ 'lineinfo', 'percent' ],
-    \              [ 'fileformat', 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_infos', 'linter_ok' ]]
+    \             ['gitbranch',  'filetype', 'filename', 'wordcount', 'modified', 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_infos', 'linter_ok' ] ],
+    \   'right': [ ['fileformat'],
+    \              [ 'relativepath','lineinfo', 'readonly', 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_infos', 'linter_ok' ]]
     \ },
     \ 'component_function': {
     \    'filetype': 'MyFiletype',
     \    'fileformat': 'MyFileformat',
     \    'wordcount': 'WordCount',
-    \    'gitbranch': 'FugitiveHead'
+    \    'gitbranch': 'FugitiveHead',
+    \    'readonly': 'LightlineReadonly',
     \ },
     \ 'component_expand': {
     \   'linter_checking': 'lightline#ale#checking',
@@ -186,6 +201,11 @@ function! MyFileformat()
     return winwidth(0) > 70 ? (&fileformat . ' ' . WebDevIconsGetFileFormatSymbol()) : ''
 endfunction
 
+"create function to get read only
+function! LightlineReadonly()
+  return &readonly && &filetype !=# 'help' ? 'RO' : ''
+endfunction
+
 "create function to get workdcount
 function! WordCount()
     let currentmode = mode()
@@ -213,22 +233,38 @@ function! WordCount()
         call setpos('.', l:old_position)
         return b:wordcount
     else
+      return b:wordcount
+    endif
+endfunction
 
-"Make fzf float
 let $FZF_DEFAULT_COMMAND =  "find * -path '*/\.*' -prune -o -path 'node_modules/**' -prune -o -path 'target/**' -prune -o -path 'dist/**' -prune -o  -type f -print -o -type l -print 2> /dev/null"
-let $FZF_DEFAULT_OPTS=' --color=dark --color=fg:15,bg:-1,hl:1,fg+:#ffffff,bg+:0,hl+:1 --color=info:0,prompt:0,pointer:12,marker:4,spinner:11,header:-1 --layout=reverse  --margin=1,4'
+
+"doom
+""let $FZF_DEFAULT_OPTS=' --color=dark --color=fg:#bbc2cf,bg:#3c4557,hl:#baacff,fg+:#bbc2cf,bg+:#3c4557,hl+:#5B6268 --color=info:#3c4557,prompt:#3c4557,pointer:#c678dd,marker:#3c4557,spinner:#3c4557,header:-1 --layout=reverse  --margin=1,4'
+
+"nord
+let $FZF_DEFAULT_OPTS=' --color=dark --color=fg:#bbc2cf,bg:#414C60,hl:#baacff,fg+:#bbc2cf,bg+:#414C60,hl+:#5B6268 --color=info:#414C60,prompt:#414C60,pointer:#c678dd,marker:#414C60,spinner:#414C60,header:-1 --layout=reverse  --margin=1,4'
+
 let g:fzf_layout = { 'window': 'call FloatingFZF()' }
 
-"hardcoded atm sorry
+"nord but with an annoying preview
+""let g:height = float2nr(&lines * 0.9)
+""let g:width = float2nr(&columns * 0.95)
+""let g:preview_width = float2nr(&columns * 0.7)
+""let g:fzf_buffers_jump = 1
+""let $FZF_DEFAULT_OPTS=" --color=dark --color=fg:#bbc2cf,bg:#414C60,hl:#baacff,fg+:#bbc2cf,bg+:#414C60,hl+:#5B6268 --color=info:#414C60,prompt:#414C60,pointer:#c678dd,marker:#414C60,spinner:#414C60,header:-1 --layout=reverse  --margin=1,4 --preview 'if file -i {}|grep -q binary; then file -b {}; else cat --style=changes --color always --line-range :40 {}; fi' --preview-window right:" . g:preview_width
+""let g:fzf_layout = { 'window': 'call FloatingFZF(' . g:width . ',' . g:height . ')' }
+
+""hardcoded atm sorry
 function! FloatingFZF()
   let buf = nvim_create_buf(v:false, v:true)
   call setbufvar(buf, '&signcolumn', 'no')
 
   let height = float2nr(30)
-  let width = float2nr(150)
+  let width = float2nr(135)
   let horizontal = float2nr((&columns - width) / 2)
   ""let vertical = 1
-  let vertical = 12
+  let vertical = float2nr((&lines - height) / 2)
 
   let opts = {
         \ 'relative': 'editor',
@@ -240,8 +276,6 @@ function! FloatingFZF()
         \ }
 
   call nvim_open_win(buf, v:true, opts)
-endfunction        return b:wordcount
-    endif
 endfunction
 
 " Floating Term
@@ -283,7 +317,7 @@ function! FloatTerm(...)
     let s:float_term_win = nvim_open_win(buf, v:true, opts)
 
     " Styling
-  hi FloatWinBorder guifg=#87bb7c
+  hi FloatWinBorder guifg=#bbc2cf
   call setwinvar(s:float_term_border_win, '&winhl', 'Normal:FloatWinBorder')
   call setwinvar(s:float_term_win, '&winhl', 'Normal:Normal')
 
@@ -301,10 +335,10 @@ endfunction
 "map FloatermNew to new terminal
 command FloatermNew call FloatTerm()
 
-"always mouse available
-if has('mouse')
-  set mouse=a
-endif
+""always mouse available
+"if has('mouse')
+"  set mouse=a
+"endif
 
 "fzf
 nnoremap <silent> <C-p> :call fzf#vim#files('.', {'options': '--prompt ""'})<CR>
@@ -317,12 +351,14 @@ inoremap { {}<left>
 inoremap {<CR> {<CR>}<ESC>O
 inoremap {;<CR> {<CR>};<ESC>O
 
+"remove arrow keys from normal mode (forces to use hjkl)
+noremap <Up> <Nop>
+noremap <Down> <Nop>
+noremap <Left> <Nop>
+noremap <Right> <Nop>
 
 "jk to exit instead
-" esc in insert mode
 inoremap jk <esc>
-
-" esc in command mode
 cnoremap jk <C-C>
 " Note: In command mode mappings to esc run the command for some odd
 " historical vi compatibility reason. We use the alternate method of
@@ -372,23 +408,23 @@ endif
 endfunc
 
 "lightline ale
-let g:lightline#ale#indicator_checking = "\uf110"
-let g:lightline#ale#indicator_infos = "\uf129"
-let g:lightline#ale#indicator_warnings = "\uf071"
-let g:lightline#ale#indicator_errors = "\uf05e"
-let g:lightline#ale#indicator_ok = "\uf00c"
+let g:lightline#ale#indicator_checking = "\uf110 "
+let g:lightline#ale#indicator_infos = "\uf129 "
+let g:lightline#ale#indicator_warnings = "\uf071 "
+let g:lightline#ale#indicator_errors = "\uf05e "
+let g:lightline#ale#indicator_ok = "\uf00c "
 
 "just ale icons
-let g:ale_sign_error                  = '✘'
-let g:ale_sign_warning                = '⚠'
-highlight ALEErrorSign ctermbg        =NONE ctermfg=red
-highlight ALEWarningSign ctermbg      =NONE ctermfg=yellow
+let g:ale_sign_error = '×'
+let g:ale_sign_warning = '»'
+highlight ALEErrorSign ctermbg=NONE ctermfg=red
+highlight ALEWarningSign ctermbg=NONE ctermfg=yellow
 
 let g:ale_linters = {
             \   'mail': ['proselint'],
-            \   'markdown': ['proselint'],
-            \   'text': ['proselint'],
-	    \   'python': ['pyls'],
+            \   'markdown': ['proselint', 'languagetool'],
+            \   'text': ['proselint', 'languagetool'],
+	    \   'python': ['pyls', 'autoimport', 'flake8', 'yapf'],
             \   }
 let g:ale_fixers = {
 \   '*':          ['remove_trailing_lines', 'trim_whitespace'],
@@ -397,11 +433,6 @@ let g:ale_fixers = {
 let g:ale_lint_on_text_changed = 'never'
 let g:ale_fix_on_save = 1
 let g:ale_lint_on_save = 1
-
-"limelight for goyo
-let g:limelight_default_coefficient = 0.4
-let g:limelight_conceal_ctermfg = 141
-let g:limelight_paragraph_span = 0
 
 "make cursor line -> block
 let &t_SI = "\<Esc>]50;CursorShape=1\x7"
@@ -445,6 +476,8 @@ let NERDTreeMinimalUI=1
 let NERDTreeDirArrows=1
 let g:NERDTreeDirArrowExpandable = '»'
 let g:NERDTreeDirArrowCollapsible = '«'
+"let me see dotfiles
+let NERDTreeShowHidden=1
 
 " If another buffer tries to replace NERDTree, put it in the other window, and bring back NERDTree.
 autocmd BufEnter * if bufname('#') =~ 'NERD_tree_\d\+' && bufname('%') !~ 'NERD_tree_\d\+' && winnr('$') > 1 |
@@ -474,64 +507,58 @@ let g:dashboard_custom_header =<< trim END
  `''                                                                      ''`
 END
 
+
 "minimap
 let g:minimap_width = 10
 let g:minimap_auto_start = 1
 let g:minimap_auto_start_win_enter = 1
 
 "limelight
-let g:limelight_default_coefficient = 0.4
+let g:limelight_default_coefficient = 0.7
 let g:limelight_paragraph_span = 0
 
 "discord presence
-let g:presence_auto_update       = 1
-let g:presence_editing_text      = "Editing %s"
-let g:presence_workspace_text    = "Working on %s"
-let g:presence_neovim_image_text = "The One True Text Editor"
-let g:presence_main_image        = "neovim"
-let g:presence_client_id         = "793271441293967371"
-let g:presence_debounce_timeout  = 15
-
-"bufferline
-let bufferline = get(g:, 'bufferline', {})
-" Enable/disable animations
-let bufferline.animation = v:false
-" Enable/disable auto-hiding the tab bar when there is a single buffer
-let bufferline.auto_hide = v:false
-"tabnumber
-let bufferline.tabpages = v:true
-" Enable/disable close button
-let bufferline.closable = v:true
-" Enables/disable clickable tabs
-"  - left-click: go to buffer
-"  - middle-click: delete buffer
-let bufferline.clickable = v:true
-" Enable/disable icons
-" if set to 'numbers', will show buffer index in the tabline
-" if set to 'both', will show buffer index and icons in the tabline
-let bufferline.icons = v:true
-" Sets the icon's highlight group.
-" If false, will use nvim-web-devicons colors
-let bufferline.icon_custom_colors = v:false
-" Configure icons on the bufferline.
-let bufferline.icon_separator_active = '▎'
-let bufferline.icon_separator_inactive = '▎'
-let bufferline.icon_close_tab = ''
-let bufferline.icon_close_tab_modified = '●'
+"let g:presence_auto_update       = 1
+"let g:presence_editing_text      = "Editing %s"
+"let g:presence_workspace_text    = "Working on %s"
+"let g:presence_neovim_image_text = "The One True Text Editor"
+"let g:presence_main_image        = "neovim"
+"let g:presence_client_id         = "793271441293967371"
+"let g:presence_debounce_timeout  = 15
 
 "Vim multi-cursors
-"map mouse (ctrl click = cursor)
-nmap   <C-LeftMouse>         <Plug>(VM-Mouse-Cursor)
-nmap   <C-RightMouse>        <Plug>(VM-Mouse-Word)
-nmap   <M-C-RightMouse>      <Plug>(VM-Mouse-Column)
 "use alt instead of ctrl
 let g:VM_maps = {}
 let g:VM_default_mappings = 0
 let g:VM_maps["Add Cursor Down"]             = '<A-Down>'
 let g:VM_maps["Add Cursor Up"]               = '<A-Up>'
 
+"vim markdown
+let g:vim_markdown_folding_disabled = 1
+"quote stuff (curly instead of normal "", qc to autocorrect)
+filetype plugin on       " may already be in your .vimrc
+nnoremap <silent> qc <Plug>ReplaceWithCurly
+
+augroup textobj_quote
+  autocmd!
+  autocmd FileType markdown call textobj#quote#init()
+  autocmd FileType textile call textobj#quote#init()
+  autocmd FileType text call textobj#quote#init({'educate': 0})
+augroup END
+
 "Goyo
-let g:goyo_width = 85
+""let g:goyo_width = 85
+
+"lazy load vim-fuigitive
+command! Gstatus call LazyLoadFugitive('Gstatus')
+command! Gdiff call LazyLoadFugitive('Gdiff')
+command! Glog call LazyLoadFugitive('Glog')
+command! Gblame call LazyLoadFugitive('Gblame')
+function! LazyLoadFugitive(cmd)
+  call plug#load('vim-fugitive')
+  call fugitive#detect(expand('%:p'))
+  exe a:cmd
+endfunction
 
 "limelight +goyo
 autocmd! User GoyoEnter Limelight
