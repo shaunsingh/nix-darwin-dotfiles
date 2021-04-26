@@ -7,82 +7,69 @@ if empty(glob(data_dir . '/autoload/plug.vim'))
   silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
-
 "auto install plugins
 autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
   \| PlugInstall --sync | source $MYVIMRC
 \| endif
 
-call plug#begin('~/.vim/plugged')
 
+call plug#begin('~/.vim/plugged')
 "statusline/bufferline
 Plug 'itchyny/lightline.vim'
 Plug 'ojroques/vim-scrollstatus'
-
 "icons
 Plug 'ryanoasis/vim-devicons'
 ""Plug 'kyazdani42/nvim-web-devicons'
-
 "fuzzy search + files
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight', { 'on': 'NERDTreeToggle' }
-
 "minimap // enable when supported in openGL neovide
 ""Plug 'wfxr/minimap.vim', {'do': ':!cargo install --locked code-minimap'}
-
 "git
 Plug 'tpope/vim-fugitive', { 'on': [] }
 Plug 'airblade/vim-gitgutter', { 'on': 'GitGutterToggle' }
-
 "unix commands
 ""Plug 'tpope/vim-eunuch'
-
 "start dash + give a tip
 Plug 'glepnir/dashboard-nvim'
-
 "distraction free/zen mode
-Plug 'junegunn/goyo.vim', { 'on': 'Goyo'}
-Plug 'junegunn/limelight.vim', { 'on': 'Goyo'}
-
+Plug 'kdav5758/TrueZen.nvim'
+""Plug 'junegunn/goyo.vim', { 'on': 'Goyo'}
+Plug 'junegunn/limelight.vim'
 "syntax/themes (treesitter replacing polygot)
 ""Plug 'arcticicestudio/nord-vim'
 "Plug 'drewtempelmeyer/palenight.vim'
 ""Plug 'Brettm12345/moonlight.vim'
 Plug 'GustavoPrietoP/doom-one.vim'
 ""Plug 'marko-cerovac/material.nvim'
-
 "markdown writing
 Plug 'kana/vim-textobj-user', {'for': ['markdown', 'text']}
 Plug 'preservim/vim-textobj-quote', {'for': ['markdown', 'text']}
 Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
-
+"kotlin support
+Plug 'udalov/kotlin-vim', {'for': 'kotlin'}
 "lines on indents + auto pairs+ multiple cursors
 Plug 'Yggdroot/indentLine', { 'on': 'IndentLinesToggle' }
 "Plug 'jiangmiao/auto-pairs'
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
-
 "linting + lsp
 "Plug 'dense-analysis/ale', { 'on':  'ALEToggle' }
 "Plug 'maximbaz/lightline-ale', { 'on':  'ALEToggle' }
 Plug 'dense-analysis/ale'
 Plug 'maximbaz/lightline-ale'
-
 "rich presence
 ""Plug 'andweeb/presence.nvim'
 call plug#end()
+
 
 "set true colors for term + vim
 if has('termguicolors')
   set termguicolors
 endif
 if (has('nvim'))
-  let $NVIM_TUI_ENABLE_TRUE_COLOR = 1
-endif
-
-"theme info
-set background=dark
+  let $NVIM_TUI_ENABLE_TRUE_COLOR = 1 endif "theme info set background=dark
 ""let g:material_style = 'deep ocean'
 ""let g:material_terminal_italics = 1
 ""colorscheme moonlight
@@ -90,7 +77,7 @@ set background=dark
 colorscheme doom-one
 
 "material theme
-"let g:material_italic_comments = v:true
+"let g:material_italic_comment = v:true
 "let g:material_italic_keywords = v:true
 "let g:material_italic_functions = v:true
 "let g:material_italic_variables = v:true
@@ -99,8 +86,7 @@ colorscheme doom-one
 "colorscheme material
 
 "enable syntax
-syntax on
-
+syntax enable
 "set 256 colors
 set t_Co=256
 
@@ -135,18 +121,27 @@ augroup numbertoggle
   autocmd BufLeave,FocusLost,InsertEnter   * set norelativenumber
 augroup END
 
-"various settings
-set autoindent                 " Minimal automatic indenting for any filetype.
-set backspace=indent,eol,start " Proper backspace behavior.
-""set hidden                     " Possibility to have more than one unsaved buffers.
-set incsearch                  " Incremental search, hit `<CR>` to stop.
-set ruler                      " Shows the current line number at the bottom-right
-set wildmenu                   " Better autcomplete
-set wildmode=longest,list,full
+"set tab to just expand spaces
+set tabstop=4
+set softtabstop=4
+set expandtab
+
+"show last command
+set showcmd
+
+"indent based on filetypes
+filetype indent on
+
+"only draw when you need to
+set lazyredraw
+
+"highlight matching characters + search stuff
+set showmatch
+set incsearch
+set hlsearch
 
 " Indents word-wrapped lines as much as the 'parent' line
 set breakindent
-" Ensures word-wrap does not split words
 set formatoptions=l
 set lbr
 
@@ -157,22 +152,117 @@ set noshowmode
 "always display taline and bufferlie"
 set laststatus=2
 set showtabline=2
-"no swap files, no backus
 set noswapfile
 set nobackup
 
+"set autoindent
+set autoindent
+set shiftwidth=4
+
+"enable the mouse
+set mouse=a
+
+"fzf
+nnoremap <silent> <C-p> :call fzf#vim#files('.', {'options': '--prompt ""'})<CR>
+
+"basic autopair
+inoremap " ""<left>
+inoremap ( ()<left>
+inoremap [ []<left>
+inoremap { {}<left>
+inoremap {<CR> {<CR>}<ESC>O
+inoremap {;<CR> {<CR>};<ESC>O
+
+"remove arrow keys from normal mode (forces to use hjkl)
+noremap <Up> <Nop>
+noremap <Down> <Nop>
+noremap <Left> <Nop>
+noremap <Right> <Nop>
+
+"jk to exit instead
+inoremap jk <esc>
+cnoremap jk <C-C>
+" Note: In command mode mappings to esc run the command for some odd
+" historical vi compatibility reason. We use the alternate method of
+" existing which is Ctrl-C
+
+"move by visual line not actal line
+nnoremap j gj
+nnoremap k gk
+
+"F12 for cool mode"
+nnoremap X :TZAtaraxis<CR>
+
+"use semicolon as colon in normal mode
+nnoremap ; :
+"leader keys
+let mapleader="g"
+
+"shortcuts to open config
+nnoremap <leader>ev :vsp $MYVIMRC<CR>
+nnoremap <leader>ez :vsp ~/.zshrc<CR>
+nnoremap <leader>sv :source $MYVIMRC<CR>
+
+"save session
+nnoremap <leader>s :mksession<CR>
+
+"basic vim wm (ctrl + hjkl to move/create)
+function! WinMove(key)
+    let t:curwin = winnr()
+    exec "wincmd ".a:key
+    if (t:curwin == winnr())
+        if (match(a:key,'[jk]'))
+            wincmd v
+        else
+            wincmd s
+        endif
+        exec "wincmd ".a:key
+    endif
+endfunction
+nnoremap <silent> <C-h> :call WinMove('h')<CR>
+nnoremap <silent> <C-j> :call WinMove('j')<CR>
+nnoremap <silent> <C-k> :call WinMove('k')<CR>
+nnoremap <silent> <C-l> :call WinMove('l')<CR>
+
+"f5 to run current filetype
+map <F5> :call CompileRunGcc()<CR>
+func! CompileRunGcc()
+exec "w"
+if &filetype == 'c'
+exec "!gcc % -o %<"
+exec "!time ./%<"
+elseif &filetype == 'cpp'
+exec "!g++ % -o %<"
+exec "!time ./%<"
+elseif &filetype == 'java'
+exec "!javac %"
+exec "!time java -cp %:p:h %:t:r"
+elseif &filetype == 'sh'
+exec "!time bash %"
+elseif &filetype == 'python'
+exec "!time python3 %"
+elseif &filetype == 'html'
+exec "!firefox % &"
+elseif &filetype == 'go'
+exec "!go build %<"
+exec "!time go run %"
+endif
+endfunc
+"tell vim backups to go in /tmp
+set backup
+set backupdir=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
+set backupskip=/tmp/*,/private/tmp/*
+set directory=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
+set writebackup
+
 "lightline setup
-"colorscheme, active, components, ale, seperators
-"Colors, [doom, moonlight = ayu_mirage], [nord = nord], [material ocean =
-"material]
-"
 let g:lightline = {
     \ 'colorscheme': 'ayu_mirage',
     \ 'active': {
     \   'left': [ [ 'mode', 'paste' ],
-    \             ['gitbranch',  'filetype', 'filename', 'wordcount', 'modified', 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_infos', 'linter_ok' ] ],
+    \             ['gitbranch', 'filetype', 'filename', 'wordcount', 'modified', 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_infos', 'linter_ok' ] ],
     \   'right': [ ['fileformat'],
-    \              [ 'relativepath', 'readonly', 'percent', 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_infos', 'linter_ok' ]]
+    \              [ 'readonly', 'percent', 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_infos', 'linter_ok' ]]
     \ },
     \ 'component_function': {
     \    'filetype': 'MyFiletype',
@@ -195,9 +285,6 @@ let g:lightline = {
     \   'linter_warnings': 'warning',
     \   'linter_errors': 'error',
     \   'linter_ok': 'right',
-    \ },
-    \ 'component': {
-    \   'lineinfo': '%3l:%-2v%<',
     \ },
     \ 'separator': { 'left': '', 'right': '' },
     \ 'subseparator': { 'left': '', 'right': '' }
@@ -247,6 +334,7 @@ function! WordCount()
     endif
 endfunction
 
+
 let $FZF_DEFAULT_COMMAND =  "find * -path '*/\.*' -prune -o -path 'node_modules/**' -prune -o -path 'target/**' -prune -o -path 'dist/**' -prune -o  -type f -print -o -type l -print 2> /dev/null"
 
 "doom
@@ -260,7 +348,7 @@ let $FZF_DEFAULT_OPTS=' --color=dark --color=fg:#bbc2cf,bg:#3c4557,hl:#baacff,fg
 
 let g:fzf_layout = { 'window': 'call FloatingFZF()' }
 
-""hardcoded atm sorry
+""function to create a floating fzf window
 function! FloatingFZF()
   let buf = nvim_create_buf(v:false, v:true)
   call setbufvar(buf, '&signcolumn', 'no')
@@ -340,77 +428,6 @@ endfunction
 "map FloatermNew to new terminal
 command FloatermNew call FloatTerm()
 
-""always mouse available
-"if has('mouse')
-"  set mouse=a
-"endif
-
-"fzf
-nnoremap <silent> <C-p> :call fzf#vim#files('.', {'options': '--prompt ""'})<CR>
-
-"basic autopair
-inoremap " ""<left>
-inoremap ( ()<left>
-inoremap [ []<left>
-inoremap { {}<left>
-inoremap {<CR> {<CR>}<ESC>O
-inoremap {;<CR> {<CR>};<ESC>O
-
-"remove arrow keys from normal mode (forces to use hjkl)
-noremap <Up> <Nop>
-noremap <Down> <Nop>
-noremap <Left> <Nop>
-noremap <Right> <Nop>
-
-"jk to exit instead
-inoremap jk <esc>
-cnoremap jk <C-C>
-" Note: In command mode mappings to esc run the command for some odd
-" historical vi compatibility reason. We use the alternate method of
-" existing which is Ctrl-C
-
-"basic vim wm (ctrl + hjkl to move/create)
-function! WinMove(key)
-    let t:curwin = winnr()
-    exec "wincmd ".a:key
-    if (t:curwin == winnr())
-        if (match(a:key,'[jk]'))
-            wincmd v
-        else
-            wincmd s
-        endif
-        exec "wincmd ".a:key
-    endif
-endfunction
-nnoremap <silent> <C-h> :call WinMove('h')<CR>
-nnoremap <silent> <C-j> :call WinMove('j')<CR>
-nnoremap <silent> <C-k> :call WinMove('k')<CR>
-nnoremap <silent> <C-l> :call WinMove('l')<CR>
-
-"f5 to run current filetype
-map <F5> :call CompileRunGcc()<CR>
-func! CompileRunGcc()
-exec "w"
-if &filetype == 'c'
-exec "!gcc % -o %<"
-exec "!time ./%<"
-elseif &filetype == 'cpp'
-exec "!g++ % -o %<"
-exec "!time ./%<"
-elseif &filetype == 'java'
-exec "!javac %"
-exec "!time java -cp %:p:h %:t:r"
-elseif &filetype == 'sh'
-exec "!time bash %"
-elseif &filetype == 'python'
-exec "!time python3 %"
-elseif &filetype == 'html'
-exec "!firefox % &"
-elseif &filetype == 'go'
-exec "!go build %<"
-exec "!time go run %"
-endif
-endfunc
 
 "lightline ale
 let g:lightline#ale#indicator_checking = "\uf110 "
@@ -569,6 +586,63 @@ function! LazyLoadFugitive(cmd)
   exe a:cmd
 endfunction
 
-"limelight +goyo
-autocmd! User GoyoEnter Limelight
-autocmd! User GoyoLeave Limelight!
+"zen-mode settings
+lua << EOF
+-- setup for TrueZen.nvim
+require("true-zen").setup({
+    true_false_commands = false,
+	cursor_by_mode = false,
+	before_minimalist_mode_shown = false,
+	before_minimalist_mode_hidden = false,
+	after_minimalist_mode_shown = false,
+	after_minimalist_mode_hidden = false,
+	unknown_bkg_color_fix = true,
+	bottom = {
+		hidden_laststatus = 0,
+		hidden_ruler = false,
+		hidden_showmode = false,
+		hidden_showcmd = true,
+		hidden_cmdheight = 1,
+
+		shown_laststatus = 2,
+		shown_ruler = true,
+		shown_showmode = false,
+		shown_showcmd = false,
+		shown_cmdheight = 1
+	},
+	top = {
+		hidden_showtabline = 0,
+
+		shown_showtabline = 2
+	},
+	left = {
+		hidden_number = false,
+		hidden_relativenumber = false,
+		hidden_signcolumn = "yes",
+
+		shown_number = true,
+		shown_relativenumber = false,
+		shown_signcolumn = "yes"
+	},
+	ataraxis = {
+		just_do_it_for_me = false,
+		left_padding = 40,
+		right_padding = 40,
+		top_padding = 0,
+		bottom_padding = 0
+	},
+	focus = {
+		margin_of_error = 5
+	},
+	integrations = {
+		integration_galaxyline = false,
+		integration_vim_airline = false,
+		integration_vim_powerline = false,
+		integration_tmux = false,
+		integration_express_line = false,
+		integration_gitgutter = true,
+		integration_vim_signify = false,
+		integration_limelight = true
+	}
+})
+EOF
