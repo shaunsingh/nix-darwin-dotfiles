@@ -572,5 +572,3 @@ endfunction
 "limelight +goyo
 autocmd! User GoyoEnter Limelight
 autocmd! User GoyoLeave Limelight!
-
-autocmd! User GoyoLeave Limelight!
