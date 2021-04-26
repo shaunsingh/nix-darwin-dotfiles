@@ -39,10 +39,10 @@ Plug 'kdav5758/TrueZen.nvim'
 ""Plug 'junegunn/goyo.vim', { 'on': 'Goyo'}
 Plug 'junegunn/limelight.vim'
 "syntax/themes (treesitter replacing polygot)
-""Plug 'arcticicestudio/nord-vim'
+Plug 'arcticicestudio/nord-vim'
 "Plug 'drewtempelmeyer/palenight.vim'
 ""Plug 'Brettm12345/moonlight.vim'
-Plug 'GustavoPrietoP/doom-one.vim'
+""Plug 'GustavoPrietoP/doom-one.vim'
 ""Plug 'marko-cerovac/material.nvim'
 "markdown writing
 Plug 'kana/vim-textobj-user', {'for': ['markdown', 'text']}
@@ -52,6 +52,7 @@ Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
 Plug 'udalov/kotlin-vim', {'for': 'kotlin'}
 "lines on indents + auto pairs+ multiple cursors
 Plug 'Yggdroot/indentLine', { 'on': 'IndentLinesToggle' }
+Plug 'lukas-reineke/indent-blankline.nvim', { 'on': 'IndentLinesToggle'}
 "Plug 'jiangmiao/auto-pairs'
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 "linting + lsp
@@ -69,12 +70,16 @@ if has('termguicolors')
   set termguicolors
 endif
 if (has('nvim'))
-  let $NVIM_TUI_ENABLE_TRUE_COLOR = 1 endif "theme info set background=dark
+  let $NVIM_TUI_ENABLE_TRUE_COLOR = 1
+endif
+
+"Theme Info
+set background=dark
 ""let g:material_style = 'deep ocean'
 ""let g:material_terminal_italics = 1
 ""colorscheme moonlight
-""colorscheme nord
-colorscheme doom-one
+colorscheme nord
+""colorscheme doom-one
 
 "material theme
 "let g:material_italic_comment = v:true
@@ -257,7 +262,7 @@ set writebackup
 
 "lightline setup
 let g:lightline = {
-    \ 'colorscheme': 'ayu_mirage',
+    \ 'colorscheme': 'nord',
     \ 'active': {
     \   'left': [ [ 'mode', 'paste' ],
     \             ['gitbranch', 'filetype', 'filename', 'wordcount', 'modified', 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_infos', 'linter_ok' ] ],
@@ -338,10 +343,10 @@ endfunction
 let $FZF_DEFAULT_COMMAND =  "find * -path '*/\.*' -prune -o -path 'node_modules/**' -prune -o -path 'target/**' -prune -o -path 'dist/**' -prune -o  -type f -print -o -type l -print 2> /dev/null"
 
 "doom
-let $FZF_DEFAULT_OPTS=' --color=dark --color=fg:#bbc2cf,bg:#3c4557,hl:#baacff,fg+:#bbc2cf,bg+:#3c4557,hl+:#5B6268 --color=info:#3c4557,prompt:#3c4557,pointer:#c678dd,marker:#3c4557,spinner:#3c4557,header:-1 --layout=reverse  --margin=1,4'
+""let $FZF_DEFAULT_OPTS=' --color=dark --color=fg:#bbc2cf,bg:#3c4557,hl:#baacff,fg+:#bbc2cf,bg+:#3c4557,hl+:#5B6268 --color=info:#3c4557,prompt:#3c4557,pointer:#c678dd,marker:#3c4557,spinner:#3c4557,header:-1 --layout=reverse  --margin=1,4'
 
 "nord
-""let $FZF_DEFAULT_OPTS=' --color=dark --color=fg:#bbc2cf,bg:#414C60,hl:#baacff,fg+:#bbc2cf,bg+:#414C60,hl+:#5B6268 --color=info:#414C60,prompt:#414C60,pointer:#c678dd,marker:#414C60,spinner:#414C60,header:-1 --layout=reverse  --margin=1,4'
+let $FZF_DEFAULT_OPTS=' --color=dark --color=fg:#bbc2cf,bg:#414C60,hl:#baacff,fg+:#bbc2cf,bg+:#414C60,hl+:#5B6268 --color=info:#414C60,prompt:#414C60,pointer:#c678dd,marker:#414C60,spinner:#414C60,header:-1 --layout=reverse  --margin=1,4'
 
 "material ocean
 ""let $FZF_DEFAULT_OPTS=' --color=dark --color=fg:#bbc2cf,bg:#10141c,hl:#baacff,fg+:#bbc2cf,bg+:#10141c,hl+:#5B6268 --color=info:#10141c,prompt:#10141c,pointer:#c678dd,marker:#10141c,spinner:#10141c,header:-1 --layout=reverse  --margin=1,4'
@@ -642,7 +647,7 @@ require("true-zen").setup({
 		integration_express_line = false,
 		integration_gitgutter = true,
 		integration_vim_signify = false,
-		integration_limelight = true
+		integration_limelight = false
 	}
 })
 EOF
