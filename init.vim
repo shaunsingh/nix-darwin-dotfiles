@@ -17,11 +17,11 @@ call plug#begin('~/.vim/plugged')
 
 "statusline/bufferline
 Plug 'itchyny/lightline.vim'
+Plug 'ojroques/vim-scrollstatus'
 
 "icons
 Plug 'ryanoasis/vim-devicons'
-Plug 'bryanmylee/vim-colorscheme-icons'
-Plug 'kyazdani42/nvim-web-devicons'
+""Plug 'kyazdani42/nvim-web-devicons'
 
 "fuzzy search + files
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
@@ -34,12 +34,12 @@ Plug 'tiagofumo/vim-nerdtree-syntax-highlight', { 'on': 'NERDTreeToggle' }
 
 "git
 Plug 'tpope/vim-fugitive', { 'on': [] }
-Plug 'airblade/vim-gitgutter'
+Plug 'airblade/vim-gitgutter', { 'on': 'GitGutterToggle' }
 
 "unix commands
 ""Plug 'tpope/vim-eunuch'
 
-"start dash
+"start dash + give a tip
 Plug 'glepnir/dashboard-nvim'
 
 "distraction free/zen mode
@@ -47,13 +47,11 @@ Plug 'junegunn/goyo.vim', { 'on': 'Goyo'}
 Plug 'junegunn/limelight.vim', { 'on': 'Goyo'}
 
 "syntax/themes (treesitter replacing polygot)
-""Plug 'sheerun/vim-polyglot'
-"Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
-""Plug 'kaicataldo/material.vim', { 'branch': 'main' }
-Plug 'arcticicestudio/nord-vim'
+""Plug 'arcticicestudio/nord-vim'
 "Plug 'drewtempelmeyer/palenight.vim'
 ""Plug 'Brettm12345/moonlight.vim'
-""Plug 'GustavoPrietoP/doom-one.vim'
+Plug 'GustavoPrietoP/doom-one.vim'
+""Plug 'marko-cerovac/material.nvim'
 
 "markdown writing
 Plug 'kana/vim-textobj-user', {'for': ['markdown', 'text']}
@@ -66,8 +64,10 @@ Plug 'Yggdroot/indentLine', { 'on': 'IndentLinesToggle' }
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 
 "linting + lsp
-Plug 'dense-analysis/ale', { 'on':  'ALEToggle' }
-Plug 'maximbaz/lightline-ale', { 'on':  'ALEToggle' }
+"Plug 'dense-analysis/ale', { 'on':  'ALEToggle' }
+"Plug 'maximbaz/lightline-ale', { 'on':  'ALEToggle' }
+Plug 'dense-analysis/ale'
+Plug 'maximbaz/lightline-ale'
 
 "rich presence
 ""Plug 'andweeb/presence.nvim'
@@ -83,12 +83,20 @@ endif
 
 "theme info
 set background=dark
-""let g:material_theme_style = 'ocean'
+""let g:material_style = 'deep ocean'
 ""let g:material_terminal_italics = 1
 ""colorscheme moonlight
-colorscheme nord
-""colorscheme material
-""colorscheme doom-one
+""colorscheme nord
+colorscheme doom-one
+
+"material theme
+"let g:material_italic_comments = v:true
+"let g:material_italic_keywords = v:true
+"let g:material_italic_functions = v:true
+"let g:material_italic_variables = v:true
+"let g:material_contrast = v:false
+"let g:material_borders = v:false
+"colorscheme material
 
 "enable syntax
 syntax on
@@ -102,6 +110,7 @@ set guifont=SFMono\ Nerd\ Font:h13
 let g:neovide_cursor_antialiasing=v:false
 let g:neovide_fullscreen=v:true
 let g:neovide_refresh_rate=60
+let g:neovide_keyboard_layout="qwerty"
 
 "numrow transparent, vert split line transparent.
 highlight clear SignColumn
@@ -158,12 +167,12 @@ set nobackup
 "material]
 "
 let g:lightline = {
-    \ 'colorscheme': 'nord',
+    \ 'colorscheme': 'ayu_mirage',
     \ 'active': {
     \   'left': [ [ 'mode', 'paste' ],
     \             ['gitbranch',  'filetype', 'filename', 'wordcount', 'modified', 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_infos', 'linter_ok' ] ],
     \   'right': [ ['fileformat'],
-    \              [ 'relativepath','lineinfo', 'readonly', 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_infos', 'linter_ok' ]]
+    \              [ 'relativepath', 'readonly', 'percent', 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_infos', 'linter_ok' ]]
     \ },
     \ 'component_function': {
     \    'filetype': 'MyFiletype',
@@ -171,6 +180,7 @@ let g:lightline = {
     \    'wordcount': 'WordCount',
     \    'gitbranch': 'FugitiveHead',
     \    'readonly': 'LightlineReadonly',
+    \    'percent' : 'ScrollStatus',
     \ },
     \ 'component_expand': {
     \   'linter_checking': 'lightline#ale#checking',
@@ -240,20 +250,15 @@ endfunction
 let $FZF_DEFAULT_COMMAND =  "find * -path '*/\.*' -prune -o -path 'node_modules/**' -prune -o -path 'target/**' -prune -o -path 'dist/**' -prune -o  -type f -print -o -type l -print 2> /dev/null"
 
 "doom
-""let $FZF_DEFAULT_OPTS=' --color=dark --color=fg:#bbc2cf,bg:#3c4557,hl:#baacff,fg+:#bbc2cf,bg+:#3c4557,hl+:#5B6268 --color=info:#3c4557,prompt:#3c4557,pointer:#c678dd,marker:#3c4557,spinner:#3c4557,header:-1 --layout=reverse  --margin=1,4'
+let $FZF_DEFAULT_OPTS=' --color=dark --color=fg:#bbc2cf,bg:#3c4557,hl:#baacff,fg+:#bbc2cf,bg+:#3c4557,hl+:#5B6268 --color=info:#3c4557,prompt:#3c4557,pointer:#c678dd,marker:#3c4557,spinner:#3c4557,header:-1 --layout=reverse  --margin=1,4'
 
 "nord
-let $FZF_DEFAULT_OPTS=' --color=dark --color=fg:#bbc2cf,bg:#414C60,hl:#baacff,fg+:#bbc2cf,bg+:#414C60,hl+:#5B6268 --color=info:#414C60,prompt:#414C60,pointer:#c678dd,marker:#414C60,spinner:#414C60,header:-1 --layout=reverse  --margin=1,4'
+""let $FZF_DEFAULT_OPTS=' --color=dark --color=fg:#bbc2cf,bg:#414C60,hl:#baacff,fg+:#bbc2cf,bg+:#414C60,hl+:#5B6268 --color=info:#414C60,prompt:#414C60,pointer:#c678dd,marker:#414C60,spinner:#414C60,header:-1 --layout=reverse  --margin=1,4'
+
+"material ocean
+""let $FZF_DEFAULT_OPTS=' --color=dark --color=fg:#bbc2cf,bg:#10141c,hl:#baacff,fg+:#bbc2cf,bg+:#10141c,hl+:#5B6268 --color=info:#10141c,prompt:#10141c,pointer:#c678dd,marker:#10141c,spinner:#10141c,header:-1 --layout=reverse  --margin=1,4'
 
 let g:fzf_layout = { 'window': 'call FloatingFZF()' }
-
-"nord but with an annoying preview
-""let g:height = float2nr(&lines * 0.9)
-""let g:width = float2nr(&columns * 0.95)
-""let g:preview_width = float2nr(&columns * 0.7)
-""let g:fzf_buffers_jump = 1
-""let $FZF_DEFAULT_OPTS=" --color=dark --color=fg:#bbc2cf,bg:#414C60,hl:#baacff,fg+:#bbc2cf,bg+:#414C60,hl+:#5B6268 --color=info:#414C60,prompt:#414C60,pointer:#c678dd,marker:#414C60,spinner:#414C60,header:-1 --layout=reverse  --margin=1,4 --preview 'if file -i {}|grep -q binary; then file -b {}; else cat --style=changes --color always --line-range :40 {}; fi' --preview-window right:" . g:preview_width
-""let g:fzf_layout = { 'window': 'call FloatingFZF(' . g:width . ',' . g:height . ')' }
 
 ""hardcoded atm sorry
 function! FloatingFZF()
@@ -415,8 +420,12 @@ let g:lightline#ale#indicator_errors = "\uf05e "
 let g:lightline#ale#indicator_ok = "\uf00c "
 
 "just ale icons
-let g:ale_sign_error = '×'
-let g:ale_sign_warning = '»'
+let g:ale_enabled = 0
+
+"let g:ale_sign_error = '×'
+"let g:ale_sign_warning = '»'
+let g:ale_sign_warning = "\uf071"
+let g:ale_sign_error = "\uf05e"
 highlight ALEErrorSign ctermbg=NONE ctermfg=red
 highlight ALEWarningSign ctermbg=NONE ctermfg=yellow
 
@@ -507,7 +516,6 @@ let g:dashboard_custom_header =<< trim END
  `''                                                                      ''`
 END
 
-
 "minimap
 let g:minimap_width = 10
 let g:minimap_auto_start = 1
@@ -537,7 +545,11 @@ let g:VM_maps["Add Cursor Up"]               = '<A-Up>'
 let g:vim_markdown_folding_disabled = 1
 "quote stuff (curly instead of normal "", qc to autocorrect)
 filetype plugin on       " may already be in your .vimrc
-nnoremap <silent> qc <Plug>ReplaceWithCurly
+nnoremap <silent> qr <Plug>ReplaceWithCurly
+"spell check for only markdown
+autocmd FileType markdown setlocal spell
+"set to conceal formatting by default to not clutter
+set conceallevel=2
 
 augroup textobj_quote
   autocmd!
@@ -545,9 +557,6 @@ augroup textobj_quote
   autocmd FileType textile call textobj#quote#init()
   autocmd FileType text call textobj#quote#init({'educate': 0})
 augroup END
-
-"Goyo
-""let g:goyo_width = 85
 
 "lazy load vim-fuigitive
 command! Gstatus call LazyLoadFugitive('Gstatus')
@@ -562,4 +571,6 @@ endfunction
 
 "limelight +goyo
 autocmd! User GoyoEnter Limelight
+autocmd! User GoyoLeave Limelight!
+
 autocmd! User GoyoLeave Limelight!
