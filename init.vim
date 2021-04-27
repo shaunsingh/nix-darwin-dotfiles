@@ -17,51 +17,60 @@ call plug#begin('~/.vim/plugged')
 "statusline/bufferline
 Plug 'itchyny/lightline.vim'
 Plug 'ojroques/vim-scrollstatus'
+
 "icons
 Plug 'ryanoasis/vim-devicons'
-""Plug 'kyazdani42/nvim-web-devicons'
+
 "fuzzy search + files
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight', { 'on': 'NERDTreeToggle' }
+
 "minimap // enable when supported in openGL neovide
 ""Plug 'wfxr/minimap.vim', {'do': ':!cargo install --locked code-minimap'}
+
 "git
 Plug 'tpope/vim-fugitive', { 'on': [] }
-Plug 'airblade/vim-gitgutter', { 'on': 'GitGutterToggle' }
+Plug 'airblade/vim-gitgutter'
+
 "unix commands
 ""Plug 'tpope/vim-eunuch'
+
 "start dash + give a tip
 Plug 'glepnir/dashboard-nvim'
+
 "distraction free/zen mode
 Plug 'kdav5758/TrueZen.nvim'
-""Plug 'junegunn/goyo.vim', { 'on': 'Goyo'}
 Plug 'junegunn/limelight.vim'
+
 "syntax/themes (treesitter replacing polygot)
-Plug 'arcticicestudio/nord-vim'
+""Plug 'arcticicestudio/nord-vim'
 "Plug 'drewtempelmeyer/palenight.vim'
 ""Plug 'Brettm12345/moonlight.vim'
-""Plug 'GustavoPrietoP/doom-one.vim'
+Plug 'GustavoPrietoP/doom-one.vim'
 ""Plug 'marko-cerovac/material.nvim'
+
 "markdown writing
 Plug 'kana/vim-textobj-user', {'for': ['markdown', 'text']}
 Plug 'preservim/vim-textobj-quote', {'for': ['markdown', 'text']}
 Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
 "kotlin support
 Plug 'udalov/kotlin-vim', {'for': 'kotlin'}
+
 "lines on indents + auto pairs+ multiple cursors
-Plug 'Yggdroot/indentLine', { 'on': 'IndentLinesToggle' }
-Plug 'lukas-reineke/indent-blankline.nvim', { 'on': 'IndentLinesToggle'}
-"Plug 'jiangmiao/auto-pairs'
+Plug 'Yggdroot/indentLine', {'on': 'IndentLinesToggle'}
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
+
 "linting + lsp
-"Plug 'dense-analysis/ale', { 'on':  'ALEToggle' }
-"Plug 'maximbaz/lightline-ale', { 'on':  'ALEToggle' }
 Plug 'dense-analysis/ale'
 Plug 'maximbaz/lightline-ale'
+
 "rich presence
 ""Plug 'andweeb/presence.nvim'
+
+"easymotions
+Plug 'phaazon/hop.nvim'
 call plug#end()
 
 
@@ -78,8 +87,8 @@ set background=dark
 ""let g:material_style = 'deep ocean'
 ""let g:material_terminal_italics = 1
 ""colorscheme moonlight
-colorscheme nord
-""colorscheme doom-one
+""colorscheme nord
+colorscheme doom-one
 
 "material theme
 "let g:material_italic_comment = v:true
@@ -98,6 +107,7 @@ set t_Co=256
 "Neovide + gui
 set guifont=SFMono\ Nerd\ Font:h13
 ""set guifont=FiraCode\ Nerd\ Font:h13
+""autocmd FileType markdown setlocal guifont=iMWritingQuattroS\ Nerd\ Font\ Regular:h13
 let g:neovide_cursor_antialiasing=v:false
 let g:neovide_fullscreen=v:true
 let g:neovide_refresh_rate=60
@@ -109,8 +119,8 @@ hi VertSplit ctermfg=1 ctermbg=NONE cterm=NONE
 set fillchars+=vert:┊
 
 "highlight current number
-set number relativenumber
-""set number
+""set number relativenumber
+set number
 set cursorline
 highlight CursorLine cterm=NONE ctermbg=NONE ctermfg=NONE guibg=NONE guifg=NONE
 hi clear CursorLine
@@ -120,11 +130,11 @@ augroup CLClear
 augroup END
 
 "auto switch number depending on mode + show numbers in Goyo command mode
-augroup numbertoggle
-  autocmd!
-  autocmd BufEnter,FocusGained,InsertLeave * set relativenumber
-  autocmd BufLeave,FocusLost,InsertEnter   * set norelativenumber
-augroup END
+"augroup numbertoggle
+"  autocmd!
+"  autocmd BufEnter,FocusGained,InsertLeave * set relativenumber
+"  autocmd BufLeave,FocusLost,InsertEnter   * set norelativenumber
+"augroup END
 
 "set tab to just expand spaces
 set tabstop=4
@@ -158,7 +168,7 @@ set noshowmode
 set laststatus=2
 set showtabline=2
 set noswapfile
-set nobackup
+""set nobackup
 
 "set autoindent
 set autoindent
@@ -167,8 +177,6 @@ set shiftwidth=4
 "enable the mouse
 set mouse=a
 
-"fzf
-nnoremap <silent> <C-p> :call fzf#vim#files('.', {'options': '--prompt ""'})<CR>
 
 "basic autopair
 inoremap " ""<left>
@@ -195,19 +203,27 @@ cnoremap jk <C-C>
 nnoremap j gj
 nnoremap k gk
 
-"F12 for cool mode"
-nnoremap X :TZAtaraxis<CR>
-
 "use semicolon as colon in normal mode
 nnoremap ; :
-"leader keys
-let mapleader="g"
+"leader keys (space)
+let mapleader=" "
 
 "shortcuts to open config
 nnoremap <leader>ev :vsp $MYVIMRC<CR>
 nnoremap <leader>ez :vsp ~/.zshrc<CR>
 nnoremap <leader>sv :source $MYVIMRC<CR>
 
+"easymotion/hop"
+nnoremap <leader>w :HopWord<CR>
+nnoremap <leader>l :HopLine<CR>
+
+"fuzzy stuff
+nnoremap <leader>o :History<CR>
+nnoremap <leader>p :call fzf#vim#files('.', {'options': '--prompt ""'})<CR>
+
+"F12 for cool mode"
+nnoremap <leader>z :TZAtaraxis<CR>
+"
 "save session
 nnoremap <leader>s :mksession<CR>
 
@@ -262,7 +278,7 @@ set writebackup
 
 "lightline setup
 let g:lightline = {
-    \ 'colorscheme': 'nord',
+    \ 'colorscheme': 'ayu_mirage',
     \ 'active': {
     \   'left': [ [ 'mode', 'paste' ],
     \             ['gitbranch', 'filetype', 'filename', 'wordcount', 'modified', 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_infos', 'linter_ok' ] ],
@@ -343,10 +359,10 @@ endfunction
 let $FZF_DEFAULT_COMMAND =  "find * -path '*/\.*' -prune -o -path 'node_modules/**' -prune -o -path 'target/**' -prune -o -path 'dist/**' -prune -o  -type f -print -o -type l -print 2> /dev/null"
 
 "doom
-""let $FZF_DEFAULT_OPTS=' --color=dark --color=fg:#bbc2cf,bg:#3c4557,hl:#baacff,fg+:#bbc2cf,bg+:#3c4557,hl+:#5B6268 --color=info:#3c4557,prompt:#3c4557,pointer:#c678dd,marker:#3c4557,spinner:#3c4557,header:-1 --layout=reverse  --margin=1,4'
+let $FZF_DEFAULT_OPTS=' --color=dark --color=fg:#bbc2cf,bg:#3c4557,hl:#baacff,fg+:#bbc2cf,bg+:#3c4557,hl+:#5B6268 --color=info:#3c4557,prompt:#3c4557,pointer:#c678dd,marker:#3c4557,spinner:#3c4557,header:-1 --layout=reverse  --margin=1,4'
 
 "nord
-let $FZF_DEFAULT_OPTS=' --color=dark --color=fg:#bbc2cf,bg:#414C60,hl:#baacff,fg+:#bbc2cf,bg+:#414C60,hl+:#5B6268 --color=info:#414C60,prompt:#414C60,pointer:#c678dd,marker:#414C60,spinner:#414C60,header:-1 --layout=reverse  --margin=1,4'
+""let $FZF_DEFAULT_OPTS=' --color=dark --color=fg:#bbc2cf,bg:#414C60,hl:#baacff,fg+:#bbc2cf,bg+:#414C60,hl+:#5B6268 --color=info:#414C60,prompt:#414C60,pointer:#c678dd,marker:#414C60,spinner:#414C60,header:-1 --layout=reverse  --margin=1,4'
 
 "material ocean
 ""let $FZF_DEFAULT_OPTS=' --color=dark --color=fg:#bbc2cf,bg:#10141c,hl:#baacff,fg+:#bbc2cf,bg+:#10141c,hl+:#5B6268 --color=info:#10141c,prompt:#10141c,pointer:#c678dd,marker:#10141c,spinner:#10141c,header:-1 --layout=reverse  --margin=1,4'
@@ -492,7 +508,7 @@ call lightline#colorscheme()
 endfunction
 
 "indentline
-let g:indentLine_enabled = 0
+let g:indentLine_enabled = 1
 let g:indentLine_char_list = ['┊']
 
 "NERDTree
@@ -560,8 +576,8 @@ let g:limelight_paragraph_span = 0
 "use alt instead of ctrl
 let g:VM_maps = {}
 let g:VM_default_mappings = 0
-let g:VM_maps["Add Cursor Down"]             = '<A-Down>'
-let g:VM_maps["Add Cursor Up"]               = '<A-Up>'
+let g:VM_maps["Add Cursor Down"]             = '<A-j>'
+let g:VM_maps["Add Cursor Up"]               = '<A-k>'
 
 "vim markdown
 let g:vim_markdown_folding_disabled = 1
@@ -625,7 +641,7 @@ require("true-zen").setup({
 		hidden_relativenumber = false,
 		hidden_signcolumn = "yes",
 
-		shown_number = true,
+		shown_number = false,
 		shown_relativenumber = false,
 		shown_signcolumn = "yes"
 	},
@@ -645,7 +661,7 @@ require("true-zen").setup({
 		integration_vim_powerline = false,
 		integration_tmux = false,
 		integration_express_line = false,
-		integration_gitgutter = true,
+		integration_gitgutter = false,
 		integration_vim_signify = false,
 		integration_limelight = false
 	}
