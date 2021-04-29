@@ -1,5 +1,9 @@
 set nocompatible
 
+
+"__PLUGINS__"
+
+
 "autoinstall vim plug
 "check for uninstalled plugins
 let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
@@ -11,7 +15,6 @@ endif
 autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
   \| PlugInstall --sync | source $MYVIMRC
 \| endif
-
 
 call plug#begin('~/.vim/plugged')
 "statusline/bufferline
@@ -32,34 +35,41 @@ Plug 'tiagofumo/vim-nerdtree-syntax-highlight', { 'on': 'NERDTreeToggle' }
 
 "git
 Plug 'tpope/vim-fugitive', { 'on': [] }
-Plug 'airblade/vim-gitgutter'
+""Plug 'airblade/vim-gitgutter'
 
 "unix commands
-""Plug 'tpope/vim-eunuch'
+Plug 'tpope/vim-eunuch'
 
 "start dash + give a tip
 Plug 'glepnir/dashboard-nvim'
 
 "distraction free/zen mode
 Plug 'kdav5758/TrueZen.nvim'
-Plug 'junegunn/limelight.vim'
+Plug 'junegunn/goyo.vim', {'on': 'Goyo' }
+Plug 'junegunn/limelight.vim', {'on': 'Goyo' }
 
 "syntax/themes (treesitter replacing polygot)
 ""Plug 'arcticicestudio/nord-vim'
-"Plug 'drewtempelmeyer/palenight.vim'
+""Plug 'drewtempelmeyer/palenight.vim'
 ""Plug 'Brettm12345/moonlight.vim'
-Plug 'GustavoPrietoP/doom-one.vim'
-""Plug 'marko-cerovac/material.nvim'
+""Plug 'GustavoPrietoP/doom-one.vim'
+Plug 'marko-cerovac/material.nvim'
+""Plug 'arzg/vim-colors-xcode'
+""Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
 "markdown writing
-Plug 'kana/vim-textobj-user', {'for': ['markdown', 'text']}
-Plug 'preservim/vim-textobj-quote', {'for': ['markdown', 'text']}
+Plug 'kana/vim-textobj-user', {'for': 'markdown'}
+Plug 'preservim/vim-textobj-quote', {'for': 'markdown'}
 Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
 "kotlin support
 Plug 'udalov/kotlin-vim', {'for': 'kotlin'}
 
+"writing plugins
+Plug 'preservim/vim-litecorrect'
+
 "lines on indents + auto pairs+ multiple cursors
-Plug 'Yggdroot/indentLine', {'on': 'IndentLinesToggle'}
+Plug 'Yggdroot/indentLine'
+Plug 'lukas-reineke/indent-blankline.nvim'
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 
 "linting + lsp
@@ -71,7 +81,14 @@ Plug 'maximbaz/lightline-ale'
 
 "easymotions
 Plug 'phaazon/hop.nvim'
+
+"cool animations
+"Plug 'camspiers/animate.vim'
+"Plug 'camspiers/lens.vim'
 call plug#end()
+
+
+"__COLORS__"
 
 
 "set true colors for term + vim
@@ -85,19 +102,24 @@ endif
 "Theme Info
 set background=dark
 ""let g:material_style = 'deep ocean'
+let g:material_style = 'palenight'
 ""let g:material_terminal_italics = 1
 ""colorscheme moonlight
 ""colorscheme nord
-colorscheme doom-one
+""colorscheme doom-one
+""colorscheme xcodedark
 
-"material theme
-"let g:material_italic_comment = v:true
-"let g:material_italic_keywords = v:true
-"let g:material_italic_functions = v:true
-"let g:material_italic_variables = v:true
-"let g:material_contrast = v:false
-"let g:material_borders = v:false
-"colorscheme material
+"fix bg
+hi NORMAL guibg=#282c34
+
+""material theme
+let g:material_italic_comment = v:true
+let g:material_italic_keywords = v:true
+let g:material_italic_functions = v:true
+let g:material_italic_variables = v:true
+let g:material_contrast = v:false
+let g:material_borders = v:false
+colorscheme material
 
 "enable syntax
 syntax enable
@@ -105,13 +127,19 @@ syntax enable
 set t_Co=256
 
 "Neovide + gui
-set guifont=SFMono\ Nerd\ Font:h13
-""set guifont=FiraCode\ Nerd\ Font:h13
-""autocmd FileType markdown setlocal guifont=iMWritingQuattroS\ Nerd\ Font\ Regular:h13
-let g:neovide_cursor_antialiasing=v:false
-let g:neovide_fullscreen=v:true
+""set guifont=SFMono\ Nerd\ Font:h13
+set guifont=FiraCode\ Nerd\ Font:h13
+let g:neovide_cursor_antialiasing=v:true
+""let g:neovide_fullscreen=v:true
 let g:neovide_refresh_rate=60
 let g:neovide_keyboard_layout="qwerty"
+
+let g:neovide_cursor_vfx_mode = "pixiedust"
+let g:neovide_cursor_animation_length=0.13
+let g:neovide_cursor_trail_length=0.8
+
+"__VIM_SETTINGS__"
+
 
 "numrow transparent, vert split line transparent.
 highlight clear SignColumn
@@ -119,7 +147,6 @@ hi VertSplit ctermfg=1 ctermbg=NONE cterm=NONE
 set fillchars+=vert:┊
 
 "highlight current number
-""set number relativenumber
 set number
 set cursorline
 highlight CursorLine cterm=NONE ctermbg=NONE ctermfg=NONE guibg=NONE guifg=NONE
@@ -129,12 +156,8 @@ augroup CLClear
     autocmd! ColorScheme * hi clear CursorLine
 augroup END
 
-"auto switch number depending on mode + show numbers in Goyo command mode
-"augroup numbertoggle
-"  autocmd!
-"  autocmd BufEnter,FocusGained,InsertLeave * set relativenumber
-"  autocmd BufLeave,FocusLost,InsertEnter   * set norelativenumber
-"augroup END
+"remove empty line symbols
+let &fcs='eob: '
 
 "set tab to just expand spaces
 set tabstop=4
@@ -146,6 +169,7 @@ set showcmd
 
 "indent based on filetypes
 filetype indent on
+filetype plugin on
 
 "only draw when you need to
 set lazyredraw
@@ -164,11 +188,10 @@ set lbr
 set clipboard=unnamed
 "remove insert from bottom left
 set noshowmode
-"always display taline and bufferlie"
+"always display tabline and bufferlie"
 set laststatus=2
-set showtabline=2
+""set showtabline=2
 set noswapfile
-""set nobackup
 
 "set autoindent
 set autoindent
@@ -176,6 +199,9 @@ set shiftwidth=4
 
 "enable the mouse
 set mouse=a
+
+
+"__VIM_BINDINGS__"
 
 
 "basic autopair
@@ -220,6 +246,7 @@ nnoremap <leader>l :HopLine<CR>
 "fuzzy stuff
 nnoremap <leader>o :History<CR>
 nnoremap <leader>p :call fzf#vim#files('.', {'options': '--prompt ""'})<CR>
+nnoremap <leader>f :BLines<CR>
 
 "F12 for cool mode"
 nnoremap <leader>z :TZAtaraxis<CR>
@@ -269,12 +296,17 @@ exec "!go build %<"
 exec "!time go run %"
 endif
 endfunc
+
 "tell vim backups to go in /tmp
 set backup
 set backupdir=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
 set backupskip=/tmp/*,/private/tmp/*
 set directory=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
 set writebackup
+
+
+"__LIGHTLINE, FZF, TERMINAL__"
+
 
 "lightline setup
 let g:lightline = {
@@ -359,13 +391,16 @@ endfunction
 let $FZF_DEFAULT_COMMAND =  "find * -path '*/\.*' -prune -o -path 'node_modules/**' -prune -o -path 'target/**' -prune -o -path 'dist/**' -prune -o  -type f -print -o -type l -print 2> /dev/null"
 
 "doom
-let $FZF_DEFAULT_OPTS=' --color=dark --color=fg:#bbc2cf,bg:#3c4557,hl:#baacff,fg+:#bbc2cf,bg+:#3c4557,hl+:#5B6268 --color=info:#3c4557,prompt:#3c4557,pointer:#c678dd,marker:#3c4557,spinner:#3c4557,header:-1 --layout=reverse  --margin=1,4'
+""let $FZF_DEFAULT_OPTS=' --color=dark --color=fg:#bbc2cf,bg:#3c4557,hl:#baacff,fg+:#bbc2cf,bg+:#3c4557,hl+:#5B6268 --color=info:#3c4557,prompt:#3c4557,pointer:#c678dd,marker:#3c4557,spinner:#3c4557,header:-1 --layout=reverse  --margin=1,4'
 
 "nord
 ""let $FZF_DEFAULT_OPTS=' --color=dark --color=fg:#bbc2cf,bg:#414C60,hl:#baacff,fg+:#bbc2cf,bg+:#414C60,hl+:#5B6268 --color=info:#414C60,prompt:#414C60,pointer:#c678dd,marker:#414C60,spinner:#414C60,header:-1 --layout=reverse  --margin=1,4'
 
 "material ocean
 ""let $FZF_DEFAULT_OPTS=' --color=dark --color=fg:#bbc2cf,bg:#10141c,hl:#baacff,fg+:#bbc2cf,bg+:#10141c,hl+:#5B6268 --color=info:#10141c,prompt:#10141c,pointer:#c678dd,marker:#10141c,spinner:#10141c,header:-1 --layout=reverse  --margin=1,4'
+
+"material palenight
+let $FZF_DEFAULT_OPTS=' --color=dark --color=fg:#bbc2cf,bg:#282d3f,hl:#baacff,fg+:#bbc2cf,bg+:#282d3f,hl+:#5B6268 --color=info:#282d3f,prompt:#282d3f,pointer:#c678dd,marker:#282d3f,spinner:#282d3f,header:-1 --layout=reverse  --margin=1,4'
 
 let g:fzf_layout = { 'window': 'call FloatingFZF()' }
 
@@ -450,22 +485,21 @@ endfunction
 command FloatermNew call FloatTerm()
 
 
+"__PLUGIN_SETTINGS__"
+
+
 "lightline ale
 let g:lightline#ale#indicator_checking = "\uf110 "
 let g:lightline#ale#indicator_infos = "\uf129 "
 let g:lightline#ale#indicator_warnings = "\uf071 "
 let g:lightline#ale#indicator_errors = "\uf05e "
-let g:lightline#ale#indicator_ok = "\uf00c "
+let g:lightline#ale#indicator_ok = "\uf00c " 
 
-"just ale icons
-let g:ale_enabled = 0
+"disable ale on start
+""let g:ale_enabled = 0
 
-"let g:ale_sign_error = '×'
-"let g:ale_sign_warning = '»'
-let g:ale_sign_warning = "\uf071"
-let g:ale_sign_error = "\uf05e"
-highlight ALEErrorSign ctermbg=NONE ctermfg=red
-highlight ALEWarningSign ctermbg=NONE ctermfg=yellow
+let g:ale_sign_error = '×'
+let g:ale_sign_warning = '»'
 
 let g:ale_linters = {
             \   'mail': ['proselint'],
@@ -480,6 +514,13 @@ let g:ale_fixers = {
 let g:ale_lint_on_text_changed = 'never'
 let g:ale_fix_on_save = 1
 let g:ale_lint_on_save = 1
+
+"litecorrect
+augroup litecorrect
+  autocmd!
+  autocmd FileType markdown,mkd call litecorrect#init()
+  autocmd FileType textile call litecorrect#init()
+augroup END
 
 "make cursor line -> block
 let &t_SI = "\<Esc>]50;CursorShape=1\x7"
@@ -508,8 +549,10 @@ call lightline#colorscheme()
 endfunction
 
 "indentline
-let g:indentLine_enabled = 1
-let g:indentLine_char_list = ['┊']
+let g:indentLine_char = '┊'
+""let g:indentLine_char_list = ['|', '¦', '┆', '┊']
+let g:indentLine_setColors = 0
+let g:indentLine_fileTypeExclude = ['dashboard'] "stop indentlines on dashboard
 
 "NERDTree
 "enable icons
@@ -525,10 +568,6 @@ let g:NERDTreeDirArrowExpandable = '»'
 let g:NERDTreeDirArrowCollapsible = '«'
 "let me see dotfiles
 let NERDTreeShowHidden=1
-
-" If another buffer tries to replace NERDTree, put it in the other window, and bring back NERDTree.
-autocmd BufEnter * if bufname('#') =~ 'NERD_tree_\d\+' && bufname('%') !~ 'NERD_tree_\d\+' && winnr('$') > 1 |
-    \ let buf=bufnr() | buffer# | execute "normal! \<C-W>w" | execute 'buffer'.buf | endif
 
 "dashboard (use fzf + doom logo)
 let g:dashboard_default_executive ='fzf'
@@ -560,7 +599,7 @@ let g:minimap_auto_start = 1
 let g:minimap_auto_start_win_enter = 1
 
 "limelight
-let g:limelight_default_coefficient = 0.7
+""let g:limelight_default_coefficient = 0.7
 let g:limelight_paragraph_span = 0
 
 "discord presence
@@ -587,7 +626,7 @@ nnoremap <silent> qr <Plug>ReplaceWithCurly
 "spell check for only markdown
 autocmd FileType markdown setlocal spell
 "set to conceal formatting by default to not clutter
-set conceallevel=2
+""set conceallevel=2
 
 augroup textobj_quote
   autocmd!
@@ -607,6 +646,15 @@ function! LazyLoadFugitive(cmd)
   exe a:cmd
 endfunction
 
+"limelight
+let g:limelight_priority = -1
+autocmd! User GoyoEnter Limelight
+autocmd! User GoyoLeave Limelight!
+
+
+"__LUA__"
+
+
 "zen-mode settings
 lua << EOF
 -- setup for TrueZen.nvim
@@ -617,12 +665,11 @@ require("true-zen").setup({
 	before_minimalist_mode_hidden = false,
 	after_minimalist_mode_shown = false,
 	after_minimalist_mode_hidden = false,
-	unknown_bkg_color_fix = true,
 	bottom = {
 		hidden_laststatus = 0,
 		hidden_ruler = false,
 		hidden_showmode = false,
-		hidden_showcmd = true,
+		hidden_showcmd = false,
 		hidden_cmdheight = 1,
 
 		shown_laststatus = 2,
@@ -639,18 +686,19 @@ require("true-zen").setup({
 	left = {
 		hidden_number = false,
 		hidden_relativenumber = false,
-		hidden_signcolumn = "yes",
+		hidden_signcolumn = "no",
 
-		shown_number = false,
+		shown_number = true,
 		shown_relativenumber = false,
-		shown_signcolumn = "yes"
+		shown_signcolumn = "no"
 	},
 	ataraxis = {
 		just_do_it_for_me = false,
 		left_padding = 40,
 		right_padding = 40,
 		top_padding = 0,
-		bottom_padding = 0
+		bottom_padding = 0,
+		custome_bg = "#282c34"
 	},
 	focus = {
 		margin_of_error = 5
