@@ -30,7 +30,7 @@ Plug 'junegunn/fzf.vim'
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight', { 'on': 'NERDTreeToggle' }
 
-"minimap // enable when supported in openGL neovide
+"minimap // enable when supported in openGL Neovide
 ""Plug 'wfxr/minimap.vim', {'do': ':!cargo install --locked code-minimap'}
 
 "git
@@ -50,10 +50,8 @@ Plug 'junegunn/limelight.vim', {'on': 'Goyo' }
 
 "syntax/themes (treesitter replacing polygot)
 ""Plug 'arcticicestudio/nord-vim'
-""Plug 'Brettm12345/moonlight.vim'
 ""Plug 'GustavoPrietoP/doom-one.vim'
 Plug 'shaunsingh/material.nvim'
-""Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
 "add color to hex
 Plug 'norcalli/nvim-colorizer.lua'
@@ -76,6 +74,9 @@ Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 "linting + lsp
 Plug 'dense-analysis/ale'
 Plug 'maximbaz/lightline-ale'
+
+"tabnine
+Plug 'codota/tabnine-vim'
 
 "rich presence
 ""Plug 'andweeb/presence.nvim'
@@ -104,10 +105,8 @@ endif
 
 "Theme Info
 set background=dark
-""let g:material_style = 'deep ocean'
 let g:material_style = 'palenight'
 ""let g:material_terminal_italics = 1
-"""colorscheme moonlight
 ""colorscheme nord
 ""colorscheme doom-one
 
@@ -189,12 +188,28 @@ set formatoptions=l
 set lbr
 
 "macos clipbard
-set clipboard=unnamed
+set clipboard=unnamedplus
+"explicitely state pbcopy for some stupid reason
+let g:clipboard = {
+  \ 'name': 'pbcopy',
+  \ 'copy': {
+  \    '+': 'pbcopy',
+  \    '*': 'pbcopy',
+  \  },
+  \ 'paste': {
+  \    '+': 'pbpaste',
+  \    '*': 'pbpaste',
+  \ },
+  \ 'cache_enabled': 0,
+  \ }
+
 "remove insert from bottom left
 set noshowmode
+set noruler
+
 "always display tabline and bufferlie"
 set laststatus=2
-""set showtabline=2
+set showtabline=2
 set noswapfile
 
 "set autoindent
@@ -327,7 +342,7 @@ set writebackup
 
 "lightline setup
 let g:lightline = {
-    \ 'colorscheme': 'material',
+    \ 'colorscheme': 'moonlight',
     \ 'active': {
     \   'left': [ [ 'mode', 'paste' ],
     \             ['gitbranch', 'filetype', 'filename', 'wordcount', 'modified', 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_infos', 'linter_ok' ] ],
@@ -513,6 +528,11 @@ let g:ale_lint_on_text_changed = 'never'
 let g:ale_fix_on_save = 1
 let g:ale_lint_on_save = 1
 
+"ycm
+let g:ycm_key_invoke_completion = '<Tab>'
+let g:ycm_auto_trigger = 0
+let g:ycm_key_list_select_completion = ['h']
+
 "litecorrect
 augroup litecorrect
   autocmd!
@@ -629,8 +649,6 @@ autocmd FileType markdown setlocal spell
 augroup textobj_quote
   autocmd!
   autocmd FileType markdown call textobj#quote#init()
-  autocmd FileType textile call textobj#quote#init()
-  autocmd FileType text call textobj#quote#init({'educate': 0})
 augroup END
 
 "lazy load vim-fuigitive
