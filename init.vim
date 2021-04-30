@@ -76,7 +76,7 @@ Plug 'dense-analysis/ale'
 Plug 'maximbaz/lightline-ale'
 
 "tabnine
-Plug 'codota/tabnine-vim'
+""Plug 'codota/tabnine-vim'
 
 "rich presence
 ""Plug 'andweeb/presence.nvim'
