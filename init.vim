@@ -50,12 +50,13 @@ Plug 'junegunn/limelight.vim', {'on': 'Goyo' }
 
 "syntax/themes (treesitter replacing polygot)
 ""Plug 'arcticicestudio/nord-vim'
-""Plug 'drewtempelmeyer/palenight.vim'
 ""Plug 'Brettm12345/moonlight.vim'
 ""Plug 'GustavoPrietoP/doom-one.vim'
-Plug 'marko-cerovac/material.nvim'
-""Plug 'arzg/vim-colors-xcode'
+Plug 'shaunsingh/material.nvim'
 ""Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+
+"add color to hex
+Plug 'norcalli/nvim-colorizer.lua'
 
 "markdown writing
 Plug 'kana/vim-textobj-user', {'for': 'markdown'}
@@ -85,6 +86,8 @@ Plug 'phaazon/hop.nvim'
 "cool animations
 "Plug 'camspiers/animate.vim'
 "Plug 'camspiers/lens.vim'
+Plug 'yuttie/comfortable-motion.vim'
+
 call plug#end()
 
 
@@ -104,10 +107,9 @@ set background=dark
 ""let g:material_style = 'deep ocean'
 let g:material_style = 'palenight'
 ""let g:material_terminal_italics = 1
-""colorscheme moonlight
+"""colorscheme moonlight
 ""colorscheme nord
 ""colorscheme doom-one
-""colorscheme xcodedark
 
 "fix bg
 hi NORMAL guibg=#282c34
@@ -129,14 +131,16 @@ set t_Co=256
 "Neovide + gui
 ""set guifont=SFMono\ Nerd\ Font:h13
 set guifont=FiraCode\ Nerd\ Font:h13
+""set guifont=FiraCode\ Nerd\ Font,DejaVu\ Sans:h13
 let g:neovide_cursor_antialiasing=v:true
-""let g:neovide_fullscreen=v:true
+let g:neovide_fullscreen=v:true
 let g:neovide_refresh_rate=60
 let g:neovide_keyboard_layout="qwerty"
 
 let g:neovide_cursor_vfx_mode = "pixiedust"
 let g:neovide_cursor_animation_length=0.13
 let g:neovide_cursor_trail_length=0.8
+
 
 "__VIM_SETTINGS__"
 
@@ -200,6 +204,13 @@ set shiftwidth=4
 "enable the mouse
 set mouse=a
 
+"history and syntax
+set history=100
+set synmaxcol=240
+
+"let vim open hidden buffers
+set hidden
+
 
 "__VIM_BINDINGS__"
 
@@ -250,9 +261,15 @@ nnoremap <leader>f :BLines<CR>
 
 "F12 for cool mode"
 nnoremap <leader>z :TZAtaraxis<CR>
-"
+
 "save session
 nnoremap <leader>s :mksession<CR>
+
+"clear search highlight
+nnoremap <silent> <leader>c :nohl<CR>
+
+"reload init.vim without restart
+map \r :source ~/.config/nvim/init.vim<CR>
 
 "basic vim wm (ctrl + hjkl to move/create)
 function! WinMove(key)
@@ -310,7 +327,7 @@ set writebackup
 
 "lightline setup
 let g:lightline = {
-    \ 'colorscheme': 'ayu_mirage',
+    \ 'colorscheme': 'material',
     \ 'active': {
     \   'left': [ [ 'mode', 'paste' ],
     \             ['gitbranch', 'filetype', 'filename', 'wordcount', 'modified', 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_infos', 'linter_ok' ] ],
@@ -391,7 +408,7 @@ endfunction
 let $FZF_DEFAULT_COMMAND =  "find * -path '*/\.*' -prune -o -path 'node_modules/**' -prune -o -path 'target/**' -prune -o -path 'dist/**' -prune -o  -type f -print -o -type l -print 2> /dev/null"
 
 "doom
-""let $FZF_DEFAULT_OPTS=' --color=dark --color=fg:#bbc2cf,bg:#3c4557,hl:#baacff,fg+:#bbc2cf,bg+:#3c4557,hl+:#5B6268 --color=info:#3c4557,prompt:#3c4557,pointer:#c678dd,marker:#3c4557,spinner:#3c4557,header:-1 --layout=reverse  --margin=1,4'
+""""let $FZF_DEFAULT_OPTS=' --color=dark --color=fg:#bbc2cf,bg:#3c4557,hl:#baacff,fg+:#bbc2cf,bg+:#3c4557,hl+:#5B6268 --color=info:#3c4557,prompt:#3c4557,pointer:#c678dd,marker:#3c4557,spinner:#3c4557,header:-1 --layout=reverse  --margin=1,4'
 
 "nord
 ""let $FZF_DEFAULT_OPTS=' --color=dark --color=fg:#bbc2cf,bg:#414C60,hl:#baacff,fg+:#bbc2cf,bg+:#414C60,hl+:#5B6268 --color=info:#414C60,prompt:#414C60,pointer:#c678dd,marker:#414C60,spinner:#414C60,header:-1 --layout=reverse  --margin=1,4'
@@ -400,7 +417,10 @@ let $FZF_DEFAULT_COMMAND =  "find * -path '*/\.*' -prune -o -path 'node_modules/
 ""let $FZF_DEFAULT_OPTS=' --color=dark --color=fg:#bbc2cf,bg:#10141c,hl:#baacff,fg+:#bbc2cf,bg+:#10141c,hl+:#5B6268 --color=info:#10141c,prompt:#10141c,pointer:#c678dd,marker:#10141c,spinner:#10141c,header:-1 --layout=reverse  --margin=1,4'
 
 "material palenight
-let $FZF_DEFAULT_OPTS=' --color=dark --color=fg:#bbc2cf,bg:#282d3f,hl:#baacff,fg+:#bbc2cf,bg+:#282d3f,hl+:#5B6268 --color=info:#282d3f,prompt:#282d3f,pointer:#c678dd,marker:#282d3f,spinner:#282d3f,header:-1 --layout=reverse  --margin=1,4'
+""let $FZF_DEFAULT_OPTS=' --color=dark --color=fg:#bbc2cf,bg:#282d3f,hl:#baacff,fg+:#bbc2cf,bg+:#282d3f,hl+:#5B6268 --color=info:#282d3f,prompt:#282d3f,pointer:#c678dd,marker:#282d3f,spinner:#282d3f,header:-1 --layout=reverse  --margin=1,4'
+
+"custom
+let $FZF_DEFAULT_OPTS=' --color=dark --color=fg:#bbc2cf,bg:#2f334d,hl:#baacff,fg+:#bbc2cf,bg+:#2f334d,hl+:#5B6268 --color=info:#2f334d,prompt:#2f334d,pointer:#c678dd,marker:#2f334d,spinner:#2f334d,header:-1 --layout=reverse  --margin=1,4'
 
 let g:fzf_layout = { 'window': 'call FloatingFZF()' }
 
@@ -428,61 +448,38 @@ function! FloatingFZF()
 endfunction
 
 " Floating Term
-let s:float_term_border_win = 0
-let s:float_term_win = 0
 function! FloatTerm(...)
   " Configuration
-  let height = float2nr((&lines - 2) * 0.6)
-  let row = float2nr((&lines - height) / 2)
-  let width = float2nr(&columns * 0.6)
-  let col = float2nr((&columns - width) / 2)
-  " Border Window
-  let border_opts = {
-    \ 'relative': 'editor',
-    \ 'row': row - 1,
-    \ 'col': col - 2,
-    \ 'width': width + 4,
-    \ 'height': height + 2,
-    \ 'style': 'minimal'
-    \ }
-  " Terminal Window
+  let buf = nvim_create_buf(v:false, v:true)
+  call setbufvar(buf, '&signcolumn', 'no')
+
+  let height = float2nr(30)
+  let width = float2nr(135)
+  let horizontal = float2nr((&columns - width) / 2)
+  ""let vertical = 1
+  let vertical = float2nr((&lines - height) / 2)
+
   let opts = {
-    \ 'relative': 'editor',
-    \ 'row': row,
-    \ 'col': col,
-    \ 'width': width,
-    \ 'height': height,
-    \ 'style': 'minimal'
-    \ }
-  let top = "╭" . repeat("─", width + 2) . "╮"
-  let mid = "│" . repeat(" ", width + 2) . "│"
-  let bot = "╰" . repeat("─", width + 2) . "╯"
-  let lines = [top] + repeat([mid], height) + [bot]
-  let bbuf = nvim_create_buf(v:false, v:true)
+        \ 'relative': 'editor',
+        \ 'row': vertical,
+        \ 'col': horizontal,
+        \ 'width': width,
+        \ 'height': height,
+        \ 'style': 'minimal',
+        \ }
 
-  call nvim_buf_set_lines(bbuf, 0, -1, v:true, lines)
-    let s:float_term_border_win = nvim_open_win(bbuf, v:true, border_opts)
-    let buf = nvim_create_buf(v:false, v:true)
-    let s:float_term_win = nvim_open_win(buf, v:true, opts)
-
-    " Styling
-  hi FloatWinBorder guifg=#bbc2cf
-  call setwinvar(s:float_term_border_win, '&winhl', 'Normal:FloatWinBorder')
-  call setwinvar(s:float_term_win, '&winhl', 'Normal:Normal')
-
+  let s:float_term_win = nvim_open_win(buf, v:true, opts)
+  " Styling
   if a:0 == 0
     terminal
   else
     call termopen(a:1)
   endif
-
   startinsert
-  " Close border window when terminal window close
-  autocmd TermClose * ++once :bd! | call nvim_win_close(s:float_term_border_win, v:true)
+  autocmd TermClose * ++once :bd! | call nvim_win_close(s:float_term_win, v:true)
 endfunction
-
-"map FloatermNew to new terminal
-command FloatermNew call FloatTerm()
+"bindings
+nnoremap <Leader>at :call FloatTerm()<CR>
 
 
 "__PLUGIN_SETTINGS__"
@@ -493,19 +490,20 @@ let g:lightline#ale#indicator_checking = "\uf110 "
 let g:lightline#ale#indicator_infos = "\uf129 "
 let g:lightline#ale#indicator_warnings = "\uf071 "
 let g:lightline#ale#indicator_errors = "\uf05e "
-let g:lightline#ale#indicator_ok = "\uf00c " 
+let g:lightline#ale#indicator_ok = "\uf00c "
 
 "disable ale on start
 ""let g:ale_enabled = 0
-
 let g:ale_sign_error = '×'
 let g:ale_sign_warning = '»'
+""let g:ale_sign_error = '✘'
+""let g:ale_sign_warning = '⚠'
 
 let g:ale_linters = {
             \   'mail': ['proselint'],
             \   'markdown': ['proselint', 'languagetool'],
             \   'text': ['proselint', 'languagetool'],
-	    \   'python': ['pyls', 'autoimport', 'flake8', 'yapf'],
+    	    \   'python': ['pyls', 'autoimport', 'flake8', 'yapf'],
             \   }
 let g:ale_fixers = {
 \   '*':          ['remove_trailing_lines', 'trim_whitespace'],
@@ -549,7 +547,7 @@ call lightline#colorscheme()
 endfunction
 
 "indentline
-let g:indentLine_char = '┊'
+let g:indentLine_char = '┆'
 ""let g:indentLine_char_list = ['|', '¦', '┆', '┊']
 let g:indentLine_setColors = 0
 let g:indentLine_fileTypeExclude = ['dashboard'] "stop indentlines on dashboard
@@ -714,4 +712,11 @@ require("true-zen").setup({
 		integration_limelight = false
 	}
 })
+EOF
+
+"colorizer
+lua << EOF
+require 'colorizer'.setup {
+  '*' -- Highlight all files, but customize some others.
+}
 EOF
