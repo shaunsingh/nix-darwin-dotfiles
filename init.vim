@@ -46,7 +46,7 @@ Plug 'glepnir/dashboard-nvim'
 "distraction free/zen mode
 Plug 'kdav5758/TrueZen.nvim'
 Plug 'junegunn/goyo.vim', {'on': 'Goyo' }
-Plug 'junegunn/limelight.vim', {'on': 'Goyo' }
+Plug 'junegunn/limelight.vim'
 
 "syntax/themes (treesitter replacing polygot)
 ""Plug 'arcticicestudio/nord-vim'
@@ -111,7 +111,7 @@ let g:material_style = 'palenight'
 ""colorscheme doom-one
 
 "fix bg
-hi NORMAL guibg=#282c34
+hi NORMAL guibg=#2f334d
 
 ""material theme
 let g:material_italic_comment = v:true
@@ -431,9 +431,6 @@ let $FZF_DEFAULT_COMMAND =  "find * -path '*/\.*' -prune -o -path 'node_modules/
 "material ocean
 ""let $FZF_DEFAULT_OPTS=' --color=dark --color=fg:#bbc2cf,bg:#10141c,hl:#baacff,fg+:#bbc2cf,bg+:#10141c,hl+:#5B6268 --color=info:#10141c,prompt:#10141c,pointer:#c678dd,marker:#10141c,spinner:#10141c,header:-1 --layout=reverse  --margin=1,4'
 
-"material palenight
-""let $FZF_DEFAULT_OPTS=' --color=dark --color=fg:#bbc2cf,bg:#282d3f,hl:#baacff,fg+:#bbc2cf,bg+:#282d3f,hl+:#5B6268 --color=info:#282d3f,prompt:#282d3f,pointer:#c678dd,marker:#282d3f,spinner:#282d3f,header:-1 --layout=reverse  --margin=1,4'
-
 "custom
 let $FZF_DEFAULT_OPTS=' --color=dark --color=fg:#bbc2cf,bg:#2f334d,hl:#baacff,fg+:#bbc2cf,bg+:#2f334d,hl+:#5B6268 --color=info:#2f334d,prompt:#2f334d,pointer:#c678dd,marker:#2f334d,spinner:#2f334d,header:-1 --layout=reverse  --margin=1,4'
 
@@ -509,10 +506,12 @@ let g:lightline#ale#indicator_ok = "\uf00c "
 
 "disable ale on start
 ""let g:ale_enabled = 0
-let g:ale_sign_error = '×'
-let g:ale_sign_warning = '»'
-""let g:ale_sign_error = '✘'
-""let g:ale_sign_warning = '⚠'
+let g:ale_sign_error = "\uf05e"
+let g:ale_sign_warning = "\uf071"
+hi link ALEErrorSign    Error
+hi link ALEWarningSign  Warning
+hi Error   cterm=bold gui=bold
+hi Warning cterm=bold gui=bold
 
 let g:ale_linters = {
             \   'mail': ['proselint'],
@@ -674,13 +673,10 @@ autocmd! User GoyoLeave Limelight!
 "zen-mode settings
 lua << EOF
 -- setup for TrueZen.nvim
-require("true-zen").setup({
+local true_zen = require("true-zen")
+true_zen.setup({
     true_false_commands = false,
 	cursor_by_mode = false,
-	before_minimalist_mode_shown = false,
-	before_minimalist_mode_hidden = false,
-	after_minimalist_mode_shown = false,
-	after_minimalist_mode_hidden = false,
 	bottom = {
 		hidden_laststatus = 0,
 		hidden_ruler = false,
@@ -689,7 +685,7 @@ require("true-zen").setup({
 		hidden_cmdheight = 1,
 
 		shown_laststatus = 2,
-		shown_ruler = true,
+		shown_ruler = false,
 		shown_showmode = false,
 		shown_showcmd = false,
 		shown_cmdheight = 1
@@ -709,15 +705,26 @@ require("true-zen").setup({
 		shown_signcolumn = "no"
 	},
 	ataraxis = {
-		just_do_it_for_me = false,
+		just_do_it_for_me = true,
 		left_padding = 40,
 		right_padding = 40,
 		top_padding = 0,
 		bottom_padding = 0,
-		custome_bg = "#282c34"
+		custome_bg = "#2f334d",
+		disable_bg_configuration = false,
+		disable_fillchars_configuration = false,
+		force_when_plus_one_window = true,
+		force_hide_statusline = false
 	},
 	focus = {
-		margin_of_error = 5
+		margin_of_error = 5,
+		focus_method = "experimental"
+	},
+	events = {
+		before_minimalist_mode_shown = false,
+		before_minimalist_mode_hidden = false,
+		after_minimalist_mode_shown = false,
+		after_minimalist_mode_hidden = false
 	},
 	integrations = {
 		integration_galaxyline = false,
@@ -727,7 +734,8 @@ require("true-zen").setup({
 		integration_express_line = false,
 		integration_gitgutter = false,
 		integration_vim_signify = false,
-		integration_limelight = false
+		integration_limelight = false,
+		integration_tzfocus_tzataraxis = true
 	}
 })
 EOF
