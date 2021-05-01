@@ -17,9 +17,13 @@ autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
 \| endif
 
 call plug#begin('~/.vim/plugged')
+"speed/profiling
+Plug 'dstein64/vim-startuptime'
+
 "statusline/bufferline
 Plug 'shaunsingh/lightline.vim' "has my moonlight theme
 Plug 'ojroques/vim-scrollstatus'
+Plug 'shaunsingh/moonlight.nvim'
 
 "icons
 Plug 'ryanoasis/vim-devicons'
@@ -48,11 +52,6 @@ Plug 'kdav5758/TrueZen.nvim'
 Plug 'junegunn/goyo.vim', {'on': 'Goyo' }
 Plug 'junegunn/limelight.vim'
 
-"syntax/themes (treesitter replacing polygot)
-""Plug 'arcticicestudio/nord-vim'
-""Plug 'GustavoPrietoP/doom-one.vim'
-Plug 'shaunsingh/moonlight.nvim'
-
 "add color to hex
 Plug 'norcalli/nvim-colorizer.lua'
 
@@ -60,8 +59,9 @@ Plug 'norcalli/nvim-colorizer.lua'
 Plug 'kana/vim-textobj-user', {'for': 'markdown'}
 Plug 'preservim/vim-textobj-quote', {'for': 'markdown'}
 Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
-"kotlin support
-Plug 'udalov/kotlin-vim', {'for': 'kotlin'}
+
+"syntax
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
 "writing plugins
 Plug 'preservim/vim-litecorrect'
@@ -100,14 +100,12 @@ endif
 
 "Theme Info
 set background=dark
-let g:material_style = 'moonlight'
-""colorscheme nord
-""colorscheme doom-one
 
 "fix bg
 hi NORMAL guibg=#2f334d
 
 ""material theme
+let g:material_style = 'moonlight'
 let g:material_italic_comment = v:true
 let g:material_italic_keywords = v:true
 let g:material_italic_functions = v:true
@@ -122,9 +120,7 @@ syntax enable
 set t_Co=256
 
 "Neovide + gui
-""set guifont=SFMono\ Nerd\ Font:h13
 set guifont=FiraCode\ Nerd\ Font:h13
-""set guifont=FiraCode\ Nerd\ Font,DejaVu\ Sans:h13
 let g:neovide_cursor_antialiasing=v:true
 let g:neovide_fullscreen=v:true
 let g:neovide_refresh_rate=60
@@ -324,11 +320,7 @@ endif
 endfunc
 
 "tell vim backups to go in /tmp
-set backup
-set backupdir=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
-set backupskip=/tmp/*,/private/tmp/*
-set directory=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
-set writebackup
+set nobackup
 
 
 "__LIGHTLINE, FZF, TERMINAL__"
@@ -416,16 +408,7 @@ endfunction
 
 let $FZF_DEFAULT_COMMAND =  "find * -path '*/\.*' -prune -o -path 'node_modules/**' -prune -o -path 'target/**' -prune -o -path 'dist/**' -prune -o  -type f -print -o -type l -print 2> /dev/null"
 
-"doom
-""""let $FZF_DEFAULT_OPTS=' --color=dark --color=fg:#bbc2cf,bg:#3c4557,hl:#baacff,fg+:#bbc2cf,bg+:#3c4557,hl+:#5B6268 --color=info:#3c4557,prompt:#3c4557,pointer:#c678dd,marker:#3c4557,spinner:#3c4557,header:-1 --layout=reverse  --margin=1,4'
-
-"nord
-""let $FZF_DEFAULT_OPTS=' --color=dark --color=fg:#bbc2cf,bg:#414C60,hl:#baacff,fg+:#bbc2cf,bg+:#414C60,hl+:#5B6268 --color=info:#414C60,prompt:#414C60,pointer:#c678dd,marker:#414C60,spinner:#414C60,header:-1 --layout=reverse  --margin=1,4'
-
-"material ocean
-""let $FZF_DEFAULT_OPTS=' --color=dark --color=fg:#bbc2cf,bg:#10141c,hl:#baacff,fg+:#bbc2cf,bg+:#10141c,hl+:#5B6268 --color=info:#10141c,prompt:#10141c,pointer:#c678dd,marker:#10141c,spinner:#10141c,header:-1 --layout=reverse  --margin=1,4'
-
-"custom
+"floating window specs
 let $FZF_DEFAULT_OPTS=' --color=dark --color=fg:#bbc2cf,bg:#2f334d,hl:#baacff,fg+:#bbc2cf,bg+:#2f334d,hl+:#5B6268 --color=info:#2f334d,prompt:#2f334d,pointer:#c678dd,marker:#2f334d,spinner:#2f334d,header:-1 --layout=reverse  --margin=1,4'
 
 let g:fzf_layout = { 'window': 'call FloatingFZF()' }
@@ -502,15 +485,10 @@ let g:lightline#ale#indicator_ok = "\uf00c "
 ""let g:ale_enabled = 0
 let g:ale_sign_error = "\uf05e"
 let g:ale_sign_warning = "\uf071"
-hi link ALEErrorSign    Error
-hi link ALEWarningSign  Warning
-hi Error   cterm=bold gui=bold
-hi Warning cterm=bold gui=bold
 
 let g:ale_linters = {
             \   'mail': ['proselint'],
             \   'markdown': ['proselint', 'languagetool'],
-            \   'text': ['proselint', 'languagetool'],
     	    \   'python': ['pyls', 'autoimport', 'flake8', 'yapf'],
             \   }
 let g:ale_fixers = {
@@ -520,11 +498,6 @@ let g:ale_fixers = {
 let g:ale_lint_on_text_changed = 'never'
 let g:ale_fix_on_save = 1
 let g:ale_lint_on_save = 1
-
-"ycm
-let g:ycm_key_invoke_completion = '<Tab>'
-let g:ycm_auto_trigger = 0
-let g:ycm_key_list_select_completion = ['h']
 
 "litecorrect
 augroup litecorrect
@@ -543,21 +516,6 @@ set ttimeout
 set ttimeoutlen=1
 set listchars=tab:>-,trail:~,extends:>,precedes:<,space:.
 set ttyfast
-
-"make statusline transparent (kindof working)
-autocmd VimEnter * call SetupLightlineColors()
-function SetupLightlineColors() abort
-
-" transparent background in statusbar
-let l:palette = lightline#palette()
-let l:palette.normal.middle = [ [ 'NONE', 'NONE', 'NONE', 'NONE' ] ]
-let l:palette.insert.middle = l:palette.normal.middle
-let l:palette.visual.middle = l:palette.normal.middle
-let l:palette.inactive.middle = l:palette.normal.middle
-let l:palette.inactive.middle = l:palette.normal.middle
-let l:palette.tabline.middle = l:palette.normal.middle
-call lightline#colorscheme()
-endfunction
 
 "indentline
 let g:indentLine_char = '┆'
@@ -604,15 +562,6 @@ let g:dashboard_custom_header =<< trim END
  `''                                                                      ''`
 END
 
-"minimap
-let g:minimap_width = 10
-let g:minimap_auto_start = 1
-let g:minimap_auto_start_win_enter = 1
-
-"limelight
-""let g:limelight_default_coefficient = 0.7
-let g:limelight_paragraph_span = 0
-
 "discord presence
 "let g:presence_auto_update       = 1
 "let g:presence_editing_text      = "Editing %s"
@@ -636,8 +585,6 @@ filetype plugin on       " may already be in your .vimrc
 nnoremap <silent> qr <Plug>ReplaceWithCurly
 "spell check for only markdown
 autocmd FileType markdown setlocal spell
-"set to conceal formatting by default to not clutter
-""set conceallevel=2
 
 augroup textobj_quote
   autocmd!
@@ -738,5 +685,15 @@ EOF
 lua << EOF
 require 'colorizer'.setup {
   '*' -- Highlight all files, but customize some others.
+}
+EOF
+
+"treesitter
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+  ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+  highlight = {
+    enable = true,              -- false will disable the whole extension
+  },
 }
 EOF
