@@ -18,7 +18,7 @@ autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
 
 call plug#begin('~/.vim/plugged')
 "statusline/bufferline
-Plug 'itchyny/lightline.vim'
+Plug 'shaunsingh/lightline.vim' "has my moonlight theme
 Plug 'ojroques/vim-scrollstatus'
 
 "icons
@@ -51,7 +51,7 @@ Plug 'junegunn/limelight.vim'
 "syntax/themes (treesitter replacing polygot)
 ""Plug 'arcticicestudio/nord-vim'
 ""Plug 'GustavoPrietoP/doom-one.vim'
-Plug 'shaunsingh/material.nvim'
+Plug 'shaunsingh/moonlight.nvim'
 
 "add color to hex
 Plug 'norcalli/nvim-colorizer.lua'
@@ -75,18 +75,13 @@ Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 Plug 'dense-analysis/ale'
 Plug 'maximbaz/lightline-ale'
 
-"tabnine
-""Plug 'codota/tabnine-vim'
-
 "rich presence
 ""Plug 'andweeb/presence.nvim'
 
 "easymotions
 Plug 'phaazon/hop.nvim'
 
-"cool animations
-"Plug 'camspiers/animate.vim'
-"Plug 'camspiers/lens.vim'
+"scroll
 Plug 'yuttie/comfortable-motion.vim'
 
 call plug#end()
@@ -105,8 +100,7 @@ endif
 
 "Theme Info
 set background=dark
-let g:material_style = 'palenight'
-""let g:material_terminal_italics = 1
+let g:material_style = 'moonlight'
 ""colorscheme nord
 ""colorscheme doom-one
 
