@@ -38,8 +38,8 @@ Plug 'tiagofumo/vim-nerdtree-syntax-highlight', { 'on': 'NERDTreeToggle' }
 ""Plug 'wfxr/minimap.vim', {'do': ':!cargo install --locked code-minimap'}
 
 "git
-Plug 'tpope/vim-fugitive', { 'on': [] }
-""Plug 'airblade/vim-gitgutter'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'TimUntersberger/neogit'
 
 "unix commands
 Plug 'tpope/vim-eunuch'
@@ -62,9 +62,7 @@ Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
 
 "syntax
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-
-"writing plugins
-Plug 'preservim/vim-litecorrect'
+Plug 'lewis6991/spellsitter.nvim'
 
 "lines on indents + auto pairs+ multiple cursors
 Plug 'Yggdroot/indentLine'
@@ -74,7 +72,7 @@ Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 "linting + lsp
 Plug 'dense-analysis/ale'
 Plug 'maximbaz/lightline-ale'
-
+Plug 'codota/tabnine-vim', { 'for': ['java', 'kotlin', 'python', 'rust'] }
 "rich presence
 ""Plug 'andweeb/presence.nvim'
 
@@ -499,12 +497,26 @@ let g:ale_lint_on_text_changed = 'never'
 let g:ale_fix_on_save = 1
 let g:ale_lint_on_save = 1
 
-"litecorrect
-augroup litecorrect
-  autocmd!
-  autocmd FileType markdown,mkd call litecorrect#init()
-  autocmd FileType textile call litecorrect#init()
-augroup END
+"ycm
+let g:ycm_min_num_of_chars_for_completion = 2
+let g:ycm_key_invoke_completion = '<C-Space>'
+let g:ycm_auto_trigger = 1
+let g:ycm_key_list_select_completion = [ '<TAB>', '<Down>']
+let g:ycm_key_list_previous_completion = ['<S-TAB>', '<Up>']
+"disable ycm for these filetypes
+let g:ycm_filetype_blacklist = {
+      \ 'tagbar': 1,
+      \ 'notes': 1,
+      \ 'markdown': 1,
+      \ 'netrw': 1,
+      \ 'unite': 1,
+      \ 'text': 1,
+      \ 'vimwiki': 1,
+      \ 'pandoc': 1,
+      \ 'infolog': 1,
+      \ 'leaderf': 1,
+      \ 'mail': 1
+      \}
 
 "make cursor line -> block
 let &t_SI = "\<Esc>]50;CursorShape=1\x7"
@@ -590,17 +602,6 @@ augroup textobj_quote
   autocmd!
   autocmd FileType markdown call textobj#quote#init()
 augroup END
-
-"lazy load vim-fuigitive
-command! Gstatus call LazyLoadFugitive('Gstatus')
-command! Gdiff call LazyLoadFugitive('Gdiff')
-command! Glog call LazyLoadFugitive('Glog')
-command! Gblame call LazyLoadFugitive('Gblame')
-function! LazyLoadFugitive(cmd)
-  call plug#load('vim-fugitive')
-  call fugitive#detect(expand('%:p'))
-  exe a:cmd
-endfunction
 
 "limelight
 let g:limelight_priority = -1
@@ -696,4 +697,16 @@ require'nvim-treesitter.configs'.setup {
     enable = true,              -- false will disable the whole extension
   },
 }
+EOF
+
+"spellcheck
+lua <<EOF
+require('spellsitter').setup()
+EOF
+
+"magit
+lua <<EOF
+local neogit = require('neogit')
+
+neogit.setup {}
 EOF
