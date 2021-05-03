@@ -6,17 +6,18 @@ set nocompatible
 
 "autoinstall vim plug
 "check for uninstalled plugins
-let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
-if empty(glob(data_dir . '/autoload/plug.vim'))
-  silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-endif
-"auto install plugins
-autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
-  \| PlugInstall --sync | source $MYVIMRC
-\| endif
+"let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
+"if empty(glob(data_dir . '/autoload/plug.vim'))
+"  silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+"  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+"endif
+""auto install plugins
+"autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
+"  \| PlugInstall --sync | source $MYVIMRC
+"\| endif
 
-call plug#begin('~/.vim/plugged')
+call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.vim/plugged')
+
 "speed/profiling
 Plug 'dstein64/vim-startuptime'
 
@@ -29,17 +30,14 @@ Plug 'shaunsingh/moonlight.nvim'
 Plug 'ryanoasis/vim-devicons'
 
 "fuzzy search + files
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim'
-Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
-Plug 'tiagofumo/vim-nerdtree-syntax-highlight', { 'on': 'NERDTreeToggle' }
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } | Plug 'junegunn/fzf.vim'
+Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' } | Plug 'tiagofumo/vim-nerdtree-syntax-highlight', { 'on': 'NERDTreeToggle' }
 
 "minimap // enable when supported in openGL Neovide
 ""Plug 'wfxr/minimap.vim', {'do': ':!cargo install --locked code-minimap'}
 
 "git
-Plug 'nvim-lua/plenary.nvim'
-Plug 'TimUntersberger/neogit'
+Plug 'nvim-lua/plenary.nvim' | Plug 'TimUntersberger/neogit' | Plug 'lewis6991/gitsigns.nvim'
 
 "unix commands
 Plug 'tpope/vim-eunuch'
@@ -49,15 +47,13 @@ Plug 'glepnir/dashboard-nvim'
 
 "distraction free/zen mode
 Plug 'kdav5758/TrueZen.nvim'
-Plug 'junegunn/goyo.vim', {'on': 'Goyo' }
-Plug 'junegunn/limelight.vim'
+Plug 'junegunn/goyo.vim', {'on': 'Goyo' } | Plug 'junegunn/limelight.vim'
 
 "add color to hex
 Plug 'norcalli/nvim-colorizer.lua'
 
 "markdown writing
-Plug 'kana/vim-textobj-user', {'for': 'markdown'}
-Plug 'preservim/vim-textobj-quote', {'for': 'markdown'}
+Plug 'kana/vim-textobj-user', {'for': 'markdown'} | Plug 'preservim/vim-textobj-quote', {'for': 'markdown'}
 Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
 
 "syntax
@@ -65,24 +61,21 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'lewis6991/spellsitter.nvim'
 
 "lines on indents + auto pairs+ multiple cursors
-Plug 'Yggdroot/indentLine'
-Plug 'lukas-reineke/indent-blankline.nvim'
+Plug 'Yggdroot/indentLine' | Plug 'lukas-reineke/indent-blankline.nvim'
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 
 "linting + lsp
-Plug 'dense-analysis/ale'
-Plug 'maximbaz/lightline-ale'
-Plug 'codota/tabnine-vim', { 'for': ['java', 'kotlin', 'python', 'rust'] }
+Plug 'dense-analysis/ale' | Plug 'maximbaz/lightline-ale'
+Plug 'hrsh7th/nvim-compe' | Plug 'onsails/lspkind-nvim' | Plug 'tzachar/compe-tabnine', { 'do': './install.sh' }
+
 "rich presence
 ""Plug 'andweeb/presence.nvim'
 
 "easymotions
 Plug 'phaazon/hop.nvim'
 
-"scroll
-Plug 'yuttie/comfortable-motion.vim'
-
 call plug#end()
+
 
 
 "__COLORS__"
@@ -218,13 +211,13 @@ set hidden
 "__VIM_BINDINGS__"
 
 
-"basic autopair
-inoremap " ""<left>
-inoremap ( ()<left>
-inoremap [ []<left>
-inoremap { {}<left>
-inoremap {<CR> {<CR>}<ESC>O
-inoremap {;<CR> {<CR>};<ESC>O
+"basic autopair (uses lexima now)
+"inoremap " ""<left>
+"inoremap ( ()<left>
+"inoremap [ []<left>
+"inoremap { {}<left>
+"inoremap {<CR> {<CR>}<ESC>O
+"inoremap {;<CR> {<CR>};<ESC>O
 
 "remove arrow keys from normal mode (forces to use hjkl)
 noremap <Up> <Nop>
@@ -497,26 +490,46 @@ let g:ale_lint_on_text_changed = 'never'
 let g:ale_fix_on_save = 1
 let g:ale_lint_on_save = 1
 
-"ycm
-let g:ycm_min_num_of_chars_for_completion = 2
-let g:ycm_key_invoke_completion = '<C-Space>'
-let g:ycm_auto_trigger = 1
-let g:ycm_key_list_select_completion = [ '<TAB>', '<Down>']
-let g:ycm_key_list_previous_completion = ['<S-TAB>', '<Up>']
-"disable ycm for these filetypes
-let g:ycm_filetype_blacklist = {
-      \ 'tagbar': 1,
-      \ 'notes': 1,
-      \ 'markdown': 1,
-      \ 'netrw': 1,
-      \ 'unite': 1,
-      \ 'text': 1,
-      \ 'vimwiki': 1,
-      \ 'pandoc': 1,
-      \ 'infolog': 1,
-      \ 'leaderf': 1,
-      \ 'mail': 1
-      \}
+"Lsp
+set completeopt=menuone,noselect
+let g:compe = {}
+let g:compe.enabled = v:true
+let g:compe.autocomplete = v:true
+let g:compe.debug = v:false
+let g:compe.min_length = 1
+let g:compe.preselect = 'enable'
+let g:compe.throttle_time = 80
+let g:compe.source_timeout = 200
+let g:compe.incomplete_delay = 400
+let g:compe.max_abbr_width = 100
+let g:compe.max_kind_width = 100
+let g:compe.max_menu_width = 100
+let g:compe.documentation = v:true
+
+let g:compe.source = {}
+let g:compe.source.path = v:true
+let g:compe.source.buffer = v:true
+let g:compe.source.calc = v:true
+let g:compe.source.nvim_lsp = v:true
+let g:compe.source.nvim_lua = v:true
+let g:compe.source.vsnip = v:true
+let g:compe.source.tabnine = v:true
+let g:compe.source.treesitter = v:true
+
+let g:compe.source.tabnine = {}
+let g:compe.source.tabnine.max_line = 1000
+let g:compe.source.tabnine.max_num_results = 6
+let g:compe.source.tabnine.priority = 5000
+" setting sort to false means compe will leave tabnine to sort the completion items
+let g:compe.source.tabnine.sort = v:false
+let g:compe.source.tabnine.show_prediction_strength = v:true
+let g:compe.source.tabnine.ignore_pattern = ''
+
+inoremap <silent><expr> <C-Space> compe#complete()
+inoremap <silent><expr> <CR>      compe#confirm('<CR>')
+inoremap <silent><expr> <C-e>     compe#close('<C-e>')
+inoremap <silent><expr> <C-f>     compe#scroll({ 'delta': +4 })
+inoremap <silent><expr> <C-d>     compe#scroll({ 'delta': -4 })
 
 "make cursor line -> block
 let &t_SI = "\<Esc>]50;CursorShape=1\x7"
@@ -530,7 +543,7 @@ set listchars=tab:>-,trail:~,extends:>,precedes:<,space:.
 set ttyfast
 
 "indentline
-let g:indentLine_char = '┆'
+let g:indentLine_char = '|'
 ""let g:indentLine_char_list = ['|', '¦', '┆', '┊']
 let g:indentLine_setColors = 0
 let g:indentLine_fileTypeExclude = ['dashboard'] "stop indentlines on dashboard
@@ -633,7 +646,7 @@ true_zen.setup({
 		shown_cmdheight = 1
 	},
 	top = {
-		hidden_showtabline = 0,
+		hidden_showtabline = 2,
 
 		shown_showtabline = 2
 	},
@@ -710,3 +723,76 @@ local neogit = require('neogit')
 
 neogit.setup {}
 EOF
+
+"gitsigns
+lua <<EOF
+require('gitsigns').setup {
+  signs = {
+    add          = {hl = 'GitSignsAdd'   , text = '│', numhl='GitSignsAddNr'   , linehl='GitSignsAddLn'},
+    change       = {hl = 'GitSignsChange', text = '│', numhl='GitSignsChangeNr', linehl='GitSignsChangeLn'},
+    delete       = {hl = 'GitSignsDelete', text = '_', numhl='GitSignsDeleteNr', linehl='GitSignsDeleteLn'},
+    topdelete    = {hl = 'GitSignsDelete', text = '‾', numhl='GitSignsDeleteNr', linehl='GitSignsDeleteLn'},
+    changedelete = {hl = 'GitSignsChange', text = '~', numhl='GitSignsChangeNr', linehl='GitSignsChangeLn'},
+  },
+  numhl = false,
+  linehl = false,
+  keymaps = {
+    -- Default keymap options
+    noremap = true,
+    buffer = true,
+
+    ['n ]c'] = { expr = true, "&diff ? ']c' : '<cmd>lua require\"gitsigns\".next_hunk()<CR>'"},
+    ['n [c'] = { expr = true, "&diff ? '[c' : '<cmd>lua require\"gitsigns\".prev_hunk()<CR>'"},
+
+    ['n <leader>hs'] = '<cmd>lua require"gitsigns".stage_hunk()<CR>',
+    ['n <leader>hu'] = '<cmd>lua require"gitsigns".undo_stage_hunk()<CR>',
+    ['n <leader>hr'] = '<cmd>lua require"gitsigns".reset_hunk()<CR>',
+    ['n <leader>hR'] = '<cmd>lua require"gitsigns".reset_buffer()<CR>',
+    ['n <leader>hp'] = '<cmd>lua require"gitsigns".preview_hunk()<CR>',
+    ['n <leader>hb'] = '<cmd>lua require"gitsigns".blame_line()<CR>',
+
+    -- Text objects
+    ['o ih'] = ':<C-U>lua require"gitsigns".select_hunk()<CR>',
+    ['x ih'] = ':<C-U>lua require"gitsigns".select_hunk()<CR>'
+  },
+  watch_index = {
+    interval = 1000
+  },
+  current_line_blame = false,
+  sign_priority = 6,
+  update_debounce = 100,
+  status_formatter = nil, -- Use default
+  use_decoration_api = true,
+  use_internal_diff = true,  -- If luajit is present
+}
+EOF
+
+"lspkind-nvim
+lua <<EOF
+require('lspkind').init({
+     with_text = true,
+     symbol_map = {
+       Text = '',
+       Method = 'ƒ',
+       Function = '',
+       Constructor = '',
+       Variable = '',
+       Class = '',
+       Interface = 'ﰮ',
+       Module = '',
+       Property = '',
+       Unit = '',
+       Value = '',
+       Enum = '了',
+       Keyword = '',
+       Snippet = '﬌',
+       Color = '',
+       File = '',
+       Folder = '',
+       EnumMember = '',
+       Constant = '',
+       Struct = ''
+     },
+})
+EOF
+
