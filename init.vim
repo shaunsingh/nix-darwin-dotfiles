@@ -21,10 +21,13 @@ call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.vim/plugged')
 "speed/profiling
 Plug 'dstein64/vim-startuptime'
 
-"statusline/bufferline
+"statusline/bufferline he
 Plug 'shaunsingh/lightline.vim' "has my moonlight theme
-Plug 'ojroques/vim-scrollstatus'
 Plug 'shaunsingh/moonlight.nvim'
+
+"smooth scroll and statusline
+Plug 'yuttie/comfortable-motion.vim'
+Plug 'ojroques/vim-scrollstatus'
 
 "icons
 Plug 'ryanoasis/vim-devicons'
@@ -59,7 +62,6 @@ Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
 
 "syntax
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-Plug 'lewis6991/spellsitter.nvim'
 
 "lines on indents + auto pairs+ multiple cursors
 Plug 'Yggdroot/indentLine' | Plug 'lukas-reineke/indent-blankline.nvim'
@@ -69,7 +71,6 @@ Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 Plug 'dense-analysis/ale' | Plug 'maximbaz/lightline-ale'
 Plug 'hrsh7th/nvim-compe' | Plug 'onsails/lspkind-nvim' | Plug 'tzachar/compe-tabnine', { 'do': './install.sh' } | Plug 'neovim/nvim-lspconfig' |
 Plug 'folke/lsp-trouble.nvim' | Plug 'glepnir/lspsaga.nvim'
-
 "rich presence
 ""Plug 'andweeb/presence.nvim'
 
@@ -77,7 +78,6 @@ Plug 'folke/lsp-trouble.nvim' | Plug 'glepnir/lspsaga.nvim'
 Plug 'phaazon/hop.nvim'
 
 call plug#end()
-
 
 
 "__COLORS__"
@@ -177,7 +177,7 @@ set clipboard=unnamed
 set noshowmode
 set noruler
 
-"always display tabline and bufferlie"
+"always display tabline and bufferline"
 set laststatus=2
 set showtabline=2
 set noswapfile
@@ -247,9 +247,6 @@ nnoremap <leader>f :BLines<CR>
 "F12 for cool mode"
 nnoremap <leader>z :TZAtaraxis<CR>
 
-"save session
-nnoremap <leader>s :mksession<CR>
-
 "clear search highlight
 nnoremap <leader>c :nohl<CR>
 
@@ -296,7 +293,7 @@ exec "!time go run %"
 endif
 endfunc
 
-"tell vim backups to go in /tmp
+"tell vim backups to not exist
 set nobackup
 
 
@@ -308,15 +305,14 @@ let g:lightline = {
     \ 'colorscheme': 'moonlight',
     \ 'active': {
     \   'left': [ [ 'mode', 'paste' ],
-    \             ['gitbranch', 'filetype', 'filename', 'wordcount', 'modified', 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_infos', 'linter_ok' ] ],
-    \   'right': [ ['fileformat'],
+    \             [ 'filetype', 'filename', 'wordcount', 'modified', 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_infos', 'linter_ok' ] ],
+    \   'right': [ [ 'fileformat' ],
     \              [ 'readonly', 'percent', 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_infos', 'linter_ok' ]]
     \ },
     \ 'component_function': {
     \    'filetype': 'MyFiletype',
     \    'fileformat': 'MyFileformat',
     \    'wordcount': 'WordCount',
-    \    'gitbranch': 'FugitiveHead',
     \    'readonly': 'LightlineReadonly',
     \    'percent' : 'ScrollStatus',
     \ },
@@ -389,6 +385,10 @@ let $FZF_DEFAULT_COMMAND =  "find * -path '*/\.*' -prune -o -path 'node_modules/
 let $FZF_DEFAULT_OPTS=' --color=dark --color=fg:#bbc2cf,bg:#2f334d,hl:#baacff,fg+:#bbc2cf,bg+:#2f334d,hl+:#5B6268 --color=info:#2f334d,prompt:#2f334d,pointer:#c678dd,marker:#2f334d,spinner:#2f334d,header:-1 --layout=reverse  --margin=1,4'
 
 let g:fzf_layout = { 'window': 'call FloatingFZF()' }
+
+"semi transparent floating window and autocomplete
+set winblend=13
+set pumblend=15
 
 ""function to create a floating fzf window
 function! FloatingFZF()
@@ -465,7 +465,7 @@ let g:ale_sign_warning = ""
 
 let g:ale_linters = {
             \   'mail': ['proselint'],
-            \   'markdown': ['proselint', 'languagetool'],
+            \   'markdown': ['proselint'],
     	    \   'python': ['pyls', 'autoimport', 'flake8', 'yapf'],
             \   }
 let g:ale_fixers = {
@@ -493,13 +493,17 @@ let g:compe.max_menu_width = 100
 let g:compe.documentation = v:true
 
 let g:compe.source = {}
+let g:compe.source.spell = v:true
 let g:compe.source.path = v:true
 let g:compe.source.buffer = v:true
 let g:compe.source.calc = v:true
 let g:compe.source.nvim_lsp = v:true
 let g:compe.source.nvim_lua = v:true
-let g:compe.source.vsnip = v:true
 let g:compe.source.tabnine = v:true
+
+
+""let g:compe.source.treesitter = v:true
+
 
 let g:compe.source.tabnine = {}
 let g:compe.source.tabnine.max_line = 1000
@@ -516,51 +520,6 @@ inoremap <silent><expr> <CR>      compe#confirm('<CR>')
 inoremap <silent><expr> <C-e>     compe#close('<C-e>')
 inoremap <silent><expr> <C-f>     compe#scroll({ 'delta': +4 })
 inoremap <silent><expr> <C-d>     compe#scroll({ 'delta': -4 })
-
-"tab to forwards s-tab to go back
-lua <<EOF
-local t = function(str)
-  return vim.api.nvim_replace_termcodes(str, true, true, true)
-end
-
-local check_back_space = function()
-    local col = vim.fn.col('.') - 1
-    if col == 0 or vim.fn.getline('.'):sub(col, col):match('%s') then
-        return true
-    else
-        return false
-    end
-end
-
--- Use (s-)tab to:
---- move to prev/next item in completion menuone
---- jump to prev/next snippet's placeholder
-_G.tab_complete = function()
-  if vim.fn.pumvisible() == 1 then
-    return t "<C-n>"
-  elseif vim.fn.call("vsnip#available", {1}) == 1 then
-    return t "<Plug>(vsnip-expand-or-jump)"
-  elseif check_back_space() then
-    return t "<Tab>"
-  else
-    return vim.fn['compe#complete']()
-  end
-end
-_G.s_tab_complete = function()
-  if vim.fn.pumvisible() == 1 then
-    return t "<C-p>"
-  elseif vim.fn.call("vsnip#jumpable", {-1}) == 1 then
-    return t "<Plug>(vsnip-jump-prev)"
-  else
-    return t "<S-Tab>"
-  end
-end
-
-vim.api.nvim_set_keymap("i", "<Tab>", "v:lua.tab_complete()", {expr = true})
-vim.api.nvim_set_keymap("s", "<Tab>", "v:lua.tab_complete()", {expr = true})
-vim.api.nvim_set_keymap("i", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
-vim.api.nvim_set_keymap("s", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
-EOF
 
 "make cursor line -> block
 let &t_SI = "\<Esc>]50;CursorShape=1\x7"
@@ -579,6 +538,10 @@ let g:indentLine_char = '|'
 let g:indentLine_setColors = 0
 let g:indentLine_fileTypeExclude = ['dashboard'] "stop indentlines on dashboard
 
+"scrolling
+noremap <silent> <ScrollWheelDown> :call comfortable_motion#flick(100)<CR>
+noremap <silent> <ScrollWheelUp>   :call comfortable_motion#flick(-100)<CR>
+
 "NERDTree
 "enable icons
 let g:webdevicons_enable = 1
@@ -589,8 +552,8 @@ let g:NERDTreeHighlightCursorline = 0
 "better ui
 let NERDTreeMinimalUI=1
 let NERDTreeDirArrows=1
-let g:NERDTreeDirArrowExpandable = '»'
-let g:NERDTreeDirArrowCollapsible = '«'
+let g:NERDTreeDirArrowExpandable = ' '
+let g:NERDTreeDirArrowCollapsible = ' '
 "let me see dotfiles
 let NERDTreeShowHidden=1
 
@@ -639,15 +602,17 @@ let g:vim_markdown_folding_disabled = 1
 "quote stuff (curly instead of normal "", qc to autocorrect)
 filetype plugin on       " may already be in your .vimrc
 nnoremap <silent> qr <Plug>ReplaceWithCurly
+
 "spell check for only markdown
 autocmd FileType markdown setlocal spell
+setlocal spelllang=en_us
 
 augroup textobj_quote
   autocmd!
   autocmd FileType markdown call textobj#quote#init()
 augroup END
 
-"limelight
+""limelight
 let g:limelight_priority = -1
 autocmd! User GoyoEnter Limelight
 autocmd! User GoyoLeave Limelight!
@@ -724,39 +689,25 @@ true_zen.setup({
 		integration_tzfocus_tzataraxis = true
 	}
 })
-EOF
 
-"colorizer
-lua << EOF
+--colorizer setup
 require 'colorizer'.setup {
   '*' -- Highlight all files, but customize some others.
 }
-EOF
 
-"treesitter
-lua <<EOF
+--nvim treesitter
 require'nvim-treesitter.configs'.setup {
   ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
   highlight = {
     enable = true,              -- false will disable the whole extension
   },
 }
-EOF
 
-"spellcheck
-lua <<EOF
-require('spellsitter').setup()
-EOF
-
-"magit
-lua <<EOF
+--neogit
 local neogit = require('neogit')
-
 neogit.setup {}
-EOF
 
-"gitsigns
-lua <<EOF
+--gitsigns
 require('gitsigns').setup {
   signs = {
     add          = {hl = 'GitSignsAdd'   , text = '│', numhl='GitSignsAddNr'   , linehl='GitSignsAddLn'},
@@ -796,10 +747,8 @@ require('gitsigns').setup {
   use_decoration_api = true,
   use_internal_diff = true,  -- If luajit is present
 }
-EOF
 
-"lspkind-nvim
-lua <<EOF
+--lspkind for icons
 require('lspkind').init({
      with_text = true,
      symbol_map = {
@@ -825,29 +774,59 @@ require('lspkind').init({
        Struct = ''
      },
 })
-EOF
 
-"lsp config
-lua << EOF
+--lspconfig + lsp trouble + lspsaga
 require'lspconfig'.pyls.setup{}
 require'lspconfig'.kotlin_language_server.setup{ cmd = { "/Users/shauryasingh/lsp/server/bin/kotlin-language-server" }}
-EOF
-
-"lsp trouble config
-lua <<EOF
-  require("trouble").setup {
-    -- your configuration comes here
-    -- or leave it empty to use the default settings
-    -- refer to the configuration section below
-  }
-EOF
-
-"lsp saga config
-lua <<EOF
+require("trouble").setup {}
 require'lspsaga'.init_lsp_saga{
     error_sign = "",
     warn_sign = "",
     hint_sign = "",
     infor_sign = ""
 }
+
+--use tab to navigate autocomplete
+local t = function(str)
+  return vim.api.nvim_replace_termcodes(str, true, true, true)
+end
+
+local check_back_space = function()
+    local col = vim.fn.col('.') - 1
+    if col == 0 or vim.fn.getline('.'):sub(col, col):match('%s') then
+        return true
+    else
+        return false
+    end
+end
+
+-- Use (s-)tab to:
+--- move to prev/next item in completion menuone
+--- jump to prev/next snippet's placeholder
+_G.tab_complete = function()
+  if vim.fn.pumvisible() == 1 then
+    return t "<C-n>"
+  elseif vim.fn.call("vsnip#available", {1}) == 1 then
+    return t "<Plug>(vsnip-expand-or-jump)"
+  elseif check_back_space() then
+    return t "<Tab>"
+  else
+    return vim.fn['compe#complete']()
+  end
+end
+_G.s_tab_complete = function()
+  if vim.fn.pumvisible() == 1 then
+    return t "<C-p>"
+  elseif vim.fn.call("vsnip#jumpable", {-1}) == 1 then
+    return t "<Plug>(vsnip-jump-prev)"
+  else
+    return t "<S-Tab>"
+  end
+end
+
+vim.api.nvim_set_keymap("i", "<Tab>", "v:lua.tab_complete()", {expr = true})
+vim.api.nvim_set_keymap("s", "<Tab>", "v:lua.tab_complete()", {expr = true})
+vim.api.nvim_set_keymap("i", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
+vim.api.nvim_set_keymap("s", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
+
 EOF
