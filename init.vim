@@ -26,7 +26,6 @@ Plug 'shaunsingh/lightline.vim' "has my moonlight theme
 Plug 'shaunsingh/moonlight.nvim'
 
 "smooth scroll and statusline
-Plug 'yuttie/comfortable-motion.vim'
 Plug 'ojroques/vim-scrollstatus'
 
 "icons
@@ -51,10 +50,7 @@ Plug 'glepnir/dashboard-nvim'
 
 "distraction free/zen mode
 Plug 'kdav5758/TrueZen.nvim'
-Plug 'junegunn/goyo.vim', {'on': 'Goyo' } | Plug 'junegunn/limelight.vim'
-
-"add color to hex
-Plug 'norcalli/nvim-colorizer.lua'
+Plug 'junegunn/goyo.vim', {'on': 'Goyo' } | Plug 'junegunn/limelight.vim', {'on': 'Goyo'}
 
 "markdown writing
 Plug 'kana/vim-textobj-user', {'for': 'markdown'} | Plug 'preservim/vim-textobj-quote', {'for': 'markdown'}
@@ -68,9 +64,13 @@ Plug 'Yggdroot/indentLine' | Plug 'lukas-reineke/indent-blankline.nvim'
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 
 "linting + lsp (ale for linting), (compe for completion, lspkind icons, tabnine, lspconfig for kotlin kotlin_language_server)
-Plug 'dense-analysis/ale' | Plug 'maximbaz/lightline-ale'
+Plug 'dense-analysis/ale' | Plug 'maximbaz/lightline-ale' | Plug 'nathunsmitty/nvim-ale-diagnostic'
 Plug 'hrsh7th/nvim-compe' | Plug 'onsails/lspkind-nvim' | Plug 'tzachar/compe-tabnine', { 'do': './install.sh' } | Plug 'neovim/nvim-lspconfig' |
 Plug 'folke/lsp-trouble.nvim' | Plug 'glepnir/lspsaga.nvim'
+
+"snippets
+Plug 'hrsh7th/vim-vsnip' | Plug 'hrsh7th/vim-vsnip-integ' | Plug 'rafamadriz/friendly-snippets'
+
 "rich presence
 ""Plug 'andweeb/presence.nvim'
 
@@ -127,12 +127,7 @@ let g:neovide_cursor_trail_length=0.8
 "__VIM_SETTINGS__"
 
 
-"numrow transparent, vert split line transparent.
-highlight clear SignColumn
-hi VertSplit ctermfg=1 ctermbg=NONE cterm=NONE
-set fillchars+=vert:┊
-
-"highlight current number
+""highlight current number
 set number
 set cursorline
 highlight CursorLine cterm=NONE ctermbg=NONE ctermfg=NONE guibg=NONE guifg=NONE
@@ -180,7 +175,6 @@ set noruler
 "always display tabline and bufferline"
 set laststatus=2
 set showtabline=2
-set noswapfile
 
 "set autoindent
 set autoindent
@@ -208,18 +202,9 @@ inoremap { {}<left>
 inoremap {<CR> {<CR>}<ESC>O
 inoremap {;<CR> {<CR>};<ESC>O
 
-"remove arrow keys from normal mode (forces to use hjkl)
-noremap <Up> <Nop>
-noremap <Down> <Nop>
-noremap <Left> <Nop>
-noremap <Right> <Nop>
-
 "jk to exit instead
 inoremap jk <esc>
 cnoremap jk <C-C>
-" Note: In command mode mappings to esc run the command for some odd
-" historical vi compatibility reason. We use the alternate method of
-" existing which is Ctrl-C
 
 "move by visual line not actal line
 nnoremap j gj
@@ -229,11 +214,6 @@ nnoremap k gk
 nnoremap ; :
 "leader keys (space)
 let mapleader=" "
-
-"shortcuts to open config
-nnoremap <leader>ev :vsp $MYVIMRC<CR>
-nnoremap <leader>ez :vsp ~/.zshrc<CR>
-nnoremap <leader>sv :source $MYVIMRC<CR>
 
 "easymotion/hop"
 nnoremap <leader>w :HopWord<CR>
@@ -247,54 +227,30 @@ nnoremap <leader>f :BLines<CR>
 "F12 for cool mode"
 nnoremap <leader>z :TZAtaraxis<CR>
 
-"clear search highlight
-nnoremap <leader>c :nohl<CR>
-
-"basic vim wm (ctrl + hjkl to move/create)
-function! WinMove(key)
-    let t:curwin = winnr()
-    exec "wincmd ".a:key
-    if (t:curwin == winnr())
-        if (match(a:key,'[jk]'))
-            wincmd v
-        else
-            wincmd s
-        endif
-        exec "wincmd ".a:key
-    endif
-endfunction
-nnoremap <silent> <C-h> :call WinMove('h')<CR>
-nnoremap <silent> <C-j> :call WinMove('j')<CR>
-nnoremap <silent> <C-k> :call WinMove('k')<CR>
-nnoremap <silent> <C-l> :call WinMove('l')<CR>
+" Use ctrl-[hjkl] to select the active split!
+nmap <silent> <c-k> :wincmd k<CR>
+nmap <silent> <c-j> :wincmd j<CR>
+nmap <silent> <c-h> :wincmd h<CR>
+nmap <silent> <c-l> :wincmd l<CR>
 
 "f5 to run current filetype
 map <F5> :call CompileRunGcc()<CR>
 func! CompileRunGcc()
 exec "w"
-if &filetype == 'c'
-exec "!gcc % -o %<"
-exec "!time ./%<"
 elseif &filetype == 'cpp'
 exec "!g++ % -o %<"
 exec "!time ./%<"
 elseif &filetype == 'java'
 exec "!javac %"
 exec "!time java -cp %:p:h %:t:r"
-elseif &filetype == 'sh'
-exec "!time bash %"
 elseif &filetype == 'python'
 exec "!time python3 %"
-elseif &filetype == 'html'
-exec "!firefox % &"
-elseif &filetype == 'go'
-exec "!go build %<"
-exec "!time go run %"
 endif
 endfunc
 
 "tell vim backups to not exist
 set nobackup
+set noswapfile
 
 
 "__LIGHTLINE, FZF, TERMINAL__"
@@ -307,13 +263,12 @@ let g:lightline = {
     \   'left': [ [ 'mode', 'paste' ],
     \             [ 'filetype', 'filename', 'wordcount', 'modified', 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_infos', 'linter_ok' ] ],
     \   'right': [ [ 'fileformat' ],
-    \              [ 'readonly', 'percent', 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_infos', 'linter_ok' ]]
+    \              [ 'readonly', 'percent', 'linter_checking', 'linter_ok' ]]
     \ },
     \ 'component_function': {
     \    'filetype': 'MyFiletype',
     \    'fileformat': 'MyFileformat',
     \    'wordcount': 'WordCount',
-    \    'readonly': 'LightlineReadonly',
     \    'percent' : 'ScrollStatus',
     \ },
     \ 'component_expand': {
@@ -340,11 +295,6 @@ function! MyFiletype()
 endfunction
 function! MyFileformat()
     return winwidth(0) > 70 ? (&fileformat . ' ' . WebDevIconsGetFileFormatSymbol()) : ''
-endfunction
-
-"create function to get read only
-function! LightlineReadonly()
-  return &readonly && &filetype !=# 'help' ? 'RO' : ''
 endfunction
 
 "create function to get workdcount
@@ -388,7 +338,7 @@ let g:fzf_layout = { 'window': 'call FloatingFZF()' }
 
 "semi transparent floating window and autocomplete
 set winblend=13
-set pumblend=15
+set pumblend=30
 
 ""function to create a floating fzf window
 function! FloatingFZF()
@@ -459,7 +409,6 @@ let g:lightline#ale#indicator_errors = " "
 let g:lightline#ale#indicator_ok = "\uf00c "
 
 "disable ale on start
-""let g:ale_enabled = 0
 let g:ale_sign_error = ""
 let g:ale_sign_warning = ""
 
@@ -478,43 +427,6 @@ let g:ale_lint_on_save = 1
 
 "Lsp
 set completeopt=menuone,noselect
-let g:compe = {}
-let g:compe.enabled = v:true
-let g:compe.autocomplete = v:true
-let g:compe.debug = v:false
-let g:compe.min_length = 1
-let g:compe.preselect = 'enable'
-let g:compe.throttle_time = 80
-let g:compe.source_timeout = 200
-let g:compe.incomplete_delay = 400
-let g:compe.max_abbr_width = 100
-let g:compe.max_kind_width = 100
-let g:compe.max_menu_width = 100
-let g:compe.documentation = v:true
-
-let g:compe.source = {}
-let g:compe.source.spell = v:true
-let g:compe.source.path = v:true
-let g:compe.source.buffer = v:true
-let g:compe.source.calc = v:true
-let g:compe.source.nvim_lsp = v:true
-let g:compe.source.nvim_lua = v:true
-let g:compe.source.tabnine = v:true
-
-
-""let g:compe.source.treesitter = v:true
-
-
-let g:compe.source.tabnine = {}
-let g:compe.source.tabnine.max_line = 1000
-let g:compe.source.tabnine.max_num_results = 6
-let g:compe.source.tabnine.priority = 5000
-" setting sort to false means compe will leave tabnine to sort the completion items
-let g:compe.source.tabnine.sort = v:false
-let g:compe.source.tabnine.show_prediction_strength = v:true
-let g:compe.source.tabnine.ignore_pattern = ''
-
-"compe mappings
 inoremap <silent><expr> <C-Space> compe#complete()
 inoremap <silent><expr> <CR>      compe#confirm('<CR>')
 inoremap <silent><expr> <C-e>     compe#close('<C-e>')
@@ -537,10 +449,6 @@ let g:indentLine_char = '|'
 ""let g:indentLine_char_list = ['|', '¦', '┆', '┊']
 let g:indentLine_setColors = 0
 let g:indentLine_fileTypeExclude = ['dashboard'] "stop indentlines on dashboard
-
-"scrolling
-noremap <silent> <ScrollWheelDown> :call comfortable_motion#flick(100)<CR>
-noremap <silent> <ScrollWheelUp>   :call comfortable_motion#flick(-100)<CR>
 
 "NERDTree
 "enable icons
@@ -623,6 +531,42 @@ autocmd! User GoyoLeave Limelight!
 
 "zen-mode settings
 lua << EOF
+--nvim-compe
+require'compe'.setup {
+  enabled = true;
+  autocomplete = true;
+  debug = false;
+  min_length = 1;
+  preselect = 'enable';
+  throttle_time = 80;
+  source_timeout = 200;
+  incomplete_delay = 400;
+  max_abbr_width = 100;
+  max_kind_width = 100;
+  max_menu_width = 100;
+  documentation = true;
+
+  source = {
+    path = true;
+    buffer = true;
+    calc = true;
+    spell = true;
+    nvim_lsp = true;
+    nvim_lua = true;
+    vsnip = true;
+    tabnine = true;
+    tabnine = {
+        max_line = 1000;
+        max_num_results = 6;
+        priority = 5000;
+        sort = false;
+        show_prediction_strength = true;
+        ignore_pattern = ' ';
+    }
+
+  };
+}
+
 -- setup for TrueZen.nvim
 local true_zen = require("true-zen")
 true_zen.setup({
@@ -642,7 +586,7 @@ true_zen.setup({
 		shown_cmdheight = 1
 	},
 	top = {
-		hidden_showtabline = 2,
+		hidden_showtabline = 0,
 
 		shown_showtabline = 2
 	},
@@ -689,11 +633,6 @@ true_zen.setup({
 		integration_tzfocus_tzataraxis = true
 	}
 })
-
---colorizer setup
-require 'colorizer'.setup {
-  '*' -- Highlight all files, but customize some others.
-}
 
 --nvim treesitter
 require'nvim-treesitter.configs'.setup {
@@ -829,4 +768,31 @@ vim.api.nvim_set_keymap("s", "<Tab>", "v:lua.tab_complete()", {expr = true})
 vim.api.nvim_set_keymap("i", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
 vim.api.nvim_set_keymap("s", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
 
+--add snippet support
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities.textDocument.completion.completionItem.snippetSupport = true
+capabilities.textDocument.completion.completionItem.resolveSupport = {
+  properties = {
+    'documentation',
+    'detail',
+    'additionalTextEdits',
+  }
+}
+
+require'lspconfig'.rust_analyzer.setup {
+  capabilities = capabilities,
+}
+
+--ale to nvim lsp
+local lspconfig = require('lspconfig')
+require("nvim-ale-diagnostic")
+
+vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
+  vim.lsp.diagnostic.on_publish_diagnostics, {
+    underline = false,
+    virtual_text = false,
+    signs = true,
+    update_in_insert = false,
+  }
+)
 EOF
