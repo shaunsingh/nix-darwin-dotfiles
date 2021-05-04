@@ -28,6 +28,7 @@ Plug 'shaunsingh/moonlight.nvim'
 
 "icons
 Plug 'ryanoasis/vim-devicons'
+Plug 'kyazdani42/nvim-web-devicons'
 
 "fuzzy search + files
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } | Plug 'junegunn/fzf.vim'
@@ -40,7 +41,7 @@ Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' } | Plug 'tiagofumo/vim-ner
 Plug 'nvim-lua/plenary.nvim' | Plug 'TimUntersberger/neogit' | Plug 'lewis6991/gitsigns.nvim'
 
 "unix commands
-Plug 'tpope/vim-eunuch'
+"Plug 'tpope/vim-eunuch'
 
 "start dash + give a tip
 Plug 'glepnir/dashboard-nvim'
@@ -64,9 +65,10 @@ Plug 'lewis6991/spellsitter.nvim'
 Plug 'Yggdroot/indentLine' | Plug 'lukas-reineke/indent-blankline.nvim'
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 
-"linting + lsp
+"linting + lsp (ale for linting), (compe for completion, lspkind icons, tabnine, lspconfig for kotlin kotlin_language_server)
 Plug 'dense-analysis/ale' | Plug 'maximbaz/lightline-ale'
-Plug 'hrsh7th/nvim-compe' | Plug 'onsails/lspkind-nvim' | Plug 'tzachar/compe-tabnine', { 'do': './install.sh' }
+Plug 'hrsh7th/nvim-compe' | Plug 'onsails/lspkind-nvim' | Plug 'tzachar/compe-tabnine', { 'do': './install.sh' } | Plug 'neovim/nvim-lspconfig' |
+Plug 'folke/lsp-trouble.nvim' | Plug 'glepnir/lspsaga.nvim'
 
 "rich presence
 ""Plug 'andweeb/presence.nvim'
@@ -169,20 +171,7 @@ set formatoptions=l
 set lbr
 
 "macos clipbard
-set clipboard=unnamedplus
-"explicitely state pbcopy for some stupid reason
-let g:clipboard = {
-  \ 'name': 'pbcopy',
-  \ 'copy': {
-  \    '+': 'pbcopy',
-  \    '*': 'pbcopy',
-  \  },
-  \ 'paste': {
-  \    '+': 'pbpaste',
-  \    '*': 'pbpaste',
-  \ },
-  \ 'cache_enabled': 0,
-  \ }
+set clipboard=unnamed
 
 "remove insert from bottom left
 set noshowmode
@@ -211,13 +200,13 @@ set hidden
 "__VIM_BINDINGS__"
 
 
-"basic autopair (uses lexima now)
-"inoremap " ""<left>
-"inoremap ( ()<left>
-"inoremap [ []<left>
-"inoremap { {}<left>
-"inoremap {<CR> {<CR>}<ESC>O
-"inoremap {;<CR> {<CR>};<ESC>O
+"basic autopair
+inoremap " ""<left>
+inoremap ( ()<left>
+inoremap [ []<left>
+inoremap { {}<left>
+inoremap {<CR> {<CR>}<ESC>O
+inoremap {;<CR> {<CR>};<ESC>O
 
 "remove arrow keys from normal mode (forces to use hjkl)
 noremap <Up> <Nop>
@@ -262,10 +251,7 @@ nnoremap <leader>z :TZAtaraxis<CR>
 nnoremap <leader>s :mksession<CR>
 
 "clear search highlight
-nnoremap <silent> <leader>c :nohl<CR>
-
-"reload init.vim without restart
-map \r :source ~/.config/nvim/init.vim<CR>
+nnoremap <leader>c :nohl<CR>
 
 "basic vim wm (ctrl + hjkl to move/create)
 function! WinMove(key)
@@ -468,14 +454,14 @@ nnoremap <Leader>at :call FloatTerm()<CR>
 "lightline ale
 let g:lightline#ale#indicator_checking = "\uf110 "
 let g:lightline#ale#indicator_infos = "\uf129 "
-let g:lightline#ale#indicator_warnings = "\uf071 "
-let g:lightline#ale#indicator_errors = "\uf05e "
+let g:lightline#ale#indicator_warnings = " "
+let g:lightline#ale#indicator_errors = " "
 let g:lightline#ale#indicator_ok = "\uf00c "
 
 "disable ale on start
 ""let g:ale_enabled = 0
-let g:ale_sign_error = "\uf05e"
-let g:ale_sign_warning = "\uf071"
+let g:ale_sign_error = ""
+let g:ale_sign_warning = ""
 
 let g:ale_linters = {
             \   'mail': ['proselint'],
@@ -514,7 +500,6 @@ let g:compe.source.nvim_lsp = v:true
 let g:compe.source.nvim_lua = v:true
 let g:compe.source.vsnip = v:true
 let g:compe.source.tabnine = v:true
-let g:compe.source.treesitter = v:true
 
 let g:compe.source.tabnine = {}
 let g:compe.source.tabnine.max_line = 1000
@@ -525,11 +510,57 @@ let g:compe.source.tabnine.sort = v:false
 let g:compe.source.tabnine.show_prediction_strength = v:true
 let g:compe.source.tabnine.ignore_pattern = ''
 
+"compe mappings
 inoremap <silent><expr> <C-Space> compe#complete()
 inoremap <silent><expr> <CR>      compe#confirm('<CR>')
 inoremap <silent><expr> <C-e>     compe#close('<C-e>')
 inoremap <silent><expr> <C-f>     compe#scroll({ 'delta': +4 })
 inoremap <silent><expr> <C-d>     compe#scroll({ 'delta': -4 })
+
+"tab to forwards s-tab to go back
+lua <<EOF
+local t = function(str)
+  return vim.api.nvim_replace_termcodes(str, true, true, true)
+end
+
+local check_back_space = function()
+    local col = vim.fn.col('.') - 1
+    if col == 0 or vim.fn.getline('.'):sub(col, col):match('%s') then
+        return true
+    else
+        return false
+    end
+end
+
+-- Use (s-)tab to:
+--- move to prev/next item in completion menuone
+--- jump to prev/next snippet's placeholder
+_G.tab_complete = function()
+  if vim.fn.pumvisible() == 1 then
+    return t "<C-n>"
+  elseif vim.fn.call("vsnip#available", {1}) == 1 then
+    return t "<Plug>(vsnip-expand-or-jump)"
+  elseif check_back_space() then
+    return t "<Tab>"
+  else
+    return vim.fn['compe#complete']()
+  end
+end
+_G.s_tab_complete = function()
+  if vim.fn.pumvisible() == 1 then
+    return t "<C-p>"
+  elseif vim.fn.call("vsnip#jumpable", {-1}) == 1 then
+    return t "<Plug>(vsnip-jump-prev)"
+  else
+    return t "<S-Tab>"
+  end
+end
+
+vim.api.nvim_set_keymap("i", "<Tab>", "v:lua.tab_complete()", {expr = true})
+vim.api.nvim_set_keymap("s", "<Tab>", "v:lua.tab_complete()", {expr = true})
+vim.api.nvim_set_keymap("i", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
+vim.api.nvim_set_keymap("s", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
+EOF
 
 "make cursor line -> block
 let &t_SI = "\<Esc>]50;CursorShape=1\x7"
@@ -796,3 +827,27 @@ require('lspkind').init({
 })
 EOF
 
+"lsp config
+lua << EOF
+require'lspconfig'.pyls.setup{}
+require'lspconfig'.kotlin_language_server.setup{ cmd = { "/Users/shauryasingh/lsp/server/bin/kotlin-language-server" }}
+EOF
+
+"lsp trouble config
+lua <<EOF
+  require("trouble").setup {
+    -- your configuration comes here
+    -- or leave it empty to use the default settings
+    -- refer to the configuration section below
+  }
+EOF
+
+"lsp saga config
+lua <<EOF
+require'lspsaga'.init_lsp_saga{
+    error_sign = "",
+    warn_sign = "",
+    hint_sign = "",
+    infor_sign = ""
+}
+EOF
