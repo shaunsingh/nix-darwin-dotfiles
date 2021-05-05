@@ -4,56 +4,27 @@ set nocompatible
 "__PLUGINS__"
 
 
-"autoinstall vim plug
-"check for uninstalled plugins
-"let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
-"if empty(glob(data_dir . '/autoload/plug.vim'))
-"  silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-"  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-"endif
-""auto install plugins
-"autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
-"  \| PlugInstall --sync | source $MYVIMRC
-"\| endif
-
 call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.vim/plugged')
-"nocompatible but more
-Plug 'tpope/vim-sensible'
-
 "statusline/bufferline he
-Plug 'shaunsingh/lightline.vim' "has my moonlight theme
+Plug 'hoob3rt/lualine.nvim'
+Plug 'romgrk/barbar.nvim'
 Plug 'shaunsingh/moonlight.nvim'
 
-"smooth scroll and statusline
-Plug 'ojroques/vim-scrollstatus'
-
 "icons
-Plug 'ryanoasis/vim-devicons'
 Plug 'kyazdani42/nvim-web-devicons'
 
 "fuzzy search + files
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } | Plug 'junegunn/fzf.vim'
 Plug 'kyazdani42/nvim-tree.lua'
 
-"minimap // enable when supported in openGL Neovide
-""Plug 'wfxr/minimap.vim', {'do': ':!cargo install --locked code-minimap'}
-
 "git
 Plug 'nvim-lua/plenary.nvim' | Plug 'TimUntersberger/neogit' | Plug 'lewis6991/gitsigns.nvim'
-
-"unix commands
-"Plug 'tpope/vim-eunuch'
 
 "start dash + give a tip
 Plug 'glepnir/dashboard-nvim'
 
 "distraction free/zen mode
 Plug 'kdav5758/TrueZen.nvim'
-Plug 'junegunn/goyo.vim', {'on': 'Goyo' } | Plug 'junegunn/limelight.vim', {'on': 'Goyo'}
-
-"markdown writing
-Plug 'kana/vim-textobj-user', {'for': 'markdown'} | Plug 'preservim/vim-textobj-quote', {'for': 'markdown'}
-Plug 'plasticboy/vim-markdown', { 'for': 'markdown' }
 
 "syntax
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
@@ -63,20 +34,15 @@ Plug 'Yggdroot/indentLine' | Plug 'lukas-reineke/indent-blankline.nvim'
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 
 "linting + lsp (ale for linting), (compe for completion, lspkind icons, tabnine, lspconfig for kotlin kotlin_language_server)
-Plug 'dense-analysis/ale' | Plug 'maximbaz/lightline-ale'
-Plug 'hrsh7th/nvim-compe' | Plug 'onsails/lspkind-nvim' |  Plug 'neovim/nvim-lspconfig' | Plug 'folke/lsp-trouble.nvim' | Plug 'glepnir/lspsaga.nvim' | Plug 'nathunsmitty/nvim-ale-diagnostic'
+Plug 'hrsh7th/nvim-compe' | Plug 'onsails/lspkind-nvim' |  Plug 'neovim/nvim-lspconfig' | Plug 'folke/lsp-trouble.nvim' | Plug 'glepnir/lspsaga.nvim' 
 
 "snippets
 Plug 'hrsh7th/vim-vsnip' | Plug 'hrsh7th/vim-vsnip-integ' | Plug 'rafamadriz/friendly-snippets'
-
-"rich presence
-""Plug 'andweeb/presence.nvim'
 
 "easymotions + which key
 Plug 'phaazon/hop.nvim'
 
 call plug#end()
-runtime! plugin/sensible.vim
 
 
 "__COLORS__"
@@ -146,6 +112,7 @@ let &fcs='eob: '
 set tabstop=4
 set softtabstop=4
 set expandtab
+
 "show last command
 set showcmd
 
@@ -168,9 +135,8 @@ set clipboard=unnamed
 set noshowmode
 set noruler
 
-"always display tabline and bufferline"
+"always display bufferline"
 set laststatus=2
-set showtabline=2
 
 "set autoindent
 set autoindent
@@ -185,6 +151,26 @@ set history=100
 
 "let vim open hidden buffers
 set hidden
+set nobackup
+
+"search info
+set hlsearch
+set ignorecase
+set incsearch
+set smartcase
+
+"scroll
+set sidescrolloff=5
+set scrolloff=1
+
+"stop beeping
+set noerrorbells
+
+"set the window tittle
+set title
+
+"backspace more normal
+set backspace=indent,eol,start
 
 
 "__VIM_BINDINGS__"
@@ -231,7 +217,6 @@ nnoremap <leader>ap :TSPlaygroundToggle<CR>
 
 "goyo and ataraxis modes
 nnoremap <leader>z :TZAtaraxis<CR>
-nnoremap <leader>x :Goyo<CR>
 
 " Use ctrl-[hjkl] to select the active split!
 nmap <silent> <c-k> :wincmd k<CR>
@@ -271,78 +256,6 @@ set noswapfile
 
 "__LIGHTLINE, FZF, TERMINAL__"
 
-
-"lightline setup
-let g:lightline = {
-    \ 'colorscheme': 'moonlight',
-    \ 'active': {
-    \   'left': [ [ 'mode', 'paste' ],
-    \             [ 'filetype', 'filename', 'wordcount', 'modified', 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_infos', 'linter_ok' ] ],
-    \   'right': [ [ 'fileformat' ],
-    \              [ 'readonly', 'percent', 'linter_checking', 'linter_ok' ]]
-    \ },
-    \ 'component_function': {
-    \    'filetype': 'MyFiletype',
-    \    'fileformat': 'MyFileformat',
-    \    'wordcount': 'WordCount',
-    \    'percent' : 'ScrollStatus',
-    \ },
-    \ 'component_expand': {
-    \   'linter_checking': 'lightline#ale#checking',
-    \   'linter_infos': 'lightline#ale#infos',
-    \   'linter_warnings': 'lightline#ale#warnings',
-    \   'linter_errors': 'lightline#ale#errors',
-    \   'linter_ok': 'lightline#ale#ok',
-    \ },
-    \ 'component_type': {
-    \   'linter_checking': 'right',
-    \   'linter_infos': 'right',
-    \   'linter_warnings': 'warning',
-    \   'linter_errors': 'error',
-    \   'linter_ok': 'right',
-    \ },
-    \ 'separator': { 'left': '', 'right': '' },
-    \ 'subseparator': { 'left': '', 'right': '' }
-    \ }
-
-"add devicon to lightline
-function! MyFiletype()
-    return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype . ' ' . WebDevIconsGetFileTypeSymbol() : 'no ft') : ''
-endfunction
-function! MyFileformat()
-    return winwidth(0) > 70 ? (&fileformat . ' ' . WebDevIconsGetFileFormatSymbol()) : ''
-endfunction
-
-"create function to get workdcount
-function! WordCount()
-    let currentmode = mode()
-    if !exists("g:lastmode_wc")
-        let g:lastmode_wc = currentmode
-    endif
-    " if we modify file, open a new buffer, be in visual ever, or switch modes
-    " since last run, we recompute.
-    if &modified || !exists("b:wordcount") || currentmode =~? '\c.*v' || currentmode != g:lastmode_wc
-        let g:lastmode_wc = currentmode
-        let l:old_position = getpos('.')
-        let l:old_status = v:statusmsg
-        execute "silent normal g\<c-g>"
-        if v:statusmsg == "--No lines in buffer--"
-            let b:wordcount = 0
-        else
-            let s:split_wc = split(v:statusmsg)
-            if index(s:split_wc, "Selected") < 0
-                let b:wordcount = str2nr(s:split_wc[11])
-            else
-                let b:wordcount = str2nr(s:split_wc[5])
-            endif
-            let v:statusmsg = l:old_status
-        endif
-        call setpos('.', l:old_position)
-        return b:wordcount
-    else
-      return b:wordcount
-    endif
-endfunction
 
 
 let $FZF_DEFAULT_COMMAND =  "find * -path '*/\.*' -prune -o -path 'node_modules/**' -prune -o -path 'target/**' -prune -o -path 'dist/**' -prune -o  -type f -print -o -type l -print 2> /dev/null"
@@ -419,7 +332,6 @@ nnoremap <Leader>at :call FloatTerm()<CR>
 
 let g:nvim_tree_ignore = [ '.git', 'node_modules', '.cache' ] "empty by default
 let g:nvim_tree_auto_close = 1 "0 by default, closes the tree when it's the last window
-let g:nvim_tree_tab_open = 1 "0 by default, will open the tree when entering a new tab and the tree was previously open
 let g:nvim_tree_group_empty = 1 " 0 by default, compact folders that only contain a single folder into one node in the file tree
 let g:nvim_tree_lsp_diagnostics = 1 "0 by default, will show lsp diagnostics in the signcolumn. See :help nvim_tree_lsp_diagnostics
 let g:nvim_tree_special_files = [ 'README.md', 'Makefile', 'MAKEFILE' ] " List of filenames that gets highlighted with NvimTreeSpecialFile
@@ -465,30 +377,6 @@ set termguicolors " this variable must be enabled for colors to be applied prope
 
 " a list of groups can be found at `:help nvim_tree_highlight`
 highlight NvimTreeFolderIcon guibg=blue
-
-"lightline ale
-let g:lightline#ale#indicator_checking = "\uf110 "
-let g:lightline#ale#indicator_infos = "\uf129 "
-let g:lightline#ale#indicator_warnings = " "
-let g:lightline#ale#indicator_errors = " "
-let g:lightline#ale#indicator_ok = "\uf00c "
-
-"general ale configuration
-let g:ale_sign_error = ""
-let g:ale_sign_warning = ""
-
-let g:ale_linters = {
-            \   'mail': ['proselint'],
-            \   'markdown': ['proselint'],
-    	    \   'python': ['pyls', 'autoimport', 'flake8', 'yapf'],
-            \   }
-let g:ale_fixers = {
-\   '*':          ['remove_trailing_lines', 'trim_whitespace'],
-\}
-
-let g:ale_lint_on_text_changed = 'never'
-let g:ale_fix_on_save = 1
-let g:ale_lint_on_save = 1
 
 "Lsp
 set completeopt=menuone,noselect
@@ -543,15 +431,6 @@ let g:dashboard_custom_header =<< trim END
  `''                                                                      ''`
 END
 
-"discord presence
-"let g:presence_auto_update       = 1
-"let g:presence_editing_text      = "Editing %s"
-"let g:presence_workspace_text    = "Working on %s"
-"let g:presence_neovim_image_text = "The One True Text Editor"
-"let g:presence_main_image        = "neovim"
-"let g:presence_client_id         = "793271441293967371"
-"let g:presence_debounce_timeout  = 15
-
 "Vim multi-cursors
 "use alt instead of ctrl
 let g:VM_maps = {}
@@ -559,25 +438,26 @@ let g:VM_default_mappings = 0
 let g:VM_maps["Add Cursor Down"]             = '<A-j>'
 let g:VM_maps["Add Cursor Up"]               = '<A-k>'
 
-"vim markdown
-let g:vim_markdown_folding_disabled = 1
-"quote stuff (curly instead of normal "", qc to autocorrect)
-filetype plugin on       " may already be in your .vimrc
-nnoremap <silent> qr <Plug>ReplaceWithCurly
-
 "spell check for only markdown
 autocmd FileType markdown setlocal spell
 setlocal spelllang=en_us
 
-augroup textobj_quote
-  autocmd!
-  autocmd FileType markdown call textobj#quote#init()
-augroup END
-
-""limelight
-let g:limelight_priority = -1
-autocmd! User GoyoEnter Limelight
-autocmd! User GoyoLeave Limelight!
+"barbar
+" NOTE: If barbar's option dict isn't created yet, create it
+let bufferline = get(g:, 'bufferline', {})
+let bufferline.animation = v:false
+let bufferline.auto_hide = v:true
+let bufferline.tabpages = v:true
+let bufferline.closable = v:true
+let bufferline.clickable = v:true
+let bufferline.icons = v:true
+let bufferline.icon_custom_colors = v:false
+let bufferline.icon_separator_active = '▎'
+let bufferline.icon_separator_inactive = '▎'
+let bufferline.icon_close_tab = ''
+let bufferline.icon_close_tab_modified = '●'
+let bufferline.maximum_padding = 4
+let bufferline.no_name_title = v:null
 
 
 "__LUA__"
@@ -827,16 +707,221 @@ require'lspconfig'.rust_analyzer.setup {
   capabilities = capabilities,
 }
 
---ale nvim integration
+local lualine = require'lualine'
 
-require("nvim-ale-diagnostic")
+-- Color table for highlights
+local colors = {
+  bg       = '#2f334d',
+  fg       = '#bbc2cf',
+  yellow   = '#ECBE7B',
+  cyan     = '#008080',
+  darkblue = '#081633',
+  green    = '#98be65',
+  orange   = '#FF8800',
+  violet   = '#a9a1e1',
+  magenta  = '#c678dd',
+  blue     = '#51afef';
+  red      = '#ec5f67';
+}
 
-vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
-  vim.lsp.diagnostic.on_publish_diagnostics, {
-    underline = false,
-    virtual_text = true,
-    signs = true,
-    update_in_insert = false,
+local conditions = {
+  buffer_not_empty = function()
+    return vim.fn.empty(vim.fn.expand('%:t')) ~= 1
+  end,
+  hide_in_width = function()
+    return vim.fn.winwidth(0) > 80
+  end,
+  check_git_workspace = function()
+    local filepath = vim.fn.expand('%:p:h')
+    local gitdir = vim.fn.finddir('.git', filepath .. ';')
+    return gitdir and #gitdir > 0 and #gitdir < #filepath
+  end
+}
+
+-- Config
+local config = {
+  options = {
+    -- Disable sections and component separators
+    component_separators = "",
+    section_separators = "",
+    theme = {
+      -- We are going to use lualine_c and lualine_x as left and
+      -- right section. Both are highlighted by c theme .  So we
+      -- are just setting default looks o statusline
+      normal = { c = {fg = colors.fg, bg = colors.bg}},
+      inactive = { c = {fg = colors.fg, bg = colors.bg}}
+    },
+  },
+  sections = {
+    -- these are to remove the defaults
+    lualine_a = {},
+    lualine_b = {},
+    lualine_y = {},
+    lualine_z = {},
+    -- These will be filled later
+    lualine_c = {},
+    lualine_x = {},
+  },
+  inactive_sections = {
+    -- these are to remove the defaults
+    lualine_a = {},
+    lualine_v = {},
+    lualine_y = {},
+    lualine_z = {},
+    lualine_c = {},
+    lualine_x = {},
   }
-)
+}
+
+-- Inserts a component in lualine_c at left section
+local function ins_left(component)
+  table.insert(config.sections.lualine_c, component)
+end
+
+-- Inserts a component in lualine_x ot right section
+local function ins_right(component)
+  table.insert(config.sections.lualine_x, component)
+end
+
+ins_left {
+ function() return '▊' end,
+ color = {fg = colors.blue}, -- Sets highlighting of component
+ left_padding = 0 -- We don't need space before this
+}
+
+ins_left {
+  -- mode component
+  function()
+    -- auto change color according to neovims mode
+    local mode_color = {
+      n      = colors.red,
+      i      = colors.green,
+      v      = colors.blue,
+      [''] = colors.blue,
+      V      = colors.blue,
+      c      = colors.magenta,
+      no     = colors.red,
+      s      = colors.orange,
+      S      = colors.orange,
+      [''] = colors.orange,
+      ic     = colors.yellow,
+      R      = colors.violet,
+      Rv     = colors.violet,
+      cv     = colors.red,
+      ce     = colors.red,
+      r      = colors.cyan,
+      rm     = colors.cyan,
+      ['r?'] = colors.cyan,
+      ['!']  = colors.red,
+      t      = colors.red
+    }
+    vim.api.nvim_command('hi! LualineMode guifg='..mode_color[vim.fn.mode()] .. " guibg="..colors.bg)
+    return ''
+  end,
+  color = "LualineMode",
+  left_padding = 0,
+}
+
+ins_left {
+  -- filesize component
+  function()
+    local function format_file_size(file)
+      local size = vim.fn.getfsize(file)
+      if size <= 0 then return '' end
+      local sufixes = {'b', 'k', 'm', 'g'}
+      local i = 1
+      while size > 1024 do
+        size = size / 1024
+        i = i + 1
+      end
+      return string.format('%.1f%s', size, sufixes[i])
+    end
+    local file = vim.fn.expand('%:p')
+    if string.len(file) == 0 then return '' end
+    return format_file_size(file)
+  end,
+  condition = conditions.buffer_not_empty,
+}
+
+ins_left {
+  'filename',
+  condition = conditions.buffer_not_empty,
+  color = {fg = colors.magenta, gui = 'bold'},
+}
+
+ins_left {'location'}
+
+ins_left {
+  'progress',
+  color = {fg = colors.fg, gui = 'bold'},
+}
+
+ins_left {
+  'diagnostics',
+  sources = {'nvim_lsp'},
+  symbols = {error = ' ', warn = ' ', info= ' '},
+  color_error = colors.red,
+  color_warn = colors.yellow,
+  color_info = colors.cyan,
+}
+
+ins_left {
+  -- Lsp server name .
+  function ()
+    local msg = 'none'
+    local buf_ft = vim.api.nvim_buf_get_option(0,'filetype')
+    local clients = vim.lsp.get_active_clients()
+    if next(clients) == nil then return msg end
+    for _, client in ipairs(clients) do
+      local filetypes = client.config.filetypes
+      if filetypes and vim.fn.index(filetypes, buf_ft) ~= -1 then
+        return client.name
+      end
+    end
+    return msg
+  end,
+  icon = ' LSP:',
+  color = {fg = colors.fg, gui = 'bold'}
+}
+
+-- Add components to right sections
+ins_right {
+  'o:encoding', -- option component same as &encoding in viml
+  condition = conditions.hide_in_width,
+  color = {fg = colors.magenta, gui = 'bold'}
+}
+
+ins_right {
+  'fileformat',
+  icons_enabled = false, -- I think icons are cool but Eviline doesn't have them. sigh
+  color = {fg = colors.red, gui='bold'},
+}
+
+ins_right {
+  'branch',
+  icon = '',
+  condition = conditions.check_git_workspace,
+  color = {fg = colors.violet, gui = 'bold'},
+}
+
+ins_right {
+  'diff',
+  -- Is it me or the symbol for modified us really weird
+  symbols = {added= ' ', modified= '柳 ', removed= ' '},
+  color_added = colors.green,
+  color_modified = colors.orange,
+  color_removed = colors.red,
+  condition = conditions.hide_in_width
+}
+
+extensions = { 'fzf' }
+
+ins_right {
+  function() return '▊' end,
+  color = {fg = colors.blue},
+  right_padding = 0,
+}
+
+-- Now don't forget to initialize lualine
+lualine.setup(config)
 EOF
