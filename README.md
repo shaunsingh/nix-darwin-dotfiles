@@ -9,9 +9,7 @@ These are my configurations for class/android+kotlin programming respectively
 init.vim -> neovim configuration with python and rust
 Dependencies: 
 
-Rust/cargo: Minimap 
 Python: linters and snippets 
-linters: proselint, pyls (install through pip)
-Language servers: kotlin_language_server
+lsp: pyls (install through pip), kotlin_language_server (manually, add path to cmd)
 
 Let me know if you would like me to add anything, and if there is a problem please feel free to open an issue
