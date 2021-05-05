@@ -17,9 +17,8 @@ set nocompatible
 "\| endif
 
 call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.vim/plugged')
-
-"speed/profiling
-Plug 'dstein64/vim-startuptime'
+"nocompatible but more
+Plug 'tpope/vim-sensible'
 
 "statusline/bufferline he
 Plug 'shaunsingh/lightline.vim' "has my moonlight theme
@@ -34,7 +33,7 @@ Plug 'kyazdani42/nvim-web-devicons'
 
 "fuzzy search + files
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } | Plug 'junegunn/fzf.vim'
-Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' } | Plug 'tiagofumo/vim-nerdtree-syntax-highlight', { 'on': 'NERDTreeToggle' }
+Plug 'kyazdani42/nvim-tree.lua'
 
 "minimap // enable when supported in openGL Neovide
 ""Plug 'wfxr/minimap.vim', {'do': ':!cargo install --locked code-minimap'}
@@ -64,9 +63,8 @@ Plug 'Yggdroot/indentLine' | Plug 'lukas-reineke/indent-blankline.nvim'
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
 
 "linting + lsp (ale for linting), (compe for completion, lspkind icons, tabnine, lspconfig for kotlin kotlin_language_server)
-Plug 'dense-analysis/ale' | Plug 'maximbaz/lightline-ale' | Plug 'nathunsmitty/nvim-ale-diagnostic'
-Plug 'hrsh7th/nvim-compe' | Plug 'onsails/lspkind-nvim' | Plug 'tzachar/compe-tabnine', { 'do': './install.sh' } | Plug 'neovim/nvim-lspconfig' |
-Plug 'folke/lsp-trouble.nvim' | Plug 'glepnir/lspsaga.nvim'
+Plug 'dense-analysis/ale' | Plug 'maximbaz/lightline-ale'
+Plug 'hrsh7th/nvim-compe' | Plug 'onsails/lspkind-nvim' |  Plug 'neovim/nvim-lspconfig' | Plug 'folke/lsp-trouble.nvim' | Plug 'glepnir/lspsaga.nvim' | Plug 'nathunsmitty/nvim-ale-diagnostic'
 
 "snippets
 Plug 'hrsh7th/vim-vsnip' | Plug 'hrsh7th/vim-vsnip-integ' | Plug 'rafamadriz/friendly-snippets'
@@ -74,10 +72,11 @@ Plug 'hrsh7th/vim-vsnip' | Plug 'hrsh7th/vim-vsnip-integ' | Plug 'rafamadriz/fri
 "rich presence
 ""Plug 'andweeb/presence.nvim'
 
-"easymotions
+"easymotions + which key
 Plug 'phaazon/hop.nvim'
 
 call plug#end()
+runtime! plugin/sensible.vim
 
 
 "__COLORS__"
@@ -126,6 +125,9 @@ let g:neovide_cursor_trail_length=0.8
 
 "__VIM_SETTINGS__"
 
+"set encoding
+set encoding=utf-8
+set fileencoding=utf-8
 
 ""highlight current number
 set number
@@ -144,7 +146,6 @@ let &fcs='eob: '
 set tabstop=4
 set softtabstop=4
 set expandtab
-
 "show last command
 set showcmd
 
@@ -154,11 +155,6 @@ filetype plugin on
 
 "only draw when you need to
 set lazyredraw
-
-"highlight matching characters + search stuff
-set showmatch
-set incsearch
-set hlsearch
 
 " Indents word-wrapped lines as much as the 'parent' line
 set breakindent
@@ -185,7 +181,7 @@ set mouse=a
 
 "history and syntax
 set history=100
-set synmaxcol=240
+""set synmaxcol=240
 
 "let vim open hidden buffers
 set hidden
@@ -218,14 +214,24 @@ let mapleader=" "
 "easymotion/hop"
 nnoremap <leader>w :HopWord<CR>
 nnoremap <leader>l :HopLine<CR>
+nnoremap <leader>/ :HopPattern<CR>
 
 "fuzzy stuff
 nnoremap <leader>o :History<CR>
 nnoremap <leader>p :call fzf#vim#files('.', {'options': '--prompt ""'})<CR>
 nnoremap <leader>f :BLines<CR>
+nnoremap <leader><S-p> :Commands<CR>
 
-"F12 for cool mode"
+"git
+nnoremap <leader>g :Neogit<CR>
+
+"lsp
+nnoremap <leader>ap :TSPlaygroundToggle<CR>
+
+
+"goyo and ataraxis modes
 nnoremap <leader>z :TZAtaraxis<CR>
+nnoremap <leader>x :Goyo<CR>
 
 " Use ctrl-[hjkl] to select the active split!
 nmap <silent> <c-k> :wincmd k<CR>
@@ -237,14 +243,24 @@ nmap <silent> <c-l> :wincmd l<CR>
 map <F5> :call CompileRunGcc()<CR>
 func! CompileRunGcc()
 exec "w"
+if &filetype == 'c'
+exec "!gcc % -o %<"
+exec "!time ./%<"
 elseif &filetype == 'cpp'
 exec "!g++ % -o %<"
 exec "!time ./%<"
 elseif &filetype == 'java'
 exec "!javac %"
 exec "!time java -cp %:p:h %:t:r"
+elseif &filetype == 'sh'
+exec "!time bash %"
 elseif &filetype == 'python'
 exec "!time python3 %"
+elseif &filetype == 'html'
+exec "!firefox % &"
+elseif &filetype == 'go'
+exec "!go build %<"
+exec "!time go run %"
 endif
 endfunc
 
@@ -401,6 +417,55 @@ nnoremap <Leader>at :call FloatTerm()<CR>
 "__PLUGIN_SETTINGS__"
 
 
+let g:nvim_tree_ignore = [ '.git', 'node_modules', '.cache' ] "empty by default
+let g:nvim_tree_auto_close = 1 "0 by default, closes the tree when it's the last window
+let g:nvim_tree_tab_open = 1 "0 by default, will open the tree when entering a new tab and the tree was previously open
+let g:nvim_tree_group_empty = 1 " 0 by default, compact folders that only contain a single folder into one node in the file tree
+let g:nvim_tree_lsp_diagnostics = 1 "0 by default, will show lsp diagnostics in the signcolumn. See :help nvim_tree_lsp_diagnostics
+let g:nvim_tree_special_files = [ 'README.md', 'Makefile', 'MAKEFILE' ] " List of filenames that gets highlighted with NvimTreeSpecialFile
+let g:nvim_tree_show_icons = {
+    \ 'git': 1,
+    \ 'folders': 1,
+    \ 'files': 1,
+    \ }
+let g:nvim_tree_icons = {
+    \ 'default': '',
+    \ 'symlink': '',
+    \ 'git': {
+    \   'unstaged': "✗",
+    \   'staged': "✓",
+    \   'unmerged': "",
+    \   'renamed': "➜",
+    \   'untracked': "★",
+    \   'deleted': "",
+    \   'ignored': "◌"
+    \   },
+    \ 'folder': {
+    \   'default': "",
+    \   'open': "",
+    \   'empty': "",
+    \   'empty_open': "",
+    \   'symlink': "",
+    \   'symlink_open': "",
+    \   },
+    \   'lsp': {
+    \     'hint': "",
+    \     'info': "",
+    \     'warning': "",
+    \     'error': "",
+    \   }
+    \ }
+
+nnoremap <C-n> :NvimTreeToggle<CR>
+nnoremap <leader>r :NvimTreeRefresh<CR>
+nnoremap <leader>n :NvimTreeFindFile<CR>
+" NvimTreeOpen and NvimTreeClose are also available if you need them
+
+set termguicolors " this variable must be enabled for colors to be applied properly
+
+" a list of groups can be found at `:help nvim_tree_highlight`
+highlight NvimTreeFolderIcon guibg=blue
+
 "lightline ale
 let g:lightline#ale#indicator_checking = "\uf110 "
 let g:lightline#ale#indicator_infos = "\uf129 "
@@ -408,7 +473,7 @@ let g:lightline#ale#indicator_warnings = " "
 let g:lightline#ale#indicator_errors = " "
 let g:lightline#ale#indicator_ok = "\uf00c "
 
-"disable ale on start
+"general ale configuration
 let g:ale_sign_error = ""
 let g:ale_sign_warning = ""
 
@@ -432,6 +497,7 @@ inoremap <silent><expr> <CR>      compe#confirm('<CR>')
 inoremap <silent><expr> <C-e>     compe#close('<C-e>')
 inoremap <silent><expr> <C-f>     compe#scroll({ 'delta': +4 })
 inoremap <silent><expr> <C-d>     compe#scroll({ 'delta': -4 })
+set shortmess+=c
 
 "make cursor line -> block
 let &t_SI = "\<Esc>]50;CursorShape=1\x7"
@@ -450,20 +516,8 @@ let g:indentLine_char = '|'
 let g:indentLine_setColors = 0
 let g:indentLine_fileTypeExclude = ['dashboard'] "stop indentlines on dashboard
 
-"NERDTree
-"enable icons
-let g:webdevicons_enable = 1
-let g:webdevicons_enable_nerdtree = 1
-let g:webdevicons_conceal_nerdtree_brackets = 1
-let g:WebDevIconsNerdTreeGitPluginForceVAlign = 1
-let g:NERDTreeHighlightCursorline = 0
-"better ui
-let NERDTreeMinimalUI=1
-let NERDTreeDirArrows=1
-let g:NERDTreeDirArrowExpandable = ' '
-let g:NERDTreeDirArrowCollapsible = ' '
-"let me see dotfiles
-let NERDTreeShowHidden=1
+"nvim tree
+nnoremap <leader>tt :NvimTreeToggle<CR>
 
 "dashboard (use fzf + doom logo)
 let g:dashboard_default_executive ='fzf'
@@ -554,16 +608,6 @@ require'compe'.setup {
     nvim_lsp = true;
     nvim_lua = true;
     vsnip = true;
-    tabnine = true;
-    tabnine = {
-        max_line = 1000;
-        max_num_results = 6;
-        priority = 5000;
-        sort = false;
-        show_prediction_strength = true;
-        ignore_pattern = ' ';
-    }
-
   };
 }
 
@@ -783,14 +827,14 @@ require'lspconfig'.rust_analyzer.setup {
   capabilities = capabilities,
 }
 
---ale to nvim lsp
-local lspconfig = require('lspconfig')
+--ale nvim integration
+
 require("nvim-ale-diagnostic")
 
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
   vim.lsp.diagnostic.on_publish_diagnostics, {
     underline = false,
-    virtual_text = false,
+    virtual_text = true,
     signs = true,
     update_in_insert = false,
   }
