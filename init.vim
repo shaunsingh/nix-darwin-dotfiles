@@ -1,49 +1,8 @@
 set nocompatible
 
-
 "__PLUGINS__"
 
-
-call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.vim/plugged')
-"statusline/bufferline he
-Plug 'hoob3rt/lualine.nvim'
-Plug 'romgrk/barbar.nvim'
-Plug 'shaunsingh/moonlight.nvim'
-
-"icons
-Plug 'kyazdani42/nvim-web-devicons'
-
-"fuzzy search + files
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } | Plug 'junegunn/fzf.vim'
-Plug 'kyazdani42/nvim-tree.lua'
-
-"git
-Plug 'nvim-lua/plenary.nvim' | Plug 'TimUntersberger/neogit' | Plug 'lewis6991/gitsigns.nvim'
-
-"start dash + give a tip
-Plug 'glepnir/dashboard-nvim'
-
-"distraction free/zen mode
-Plug 'kdav5758/TrueZen.nvim'
-
-"syntax
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-
-"lines on indents + auto pairs+ multiple cursors
-Plug 'Yggdroot/indentLine' | Plug 'lukas-reineke/indent-blankline.nvim'
-Plug 'mg979/vim-visual-multi', {'branch': 'master'}
-
-"linting + lsp (ale for linting), (compe for completion, lspkind icons, tabnine, lspconfig for kotlin kotlin_language_server)
-Plug 'hrsh7th/nvim-compe' | Plug 'onsails/lspkind-nvim' |  Plug 'neovim/nvim-lspconfig' | Plug 'folke/lsp-trouble.nvim' | Plug 'glepnir/lspsaga.nvim' 
-
-"snippets
-Plug 'hrsh7th/vim-vsnip' | Plug 'hrsh7th/vim-vsnip-integ' | Plug 'rafamadriz/friendly-snippets'
-
-"easymotions + which key
-Plug 'phaazon/hop.nvim'
-
-call plug#end()
-
+lua require('plugins')
 
 "__COLORS__"
 
@@ -64,6 +23,12 @@ hi NORMAL guibg=#2f334d
 
 ""material theme
 let g:material_style = 'moonlight'
+let g:material_italic_comment = v:true
+let g:material_italic_keywords = v:true
+let g:material_italic_functions = v:true
+let g:material_italic_variables = v:true
+let g:material_contrast = v:false
+let g:material_borders = v:false
 colorscheme material
 
 "enable syntax
@@ -919,4 +884,3 @@ ins_right {
 -- Now don't forget to initialize lualine
 lualine.setup(config)
 EOF
-
