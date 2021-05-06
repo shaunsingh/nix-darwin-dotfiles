@@ -17,7 +17,6 @@ endif
 
 "Theme Info
 set background=dark
-
 "fix bg
 hi NORMAL guibg=#2f334d
 
@@ -91,7 +90,7 @@ set lbr
 set clipboard=unnamed
 
 "remove insert from bottom left
-set noshowmode
+""set noshowmode
 set noruler
 
 "always display bufferline"
@@ -288,45 +287,6 @@ nnoremap <Leader>at :call FloatTerm()<CR>
 
 "__PLUGIN_SETTINGS__"
 
-
-let g:nvim_tree_ignore = [ '.git', 'node_modules', '.cache' ] "empty by default
-let g:nvim_tree_auto_close = 1 "0 by default, closes the tree when it's the last window
-let g:nvim_tree_group_empty = 1 " 0 by default, compact folders that only contain a single folder into one node in the file tree
-let g:nvim_tree_lsp_diagnostics = 1 "0 by default, will show lsp diagnostics in the signcolumn. See :help nvim_tree_lsp_diagnostics
-let g:nvim_tree_special_files = [ 'README.md', 'Makefile', 'MAKEFILE' ] " List of filenames that gets highlighted with NvimTreeSpecialFile
-let g:nvim_tree_show_icons = {
-    \ 'git': 1,
-    \ 'folders': 1,
-    \ 'files': 1,
-    \ }
-let g:nvim_tree_icons = {
-    \ 'default': '',
-    \ 'symlink': '',
-    \ 'git': {
-    \   'unstaged': "✗",
-    \   'staged': "✓",
-    \   'unmerged': "",
-    \   'renamed': "➜",
-    \   'untracked': "★",
-    \   'deleted': "",
-    \   'ignored': "◌"
-    \   },
-    \ 'folder': {
-    \   'default': "",
-    \   'open': "",
-    \   'empty': "",
-    \   'empty_open': "",
-    \   'symlink': "",
-    \   'symlink_open': "",
-    \   },
-    \   'lsp': {
-    \     'hint': "",
-    \     'info': "",
-    \     'warning': "",
-    \     'error': "",
-    \   }
-    \ }
-
 nnoremap <C-n> :NvimTreeToggle<CR>
 nnoremap <leader>r :NvimTreeRefresh<CR>
 nnoremap <leader>n :NvimTreeFindFile<CR>
@@ -359,9 +319,10 @@ set ttyfast
 
 "indentline
 let g:indentLine_char = '|'
-""let g:indentLine_char_list = ['|', '¦', '┆', '┊']
 let g:indentLine_setColors = 0
+let g:indent_blankline_space_char = ' '
 let g:indentLine_fileTypeExclude = ['dashboard'] "stop indentlines on dashboard
+let g:indent_blankline_use_treesitter = v:true
 
 "nvim tree
 nnoremap <leader>tt :NvimTreeToggle<CR>
@@ -400,23 +361,6 @@ let g:VM_maps["Add Cursor Up"]               = '<A-k>'
 "spell check for only markdown
 autocmd FileType markdown setlocal spell
 setlocal spelllang=en_us
-
-"barbar
-" NOTE: If barbar's option dict isn't created yet, create it
-let bufferline = get(g:, 'bufferline', {})
-let bufferline.animation = v:false
-let bufferline.auto_hide = v:true
-let bufferline.tabpages = v:true
-let bufferline.closable = v:true
-let bufferline.clickable = v:true
-let bufferline.icons = v:true
-let bufferline.icon_custom_colors = v:false
-let bufferline.icon_separator_active = '▎'
-let bufferline.icon_separator_inactive = '▎'
-let bufferline.icon_close_tab = ''
-let bufferline.icon_close_tab_modified = '●'
-let bufferline.maximum_padding = 4
-let bufferline.no_name_title = v:null
 
 
 "__LUA__"
@@ -500,8 +444,7 @@ true_zen.setup({
 	},
 	events = {
 		before_minimalist_mode_shown = false,
-		before_minimalist_mode_hidden = false,
-		after_minimalist_mode_shown = false,
+		before_minimalist_mode_hidden = false, after_minimalist_mode_shown = false,
 		after_minimalist_mode_hidden = false
 	},
 	integrations = {
@@ -824,7 +767,7 @@ ins_left {
   color_info = colors.cyan,
 }
 
-ins_left {
+ins_right {
   -- Lsp server name .
   function ()
     local msg = 'none'
@@ -883,4 +826,128 @@ ins_right {
 
 -- Now don't forget to initialize lualine
 lualine.setup(config)
+
+--bufferline
+-- colors
+local bar_fg = "#676E95"
+local activeBuffer_fg = "EEFFFF"
+
+require "bufferline".setup {
+    options = {
+        buffer_close_icon = "",
+        modified_icon = "",
+        close_icon = "",
+        left_trunc_marker = "",
+        right_trunc_marker = "",
+        max_name_length = 14,
+        max_prefix_length = 13,
+        tab_size = 20,
+        enforce_regular_tabs = true,
+        view = "multiwindow",
+        show_buffer_close_icons = true,
+        numbers = "ordinal",
+        diagnostics = "nvim_lsp",
+        diagnostics_indicator = function(count, level, diagnostics_dict)
+            local icon = level:match("error") and " " or " "
+            return " " .. icon .. count
+        end
+    },
+    highlights = {
+        background = {
+            guifg = bar_fg,
+            guibg = "#2f334d"
+        },
+        fill = {
+            guifg = bar_fg,
+            guibg = "#2f334d"
+        },
+        -- focused window
+        buffer_selected = {
+            guifg = activeBuffer_fg,
+            guibg = "#2f334d",
+            gui = "bold"
+        },
+        separator_selected = {
+            guifg = "#2f334d",
+            guibg = "#414863"
+        },
+        -- unfocused opened window
+        buffer_visible = {
+            guifg = "#9298a0",
+            guibg = "#2f334d"
+        },
+        separator_visible = {
+            guifg = "#2f334d",
+            guibg = "#2f334d"
+        },
+        separator = {
+            guifg = "#201c2c",
+            guibg = "#201c2c"
+        },
+        indicator_selected = {
+            guifg = "#201c2c",
+            guibg = "#201c2c"
+        },
+        modified_selected = {
+            guifg = "#d0f5c2",
+            guibg = "#2f334d"
+        }
+    }
+}
+
+--colorizer 
+require'colorizer'.setup()
+
+--nvim tree
+local cmd = vim.cmd
+local g = vim.g
+
+vim.o.termguicolors = true
+
+g.nvim_tree_side = "left"
+g.nvim_tree_width = 25
+g.nvim_tree_ignore = {".git", "node_modules", ".cache"}
+g.nvim_tree_auto_open = 0
+g.nvim_tree_auto_close = 0
+g.nvim_tree_quit_on_open = 0
+g.nvim_tree_follow = 1
+g.nvim_tree_indent_markers = 1
+g.nvim_tree_hide_dotfiles = 1
+g.nvim_tree_git_hl = 1
+g.nvim_tree_root_folder_modifier = ":~"
+g.nvim_tree_allow_resize = 1
+
+g.nvim_tree_show_icons = {
+    git = 1,
+    folders = 1,
+    files = 1
+}
+
+g.nvim_tree_icons = {
+    default = '',
+    symlink = '',
+    git  = {
+      unstaged = "✗",
+      staged = "✓",
+      unmerged = "",
+      renamed = "➜",
+      untracked = "★",
+      deleted = "",
+      ignored = "◌"
+      },
+    folder  = {
+      default = "",
+      open = "",
+      empty = "",
+      empty_open = "",
+      symlink = "",
+      symlink_open = "",
+      },
+      lsp  = {
+        hint = "",
+        info = "",
+        warning = "",
+        error = "",
+      }
+}
 EOF
