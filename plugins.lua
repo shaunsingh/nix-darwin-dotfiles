@@ -13,14 +13,17 @@ vim.cmd [[packadd packer.nvim]]
 
 return require('packer').startup(function()
   -- Packer can manage itself
-  use 'wbthomason/packer.nvim'
+  use {"wbthomason/packer.nvim", opt = true}
+
   --lualine/nvim-web-devicons
   use {
     'hoob3rt/lualine.nvim',
     requires = {'kyazdani42/nvim-web-devicons', opt = true}
   }
   --barbar
-  use 'romgrk/barbar.nvim'
+  --use 'romgrk/barbar.nvim'
+  --bufferline
+  use 'akinsho/nvim-bufferline.lua'
   --my moonlight theme
   use 'shaunsingh/material.nvim'
   --nvim-tree
@@ -35,8 +38,9 @@ return require('packer').startup(function()
   --treesitter
   use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
   --indentlines
-  use 'Yggdroot/indentLine' 
-  use 'lukas-reineke/indent-blankline.nvim'
+  --use 'Yggdroot/indentLine' 
+  use {"lukas-reineke/indent-blankline.nvim", branch = "lua"}  
+  
   --vim-visual-multi
   use 'mg979/vim-visual-multi'
   --linting/lsp
@@ -54,6 +58,8 @@ return require('packer').startup(function()
   --fzf
   use {'junegunn/fzf', dir = '~/.fzf', run = './install --all' }
   use {'junegunn/fzf.vim'}
+  --colorizer
+  use 'norcalli/nvim-colorizer.lua' 
 
 
 end)
