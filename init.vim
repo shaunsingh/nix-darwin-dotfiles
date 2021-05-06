@@ -64,12 +64,6 @@ hi NORMAL guibg=#2f334d
 
 ""material theme
 let g:material_style = 'moonlight'
-let g:material_italic_comment = v:true
-let g:material_italic_keywords = v:true
-let g:material_italic_functions = v:true
-let g:material_italic_variables = v:true
-let g:material_contrast = v:false
-let g:material_borders = v:false
 colorscheme material
 
 "enable syntax
@@ -83,13 +77,13 @@ let g:neovide_cursor_antialiasing=v:true
 let g:neovide_fullscreen=v:true
 let g:neovide_refresh_rate=60
 let g:neovide_keyboard_layout="qwerty"
-
 let g:neovide_cursor_vfx_mode = "pixiedust"
 let g:neovide_cursor_animation_length=0.13
 let g:neovide_cursor_trail_length=0.8
 
 
 "__VIM_SETTINGS__"
+
 
 "set encoding
 set encoding=utf-8
@@ -881,20 +875,20 @@ ins_left {
     return msg
   end,
   icon = ' LSP:',
-  color = {fg = colors.fg, gui = 'bold'}
+  color = {fg = colors.cyan, gui = 'bold'}
 }
 
 -- Add components to right sections
 ins_right {
   'o:encoding', -- option component same as &encoding in viml
   condition = conditions.hide_in_width,
-  color = {fg = colors.magenta, gui = 'bold'}
+  color = {fg = colors.green, gui = 'bold'}
 }
 
 ins_right {
   'fileformat',
   icons_enabled = false, -- I think icons are cool but Eviline doesn't have them. sigh
-  color = {fg = colors.red, gui='bold'},
+  color = {fg = colors.green, gui='bold'},
 }
 
 ins_right {
@@ -925,3 +919,4 @@ ins_right {
 -- Now don't forget to initialize lualine
 lualine.setup(config)
 EOF
+
