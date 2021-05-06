@@ -2,7 +2,9 @@ set nocompatible
 
 "__PLUGINS__"
 
+
 lua require('plugins')
+
 
 "__COLORS__"
 
@@ -287,15 +289,8 @@ nnoremap <Leader>at :call FloatTerm()<CR>
 
 "__PLUGIN_SETTINGS__"
 
-nnoremap <C-n> :NvimTreeToggle<CR>
-nnoremap <leader>r :NvimTreeRefresh<CR>
-nnoremap <leader>n :NvimTreeFindFile<CR>
-" NvimTreeOpen and NvimTreeClose are also available if you need them
 
 set termguicolors " this variable must be enabled for colors to be applied properly
-
-" a list of groups can be found at `:help nvim_tree_highlight`
-highlight NvimTreeFolderIcon guibg=blue
 
 "Lsp
 set completeopt=menuone,noselect
@@ -352,7 +347,6 @@ let g:dashboard_custom_header =<< trim END
 END
 
 "Vim multi-cursors
-"use alt instead of ctrl
 let g:VM_maps = {}
 let g:VM_default_mappings = 0
 let g:VM_maps["Add Cursor Down"]             = '<A-j>'
@@ -843,10 +837,13 @@ require "bufferline".setup {
         max_prefix_length = 13,
         tab_size = 20,
         enforce_regular_tabs = true,
-        view = "multiwindow",
+        view = "defualt",
         show_buffer_close_icons = true,
         numbers = "ordinal",
+        number_style = { "none", "subscript" },
         diagnostics = "nvim_lsp",
+        always_show_bufferline = false,
+        separator_style = "thin" ,
         diagnostics_indicator = function(count, level, diagnostics_dict)
             local icon = level:match("error") and " " or " "
             return " " .. icon .. count
@@ -864,7 +861,7 @@ require "bufferline".setup {
         -- focused window
         buffer_selected = {
             guifg = activeBuffer_fg,
-            guibg = "#2f334d",
+            guibg = "#414863",
             gui = "bold"
         },
         separator_selected = {
@@ -881,12 +878,12 @@ require "bufferline".setup {
             guibg = "#2f334d"
         },
         separator = {
-            guifg = "#201c2c",
-            guibg = "#201c2c"
+            guifg = "#51afef",
+            guibg = "#2f334d"
         },
         indicator_selected = {
-            guifg = "#201c2c",
-            guibg = "#201c2c"
+            guifg = "#2f334d",
+            guibg = "#2f334d"
         },
         modified_selected = {
             guifg = "#d0f5c2",
@@ -927,13 +924,13 @@ g.nvim_tree_icons = {
     default = '',
     symlink = '',
     git  = {
-      unstaged = "✗",
+      unstaged = "",
       staged = "✓",
       unmerged = "",
-      renamed = "➜",
-      untracked = "★",
+      renamed = "",
+      untracked = "",
       deleted = "",
-      ignored = "◌"
+      ignored = ""
       },
     folder  = {
       default = "",
