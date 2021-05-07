@@ -7,9 +7,7 @@ end
 
 --setup packer
 require('packer').startup(function()
-  use {"wbthomason/packer.nvim"}
-
-  use ''
+  use "wbthomason/packer.nvim"
   use {
     'hoob3rt/lualine.nvim',
     requires = {'kyazdani42/nvim-web-devicons', opt = true}
@@ -27,7 +25,6 @@ require('packer').startup(function()
   use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
   use {"lukas-reineke/indent-blankline.nvim", branch = "lua"}
   use 'mg979/vim-visual-multi'
-
   use 'hrsh7th/nvim-compe'
   use 'onsails/lspkind-nvim'
   use 'neovim/nvim-lspconfig'
@@ -89,7 +86,7 @@ opt('o', 'termguicolors', true)                       -- True color support
 opt('o', 'wildmode', 'list:longest')                  -- Command-line completion mode
 opt('o', 'clipboard', 'unnamed')
 opt('o', 'pumblend', 25 )
-opt('o', 'scrolloff', 5 )
+opt('o', 'scrolloff', 2 )
 opt('o', 'swapfile', false )
 opt('o', 'showmode', false )
 opt('o', 'background', 'dark' )
@@ -143,7 +140,6 @@ g.indent_blankline_filetype_exclude = {"help", "terminal", "dashboard"}
 g.indent_blankline_buftype_exclude = {"terminal"}
 g.indent_blankline_show_trailing_blankline_indent = false
 g.indent_blankline_show_first_indent_level = false
-
 
 --barbar
 vim.api.nvim_exec([[
@@ -228,7 +224,8 @@ true_zen.setup({
 	},
 	events = {
 		before_minimalist_mode_shown = false,
-		before_minimalist_mode_hidden = false, after_minimalist_mode_shown = false,
+		before_minimalist_mode_hidden = false,
+        after_minimalist_mode_shown = false,
 		after_minimalist_mode_hidden = false
 	},
 	integrations = {
@@ -365,12 +362,9 @@ vim.cmd("nnoremap <silent> gr <cmd>lua vim.lsp.buf.references()<CR>")
 vim.cmd("nnoremap <silent> gi <cmd>lua vim.lsp.buf.implementation()<CR>")
 vim.cmd("nnoremap <silent> ca :Lspsaga code_action<CR>")
 vim.cmd("nnoremap <silent> K :Lspsaga hover_doc<CR>")
--- vim.cmd('nnoremap <silent> <C-k> <cmd>lua vim.lsp.buf.signature_help()<CR>')
 vim.cmd("nnoremap <silent> <C-p> :Lspsaga diagnostic_jump_prev<CR>")
 vim.cmd("nnoremap <silent> <C-n> :Lspsaga diagnostic_jump_next<CR>")
--- scroll down hover doc or scroll in definition preview
 vim.cmd("nnoremap <silent> <C-f> <cmd>lua require('lspsaga.action').smart_scroll_with_saga(1)<CR>")
--- scroll up hover doc
 vim.cmd("nnoremap <silent> <C-b> <cmd>lua require('lspsaga.action').smart_scroll_with_saga(-1)<CR>")
 vim.cmd('command! -nargs=0 LspVirtualTextToggle lua require("lsp/virtual_text").toggle()')
 
@@ -446,7 +440,7 @@ vim.api.nvim_set_keymap("s", "<Tab>", "v:lua.tab_complete()", {expr = true})
 vim.api.nvim_set_keymap("i", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
 vim.api.nvim_set_keymap("s", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
 
-
+--evilline
 local lualine = require'lualine'
 
 -- Color table for highlights
@@ -556,7 +550,7 @@ ins_left {
       t      = colors.red
     }
     vim.api.nvim_command('hi! LualineMode guifg='..mode_color[vim.fn.mode()] .. " guibg="..colors.bg)
-    return ''
+    return ' '
   end,
   color = "LualineMode",
   left_padding = 0,
@@ -602,7 +596,7 @@ ins_left {
 ins_left {
   'diagnostics',
   sources = {'nvim_lsp'},
-  symbols = {error = ' ', warn = ' ', info= ' '},
+  symbols = {error = ' ', warn = ' ', info= ' '},
   color_error = colors.red,
   color_warn = colors.yellow,
   color_info = colors.cyan,
@@ -623,7 +617,7 @@ ins_right {
     end
     return msg
   end,
-  icon = ' LSP:',
+  icon = ' LSP:',
   color = {fg = colors.cyan, gui = 'bold'}
 }
 
@@ -636,7 +630,7 @@ ins_right {
 
 ins_right {
   'fileformat',
-  icons_enabled = false, -- I think icons are cool but Eviline doesn't have them. sigh
+  icons_enabled = true, -- I think icons are cool but Eviline doesn't have them. sigh
   color = {fg = colors.green, gui='bold'},
 }
 
@@ -650,7 +644,7 @@ ins_right {
 ins_right {
   'diff',
   -- Is it me or the symbol for modified us really weird
-  symbols = {added= ' ', modified= '柳 ', removed= ' '},
+  symbols = {added= ' ', modified= ' ', removed= ' '},
   color_added = colors.green,
   color_modified = colors.orange,
   color_removed = colors.red,
@@ -662,8 +656,6 @@ ins_right {
   color = {fg = colors.blue},
   right_padding = 0,
 }
-
--- Now don't forget to initialize lualine
 lualine.setup(config)
 
 --colorizer
