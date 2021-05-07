@@ -21,9 +21,7 @@ return require('packer').startup(function()
     requires = {'kyazdani42/nvim-web-devicons', opt = true}
   }
   --barbar
-  --use 'romgrk/barbar.nvim'
-  --bufferline
-  use 'akinsho/nvim-bufferline.lua'
+  use 'romgrk/barbar.nvim'
   --my moonlight theme
   use 'shaunsingh/material.nvim'
   --nvim-tree
@@ -35,31 +33,36 @@ return require('packer').startup(function()
   use 'glepnir/dashboard-nvim'
   --dashboard
   use 'kdav5758/TrueZen.nvim'
+  use 'junegunn/limelight.vim'
   --treesitter
   use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
   --indentlines
-  --use 'Yggdroot/indentLine' 
+  --use 'Yggdroot/indentLine'
   use {"lukas-reineke/indent-blankline.nvim", branch = "lua"}  
-  
   --vim-visual-multi
   use 'mg979/vim-visual-multi'
   --linting/lsp
-  use 'hrsh7th/nvim-compe' 
-  use 'onsails/lspkind-nvim' 
-  use 'neovim/nvim-lspconfig' 
-  use 'folke/lsp-trouble.nvim' 
-  use 'glepnir/lspsaga.nvim'   
-  --snpipets 
+  use 'hrsh7th/nvim-compe'
+  use 'onsails/lspkind-nvim'
+  use 'neovim/nvim-lspconfig'
+  use 'folke/lsp-trouble.nvim'
+  use 'glepnir/lspsaga.nvim'
+  use 'kabouzeid/nvim-lspinstall'
+  use 'ray-x/lsp_signature.nvim'
+
+  --snpipets
   use 'hrsh7th/vim-vsnip'   
   use 'hrsh7th/vim-vsnip-integ'   
   use 'rafamadriz/friendly-snippets' 
   --hop
   use 'phaazon/hop.nvim'
   --fzf
-  use {'junegunn/fzf', dir = '~/.fzf', run = './install --all' }
-  use {'junegunn/fzf.vim'}
+  use {
+    'nvim-telescope/telescope.nvim',
+    requires = {{'nvim-lua/popup.nvim'}, {'nvim-lua/plenary.nvim'}}
+  }
   --colorizer
   use 'norcalli/nvim-colorizer.lua' 
-
-
+  --cursorline 
+  use 'yamatsum/nvim-cursorline'
 end)
