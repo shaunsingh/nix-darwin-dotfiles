@@ -1,5 +1,3 @@
-set nocompatible
-
 "__PLUGINS__"
 
 
@@ -9,40 +7,26 @@ lua require('plugins')
 "__COLORS__"
 
 
-"set true colors for term + vim
-if has('termguicolors')
-  set termguicolors
-endif
-if (has('nvim'))
-  let $NVIM_TUI_ENABLE_TRUE_COLOR = 1
-endif
-
 "Theme Info
 set background=dark
 "fix bg
 hi NORMAL guibg=#2f334d
-
 ""material theme
 let g:material_style = 'moonlight'
 let g:material_italic_comment = v:true
 let g:material_italic_keywords = v:true
 let g:material_italic_functions = v:true
 let g:material_italic_variables = v:true
-let g:material_contrast = v:false
 let g:material_borders = v:false
+let g:material_contrast = v:false
 colorscheme material
-
 "enable syntax
 syntax enable
 "set 256 colors
 set t_Co=256
-
 "Neovide + gui
-set guifont=FiraCode\ Nerd\ Font:h13
-let g:neovide_cursor_antialiasing=v:true
+set guifont=FiraCode\ Nerd\ Font:h15
 let g:neovide_fullscreen=v:true
-let g:neovide_refresh_rate=60
-let g:neovide_keyboard_layout="qwerty"
 let g:neovide_cursor_vfx_mode = "pixiedust"
 let g:neovide_cursor_animation_length=0.13
 let g:neovide_cursor_trail_length=0.8
@@ -51,86 +35,62 @@ let g:neovide_cursor_trail_length=0.8
 "__VIM_SETTINGS__"
 
 
-"set encoding
-set encoding=utf-8
-set fileencoding=utf-8
-
-""highlight current number
+"set number 
 set number
-set cursorline
-highlight CursorLine cterm=NONE ctermbg=NONE ctermfg=NONE guibg=NONE guifg=NONE
-hi clear CursorLine
-"Reset cursorline everytime colorscheme updates because stupid vim
-augroup CLClear
-    autocmd! ColorScheme * hi clear CursorLine
-augroup END
-
 "remove empty line symbols
 let &fcs='eob: '
-
 "set tab to just expand spaces
 set tabstop=4
 set softtabstop=4
 set expandtab
-
 "show last command
 set showcmd
-
 "indent based on filetypes
 filetype indent on
 filetype plugin on
-
 "only draw when you need to
 set lazyredraw
-
 " Indents word-wrapped lines as much as the 'parent' line
 set breakindent
 set formatoptions=l
 set lbr
-
 "macos clipbard
 set clipboard=unnamed
-
 "remove insert from bottom left
-""set noshowmode
+set noshowmode
 set noruler
-
 "always display bufferline"
 set laststatus=2
-
 "set autoindent
 set autoindent
 set shiftwidth=4
-
 "enable the mouse
 set mouse=a
-
 "history and syntax
 set history=100
-""set synmaxcol=240
-
 "let vim open hidden buffers
 set hidden
 set nobackup
-
 "search info
 set hlsearch
 set ignorecase
 set incsearch
 set smartcase
-
 "scroll
 set sidescrolloff=5
 set scrolloff=1
-
 "stop beeping
 set noerrorbells
-
 "set the window tittle
 set title
-
 "backspace more normal
 set backspace=indent,eol,start
+"set completion for lsp, disable "pattern not found message
+set completeopt=menuone,noselect
+set shortmess+=c
+"set spelling
+setlocal spelllang=en_us
+setlocal spell
 
 
 "__VIM_BINDINGS__"
@@ -143,174 +103,47 @@ inoremap [ []<left>
 inoremap { {}<left>
 inoremap {<CR> {<CR>}<ESC>O
 inoremap {;<CR> {<CR>};<ESC>O
-
 "jk to exit instead
 inoremap jk <esc>
 cnoremap jk <C-C>
-
 "move by visual line not actal line
 nnoremap j gj
 nnoremap k gk
-
 "use semicolon as colon in normal mode
 nnoremap ; :
 "leader keys (space)
 let mapleader=" "
-
 "easymotion/hop"
 nnoremap <leader>w :HopWord<CR>
 nnoremap <leader>l :HopLine<CR>
 nnoremap <leader>/ :HopPattern<CR>
-
 "fuzzy stuff
-nnoremap <leader>o :History<CR>
-nnoremap <leader>p :call fzf#vim#files('.', {'options': '--prompt ""'})<CR>
-nnoremap <leader>f :BLines<CR>
-nnoremap <leader><S-p> :Commands<CR>
-
+nnoremap <leader>o <cmd>lua require('telescope.builtin').oldfiles()<cr>
+nnoremap <leader>p <cmd>lua require('telescope.builtin').find_files()<cr>
+nnoremap <leader>f <cmd>lua require('telescope.builtin').current_buffer_fuzzy_find()<cr>
+nnoremap <leader><S-p> <cmd>lua require('telescope.builtin').commands()<cr>
 "git
 nnoremap <leader>g :Neogit<CR>
-
-"lsp
-nnoremap <leader>ap :TSPlaygroundToggle<CR>
-
-
 "goyo and ataraxis modes
 nnoremap <leader>z :TZAtaraxis<CR>
-
+nnoremap <leader>x :TZAtaraxis l45 r45 t2 b2<CR>
 " Use ctrl-[hjkl] to select the active split!
 nmap <silent> <c-k> :wincmd k<CR>
 nmap <silent> <c-j> :wincmd j<CR>
 nmap <silent> <c-h> :wincmd h<CR>
 nmap <silent> <c-l> :wincmd l<CR>
-
-"f5 to run current filetype
-map <F5> :call CompileRunGcc()<CR>
-func! CompileRunGcc()
-exec "w"
-if &filetype == 'c'
-exec "!gcc % -o %<"
-exec "!time ./%<"
-elseif &filetype == 'cpp'
-exec "!g++ % -o %<"
-exec "!time ./%<"
-elseif &filetype == 'java'
-exec "!javac %"
-exec "!time java -cp %:p:h %:t:r"
-elseif &filetype == 'sh'
-exec "!time bash %"
-elseif &filetype == 'python'
-exec "!time python3 %"
-elseif &filetype == 'html'
-exec "!firefox % &"
-elseif &filetype == 'go'
-exec "!go build %<"
-exec "!time go run %"
-endif
-endfunc
-
-"tell vim backups to not exist
-set nobackup
-set noswapfile
-
-
-"__LIGHTLINE, FZF, TERMINAL__"
-
-
-
-let $FZF_DEFAULT_COMMAND =  "find * -path '*/\.*' -prune -o -path 'node_modules/**' -prune -o -path 'target/**' -prune -o -path 'dist/**' -prune -o  -type f -print -o -type l -print 2> /dev/null"
-
-"floating window specs
-let $FZF_DEFAULT_OPTS=' --color=dark --color=fg:#bbc2cf,bg:#2f334d,hl:#baacff,fg+:#bbc2cf,bg+:#2f334d,hl+:#5B6268 --color=info:#2f334d,prompt:#2f334d,pointer:#c678dd,marker:#2f334d,spinner:#2f334d,header:-1 --layout=reverse  --margin=1,4'
-
-let g:fzf_layout = { 'window': 'call FloatingFZF()' }
-
-"semi transparent floating window and autocomplete
-set winblend=13
-set pumblend=30
-
-""function to create a floating fzf window
-function! FloatingFZF()
-  let buf = nvim_create_buf(v:false, v:true)
-  call setbufvar(buf, '&signcolumn', 'no')
-
-  let height = float2nr(30)
-  let width = float2nr(135)
-  let horizontal = float2nr((&columns - width) / 2)
-  ""let vertical = 1
-  let vertical = float2nr((&lines - height) / 2)
-
-  let opts = {
-        \ 'relative': 'editor',
-        \ 'row': vertical,
-        \ 'col': horizontal,
-        \ 'width': width,
-        \ 'height': height,
-        \ 'style': 'minimal'
-        \ }
-
-  call nvim_open_win(buf, v:true, opts)
-endfunction
-
-" Floating Term
-function! FloatTerm(...)
-  " Configuration
-  let buf = nvim_create_buf(v:false, v:true)
-  call setbufvar(buf, '&signcolumn', 'no')
-
-  let height = float2nr(30)
-  let width = float2nr(135)
-  let horizontal = float2nr((&columns - width) / 2)
-  ""let vertical = 1
-  let vertical = float2nr((&lines - height) / 2)
-
-  let opts = {
-        \ 'relative': 'editor',
-        \ 'row': vertical,
-        \ 'col': horizontal,
-        \ 'width': width,
-        \ 'height': height,
-        \ 'style': 'minimal',
-        \ }
-
-  let s:float_term_win = nvim_open_win(buf, v:true, opts)
-  " Styling
-  if a:0 == 0
-    terminal
-  else
-    call termopen(a:1)
-  endif
-  startinsert
-  autocmd TermClose * ++once :bd! | call nvim_win_close(s:float_term_win, v:true)
-endfunction
-"bindings
-nnoremap <Leader>at :call FloatTerm()<CR>
-
-
-"__PLUGIN_SETTINGS__"
-
-
-set termguicolors " this variable must be enabled for colors to be applied properly
-
-"Lsp
-set completeopt=menuone,noselect
+"nvim tree
+nnoremap <leader>tt :NvimTreeToggle<CR>
+"lsp maps
 inoremap <silent><expr> <C-Space> compe#complete()
 inoremap <silent><expr> <CR>      compe#confirm('<CR>')
 inoremap <silent><expr> <C-e>     compe#close('<C-e>')
 inoremap <silent><expr> <C-f>     compe#scroll({ 'delta': +4 })
 inoremap <silent><expr> <C-d>     compe#scroll({ 'delta': -4 })
-set shortmess+=c
 
-"make cursor line -> block
-let &t_SI = "\<Esc>]50;CursorShape=1\x7"
-let &t_SR = "\<Esc>]50;CursorShape=2\x7"
-let &t_EI = "\<Esc>]50;CursorShape=0\x7"
 
-"anti-delay for above
-set ttimeout
-set ttimeoutlen=1
-set listchars=tab:>-,trail:~,extends:>,precedes:<,space:.
-set ttyfast
+"__PLUGIN_SETTINGS__"
+
 
 "indentline
 let g:indentLine_char = '|'
@@ -318,43 +151,15 @@ let g:indentLine_setColors = 0
 let g:indent_blankline_space_char = ' '
 let g:indentLine_fileTypeExclude = ['dashboard'] "stop indentlines on dashboard
 let g:indent_blankline_use_treesitter = v:true
-
-"nvim tree
-nnoremap <leader>tt :NvimTreeToggle<CR>
-
-"dashboard (use fzf + doom logo)
-let g:dashboard_default_executive ='fzf'
-let g:dashboard_custom_header =<< trim END
-=================     ===============     ===============   ========  ========
-\\ . . . . . . .\\   //. . . . . . .\\   //. . . . . . .\\  \\. . .\\// . . //
-||. . ._____. . .|| ||. . ._____. . .|| ||. . ._____. . .|| || . . .\/ . . .||
-|| . .||   ||. . || || . .||   ||. . || || . .||   ||. . || ||. . . . . . . ||
-||. . ||   || . .|| ||. . ||   || . .|| ||. . ||   || . .|| || . | . . . . .||
-|| . .||   ||. _-|| ||-_ .||   ||. . || || . .||   ||. _-|| ||-_.|\ . . . . ||
-||. . ||   ||-'  || ||  `-||   || . .|| ||. . ||   ||-'  || ||  `|\_ . .|. .||
-|| . _||   ||    || ||    ||   ||_ . || || . _||   ||    || ||   |\ `-_/| . ||
-||_-' ||  .|/    || ||    \|.  || `-_|| ||_-' ||  .|/    || ||   | \  / |-_.||
-||    ||_-'      || ||      `-_||    || ||    ||_-'      || ||   | \  / |  `||
-||    `'         || ||         `'    || ||    `'         || ||   | \  / |   ||
-||            .===' `===.         .==='.`===.         .===' /==. |  \/  |   ||
-||         .=='   \_|-_ `===. .==='   _|_   `===. .===' _-|/   `==  \/  |   ||
-||      .=='    _-'    `-_  `='    _-'   `-_    `='  _-'   `-_  /|  \/  |   ||
-||   .=='    _-'          '-__\._-'         '-_./__-'         `' |. /|  |   ||
-||.=='    _-'                                                     `' |  /==.||
-=='    _-'                        N E O V I M                         \/   `==
-\   _-'                                                                `-_   /
- `''                                                                      ''`
-END
-
 "Vim multi-cursors
 let g:VM_maps = {}
 let g:VM_default_mappings = 0
 let g:VM_maps["Add Cursor Down"]             = '<A-j>'
 let g:VM_maps["Add Cursor Up"]               = '<A-k>'
-
-"spell check for only markdown
-autocmd FileType markdown setlocal spell
-setlocal spelllang=en_us
+"barbar
+let bufferline = get(g:, 'bufferline', {})
+let bufferline.animation = v:false
+let bufferline.auto_hide = v:true
 
 
 "__LUA__"
@@ -430,7 +235,7 @@ true_zen.setup({
 		disable_bg_configuration = false,
 		disable_fillchars_configuration = false,
 		force_when_plus_one_window = true,
-		force_hide_statusline = false
+		force_hide_statusline = true
 	},
 	focus = {
 		margin_of_error = 5,
@@ -449,7 +254,7 @@ true_zen.setup({
 		integration_express_line = false,
 		integration_gitgutter = false,
 		integration_vim_signify = false,
-		integration_limelight = false,
+		integration_limelight = true,
 		integration_tzfocus_tzataraxis = true
 	}
 })
@@ -460,6 +265,10 @@ require'nvim-treesitter.configs'.setup {
   highlight = {
     enable = true,              -- false will disable the whole extension
   },
+  rainbow = {
+    enable = true,
+    extended_mode = true, -- Highlight also non-parentheses delimiters, boolean or table: lang -> boolean
+  }
 }
 
 --neogit
@@ -507,36 +316,125 @@ require('gitsigns').setup {
   use_internal_diff = true,  -- If luajit is present
 }
 
---lspkind for icons
+vim.fn.sign_define(
+    "LspDiagnosticsSignError",
+    {texthl = "LspDiagnosticsSignError", text = "", numhl = "LspDiagnosticsSignError"}
+)
+vim.fn.sign_define(
+    "LspDiagnosticsSignWarning",
+    {texthl = "LspDiagnosticsSignWarning", text = "", numhl = "LspDiagnosticsSignWarning"}
+)
+vim.fn.sign_define(
+    "LspDiagnosticsSignHint",
+    {texthl = "LspDiagnosticsSignHint", text = "", numhl = "LspDiagnosticsSignHint"}
+)
+vim.fn.sign_define(
+    "LspDiagnosticsSignInformation",
+    {texthl = "LspDiagnosticsSignInformation", text = "", numhl = "LspDiagnosticsSignInformation"}
+)
+-- taken from https://github.com/neovim/nvim-lspconfig#keybindings-and-completion
+-- changed servers and ctermbg=237
+-- added buf_set_keymap('n', 'ga', '<Cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+local nvim_lsp = require('lspconfig')
+
+-- Snippets support
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities.textDocument.completion.completionItem.snippetSupport = true
+
+vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
+ vim.lsp.diagnostic.on_publish_diagnostics, {
+   virtual_text = {
+     prefix = " ", -- change this to whatever you want your diagnostic icons to be
+   },
+ }
+)
+
+-- Signature help
+require('lsp_signature').on_attach()
+
 require('lspkind').init({
-     with_text = true,
-     symbol_map = {
-       Text = '',
-       Method = 'ƒ',
-       Function = '',
-       Constructor = '',
-       Variable = '',
-       Class = '',
-       Interface = 'ﰮ',
-       Module = '',
-       Property = '',
-       Unit = '',
-       Value = '',
-       Enum = '了',
-       Keyword = '',
-       Snippet = '﬌',
-       Color = '',
-       File = '',
-       Folder = '',
-       EnumMember = '',
-       Constant = '',
-       Struct = ''
-     },
+    with_text = true,
+    symbol_map = {
+        Text = '',
+        Method = 'ƒ',
+        Function = '',
+        Constructor = '',
+        Variable = '',
+        Class = '',
+        Interface = 'ﰮ',
+        Module = '',
+        Property = '',
+        Unit = '',
+        Value = '',
+        Enum = '了',
+        Keyword = '',
+        Snippet = '﬌',
+        Color = '',
+        File = '',
+        Folder = '',
+        EnumMember = '',
+        Constant = '',
+        Struct = ''
+    },
 })
 
+vim.cmd("nnoremap <silent> gd <cmd>lua vim.lsp.buf.definition()<CR>")
+vim.cmd("nnoremap <silent> gD <cmd>lua vim.lsp.buf.declaration()<CR>")
+vim.cmd("nnoremap <silent> gr <cmd>lua vim.lsp.buf.references()<CR>")
+vim.cmd("nnoremap <silent> gi <cmd>lua vim.lsp.buf.implementation()<CR>")
+vim.cmd("nnoremap <silent> ca :Lspsaga code_action<CR>")
+vim.cmd("nnoremap <silent> K :Lspsaga hover_doc<CR>")
+-- vim.cmd('nnoremap <silent> <C-k> <cmd>lua vim.lsp.buf.signature_help()<CR>')
+vim.cmd("nnoremap <silent> <C-p> :Lspsaga diagnostic_jump_prev<CR>")
+vim.cmd("nnoremap <silent> <C-n> :Lspsaga diagnostic_jump_next<CR>")
+-- scroll down hover doc or scroll in definition preview
+vim.cmd("nnoremap <silent> <C-f> <cmd>lua require('lspsaga.action').smart_scroll_with_saga(1)<CR>")
+-- scroll up hover doc
+vim.cmd("nnoremap <silent> <C-b> <cmd>lua require('lspsaga.action').smart_scroll_with_saga(-1)<CR>")
+vim.cmd('command! -nargs=0 LspVirtualTextToggle lua require("lsp/virtual_text").toggle()')
+local on_attach = function(client, bufnr)
+    -- Mappings.
+    -- Set some keybinds conditional on server capabilities
+    if client.resolved_capabilities.document_formatting then
+      buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+    elseif client.resolved_capabilities.document_range_formatting then
+      buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.range_formatting()<CR>", opts)
+    end
+    -- Set autocommands conditional on server_capabilities
+    if client.resolved_capabilities.document_highlight then
+      vim.api.nvim_exec([[
+        hi LspReferenceRead ctermbg=237 guibg=LightYellow
+        hi LspReferenceText ctermbg=237 guibg=LightYellow
+        hi LspReferenceWrite ctermbg=237 guibg=LightYellow
+        augroup lsp_document_highlight
+          autocmd! * <buffer>
+          autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
+          autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
+        augroup END
+      ]], false)
+    end
+end
 --lspconfig + lsp trouble + lspsaga
 require'lspconfig'.pyls.setup{}
 require'lspconfig'.kotlin_language_server.setup{ cmd = { "/Users/shauryasingh/lsp/server/bin/kotlin-language-server" }}
+
+--lsp isntaller
+local function setup_servers()
+  require'lspinstall'.setup()
+  local servers = require'lspinstall'.installed_servers()
+  for _, server in pairs(servers) do
+    require'lspconfig'[server].setup{}
+  end
+end
+
+setup_servers()
+
+-- Automatically reload after `:LspInstall <server>` so we don't have to restart neovim
+require'lspinstall'.post_install_hook = function ()
+  setup_servers() -- reload installed servers
+  vim.cmd("bufdo e") -- this triggers the FileType autocmd that starts the server
+end
+
 require("trouble").setup {}
 require'lspsaga'.init_lsp_saga{
     error_sign = "",
@@ -608,16 +506,16 @@ local lualine = require'lualine'
 -- Color table for highlights
 local colors = {
   bg       = '#2f334d',
-  fg       = '#bbc2cf',
-  yellow   = '#ECBE7B',
-  cyan     = '#008080',
-  darkblue = '#081633',
-  green    = '#98be65',
-  orange   = '#FF8800',
-  violet   = '#a9a1e1',
-  magenta  = '#c678dd',
+  fg       = '#A6ACCD',
+  yellow   = '#FFCB6B',
+  cyan     = '#89DDFF',
+  darkblue = '#B0C9FF',
+  green    = '#C3E88D',
+  orange   = '#F78C6C',
+  violet   = '#FF9CAC',
+  magenta  = '#C792EA',
   blue     = '#51afef';
-  red      = '#ec5f67';
+  red      = '#F07178';
 }
 
 local conditions = {
@@ -745,11 +643,14 @@ ins_left {
   color = {fg = colors.magenta, gui = 'bold'},
 }
 
-ins_left {'location'}
+ins_left {
+  'location',
+  color = {fg = colors.yellow, gui = 'bold'}
+}
 
 ins_left {
   'progress',
-  color = {fg = colors.fg, gui = 'bold'},
+  color = {fg = colors.violet, gui = 'bold'},
 }
 
 ins_left {
@@ -810,7 +711,7 @@ ins_right {
   condition = conditions.hide_in_width
 }
 
-extensions = { 'fzf' }
+extensions = { 'nvim-tree' }
 
 ins_right {
   function() return '▊' end,
@@ -820,77 +721,6 @@ ins_right {
 
 -- Now don't forget to initialize lualine
 lualine.setup(config)
-
---bufferline
--- colors
-local bar_fg = "#676E95"
-local activeBuffer_fg = "EEFFFF"
-
-require "bufferline".setup {
-    options = {
-        buffer_close_icon = "",
-        modified_icon = "",
-        close_icon = "",
-        left_trunc_marker = "",
-        right_trunc_marker = "",
-        max_name_length = 14,
-        max_prefix_length = 13,
-        tab_size = 20,
-        enforce_regular_tabs = true,
-        view = "defualt",
-        show_buffer_close_icons = true,
-        numbers = "ordinal",
-        number_style = { "none", "subscript" },
-        diagnostics = "nvim_lsp",
-        always_show_bufferline = false,
-        separator_style = "thin" ,
-        diagnostics_indicator = function(count, level, diagnostics_dict)
-            local icon = level:match("error") and " " or " "
-            return " " .. icon .. count
-        end
-    },
-    highlights = {
-        background = {
-            guifg = bar_fg,
-            guibg = "#2f334d"
-        },
-        fill = {
-            guifg = bar_fg,
-            guibg = "#2f334d"
-        },
-        -- focused window
-        buffer_selected = {
-            guifg = activeBuffer_fg,
-            guibg = "#414863",
-            gui = "bold"
-        },
-        separator_selected = {
-            guifg = "#2f334d",
-            guibg = "#414863"
-        },
-        -- unfocused opened window
-        buffer_visible = {
-            guifg = "#9298a0",
-            guibg = "#2f334d"
-        },
-        separator_visible = {
-            guifg = "#2f334d",
-            guibg = "#2f334d"
-        },
-        separator = {
-            guifg = "#51afef",
-            guibg = "#2f334d"
-        },
-        indicator_selected = {
-            guifg = "#2f334d",
-            guibg = "#2f334d"
-        },
-        modified_selected = {
-            guifg = "#d0f5c2",
-            guibg = "#2f334d"
-        }
-    }
-}
 
 --colorizer 
 require'colorizer'.setup()
@@ -945,6 +775,106 @@ g.nvim_tree_icons = {
         info = "",
         warning = "",
         error = "",
-      }
+        } 
 }
+
+--telescope
+require('telescope').setup{
+  defaults = {
+    vimgrep_arguments = {
+      'rg',
+      '--color=never',
+      '--no-heading',
+      '--with-filename',
+      '--line-number',
+      '--column',
+      '--smart-case'
+    },
+    prompt_position = "top",
+    prompt_prefix = " ",
+    selection_caret = "> ",
+    entry_prefix = "  ",
+    initial_mode = "insert",
+    selection_strategy = "reset",
+    sorting_strategy = "ascending",
+    layout_strategy = "vertical",
+    layout_defaults = {
+      horizontal = {
+        mirror = false,
+      },
+      vertical = {
+        mirror = true,
+      },
+    },
+    file_sorter =  require'telescope.sorters'.get_fuzzy_file,
+    file_ignore_patterns = {},
+    generic_sorter =  require'telescope.sorters'.get_generic_fuzzy_sorter,
+    shorten_path = true,
+    winblend = 0,
+    width = 0.75,
+    preview_cutoff = 120,
+    results_height = 1,
+    results_width = 0.8,
+    border = {},
+    borderchars = { '─', '│', '─', '│', '╭', '╮', '╯', '╰' },
+    color_devicons = true,
+    use_less = true,
+    set_env = { ['COLORTERM'] = 'truecolor' }, -- default = nil,
+    file_previewer = require'telescope.previewers'.vim_buffer_cat.new,
+    grep_previewer = require'telescope.previewers'.vim_buffer_vimgrep.new,
+    qflist_previewer = require'telescope.previewers'.vim_buffer_qflist.new,
+
+    -- Developer configurations: Not meant for general override
+    buffer_previewer_maker = require'telescope.previewers'.buffer_previewer_maker
+  }
+}
+
+vim.g.dashboard_session_directory = '~/.config/nvim/.sessions'
+vim.g.dashboard_default_executive = 'telescope'
+vim.cmd("let g:dashboard_default_executive = 'telescope'")
+
+vim.cmd("let g:dashboard_session_directory = $HOME..'/.config/nvim/.sessions'")
+vim.cmd("let packages = len(globpath('~/.local/share/nvim/site/pack/packer/start', '*', 0, 1))")
+
+vim.api.nvim_exec([[
+    let g:dashboard_custom_footer = ['Doom loaded '..packages..' packages']
+]], false)
+
+vim.g.dashboard_custom_section = {
+    a = {description = {'  Reload Last Session            SPC q l'}, command = 'SessionLoad'},
+    b = {description = {'  Recently Opened Files          SPC f r'}, command = 'Telescope oldfiles'},
+    c = {description = {'  Open Project                   SPC f p'}, command = 'Telescope marks'},
+    d = {description = {'  Jump to Bookmark               SPC f b'}, command = 'Telescope project'},
+    e = {description = {'  Find File                      SPC f f'}, command = 'Telescope find_files'},
+    f = {description = {'  Find Word                      SPC s p'}, command = 'Telescope live_grep'},
+    g = {description = {'  Open Neovim Configuration     SPC f P'}, command = ':e ~/.config/nvim/init.vim'},
+}
+
+vim.g.dashboard_custom_header = {
+                 "=================     ===============     ===============   ========  ========",
+                 "\\\\ . . . . . . .\\\\   //. . . . . . .\\\\   //. . . . . . .\\\\  \\\\. . .\\\\// . . //",
+                 "||. . ._____. . .|| ||. . ._____. . .|| ||. . ._____. . .|| || . . .\\/ . . .||",
+                 "|| . .||   ||. . || || . .||   ||. . || || . .||   ||. . || ||. . . . . . . ||",
+                 "||. . ||   || . .|| ||. . ||   || . .|| ||. . ||   || . .|| || . | . . . . .||",
+                 "|| . .||   ||. _-|| ||-_ .||   ||. . || || . .||   ||. _-|| ||-_.|\\ . . . . ||",
+                 "||. . ||   ||-'  || ||  `-||   || . .|| ||. . ||   ||-'  || ||  `|\\_ . .|. .||",
+                 "|| . _||   ||    || ||    ||   ||_ . || || . _||   ||    || ||   |\\ `-_/| . ||",
+                 "||_-' ||  .|/    || ||    \\|.  || `-_|| ||_-' ||  .|/    || ||   | \\  / |-_.||",
+                 "||    ||_-'      || ||      `-_||    || ||    ||_-'      || ||   | \\  / |  `||",
+                 "||    `'         || ||         `'    || ||    `'         || ||   | \\  / |   ||",
+                 "||            .===' `===.         .==='.`===.         .===' /==. |  \\/  |   ||",
+                 "||         .=='   \\_|-_ `===. .==='   _|_   `===. .===' _-|/   `==  \\/  |   ||",
+                 "||      .=='    _-'    `-_  `='    _-'   `-_    `='  _-'   `-_  /|  \\/  |   ||",
+                 "||   .=='    _-'          `-__\\._-'         `-_./__-'         `' |. /|  |   ||",
+                 "||.=='    _-'                                                     `' |  /==.||",
+                 "=='    _-'                        N E O V I M                         \\/   `==",
+                 "\\   _-'                                                                `-_   /",
+                 " `''                                                                      ``'  ",
+                 "                                                                               ",
+}
+
+--ataraxis testing 
+cmd("set splitbelow")
+cmd("set splitright")
 EOF
+
