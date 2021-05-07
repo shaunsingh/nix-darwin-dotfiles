@@ -1,190 +1,139 @@
---plugins
+-- Install packer
+local execute = vim.api.nvim_command
+local install_path = vim.fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
+if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
+  execute('!git clone https://github.com/wbthomason/packer.nvim '.. install_path)
+end
 
-require('plugins')
+--setup packer
+require('packer').startup(function()
+  use {"wbthomason/packer.nvim"}
 
---Vimscript
+  use ''
+  use {
+    'hoob3rt/lualine.nvim',
+    requires = {'kyazdani42/nvim-web-devicons', opt = true}
+  }
+  use 'romgrk/barbar.nvim'
+  use 'shaunsingh/material.nvim'
+  use 'kyazdani42/nvim-tree.lua'
 
-vim.api.nvim_exec([[
-"Theme Info
-set background=dark
+  use { 'TimUntersberger/neogit', requires = 'nvim-lua/plenary.nvim' }
+  use { 'lewis6991/gitsigns.nvim', requires = 'nvim-lua/plenary.nvim'}
 
-"fix bg
-hi NORMAL guibg=#2f334d
+  use 'glepnir/dashboard-nvim'
+  use 'kdav5758/TrueZen.nvim'
+  use 'junegunn/limelight.vim'
+  use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
+  use {"lukas-reineke/indent-blankline.nvim", branch = "lua"}
+  use 'mg979/vim-visual-multi'
 
-""material theme
-let g:material_style = 'moonlight'
-let g:material_borders = v:false
-let g:material_contrast = v:false
-colorscheme material
+  use 'hrsh7th/nvim-compe'
+  use 'onsails/lspkind-nvim'
+  use 'neovim/nvim-lspconfig'
+  use 'folke/lsp-trouble.nvim'
+  use 'glepnir/lspsaga.nvim'
+  use 'kabouzeid/nvim-lspinstall'
+  use 'ray-x/lsp_signature.nvim'
 
-"Neovide + gui
-set guifont=FiraCode\ Nerd\ Font:h15
-let g:neovide_fullscreen=v:true
-let g:neovide_cursor_vfx_mode = "pixiedust"
-let g:neovide_cursor_animation_length=0.13
-let g:neovide_cursor_trail_length=0.8
+  use 'hrsh7th/vim-vsnip'
+  use 'hrsh7th/vim-vsnip-integ'
+  use 'rafamadriz/friendly-snippets'
 
+  use 'phaazon/hop.nvim'
+  use {'nvim-telescope/telescope.nvim', requires = {{'nvim-lua/popup.nvim'}, {'nvim-lua/plenary.nvim'}}}
 
-"__VIM_SETTINGS__"
-
-
-"set number 
-set number
-
-"remove empty line symbols
-let &fcs='eob: '
-
-"set tab to just expand spaces
-set tabstop=4
-set softtabstop=4
-set expandtab
-
-"show last command
-set showcmd
-
-"indent based on filetypes
-filetype indent on
-filetype plugin on
-
-"only draw when you need to
-set lazyredraw
-
-" Indents word-wrapped lines as much as the 'parent' line
-set breakindent
-set formatoptions=l
-set lbr
-
-"macos clipbard
-set clipboard=unnamed
-
-"remove insert from bottom left
-set noshowmode
-set noruler
-
-"always display bufferline"
-set laststatus=2
-
-"set autoindent
-set autoindent
-set shiftwidth=4
-
-"enable the mouse
-set mouse=a
-
-"history and syntax
-set history=100
-
-"let vim open hidden buffers
-set hidden
-set nobackup
-
-"search info
-set hlsearch
-set ignorecase
-set incsearch
-set smartcase
-
-"scroll
-set sidescrolloff=5
-set scrolloff=1
-
-"stop beeping
-set noerrorbells
-
-"set the window tittle
-set title
-
-"backspace more normal
-set backspace=indent,eol,start
-
-"set completion for lsp, disable "pattern not found message
-set completeopt=menuone,noselect
-set shortmess+=c
-
-"set spelling
-set spelllang=en_us
-set spell
-
-
-"__VIM_BINDINGS__"
-
-
-"basic autopair
-inoremap " ""<left>
-inoremap ( ()<left>
-inoremap [ []<left>
-inoremap { {}<left>
-inoremap {<CR> {<CR>}<ESC>O
-inoremap {;<CR> {<CR>};<ESC>O
-
-"jk to exit instead
-inoremap jk <esc>
-cnoremap jk <C-C>
-
-"move by visual line not actal line
-nnoremap j gj
-nnoremap k gk
-
-"use semicolon as colon in normal mode
-nnoremap ; :
-
-"leader keys (space)
-let mapleader=" "
-
-"easymotion/hop"
-nnoremap <leader>w :HopWord<CR>
-nnoremap <leader>l :HopLine<CR>
-nnoremap <leader>/ :HopPattern<CR>
-
-"fuzzy stuff
-nnoremap <leader>o <cmd>lua require('telescope.builtin').oldfiles()<cr>
-nnoremap <leader>p <cmd>lua require('telescope.builtin').find_files()<cr>
-nnoremap <leader>f <cmd>lua require('telescope.builtin').current_buffer_fuzzy_find()<cr>
-nnoremap <leader><S-p> <cmd>lua require('telescope.builtin').commands()<cr>
-
-"git
-nnoremap <leader>g :Neogit<CR>
-
-"goyo and ataraxis modes
-nnoremap <leader>z :TZAtaraxis<CR>
-nnoremap <leader>x :TZAtaraxis l45 r45 t2 b2<CR>
-
-" Use ctrl-[hjkl] to select the active split!
-nmap <silent> <c-k> :wincmd k<CR>
-nmap <silent> <c-j> :wincmd j<CR>
-nmap <silent> <c-h> :wincmd h<CR>
-nmap <silent> <c-l> :wincmd l<CR>
-
-"nvim tree
-nnoremap <leader>tt :NvimTreeToggle<CR>
-
-"lsp maps
-inoremap <silent><expr> <C-Space> compe#complete()
-inoremap <silent><expr> <CR>      compe#confirm('<CR>')
-inoremap <silent><expr> <C-e>     compe#close('<C-e>')
-inoremap <silent><expr> <C-f>     compe#scroll({ 'delta': +4 })
-inoremap <silent><expr> <C-d>     compe#scroll({ 'delta': -4 })
-
-"__PLUGIN_SETTINGS__"
-
-"Vim multi-cursors
-let g:VM_maps = {}
-let g:VM_default_mappings = 0
-let g:VM_maps["Add Cursor Down"]             = '<A-j>'
-let g:VM_maps["Add Cursor Up"]               = '<A-k>'
-
-"barbar
-let bufferline = get(g:, 'bufferline', {})
-let bufferline.animation = v:false
-let bufferline.auto_hide = v:true
-
-]], false)
-
---LUA
+  use 'norcalli/nvim-colorizer.lua'
+  use 'yamatsum/nvim-cursorline'
+end)
 
 --make life easier
 local cmd = vim.cmd
 local g = vim.g
+local fn = vim.fn
+
+--theme
+g.material_style = "moonlight"
+g.material_borders = false
+g.material_contrast = false
+
+--gui
+g.neovide_fullscreen = true
+g.neovide_cursor_vfx_mode = "pixiedust"
+vim.api.nvim_exec([[set guifont=FiraCode\ Nerd\ Font:h15]], false)
+
+--settings
+local scopes = {o = vim.o, b = vim.bo, w = vim.wo}
+
+local function opt(scope, key, value)
+  scopes[scope][key] = value
+  if scope ~= 'o' then scopes['o'][key] = value end
+end
+
+local indent = 4
+cmd 'colorscheme material'                              -- Put your favorite colorscheme here
+cmd 'hi NORMAL guibg=#2f334d'
+opt('b', 'expandtab', true)                           -- Use spaces instead of tabs
+opt('b', 'shiftwidth', indent)                        -- Size of an indent
+opt('b', 'smartindent', true)                         -- Insert indents automatically
+opt('b', 'tabstop', indent)                           -- Number of spaces tabs count for
+opt('o', 'completeopt', 'menuone,noselect')           -- Completion options (for compe)
+opt('o', 'hidden', true)                              -- Enable modified buffers in background
+opt('o', 'scrolloff', 3 )                             -- Lines of context
+opt('o', 'shiftround', true)                          -- Round indent
+opt('o', 'sidescrolloff', 8 )                         -- Columns of context
+opt('o', 'smartcase', true)                           -- Don't ignore case with capitals
+opt('o', 'splitbelow', true)                          -- Put new windows below current
+opt('o', 'splitright', true)                          -- Put new windows right of current
+opt('o', 'termguicolors', true)                       -- True color support
+opt('o', 'wildmode', 'list:longest')                  -- Command-line completion mode
+opt('o', 'clipboard', 'unnamed')
+opt('o', 'pumblend', 25 )
+opt('o', 'scrolloff', 5 )
+opt('o', 'swapfile', false )
+opt('o', 'showmode', false )
+opt('o', 'background', 'dark' )
+opt('o', 'backup', false )
+opt('w', 'number', true)                              -- Print line number
+vim.o.shortmess = vim.o.shortmess .. "c"
+
+--mappings
+local function map(mode, lhs, rhs, opts)
+  local options = {noremap = true}
+  if opts then options = vim.tbl_extend('force', options, opts) end
+  vim.api.nvim_set_keymap(mode, lhs, rhs, options)
+end
+
+g.mapleader = " "                                                     --leader
+map('i', 'jk', '<esc>')                                               --jk to exit
+map('c', 'jk', '<C-C>')
+map('n', ';', ':')                                                     --semicolon to enter command mode
+map('n', 'j', 'gj')                                                    --move by visual line not actual line
+map('n', 'k', 'gk')
+map('n', '<leader>w', '<cmd>HopWord<CR>')                              --easymotion/hop
+map('n', '<leader>l', '<cmd>HopLine<CR>')
+map('n', '<leader>/', '<cmd>HopPattern<CR>')
+map('n', '<leader>o', '<cmd>Telescope oldfiles<CR>')                   --fuzzy
+map('n', '<leader>p', '<cmd>Telescope find_files<CR>')
+map('n', '<leader>f', '<cmd>Telescope current_buffer_fuzzy_find<CR>')
+map('n', '<leader><S-p>', '<cmd>Telescope commands<CR>')
+map('n', '<leader>z', '<cmd>TZAtaraxis<CR>')                           --ataraxis
+map('n', '<leader>x', '<cmd>TZAtaraxis l45 r45 t2 b2<CR>')
+map('n', '<leader>tt', '<cmd>NvimTreeToggle<CR>')                      --nvimtree
+map('n', '<c-k>', '<cmd>wincmd k<CR>')                                 --ctrlhjkl to navigate splits
+map('n', '<c-j>', '<cmd>wincmd j<CR>')
+map('n', '<c-h>', '<cmd>wincmd h<CR>')
+map('n', '<c-l>', '<cmd>wincmd l<CR>')
+cmd([[autocmd BufWritePre * %s/\s\+$//e]])                             --remove trailing whitespaces
+cmd([[autocmd BufWritePre * %s/\n\+\%$//e]])
+
+--visual multi
+vim.api.nvim_exec([[
+let g:VM_maps = {}
+let g:VM_default_mappings = 0
+let g:VM_maps["Add Cursor Down"] = '<A-j>'
+let g:VM_maps["Add Cursor Up"] = '<A-k>'
+]], false)
 
 --indentline
 g.indentLine_enabled = 1
@@ -194,6 +143,14 @@ g.indent_blankline_filetype_exclude = {"help", "terminal", "dashboard"}
 g.indent_blankline_buftype_exclude = {"terminal"}
 g.indent_blankline_show_trailing_blankline_indent = false
 g.indent_blankline_show_first_indent_level = false
+
+
+--barbar
+vim.api.nvim_exec([[
+let bufferline = get(g:, 'bufferline', {})
+let bufferline.animation = v:false
+let bufferline.auto_hide = v:true
+]], false)
 
 --nvim-compe
 require'compe'.setup {
@@ -712,9 +669,7 @@ lualine.setup(config)
 --colorizer
 require'colorizer'.setup()
 
---nvim tree
-vim.o.termguicolors = true
-
+--nvimtree
 g.nvim_tree_side = "left"
 g.nvim_tree_width = 25
 g.nvim_tree_ignore = {".git", "node_modules", ".cache"}
@@ -856,7 +811,3 @@ vim.g.dashboard_custom_header = {
                  " `''                                                                      ``'  ",
                  "                                                                               ",
 }
-
---ataraxis testing
-cmd("set splitbelow")
-cmd("set splitright")
