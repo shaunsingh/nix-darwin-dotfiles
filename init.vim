@@ -255,7 +255,7 @@ true_zen.setup({
 		integration_gitgutter = false,
 		integration_vim_signify = false,
 		integration_limelight = true,
-		integration_tzfocus_tzataraxis = true
+		integration_tzfocus_tzataraxis = true 
 	}
 })
 
@@ -792,7 +792,7 @@ require('telescope').setup{
     },
     prompt_position = "top",
     prompt_prefix = " ",
-    selection_caret = "> ",
+    selection_caret = " ",
     entry_prefix = "  ",
     initial_mode = "insert",
     selection_strategy = "reset",
