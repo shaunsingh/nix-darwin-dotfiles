@@ -1,6 +1,6 @@
 # .vimrc and init.lua
 
-<img width="1440" alt="Screen Shot 2021-05-05 at 7 11 58 PM" src="https://user-images.githubusercontent.com/71196912/117220753-d948d380-add5-11eb-926a-39eb19f04ec2.png">
+![Screen Shot 2021-05-08 at 6 36 14 PM](https://user-images.githubusercontent.com/71196912/117555332-51a8d200-b02c-11eb-8a04-584a4f498702.png)
 
 These are my configurations for class/android+kotlin programming respectively
 
