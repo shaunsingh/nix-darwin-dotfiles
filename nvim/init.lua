@@ -1,4 +1,4 @@
--- Install packer
+--Install packer
 local execute = vim.api.nvim_command
 local install_path = vim.fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
 if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
@@ -8,22 +8,29 @@ end
 --setup packer
 require('packer').startup(function()
   use "wbthomason/packer.nvim"
-  use {
-    'hoob3rt/lualine.nvim',
-    requires = {'kyazdani42/nvim-web-devicons', opt = true}
-  }
+
+  use {'hoob3rt/lualine.nvim', requires = {'kyazdani42/nvim-web-devicons', opt = true}}
   use 'romgrk/barbar.nvim'
-  use 'shaunsingh/moonlight.nvim'
   use 'kyazdani42/nvim-tree.lua'
+  use 'glepnir/dashboard-nvim'
+
   use { 'TimUntersberger/neogit', requires = 'nvim-lua/plenary.nvim' }
   use { 'lewis6991/gitsigns.nvim', requires = 'nvim-lua/plenary.nvim'}
 
-  use 'glepnir/dashboard-nvim'
   use 'kdav5758/TrueZen.nvim'
   use 'junegunn/limelight.vim'
+  use 'yamatsum/nvim-cursorline'
+  use 'norcalli/nvim-colorizer.lua'
+
+  use 'shaunsingh/moonlight.nvim'
   use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
   use {"lukas-reineke/indent-blankline.nvim", branch = "lua"}
+  use 'lewis6991/spellsitter.nvim'
+
   use 'mg979/vim-visual-multi'
+  use 'phaazon/hop.nvim'
+  use {'nvim-telescope/telescope.nvim', requires = {{'nvim-lua/popup.nvim'}, {'nvim-lua/plenary.nvim'}}}
+
   use 'hrsh7th/nvim-compe'
   use 'onsails/lspkind-nvim'
   use 'neovim/nvim-lspconfig'
@@ -35,12 +42,6 @@ require('packer').startup(function()
   use 'hrsh7th/vim-vsnip'
   use 'hrsh7th/vim-vsnip-integ'
   use 'rafamadriz/friendly-snippets'
-
-  use 'phaazon/hop.nvim'
-  use {'nvim-telescope/telescope.nvim', requires = {{'nvim-lua/popup.nvim'}, {'nvim-lua/plenary.nvim'}}}
-
-  use 'norcalli/nvim-colorizer.lua'
-  use 'yamatsum/nvim-cursorline'
 end)
 
 --make life easier
@@ -50,14 +51,14 @@ local fn = vim.fn
 
 --gui
 g.neovide_fullscreen = true
-g.neovide_cursor_vfx_mode = "pixiedust" 
-vim.api.nvim_exec([[set guifont=FiraCode\ Nerd\ Font:h15]], false)
+g.neovide_cursor_vfx_mode = "pixiedust"
+vim.api.nvim_exec([[set guifont=FiraCode\ Nerd\ Font:h14]], false)
 
 --theme
 g.material_style = "moonlight"
 g.material_borders = false
 g.material_contrast = false
-vim.cmd[[colorscheme material]]
+require('material').set()
 
 --settings
 local scopes = {o = vim.o, b = vim.bo, w = vim.wo}
@@ -68,6 +69,7 @@ local function opt(scope, key, value)
 end
 
 local indent = 4
+cmd 'hi NORMAL guibg=#2f334d'
 opt('b', 'expandtab', true)                           -- Use spaces instead of tabs
 opt('b', 'shiftwidth', indent)                        -- Size of an indent
 opt('b', 'smartindent', true)                         -- Insert indents automatically
@@ -90,12 +92,17 @@ opt('o', 'showmode', false )
 opt('o', 'background', 'dark' )
 opt('o', 'backup', false )
 opt('w', 'number', true)                              -- Print line number
-opt('o', 'breakindent', true)
-opt('o', 'lbr', true)
 opt('o', 'lazyredraw', true)
 opt('o', 'signcolumn', 'yes')
-opt('o', 'formatoptions', 'l')
+opt('o', 'mouse', 'a')
+opt('o', 'cmdheight', 1)
+opt('o', 'wrap', false)
 
+--opt('o', 'breakindent', true)
+--opt('o', 'lbr', true)
+--opt('o', 'formatoptions', 'l')
+
+--set shortmess
 vim.o.shortmess = vim.o.shortmess .. "c"
 
 --mappings
@@ -117,6 +124,7 @@ map('n', '<leader>/', '<cmd>HopPattern<CR>')
 map('n', '<leader>o', '<cmd>Telescope oldfiles<CR>')                   --fuzzy
 map('n', '<leader>p', '<cmd>Telescope find_files<CR>')
 map('n', '<leader>f', '<cmd>Telescope current_buffer_fuzzy_find<CR>')
+map('n', '<leader><S-f>', '<cmd>Telescope treesitter<CR>')
 map('n', '<leader><S-p>', '<cmd>Telescope commands<CR>')
 map('n', '<leader>z', '<cmd>TZAtaraxis<CR>')                           --ataraxis
 map('n', '<leader>x', '<cmd>TZAtaraxis l45 r45 t2 b2<CR>')
@@ -177,6 +185,9 @@ require'compe'.setup {
     vsnip = true;
   };
 }
+
+--spellsitter
+require('spellsitter').setup()
 
 -- setup for TrueZen.nvim
 local true_zen = require("true-zen")
@@ -348,7 +359,7 @@ require('lspkind').init({
         Property = '',
         Unit = '',
         Value = '',
-        Enum = '了',
+        Enum = '',
         Keyword = '',
         Snippet = '﬌',
         Color = '',
@@ -359,18 +370,6 @@ require('lspkind').init({
         Struct = ''
     },
 })
-
-vim.cmd("nnoremap <silent> gd <cmd>lua vim.lsp.buf.definition()<CR>")
-vim.cmd("nnoremap <silent> gD <cmd>lua vim.lsp.buf.declaration()<CR>")
-vim.cmd("nnoremap <silent> gr <cmd>lua vim.lsp.buf.references()<CR>")
-vim.cmd("nnoremap <silent> gi <cmd>lua vim.lsp.buf.implementation()<CR>")
-vim.cmd("nnoremap <silent> ca :Lspsaga code_action<CR>")
-vim.cmd("nnoremap <silent> K :Lspsaga hover_doc<CR>")
-vim.cmd("nnoremap <silent> <C-p> :Lspsaga diagnostic_jump_prev<CR>")
-vim.cmd("nnoremap <silent> <C-n> :Lspsaga diagnostic_jump_next<CR>")
-vim.cmd("nnoremap <silent> <C-f> <cmd>lua require('lspsaga.action').smart_scroll_with_saga(1)<CR>")
-vim.cmd("nnoremap <silent> <C-b> <cmd>lua require('lspsaga.action').smart_scroll_with_saga(-1)<CR>")
-vim.cmd('command! -nargs=0 LspVirtualTextToggle lua require("lsp/virtual_text").toggle()')
 
 --lspconfig + lsp trouble + lspsaga
 require'lspconfig'.pyls.setup{}
@@ -450,16 +449,16 @@ local lualine = require'lualine'
 -- Color table for highlights
 local colors = {
   bg       = '#1d2133',
-  fg       = '#A6ACCD',
-  yellow   = '#FFCB6B',
-  cyan     = '#89DDFF',
-  darkblue = '#B0C9FF',
-  green    = '#C3E88D',
-  orange   = '#F78C6C',
-  violet   = '#FF9CAC',
-  magenta  = '#C792EA',
-  blue     = '#51afef';
-  red      = '#F07178';
+  fg       = '#e4f3fa',
+  yellow   = '#ffc777',
+  cyan     = '#04d1f9',
+  darkblue = '#a1abe0',
+  green    = '#2df4c0',
+  orange   = '#f67f81',
+  violet   = '#ecb2f0',
+  magenta  = '#b4a4f4',
+  blue     = '#04d1f9';
+  red      = '#ff757f';
 }
 
 local conditions = {
@@ -584,17 +583,17 @@ ins_left {
 ins_left {
   'filename',
   condition = conditions.buffer_not_empty,
-  color = {fg = colors.magenta, gui = 'bold'},
+  color = {fg = colors.blue, gui = 'bold'},
 }
 
 ins_left {
   'location',
-  color = {fg = colors.yellow, gui = 'bold'}
+  color = {fg = colors.darkblue, gui = 'bold'}
 }
 
 ins_left {
   'progress',
-  color = {fg = colors.violet, gui = 'bold'},
+  color = {fg = colors.darkblue, gui = 'bold'},
 }
 
 ins_left {
@@ -604,6 +603,38 @@ ins_left {
   color_error = colors.red,
   color_warn = colors.yellow,
   color_info = colors.cyan,
+}
+
+
+
+-- Add components to right sections
+ins_right {
+  'o:encoding', -- option component same as &encoding in viml
+  condition = conditions.hide_in_width,
+  color = {fg = colors.darkblue, gui = 'bold'}
+}
+
+ins_right {
+  'fileformat',
+  icons_enabled = true, -- I think icons are cool but Eviline doesn't have them. sigh
+  color = {fg = colors.darkblue, gui='bold'},
+}
+
+ins_right {
+  'branch',
+  icon = '',
+  condition = conditions.check_git_workspace,
+  color = {fg = colors.green, gui = 'bold'},
+}
+
+ins_right {
+  'diff',
+  -- Is it me or the symbol for modified us really weird
+  symbols = {added= ' ', modified= ' ', removed= ' '},
+  color_added = colors.green,
+  color_modified = colors.orange,
+  color_removed = colors.red,
+  condition = conditions.hide_in_width
 }
 
 ins_right {
@@ -621,38 +652,7 @@ ins_right {
     end
     return msg
   end,
-  icon = ' LSP:',
   color = {fg = colors.cyan, gui = 'bold'}
-}
-
--- Add components to right sections
-ins_right {
-  'o:encoding', -- option component same as &encoding in viml
-  condition = conditions.hide_in_width,
-  color = {fg = colors.green, gui = 'bold'}
-}
-
-ins_right {
-  'fileformat',
-  icons_enabled = true, -- I think icons are cool but Eviline doesn't have them. sigh
-  color = {fg = colors.green, gui='bold'},
-}
-
-ins_right {
-  'branch',
-  icon = '',
-  condition = conditions.check_git_workspace,
-  color = {fg = colors.violet, gui = 'bold'},
-}
-
-ins_right {
-  'diff',
-  -- Is it me or the symbol for modified us really weird
-  symbols = {added= ' ', modified= ' ', removed= ' '},
-  color_added = colors.green,
-  color_modified = colors.orange,
-  color_removed = colors.red,
-  condition = conditions.hide_in_width
 }
 
 ins_right {
