@@ -13,9 +13,8 @@ require('packer').startup(function()
     requires = {'kyazdani42/nvim-web-devicons', opt = true}
   }
   use 'romgrk/barbar.nvim'
-  use 'shaunsingh/material.nvim'
+  use 'shaunsingh/moonlight.nvim'
   use 'kyazdani42/nvim-tree.lua'
-
   use { 'TimUntersberger/neogit', requires = 'nvim-lua/plenary.nvim' }
   use { 'lewis6991/gitsigns.nvim', requires = 'nvim-lua/plenary.nvim'}
 
@@ -49,15 +48,16 @@ local cmd = vim.cmd
 local g = vim.g
 local fn = vim.fn
 
+--gui
+g.neovide_fullscreen = true
+g.neovide_cursor_vfx_mode = "pixiedust" 
+vim.api.nvim_exec([[set guifont=FiraCode\ Nerd\ Font:h15]], false)
+
 --theme
 g.material_style = "moonlight"
 g.material_borders = false
 g.material_contrast = false
-
---gui
-g.neovide_fullscreen = true
-g.neovide_cursor_vfx_mode = "pixiedust"
-vim.api.nvim_exec([[set guifont=FiraCode\ Nerd\ Font:h15]], false)
+vim.cmd[[colorscheme material]]
 
 --settings
 local scopes = {o = vim.o, b = vim.bo, w = vim.wo}
@@ -68,8 +68,6 @@ local function opt(scope, key, value)
 end
 
 local indent = 4
-cmd 'colorscheme material'                              -- Put your favorite colorscheme here
-cmd 'hi NORMAL guibg=#2f334d'
 opt('b', 'expandtab', true)                           -- Use spaces instead of tabs
 opt('b', 'shiftwidth', indent)                        -- Size of an indent
 opt('b', 'smartindent', true)                         -- Insert indents automatically
@@ -92,6 +90,12 @@ opt('o', 'showmode', false )
 opt('o', 'background', 'dark' )
 opt('o', 'backup', false )
 opt('w', 'number', true)                              -- Print line number
+opt('o', 'breakindent', true)
+opt('o', 'lbr', true)
+opt('o', 'lazyredraw', true)
+opt('o', 'signcolumn', 'yes')
+opt('o', 'formatoptions', 'l')
+
 vim.o.shortmess = vim.o.shortmess .. "c"
 
 --mappings
@@ -135,11 +139,11 @@ let g:VM_maps["Add Cursor Up"] = '<A-k>'
 --indentline
 g.indentLine_enabled = 1
 g.indent_blankline_char = "▏"
-cmd "hi IndentBlanklineChar guifg=#2a2e36"
 g.indent_blankline_filetype_exclude = {"help", "terminal", "dashboard"}
 g.indent_blankline_buftype_exclude = {"terminal"}
 g.indent_blankline_show_trailing_blankline_indent = false
 g.indent_blankline_show_first_indent_level = false
+g.indentline_setColors = 0
 
 --barbar
 vim.api.nvim_exec([[
@@ -204,7 +208,7 @@ true_zen.setup({
 
 		shown_number = true,
 		shown_relativenumber = false,
-		shown_signcolumn = "no"
+		shown_signcolumn = "yes"
 	},
 	ataraxis = {
 		just_do_it_for_me = true,
@@ -236,7 +240,7 @@ true_zen.setup({
 		integration_express_line = false,
 		integration_gitgutter = false,
 		integration_vim_signify = false,
-		integration_limelight = true,
+		integration_limelight = false,
 		integration_tzfocus_tzataraxis = true
 	}
 })
@@ -445,7 +449,7 @@ local lualine = require'lualine'
 
 -- Color table for highlights
 local colors = {
-  bg       = '#2f334d',
+  bg       = '#1d2133',
   fg       = '#A6ACCD',
   yellow   = '#FFCB6B',
   cyan     = '#89DDFF',
