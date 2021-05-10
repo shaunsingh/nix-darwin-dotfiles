@@ -125,6 +125,7 @@ map('n', '<leader>/', '<cmd>HopPattern<CR>')
 map('n', '<leader>fr', '<cmd>Telescope oldfiles<CR>')                   --fuzzy
 map('n', '<leader><space>', '<cmd>Telescope find_files<CR>')
 map('n', '<leader>f', '<cmd>Telescope current_buffer_fuzzy_find<CR>')
+map('n', '<leader>fP', '<cmd>e ~/.config/nvim/init.lua<CR>')
 map('n', '<leader><S-f>', '<cmd>Telescope treesitter<CR>')
 map('n', '<leader><S-p>', '<cmd>Telescope commands<CR>')
 map('n', '<leader>z', '<cmd>TZAtaraxis<CR>')                           --ataraxis
@@ -842,14 +843,14 @@ vim.api.nvim_exec([[
 vim.g.dashboard_custom_section = {
     a = {description = {'  Reload Last Session            SPC q l'}, command = 'SessionLoad'},
     b = {description = {'  Recently Opened Files          SPC f r'}, command = 'Telescope oldfiles'},
-    c = {description = {'  Open Project                   SPC f p'}, command = 'Telescope marks'},
-    d = {description = {'  Jump to Bookmark               SPC f b'}, command = 'Telescope project'},
-    e = {description = {'  Find File                      SPC f f'}, command = 'Telescope find_files'},
-    f = {description = {'  Find Word                      SPC s p'}, command = 'Telescope live_grep'},
-    g = {description = {'  Open Neovim Configuration     SPC f P'}, command = ':e ~/.config/nvim/init.vim'},
+    c = {description = {'  Open Project                   SPC f p'}, command = 'Telescope project'},
+    e = {description = {'  Find File                      SPC spc'}, command = 'Telescope find_files'},
+    f = {description = {'  Open Neovim Configuration      SPC f P'}, command = ':e ~/.config/nvim/init.lua'}
+
 }
 
 vim.g.dashboard_custom_header = {
+       "                                                                    ",
        "            :h-                                  Nhy`               ",
        "           -mh.                           h.    `Ndho               ",
        "           hmh+                          oNm.   oNdhh               ",
@@ -883,5 +884,7 @@ vim.g.dashboard_custom_header = {
        "        :dy+:`      .-::-..NNNhhd+``..`...````.-::-`                ",
        "                        .-:mNdhh:.......--::::-`                    ",
        "                           yNh/..------..`                          ",
+       "                                                                    ",
+       "                            DOOM - its evil                         ",
        "                                                                    ",
 }
