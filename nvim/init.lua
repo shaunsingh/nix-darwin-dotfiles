@@ -5,6 +5,7 @@ if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
   execute('!git clone https://github.com/wbthomason/packer.nvim '.. install_path)
 end
 
+
 --setup packer
 require('packer').startup(function()
   use "wbthomason/packer.nvim"
@@ -52,7 +53,7 @@ local fn = vim.fn
 --gui
 g.neovide_fullscreen = true
 g.neovide_cursor_vfx_mode = "pixiedust"
-vim.api.nvim_exec([[set guifont=FiraCode\ Nerd\ Font:h14]], false)
+vim.api.nvim_exec([[set guifont=FiraCode\ Nerd\ Font:h13]], false)
 
 --theme
 g.material_style = "moonlight"
@@ -105,6 +106,7 @@ opt('o', 'wrap', false)
 --set shortmess
 vim.o.shortmess = vim.o.shortmess .. "c"
 
+
 --mappings
 local function map(mode, lhs, rhs, opts)
   local options = {noremap = true}
@@ -122,13 +124,13 @@ map('n', '<leader>w', '<cmd>HopWord<CR>')                              --easymot
 map('n', '<leader>l', '<cmd>HopLine<CR>')
 map('n', '<leader>/', '<cmd>HopPattern<CR>')
 map('n', '<leader>o', '<cmd>Telescope oldfiles<CR>')                   --fuzzy
-map('n', '<leader>p', '<cmd>Telescope find_files<CR>')
+map('n', '<leader><space>', '<cmd>Telescope find_files<CR>')
 map('n', '<leader>f', '<cmd>Telescope current_buffer_fuzzy_find<CR>')
 map('n', '<leader><S-f>', '<cmd>Telescope treesitter<CR>')
 map('n', '<leader><S-p>', '<cmd>Telescope commands<CR>')
 map('n', '<leader>z', '<cmd>TZAtaraxis<CR>')                           --ataraxis
 map('n', '<leader>x', '<cmd>TZAtaraxis l45 r45 t2 b2<CR>')
-map('n', '<leader>tt', '<cmd>NvimTreeToggle<CR>')                      --nvimtree
+map('n', '<leader>op', '<cmd>NvimTreeToggle<CR>')                      --nvimtree
 map('n', '<c-k>', '<cmd>wincmd k<CR>')                                 --ctrlhjkl to navigate splits
 map('n', '<c-j>', '<cmd>wincmd j<CR>')
 map('n', '<c-h>', '<cmd>wincmd h<CR>')
@@ -146,7 +148,7 @@ let g:VM_maps["Add Cursor Up"] = '<A-k>'
 
 --indentline
 g.indentLine_enabled = 1
-g.indent_blankline_char = "▏"
+g.indent_blankline_char = "|"
 g.indent_blankline_filetype_exclude = {"help", "terminal", "dashboard"}
 g.indent_blankline_buftype_exclude = {"terminal"}
 g.indent_blankline_show_trailing_blankline_indent = false
@@ -373,7 +375,7 @@ require('lspkind').init({
 
 --lspconfig + lsp trouble + lspsaga
 require'lspconfig'.pyls.setup{}
-require'lspconfig'.kotlin_language_server.setup{ cmd = { "/Users/shauryasingh/lsp/server/bin/kotlin-language-server" }}
+require'lspconfig'.kotlin_language_server.setup{}
 
 --lsp isntaller
 local function setup_servers()
@@ -392,7 +394,44 @@ require'lspinstall'.post_install_hook = function ()
   vim.cmd("bufdo e") -- this triggers the FileType autocmd that starts the server
 end
 
-require("trouble").setup {}
+require("trouble").setup {
+    height = 7, -- height of the trouble list
+    icons = true, -- use devicons for filenames
+    mode = "lsp_workspace_diagnostics", -- "lsp_workspace_diagnostics", "lsp_document_diagnostics", "quickfix", "lsp_references", "loclist"
+    fold_open = "", -- icon used for open folds
+    fold_closed = "", -- icon used for closed folds
+    action_keys = { -- key mappings for actions in the trouble list
+        close = "q", -- close the list
+        cancel = "<esc>", -- cancel the preview and get back to your last window / buffer / cursor
+        refresh = "r", -- manually refresh
+        jump = {"<cr>", "<tab>"}, -- jump to the diagnostic or open / close folds
+        jump_close = {"o"}, -- jump to the diagnostic and close the list
+        toggle_mode = "m", -- toggle between "workspace" and "document" diagnostics mode
+        toggle_preview = "P", -- toggle auto_preview
+        hover = "K", -- opens a small poup with the full multiline message
+        preview = "p", -- preview the diagnostic location
+        close_folds = {"zM", "zm"}, -- close all folds
+        open_folds = {"zR", "zr"}, -- open all folds
+        toggle_fold = {"zA", "za"}, -- toggle fold of current file
+        previous = "k", -- preview item
+        next = "j" -- next item
+    },
+    indent_lines = true, -- add an indent guide below the fold icons
+    auto_open = true, -- automatically open the list when you have diagnostics
+    auto_close = true, -- automatically close the list when you have no diagnostics
+    auto_preview = true, -- automatyically preview the location of the diagnostic. <esc> to close preview and go back to last window
+    auto_fold = true, -- automatically fold a file trouble list at creation
+    signs = {
+        -- icons / text used for a diagnostic
+        error = "",
+        warning = "",
+        hint = "",
+        information = "",
+        other = "﫠"
+    },
+    use_lsp_diagnostic_signs = false -- enabling this will use the signs defined in your lsp client
+}
+
 require'lspsaga'.init_lsp_saga{
     error_sign = "",
     warn_sign = "",
@@ -521,7 +560,7 @@ local function ins_right(component)
 end
 
 ins_left {
- function() return '▊' end,
+ function() return '▊ 1' end,
  color = {fg = colors.blue}, -- Sets highlighting of component
  left_padding = 0 -- We don't need space before this
 }
@@ -553,7 +592,7 @@ ins_left {
       t      = colors.red
     }
     vim.api.nvim_command('hi! LualineMode guifg='..mode_color[vim.fn.mode()] .. " guibg="..colors.bg)
-    return ' '
+    return ''
   end,
   color = "LualineMode",
   left_padding = 0,
@@ -581,9 +620,20 @@ ins_left {
 }
 
 ins_left {
+    'filetype',
+    condition = conditions.buffer_not_empty,
+    icons_enabled = true,
+    color = {fg = colors.fg, gui = 'bold'}
+}
+
+ins_left {
   'filename',
   condition = conditions.buffer_not_empty,
-  color = {fg = colors.blue, gui = 'bold'},
+  full_path = true,
+  shorten = true,
+  icons_enabled = true,
+  icon = '',
+  color = {fg = colors.green, gui = 'bold'},
 }
 
 ins_left {
@@ -605,19 +655,51 @@ ins_left {
   color_info = colors.cyan,
 }
 
+ins_right {
+  -- Lsp server name .
+  function ()
+    local msg = 'none'
+    local buf_ft = vim.api.nvim_buf_get_option(0,'filetype')
+    local clients = vim.lsp.get_active_clients()
+    if next(clients) == nil then return msg end
+    for _, client in ipairs(clients) do
+      local filetypes = client.config.filetypes
+      if filetypes and vim.fn.index(filetypes, buf_ft) ~= -1 then
+        return client.name
+      end
+    end
+    return msg
+  end,
+  icon = '[LSP]',
+  color = {fg = colors.fg, gui = 'bold'}
+}
 
+ins_right {
+  function() return 'LF' end,
+  color = {fg = colors.darkblue},
+}
 
 -- Add components to right sections
 ins_right {
   'o:encoding', -- option component same as &encoding in viml
   condition = conditions.hide_in_width,
+  upper = true,
   color = {fg = colors.darkblue, gui = 'bold'}
 }
 
 ins_right {
-  'fileformat',
-  icons_enabled = true, -- I think icons are cool but Eviline doesn't have them. sigh
+  'fileformat', --same one just without the logo
+  icons_enabled = false,
+  upper = true,
   color = {fg = colors.darkblue, gui='bold'},
+}
+
+ins_right {
+    'filetype',
+    condition = conditions.buffer_not_empty,
+    icons_enabled = false,
+    upper = true,
+    color = {fg = colors.cyan, gui = 'bold'}
 }
 
 ins_right {
@@ -635,24 +717,6 @@ ins_right {
   color_modified = colors.orange,
   color_removed = colors.red,
   condition = conditions.hide_in_width
-}
-
-ins_right {
-  -- Lsp server name .
-  function ()
-    local msg = 'none'
-    local buf_ft = vim.api.nvim_buf_get_option(0,'filetype')
-    local clients = vim.lsp.get_active_clients()
-    if next(clients) == nil then return msg end
-    for _, client in ipairs(clients) do
-      local filetypes = client.config.filetypes
-      if filetypes and vim.fn.index(filetypes, buf_ft) ~= -1 then
-        return client.name
-      end
-    end
-    return msg
-  end,
-  color = {fg = colors.cyan, gui = 'bold'}
 }
 
 ins_right {
@@ -786,24 +850,32 @@ vim.g.dashboard_custom_section = {
 }
 
 vim.g.dashboard_custom_header = {
-                 "=================     ===============     ===============   ========  ========",
-                 "\\\\ . . . . . . .\\\\   //. . . . . . .\\\\   //. . . . . . .\\\\  \\\\. . .\\\\// . . //",
-                 "||. . ._____. . .|| ||. . ._____. . .|| ||. . ._____. . .|| || . . .\\/ . . .||",
-                 "|| . .||   ||. . || || . .||   ||. . || || . .||   ||. . || ||. . . . . . . ||",
-                 "||. . ||   || . .|| ||. . ||   || . .|| ||. . ||   || . .|| || . | . . . . .||",
-                 "|| . .||   ||. _-|| ||-_ .||   ||. . || || . .||   ||. _-|| ||-_.|\\ . . . . ||",
-                 "||. . ||   ||-'  || ||  `-||   || . .|| ||. . ||   ||-'  || ||  `|\\_ . .|. .||",
-                 "|| . _||   ||    || ||    ||   ||_ . || || . _||   ||    || ||   |\\ `-_/| . ||",
-                 "||_-' ||  .|/    || ||    \\|.  || `-_|| ||_-' ||  .|/    || ||   | \\  / |-_.||",
-                 "||    ||_-'      || ||      `-_||    || ||    ||_-'      || ||   | \\  / |  `||",
-                 "||    `'         || ||         `'    || ||    `'         || ||   | \\  / |   ||",
-                 "||            .===' `===.         .==='.`===.         .===' /==. |  \\/  |   ||",
-                 "||         .=='   \\_|-_ `===. .==='   _|_   `===. .===' _-|/   `==  \\/  |   ||",
-                 "||      .=='    _-'    `-_  `='    _-'   `-_    `='  _-'   `-_  /|  \\/  |   ||",
-                 "||   .=='    _-'          `-__\\._-'         `-_./__-'         `' |. /|  |   ||",
-                 "||.=='    _-'                                                     `' |  /==.||",
-                 "=='    _-'                        N E O V I M                         \\/   `==",
-                 "\\   _-'                                                                `-_   /",
-                 " `''                                                                      ``'  ",
-                 "                                                                               ",
+     "          ``                        -y.            ",
+     "         .y                          my.           ",
+     "        `dh                    :s   .Nhs           ",
+     "        +mh-                  `dNs  yNhd           ",
+     "        yNhh`                :mNmm`yNdhh           ",
+     "        sNdhy.       ``...--..--:./hdhho           ",
+     "        :NNdhh/ `.-://+++++++++////:.-/`           ",
+     "    .:   hNNdhhhs/+++//+///++/+++/++///-` -/+-     ",
+     " -  -Nh+..mNNmhhhho///+++/:-...--://+++//:.:o      ",
+     " d:  mNmh.oNNNNhhhy:///+:...--..---:++//+//:`      ",
+     " omy++ys-//yNNNdyo--://:.-.hmmd/`-:::////////.     ",
+     " `yNmdhhhhs/+oo/--::://---.ssss:`-+s-///////:/.    ",
+     "   /dNNmhhy-:+++///////:-:-...``-syo://////:///.   ",
+     "     -syo+:-:/++/////++/::+ooosyhy+://///::/:::/   ",
+     "     `///::::://++///+//////++++/://///-:::/:--:.  ",
+     "     ./+++//////+/////::////////-:///:.:::/:--:::  ",
+     "     ./+///++++///+++/:--::///:.` `.s/`::::-----:  ",
+     "     ./+++////////++//////.`.yo`````...:/:--::--:  ",
+     "      /////////////////////-`..`.`..``-::-----.:.  ",
+     "      -////////////////////::-.-o-----::-.-:-../   ",
+     "       :/:///://:://:://::::/::::-::--:---..../`:  ",
+     "        :::::::::://::::::::::-::---..-.-..../`:o+`",
+     "         -:::::::::::/:::-::----:----.....`-:` `...",
+     "        +o.::-:-----:+++/-------:-......`.:.       ",
+     "       /NNm/`-:-::..yNNhhy---..........-:.         ",
+     "      .dy+-    .-:-.sNNhh+`..`..``..:--`           ",
+     "                  `.oNdh/----------.               ",
+     "                    .m/   ``                       ",
 }
