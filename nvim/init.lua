@@ -9,7 +9,6 @@ end
 --setup packer
 require('packer').startup(function()
   use "wbthomason/packer.nvim"
-
   use {'hoob3rt/lualine.nvim', requires = {'kyazdani42/nvim-web-devicons', opt = true}}
   use 'romgrk/barbar.nvim'
   use 'kyazdani42/nvim-tree.lua'
@@ -53,7 +52,7 @@ local fn = vim.fn
 --gui
 g.neovide_fullscreen = true
 g.neovide_cursor_vfx_mode = "pixiedust"
-vim.api.nvim_exec([[set guifont=FiraCode\ Nerd\ Font:h13]], false)
+vim.api.nvim_exec([[set guifont=FiraCode\ Nerd\ Font:h12]], false)
 
 --theme
 g.material_style = "moonlight"
@@ -123,7 +122,7 @@ map('n', 'k', 'gk')
 map('n', '<leader>w', '<cmd>HopWord<CR>')                              --easymotion/hop
 map('n', '<leader>l', '<cmd>HopLine<CR>')
 map('n', '<leader>/', '<cmd>HopPattern<CR>')
-map('n', '<leader>o', '<cmd>Telescope oldfiles<CR>')                   --fuzzy
+map('n', '<leader>fr', '<cmd>Telescope oldfiles<CR>')                   --fuzzy
 map('n', '<leader><space>', '<cmd>Telescope find_files<CR>')
 map('n', '<leader>f', '<cmd>Telescope current_buffer_fuzzy_find<CR>')
 map('n', '<leader><S-f>', '<cmd>Telescope treesitter<CR>')
@@ -828,6 +827,7 @@ require('telescope').setup{
   }
 }
 
+
 vim.g.dashboard_session_directory = '~/.config/nvim/.sessions'
 vim.g.dashboard_default_executive = 'telescope'
 vim.cmd("let g:dashboard_default_executive = 'telescope'")
@@ -850,32 +850,38 @@ vim.g.dashboard_custom_section = {
 }
 
 vim.g.dashboard_custom_header = {
-     "          ``                        -y.            ",
-     "         .y                          my.           ",
-     "        `dh                    :s   .Nhs           ",
-     "        +mh-                  `dNs  yNhd           ",
-     "        yNhh`                :mNmm`yNdhh           ",
-     "        sNdhy.       ``...--..--:./hdhho           ",
-     "        :NNdhh/ `.-://+++++++++////:.-/`           ",
-     "    .:   hNNdhhhs/+++//+///++/+++/++///-` -/+-     ",
-     " -  -Nh+..mNNmhhhho///+++/:-...--://+++//:.:o      ",
-     " d:  mNmh.oNNNNhhhy:///+:...--..---:++//+//:`      ",
-     " omy++ys-//yNNNdyo--://:.-.hmmd/`-:::////////.     ",
-     " `yNmdhhhhs/+oo/--::://---.ssss:`-+s-///////:/.    ",
-     "   /dNNmhhy-:+++///////:-:-...``-syo://////:///.   ",
-     "     -syo+:-:/++/////++/::+ooosyhy+://///::/:::/   ",
-     "     `///::::://++///+//////++++/://///-:::/:--:.  ",
-     "     ./+++//////+/////::////////-:///:.:::/:--:::  ",
-     "     ./+///++++///+++/:--::///:.` `.s/`::::-----:  ",
-     "     ./+++////////++//////.`.yo`````...:/:--::--:  ",
-     "      /////////////////////-`..`.`..``-::-----.:.  ",
-     "      -////////////////////::-.-o-----::-.-:-../   ",
-     "       :/:///://:://:://::::/::::-::--:---..../`:  ",
-     "        :::::::::://::::::::::-::---..-.-..../`:o+`",
-     "         -:::::::::::/:::-::----:----.....`-:` `...",
-     "        +o.::-:-----:+++/-------:-......`.:.       ",
-     "       /NNm/`-:-::..yNNhhy---..........-:.         ",
-     "      .dy+-    .-:-.sNNhh+`..`..``..:--`           ",
-     "                  `.oNdh/----------.               ",
-     "                    .m/   ``                       ",
+       "            :h-                                  Nhy`               ",
+       "           -mh.                           h.    `Ndho               ",
+       "           hmh+                          oNm.   oNdhh               ",
+       "          `Nmhd`                        /NNmd  /NNhhd               ",
+       "          -NNhhy                      `hMNmmm`+NNdhhh               ",
+       "          .NNmhhs              ```....`..-:/./mNdhhh+               ",
+       "           mNNdhhh-     `.-::///+++////++//:--.`-/sd`               ",
+       "           oNNNdhhdo..://++//++++++/+++//++///++/-.`                ",
+       "      y.   `mNNNmhhhdy+/++++//+/////++//+++///++////-` `/oos:       ",
+       " .    Nmy:  :NNNNmhhhhdy+/++/+++///:.....--:////+++///:.`:s+        ",
+       " h-   dNmNmy oNNNNNdhhhhy:/+/+++/-         ---:/+++//++//.`         ",
+       " hd+` -NNNy`./dNNNNNhhhh+-://///    -+oo:`  ::-:+////++///:`        ",
+       " /Nmhs+oss-:++/dNNNmhho:--::///    /mmmmmo  ../-///++///////.       ",
+       "  oNNdhhhhhhhs//osso/:---:::///    /yyyyso  ..o+-//////////:/.      ",
+       "   /mNNNmdhhhh/://+///::://////     -:::- ..+sy+:////////::/:/.     ",
+       "     /hNNNdhhs--:/+++////++/////.      ..-/yhhs-/////////::/::/`    ",
+       "       .ooo+/-::::/+///////++++//-/ossyyhhhhs/:///////:::/::::/:    ",
+       "       -///:::::::////++///+++/////:/+ooo+/::///////.::://::---+`   ",
+       "       /////+//++++/////+////-..//////////::-:::--`.:///:---:::/:   ",
+       "       //+++//++++++////+++///::--                 .::::-------::   ",
+       "       :/++++///////////++++//////.                -:/:----::../-   ",
+       "       -/++++//++///+//////////////               .::::---:::-.+`   ",
+       "       `////////////////////////////:.            --::-----...-/    ",
+       "        -///://////////////////////::::-..      :-:-:-..-::.`.+`    ",
+       "         :/://///:///::://::://::::::/:::::::-:---::-.-....``/- -   ",
+       "           ::::://::://::::::::::::::----------..-:....`.../- -+oo/ ",
+       "            -/:::-:::::---://:-::-::::----::---.-.......`-/.      ``",
+       "           s-`::--:::------:////----:---.-:::...-.....`./:          ",
+       "          yMNy.`::-.--::..-dmmhhhs-..-.-.......`.....-/:`           ",
+       "         oMNNNh. `-::--...:NNNdhhh/.--.`..``.......:/-              ",
+       "        :dy+:`      .-::-..NNNhhd+``..`...````.-::-`                ",
+       "                        .-:mNdhh:.......--::::-`                    ",
+       "                           yNh/..------..`                          ",
+       "                                                                    ",
 }
