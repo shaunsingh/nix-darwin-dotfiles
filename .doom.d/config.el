@@ -7,11 +7,21 @@
 
 ;;fonts
 (setq doom-font (font-spec :family "FiraCode Nerd Font" :size 12)
-      doom-variable-pitch-font (font-spec :family "Verdana" :size 13)
-      ivy-posframe-font (font-spec :family "FiraCode Nerd Font" :size 15))
+      doom-variable-pitch-font (font-spec :family "Verdana" :size 12)
+      ivy-posframe-font (font-spec :family "FiraCode Nerd Font" :size 13))
 
 ;;set theme
+;;(setq doom-theme 'doom-vibrant)
 (setq doom-theme 'doom-moonlight)
+;;(setq doom-theme 'doom-nord)
+
+(require 'ivy-posframe)
+;; display at `ivy-posframe-style'
+(setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-top-center)))
+(ivy-posframe-mode 1)
+
+;;minimap on startup
+;;(add-hook 'window-setup-hook #'minimap-mode)
 
 ;;org direcotry
 (setq org-directory "~/org/")
@@ -42,13 +52,11 @@
 (setq fancy-splash-image "/Users/shauryasingh/.doom.d/cute-demon.png")
 (setq +doom-dashboard-banner-padding '(0 . 3))
 
-;;use tabnine
-(use-package company-tabnine :ensure t)
-
 ;;tell company to always do autocomplete + tabnine
 (after! company
-  (setq company-idle-delay 1
-        company-minimum-prefix-length 2)
+  (setq company-idle-delay 0.5
+        company-dabbrev-downcase 0
+        company-minimum-prefix-length 1)
   (setq company-show-numbers t)
   (add-hook 'evil-normal-state-entry-hook #'company-abort)) ;; make aborting less annoying.
 (set-company-backend!
@@ -58,21 +66,21 @@
   '(:seperate
     company-ispell
     company-files
-    company-yasnippet
-    company-tabnine))
+    company-yasnippet))
+
+(setq-default history-length 1000)
+(setq-default prescient-history-length 1000)
 
 ;;whichkey faster
 (setq which-key-idle-delay 0.5)
 
 ;;make zen mode smaller
-(setq +zen-text-scale 0.8)
+;;(setq +zen-text-scale 0.8)
 
-;; keybindings
-(map! :leader
-      :desc "Mixed-pitch mode"
-      "t m" #'mixed-pitch-mode)
-
-(add-to-list 'default-frame-alist '(inhibit-double-buffering . t))
+;;treemacs smaller
+(add-hook 'treemacs-mode-hook (lambda () (text-scale-decrease 1)))
+(after! treemacs
+  (setq treemacs-width 30))
 
 ;;ligatures in org mode
 (setq +ligatures-in-modes '(org-mode))
