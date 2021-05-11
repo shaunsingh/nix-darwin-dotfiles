@@ -52,6 +52,3 @@
 
 (package! avy)
 (package! elcord :pin "6608e0392b...")
-(package! company-tabnine)
-;;(package! tree-sitter)
-;;(package! tree-sitter-langs)
