@@ -50,5 +50,3 @@
 ;(unpin! t)
 ;;
 
-(package! avy)
-(package! elcord :pin "6608e0392b...")
