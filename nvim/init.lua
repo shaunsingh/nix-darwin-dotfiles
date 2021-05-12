@@ -25,7 +25,6 @@ require('packer').startup(function()
   use 'shaunsingh/moonlight.nvim'
   use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
   use {"lukas-reineke/indent-blankline.nvim", branch = "lua"}
-  use 'lewis6991/spellsitter.nvim'
 
   use 'mg979/vim-visual-multi'
   use 'phaazon/hop.nvim'
@@ -50,15 +49,16 @@ local g = vim.g
 local fn = vim.fn
 
 --gui
-g.neovide_fullscreen = true
+g.neovide_fullscreen = false
 g.neovide_cursor_vfx_mode = "pixiedust"
 vim.api.nvim_exec([[set guifont=FiraCode\ Nerd\ Font:h12]], false)
+vim.api.nvim_exec([[let &fcs='eob: ']], false)
 
 --theme
-g.material_style = "moonlight"
-g.material_borders = false
-g.material_contrast = false
-require('material').set()
+g.moonlight_style = "moonlight"
+g.moonlight_borders = true
+g.moonlight_contrast = false
+require('moonlight').set()
 
 --settings
 local scopes = {o = vim.o, b = vim.bo, w = vim.wo}
@@ -69,8 +69,8 @@ local function opt(scope, key, value)
 end
 
 local indent = 4
-cmd 'hi NORMAL guibg=#2f334d'
-opt('b', 'expandtab', true)                           -- Use spaces instead of tabs
+cmd 'hi normal guibg=#2f334d'
+opt('b', 'expandtab', true)                           -- use spaces instead of tabs
 opt('b', 'shiftwidth', indent)                        -- Size of an indent
 opt('b', 'smartindent', true)                         -- Insert indents automatically
 opt('b', 'tabstop', indent)                           -- Number of spaces tabs count for
@@ -93,18 +93,15 @@ opt('o', 'background', 'dark' )
 opt('o', 'backup', false )
 opt('w', 'number', true)                              -- Print line number
 opt('o', 'lazyredraw', true)
-opt('o', 'signcolumn', 'yes')
+--opt('o', 'signcolumn', 'yes')
 opt('o', 'mouse', 'a')
 opt('o', 'cmdheight', 1)
 opt('o', 'wrap', false)
-
+opt('o', 'spell', true)
 --opt('o', 'breakindent', true)
 --opt('o', 'lbr', true)
 --opt('o', 'formatoptions', 'l')
-
---set shortmess
 vim.o.shortmess = vim.o.shortmess .. "c"
-
 
 --mappings
 local function map(mode, lhs, rhs, opts)
@@ -138,6 +135,13 @@ map('n', '<c-l>', '<cmd>wincmd l<CR>')
 cmd([[autocmd BufWritePre * %s/\s\+$//e]])                             --remove trailing whitespaces
 cmd([[autocmd BufWritePre * %s/\n\+\%$//e]])
 
+--lsp binds
+vim.api.nvim_set_keymap('i', '<C-Space>', [[compe#complete()]], { noremap = true, silent = true, expr = true })
+vim.api.nvim_set_keymap('i', '<CR>', [[compe#confirm('<CR>')]], { noremap = true, silent = true, expr = true })
+vim.api.nvim_set_keymap('i', '<C-e>', [[compe#close('<C-e>')]], { noremap = true, silent = true, expr = true })
+vim.api.nvim_set_keymap('i', '<C-f>', [[compe#scroll({ 'delta': +4 })]], { noremap = true, silent = true, expr = true })
+vim.api.nvim_set_keymap('i', '<C-d>', [[compe#scroll({ 'delta': -4 })]], { noremap = true, silent = true, expr = true })
+
 --visual multi
 vim.api.nvim_exec([[
 let g:VM_maps = {}
@@ -159,7 +163,6 @@ g.indentline_setColors = 0
 vim.api.nvim_exec([[
 let bufferline = get(g:, 'bufferline', {})
 let bufferline.animation = v:false
-let bufferline.auto_hide = v:true
 ]], false)
 
 --nvim-compe
@@ -188,8 +191,6 @@ require'compe'.setup {
   };
 }
 
---spellsitter
-require('spellsitter').setup()
 
 -- setup for TrueZen.nvim
 local true_zen = require("true-zen")
@@ -263,6 +264,7 @@ require'nvim-treesitter.configs'.setup {
   ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
   highlight = {
     enable = true,              -- false will disable the whole extension
+    additional_vim_regex_highlighting = true -- <= THIS LINE is the magic!
   },
   rainbow = {
     enable = true,
@@ -560,7 +562,7 @@ local function ins_right(component)
 end
 
 ins_left {
- function() return '▊ 1' end,
+ function() return '▊ ' end,
  color = {fg = colors.blue}, -- Sets highlighting of component
  left_padding = 0 -- We don't need space before this
 }
@@ -620,20 +622,15 @@ ins_left {
 }
 
 ins_left {
-    'filetype',
-    condition = conditions.buffer_not_empty,
-    icons_enabled = true,
-    color = {fg = colors.fg, gui = 'bold'}
+'filetype', format = function() return " " end, right_padding=0
 }
 
 ins_left {
   'filename',
   condition = conditions.buffer_not_empty,
-  full_path = true,
-  shorten = true,
-  icons_enabled = true,
-  icon = '',
-  color = {fg = colors.green, gui = 'bold'},
+  path = 1,
+  color = {fg = colors.yellow, gui = 'bold'},
+  left_padding=0
 }
 
 ins_left {
@@ -684,13 +681,12 @@ ins_right {
   'o:encoding', -- option component same as &encoding in viml
   condition = conditions.hide_in_width,
   upper = true,
-  color = {fg = colors.darkblue, gui = 'bold'}
+  color = {fg = colors.darkblue}
 }
 
 ins_right {
   'fileformat', --same one just without the logo
-  icons_enabled = false,
-  upper = true,
+  icons_enabled = true,
   color = {fg = colors.darkblue, gui='bold'},
 }
 
@@ -862,9 +858,9 @@ vim.g.dashboard_custom_header = {
        "      y.   `mNNNmhhhdy+/++++//+/////++//+++///++////-` `/oos:       ",
        " .    Nmy:  :NNNNmhhhhdy+/++/+++///:.....--:////+++///:.`:s+        ",
        " h-   dNmNmy oNNNNNdhhhhy:/+/+++/-         ---:/+++//++//.`         ",
-       " hd+` -NNNy`./dNNNNNhhhh+-://///    -+oo:`  ::-:+////++///:`        ",
-       " /Nmhs+oss-:++/dNNNmhho:--::///    /mmmmmo  ../-///++///////.       ",
-       "  oNNdhhhhhhhs//osso/:---:::///    /yyyyso  ..o+-//////////:/.      ",
+       " hd+` -NNNy`./dNNNNNhhhh+-://///   -+ooo:`  ::-:+////++///:`        ",
+       " /Nmhs+oss-:++/dNNNmhho:--::///   /mmmmmmo  ../-///++///////.       ",
+       "  oNNdhhhhhhhs//osso/:---:::///   /myyyyso  ..o+-//////////:/.      ",
        "   /mNNNmdhhhh/://+///::://////     -:::- ..+sy+:////////::/:/.     ",
        "     /hNNNdhhs--:/+++////++/////.      ..-/yhhs-/////////::/::/`    ",
        "       .ooo+/-::::/+///////++++//-/ossyyhhhhs/:///////:::/::::/:    ",
@@ -875,9 +871,9 @@ vim.g.dashboard_custom_header = {
        "       -/++++//++///+//////////////               .::::---:::-.+`   ",
        "       `////////////////////////////:.            --::-----...-/    ",
        "        -///://////////////////////::::-..      :-:-:-..-::.`.+`    ",
-       "         :/://///:///::://::://::::::/:::::::-:---::-.-....``/- -   ",
-       "           ::::://::://::::::::::::::----------..-:....`.../- -+oo/ ",
-       "            -/:::-:::::---://:-::-::::----::---.-.......`-/.      ``",
+       "         :/://///:///::://::://::::::/:::::::-:---::-.-....``/mm`   ",
+       "           ::::://::://::::::::::::::----------..-:....`.../Nmhd+o/ ",
+       "            -/:::-:::::---://:-::-::::----::---.-.......`-/oNN   `` ",
        "           s-`::--:::------:////----:---.-:::...-.....`./:          ",
        "          yMNy.`::-.--::..-dmmhhhs-..-.-.......`.....-/:`           ",
        "         oMNNNh. `-::--...:NNNdhhh/.--.`..``.......:/-              ",
