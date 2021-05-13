@@ -1,3 +1,6 @@
+--sumneko likes to be annoying about things sometimes
+---@diagnostic disable: undefined-global
+
 --Install packer
 local execute = vim.api.nvim_command
 local install_path = vim.fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
@@ -19,7 +22,6 @@ require('packer').startup(function()
 
   use 'kdav5758/TrueZen.nvim'
   use 'junegunn/limelight.vim'
-  use 'yamatsum/nvim-cursorline'
   use 'norcalli/nvim-colorizer.lua'
 
   use 'shaunsingh/moonlight.nvim'
@@ -37,26 +39,31 @@ require('packer').startup(function()
   use 'glepnir/lspsaga.nvim'
   use 'kabouzeid/nvim-lspinstall'
   use 'ray-x/lsp_signature.nvim'
+  use 'jiangmiao/auto-pairs'
+  use 'RRethy/vim-illuminate'
 
   use 'hrsh7th/vim-vsnip'
   use 'hrsh7th/vim-vsnip-integ'
   use 'rafamadriz/friendly-snippets'
+
+  use 'folke/which-key.nvim'
 end)
 
 --make life easier
 local cmd = vim.cmd
 local g = vim.g
-local fn = vim.fn
 
 --gui
-g.neovide_fullscreen = false
+g.neovide_fullscreen = true
 g.neovide_cursor_vfx_mode = "pixiedust"
 vim.api.nvim_exec([[set guifont=FiraCode\ Nerd\ Font:h12]], false)
+
+--Hide eob~
 vim.api.nvim_exec([[let &fcs='eob: ']], false)
 
 --theme
 g.moonlight_style = "moonlight"
-g.moonlight_borders = true
+g.moonlight_borders = false
 g.moonlight_contrast = false
 require('moonlight').set()
 
@@ -74,6 +81,7 @@ opt('b', 'expandtab', true)                           -- use spaces instead of t
 opt('b', 'shiftwidth', indent)                        -- Size of an indent
 opt('b', 'smartindent', true)                         -- Insert indents automatically
 opt('b', 'tabstop', indent)                           -- Number of spaces tabs count for
+opt('o', 'cursorline', true)
 opt('o', 'completeopt', 'menuone,noselect')           -- Completion options (for compe)
 opt('o', 'hidden', true)                              -- Enable modified buffers in background
 opt('o', 'scrolloff', 3 )                             -- Lines of context
@@ -116,7 +124,7 @@ map('c', 'jk', '<C-C>')
 map('n', ';', ':')                                                     --semicolon to enter command mode
 map('n', 'j', 'gj')                                                    --move by visual line not actual line
 map('n', 'k', 'gk')
-map('n', '<leader>w', '<cmd>HopWord<CR>')                              --easymotion/hop
+map('n', '<leader>ww', '<cmd>HopWord<CR>')                              --easymotion/hop
 map('n', '<leader>l', '<cmd>HopLine<CR>')
 map('n', '<leader>/', '<cmd>HopPattern<CR>')
 map('n', '<leader>fr', '<cmd>Telescope oldfiles<CR>')                   --fuzzy
@@ -135,12 +143,21 @@ map('n', '<c-l>', '<cmd>wincmd l<CR>')
 cmd([[autocmd BufWritePre * %s/\s\+$//e]])                             --remove trailing whitespaces
 cmd([[autocmd BufWritePre * %s/\n\+\%$//e]])
 
---lsp binds
+--lspcomplete binds
 vim.api.nvim_set_keymap('i', '<C-Space>', [[compe#complete()]], { noremap = true, silent = true, expr = true })
 vim.api.nvim_set_keymap('i', '<CR>', [[compe#confirm('<CR>')]], { noremap = true, silent = true, expr = true })
 vim.api.nvim_set_keymap('i', '<C-e>', [[compe#close('<C-e>')]], { noremap = true, silent = true, expr = true })
 vim.api.nvim_set_keymap('i', '<C-f>', [[compe#scroll({ 'delta': +4 })]], { noremap = true, silent = true, expr = true })
 vim.api.nvim_set_keymap('i', '<C-d>', [[compe#scroll({ 'delta': -4 })]], { noremap = true, silent = true, expr = true })
+
+--lspsaga binds
+map('n', '<leader>gh', '<cmd>Lspsaga lsp_finder<CR>')
+map('n', '<leader>ca', '<cmd>Lspsaga code_action<CR>')
+map('v', '<leader>ca', '<cmd><C-U>Lspsaga range_code_action<CR>')
+map('n', '<leader>K', '<cmd>Lspsaga hover_doc<CR>')
+map('n', '<leader>gs', '<cmd>Lspsaga signature_help<CR>')
+map('n', '<leader>gr', '<cmd>Lspsaga rename<CR>')
+map('n', '<leader>cd', '<cmd>Lspsaga show_line_diagnostics<CR>')
 
 --visual multi
 vim.api.nvim_exec([[
@@ -316,24 +333,6 @@ require('gitsigns').setup {
   use_decoration_api = true,
   use_internal_diff = true,  -- If luajit is present
 }
-
-vim.fn.sign_define(
-    "LspDiagnosticsSignError",
-    {texthl = "LspDiagnosticsSignError", text = "", numhl = "LspDiagnosticsSignError"}
-)
-vim.fn.sign_define(
-    "LspDiagnosticsSignWarning",
-    {texthl = "LspDiagnosticsSignWarning", text = "", numhl = "LspDiagnosticsSignWarning"}
-)
-vim.fn.sign_define(
-    "LspDiagnosticsSignHint",
-    {texthl = "LspDiagnosticsSignHint", text = "", numhl = "LspDiagnosticsSignHint"}
-)
-vim.fn.sign_define(
-    "LspDiagnosticsSignInformation",
-    {texthl = "LspDiagnosticsSignInformation", text = "", numhl = "LspDiagnosticsSignInformation"}
-)
-
 -- Snippets support
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities.textDocument.completion.completionItem.snippetSupport = true
@@ -378,6 +377,20 @@ require('lspkind').init({
 --lspconfig + lsp trouble + lspsaga
 require'lspconfig'.pyls.setup{}
 require'lspconfig'.kotlin_language_server.setup{}
+require'lspconfig'.jdtls.setup{
+  cmd = { 'jdtls' },
+  require'lspconfig'.util.root_pattern("pom.xml", "gradle.build", ".git", vim.fn.getcwd()),
+  on_attach = function(client)
+    -- [[ other on_attach code ]]
+    require 'illuminate'.on_attach(client)
+  end,
+}
+
+--lsp illuminate
+vim.api.nvim_command [[ hi def link LspReferenceText Visual ]]
+vim.api.nvim_command [[ hi def link LspReferenceWrite Visual ]]
+vim.api.nvim_command [[ hi def link LspReferenceRead Visual ]]
+g.Illuminate_delay = 150
 
 --lsp isntaller
 local function setup_servers()
@@ -431,14 +444,70 @@ require("trouble").setup {
         information = "",
         other = "﫠"
     },
-    use_lsp_diagnostic_signs = false -- enabling this will use the signs defined in your lsp client
+    use_lsp_diagnostic_signs = false
 }
 
+--lsptrobule bindings
+vim.api.nvim_set_keymap("n", "<leader>xx", "<cmd>Trouble<cr>",  {silent = true, noremap = true})
+vim.api.nvim_set_keymap("n", "<leader>xw", "<cmd>Trouble lsp_workspace_diagnostics<cr>", {silent = true, noremap = true})
+vim.api.nvim_set_keymap("n", "<leader>xd", "<cmd>Trouble lsp_document_diagnostics<cr>", {silent = true, noremap = true})
+vim.api.nvim_set_keymap("n", "<leader>xl", "<cmd>Trouble loclist<cr>", {silent = true, noremap = true})
+vim.api.nvim_set_keymap("n", "<leader>xq", "<cmd>Trouble quickfix<cr>", {silent = true, noremap = true})
+vim.api.nvim_set_keymap("n", "gR", "<cmd>Trouble lsp_references<cr>", {silent = true, noremap = true})
+
+--whichkey
+require("which-key").setup {
+ plugins = {
+    marks = true, -- shows a list of your marks on ' and `
+    registers = true, -- shows your registers on " in NORMAL or <C-r> in INSERT mode
+    -- the presets plugin, adds help for a bunch of default keybindings in Neovim
+    -- No actual key bindings are created
+    spelling = {
+      enabled = true, -- enabling this will show WhichKey when pressing z= to select spelling suggestions
+      suggestions = 20, -- how many suggestions should be shown in the list?
+    },
+    presets = {
+      operators = true, -- adds help for operators like d, y, ... and registers them for motion / text object completion
+      motions = true, -- adds help for motions
+      text_objects = true, -- help for text objects triggered after entering an operator
+      windows = true, -- default bindings on <c-w>
+      nav = true, -- misc bindings to work with windows
+      z = true, -- bindings for folds, spelling and others prefixed with z
+      g = true, -- bindings for prefixed with g
+    },
+  },
+  -- add operators that will trigger motion and text object completion
+  -- to enable all native operators, set the preset / operators plugin above
+  operators = { gc = "Comments" },
+  icons = {
+    breadcrumb = "»", -- symbol used in the command line area that shows your active key combo
+    separator = "->", -- symbol used between a key and it's label
+    group = "+", -- symbol prepended to a group
+  },
+  window = {
+    border = "none", -- none, single, double, shadow
+    position = "bottom", -- bottom, top
+    margin = { 1, 0, 1, 0 }, -- extra window margin [top, right, bottom, left]
+    padding = { 2, 2, 2, 2 }, -- extra window padding [top, right, bottom, left]
+  },
+  layout = {
+    height = { min = 4, max = 25 }, -- min and max height of the columns
+    width = { min = 20, max = 50 }, -- min and max width of the columns
+    spacing = 3, -- spacing between columns
+  },
+  ignore_missing = false, -- enable this to hide mappings for which you didn't specify a label
+  hidden = { "<silent>", "<cmd>", "<Cmd>", "<CR>", "call", "lua", "^:", "^ "}, -- hide mapping boilerplate
+  show_help = true, -- show help message on the command line when the popup is visible
+  triggers = "auto", -- automatically setup triggers
+  -- triggers = {"<leader>"} -- or specifiy a list manually
+}
+
+--lspsaga and icons
 require'lspsaga'.init_lsp_saga{
     error_sign = "",
     warn_sign = "",
     hint_sign = "",
-    infor_sign = ""
+    infor_sign = "",
 }
 
 --use tab to navigate autocomplete
@@ -455,9 +524,7 @@ local check_back_space = function()
     end
 end
 
--- Use (s-)tab to:
---- move to prev/next item in completion menuone
---- jump to prev/next snippet's placeholder
+-- Use (s-)tab to move back
 _G.tab_complete = function()
   if vim.fn.pumvisible() == 1 then
     return t "<C-n>"
@@ -478,7 +545,6 @@ _G.s_tab_complete = function()
     return t "<S-Tab>"
   end
 end
-
 vim.api.nvim_set_keymap("i", "<Tab>", "v:lua.tab_complete()", {expr = true})
 vim.api.nvim_set_keymap("s", "<Tab>", "v:lua.tab_complete()", {expr = true})
 vim.api.nvim_set_keymap("i", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
