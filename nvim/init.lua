@@ -8,7 +8,6 @@ if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
   execute('!git clone https://github.com/wbthomason/packer.nvim '.. install_path)
 end
 
-
 --setup packer
 require('packer').startup(function()
   use "wbthomason/packer.nvim"
@@ -24,6 +23,7 @@ require('packer').startup(function()
   use 'junegunn/limelight.vim'
   use 'norcalli/nvim-colorizer.lua'
 
+  --use 'shaunsingh/nord.nvim'
   use 'shaunsingh/moonlight.nvim'
   use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
   use {"lukas-reineke/indent-blankline.nvim", branch = "lua"}
@@ -31,6 +31,7 @@ require('packer').startup(function()
   use 'mg979/vim-visual-multi'
   use 'phaazon/hop.nvim'
   use {'nvim-telescope/telescope.nvim', requires = {{'nvim-lua/popup.nvim'}, {'nvim-lua/plenary.nvim'}}}
+  use 'axvr/org.vim'
 
   use 'hrsh7th/nvim-compe'
   use 'onsails/lspkind-nvim'
@@ -39,9 +40,8 @@ require('packer').startup(function()
   use 'glepnir/lspsaga.nvim'
   use 'kabouzeid/nvim-lspinstall'
   use 'ray-x/lsp_signature.nvim'
-  use 'jiangmiao/auto-pairs'
-  use 'RRethy/vim-illuminate'
 
+  use 'jiangmiao/auto-pairs'
   use 'hrsh7th/vim-vsnip'
   use 'hrsh7th/vim-vsnip-integ'
   use 'rafamadriz/friendly-snippets'
@@ -55,17 +55,24 @@ local g = vim.g
 
 --gui
 g.neovide_fullscreen = true
+g.neovide_cursor_antialiasing=true
 g.neovide_cursor_vfx_mode = "pixiedust"
 vim.api.nvim_exec([[set guifont=FiraCode\ Nerd\ Font:h12]], false)
 
 --Hide eob~
 vim.api.nvim_exec([[let &fcs='eob: ']], false)
 
---theme
+--moonlight
 g.moonlight_style = "moonlight"
 g.moonlight_borders = false
 g.moonlight_contrast = false
 require('moonlight').set()
+
+--nord
+--g.nord_style = "nord"
+--g.nord_borders = fasle
+--g.nord_contrast = false
+--require('nord').set()
 
 --settings
 local scopes = {o = vim.o, b = vim.bo, w = vim.wo}
@@ -81,6 +88,7 @@ opt('b', 'expandtab', true)                           -- use spaces instead of t
 opt('b', 'shiftwidth', indent)                        -- Size of an indent
 opt('b', 'smartindent', true)                         -- Insert indents automatically
 opt('b', 'tabstop', indent)                           -- Number of spaces tabs count for
+opt('o', 'inccommand', 'nosplit')
 opt('o', 'cursorline', true)
 opt('o', 'completeopt', 'menuone,noselect')           -- Completion options (for compe)
 opt('o', 'hidden', true)                              -- Enable modified buffers in background
@@ -101,14 +109,14 @@ opt('o', 'background', 'dark' )
 opt('o', 'backup', false )
 opt('w', 'number', true)                              -- Print line number
 opt('o', 'lazyredraw', true)
---opt('o', 'signcolumn', 'yes')
+opt('o', 'signcolumn', 'yes')
 opt('o', 'mouse', 'a')
 opt('o', 'cmdheight', 1)
-opt('o', 'wrap', false)
 opt('o', 'spell', true)
---opt('o', 'breakindent', true)
---opt('o', 'lbr', true)
---opt('o', 'formatoptions', 'l')
+--opt('o', 'wrap', false)
+opt('o', 'breakindent', true)
+opt('o', 'lbr', true)
+opt('o', 'formatoptions', 'l')
 vim.o.shortmess = vim.o.shortmess .. "c"
 
 --mappings
@@ -124,7 +132,7 @@ map('c', 'jk', '<C-C>')
 map('n', ';', ':')                                                     --semicolon to enter command mode
 map('n', 'j', 'gj')                                                    --move by visual line not actual line
 map('n', 'k', 'gk')
-map('n', '<leader>ww', '<cmd>HopWord<CR>')                              --easymotion/hop
+map('n', '<leader>w', '<cmd>HopWord<CR>')                              --easymotion/hop
 map('n', '<leader>l', '<cmd>HopLine<CR>')
 map('n', '<leader>/', '<cmd>HopPattern<CR>')
 map('n', '<leader>fr', '<cmd>Telescope oldfiles<CR>')                   --fuzzy
@@ -134,7 +142,7 @@ map('n', '<leader>fP', '<cmd>e ~/.config/nvim/init.lua<CR>')
 map('n', '<leader><S-f>', '<cmd>Telescope treesitter<CR>')
 map('n', '<leader><S-p>', '<cmd>Telescope commands<CR>')
 map('n', '<leader>z', '<cmd>TZAtaraxis<CR>')                           --ataraxis
-map('n', '<leader>x', '<cmd>TZAtaraxis l45 r45 t2 b2<CR>')
+map('n', '<leader>x', '<cmd>TZAtaraxis l52 r52 t5 b5<CR>')
 map('n', '<leader>op', '<cmd>NvimTreeToggle<CR>')                      --nvimtree
 map('n', '<c-k>', '<cmd>wincmd k<CR>')                                 --ctrlhjkl to navigate splits
 map('n', '<c-j>', '<cmd>wincmd j<CR>')
@@ -151,13 +159,13 @@ vim.api.nvim_set_keymap('i', '<C-f>', [[compe#scroll({ 'delta': +4 })]], { norem
 vim.api.nvim_set_keymap('i', '<C-d>', [[compe#scroll({ 'delta': -4 })]], { noremap = true, silent = true, expr = true })
 
 --lspsaga binds
-map('n', '<leader>gh', '<cmd>Lspsaga lsp_finder<CR>')
-map('n', '<leader>ca', '<cmd>Lspsaga code_action<CR>')
-map('v', '<leader>ca', '<cmd><C-U>Lspsaga range_code_action<CR>')
+map('n', '<leader>h', '<cmd>Lspsaga lsp_finder<CR>')
+map('n', '<leader>a', '<cmd>Lspsaga code_action<CR>')
+map('v', '<leader>a', '<cmd><C-U>Lspsaga range_code_action<CR>')
 map('n', '<leader>K', '<cmd>Lspsaga hover_doc<CR>')
-map('n', '<leader>gs', '<cmd>Lspsaga signature_help<CR>')
-map('n', '<leader>gr', '<cmd>Lspsaga rename<CR>')
-map('n', '<leader>cd', '<cmd>Lspsaga show_line_diagnostics<CR>')
+map('n', '<leader>s', '<cmd>Lspsaga signature_help<CR>')
+map('n', '<leader>r', '<cmd>Lspsaga rename<CR>')
+map('n', '<leader>d', '<cmd>Lspsaga show_line_diagnostics<CR>')
 
 --visual multi
 vim.api.nvim_exec([[
@@ -180,6 +188,7 @@ g.indentline_setColors = 0
 vim.api.nvim_exec([[
 let bufferline = get(g:, 'bufferline', {})
 let bufferline.animation = v:false
+let bufferline.auto_hide = v:true
 ]], false)
 
 --nvim-compe
@@ -386,13 +395,6 @@ require'lspconfig'.jdtls.setup{
   end,
 }
 
---lsp illuminate
-vim.api.nvim_command [[ hi def link LspReferenceText Visual ]]
-vim.api.nvim_command [[ hi def link LspReferenceWrite Visual ]]
-vim.api.nvim_command [[ hi def link LspReferenceRead Visual ]]
-g.Illuminate_delay = 150
-
---lsp isntaller
 local function setup_servers()
   require'lspinstall'.setup()
   local servers = require'lspinstall'.installed_servers()
@@ -432,10 +434,10 @@ require("trouble").setup {
         next = "j" -- next item
     },
     indent_lines = true, -- add an indent guide below the fold icons
-    auto_open = true, -- automatically open the list when you have diagnostics
-    auto_close = true, -- automatically close the list when you have no diagnostics
+    auto_open = false, -- automatically open the list when you have diagnostics
+    auto_close = false, -- automatically close the list when you have no diagnostics
     auto_preview = true, -- automatyically preview the location of the diagnostic. <esc> to close preview and go back to last window
-    auto_fold = true, -- automatically fold a file trouble list at creation
+    auto_fold = false, -- automatically fold a file trouble list at creation
     signs = {
         -- icons / text used for a diagnostic
         error = "",
@@ -448,11 +450,11 @@ require("trouble").setup {
 }
 
 --lsptrobule bindings
-vim.api.nvim_set_keymap("n", "<leader>xx", "<cmd>Trouble<cr>",  {silent = true, noremap = true})
-vim.api.nvim_set_keymap("n", "<leader>xw", "<cmd>Trouble lsp_workspace_diagnostics<cr>", {silent = true, noremap = true})
-vim.api.nvim_set_keymap("n", "<leader>xd", "<cmd>Trouble lsp_document_diagnostics<cr>", {silent = true, noremap = true})
-vim.api.nvim_set_keymap("n", "<leader>xl", "<cmd>Trouble loclist<cr>", {silent = true, noremap = true})
-vim.api.nvim_set_keymap("n", "<leader>xq", "<cmd>Trouble quickfix<cr>", {silent = true, noremap = true})
+vim.api.nvim_set_keymap("n", "<leader>gx", "<cmd>Trouble<cr>",  {silent = true, noremap = true})
+vim.api.nvim_set_keymap("n", "<leader>gw", "<cmd>Trouble lsp_workspace_diagnostics<cr>", {silent = true, noremap = true})
+vim.api.nvim_set_keymap("n", "<leader>gd", "<cmd>Trouble lsp_document_diagnostics<cr>", {silent = true, noremap = true})
+vim.api.nvim_set_keymap("n", "<leader>gl", "<cmd>Trouble loclist<cr>", {silent = true, noremap = true})
+vim.api.nvim_set_keymap("n", "<leader>gq", "<cmd>Trouble quickfix<cr>", {silent = true, noremap = true})
 vim.api.nvim_set_keymap("n", "gR", "<cmd>Trouble lsp_references<cr>", {silent = true, noremap = true})
 
 --whichkey
@@ -487,7 +489,7 @@ require("which-key").setup {
   window = {
     border = "none", -- none, single, double, shadow
     position = "bottom", -- bottom, top
-    margin = { 1, 0, 1, 0 }, -- extra window margin [top, right, bottom, left]
+    margin = { 0, 1, 0, 1 }, -- extra window margin [top, right, bottom, left]
     padding = { 2, 2, 2, 2 }, -- extra window padding [top, right, bottom, left]
   },
   layout = {
@@ -554,8 +556,10 @@ vim.api.nvim_set_keymap("s", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
 local lualine = require'lualine'
 
 -- Color table for highlights
+
+--moonlight
 local colors = {
-  bg       = '#1d2133',
+  bg       = '#212337',
   fg       = '#e4f3fa',
   yellow   = '#ffc777',
   cyan     = '#04d1f9',
@@ -567,6 +571,21 @@ local colors = {
   blue     = '#04d1f9';
   red      = '#ff757f';
 }
+
+--nord
+--local colors = {
+--  bg       = '#2E3440',
+--  fg       = '#ECEFF4',
+--  yellow   = '#EBCB8B',
+--  cyan     = '#8FBCBB',
+--  darkblue = '#5E81AC',
+--  green    = '#A3BE8C',
+--  orange   = '#D08770',
+--  violet   = '#81A1C1',
+--  magenta  = '#B48EAD',
+--  blue     = '#81A1C1';
+--  red      = '#BF616A';
+--}
 
 local conditions = {
   buffer_not_empty = function()
