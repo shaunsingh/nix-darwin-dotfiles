@@ -23,8 +23,8 @@ require('packer').startup(function()
   use 'junegunn/limelight.vim'
   use 'norcalli/nvim-colorizer.lua'
 
-  --use 'shaunsingh/nord.nvim'
-  use 'shaunsingh/moonlight.nvim'
+  use 'shaunsingh/nord.nvim'
+  --use 'shaunsingh/moonlight.nvim'
   use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
   use {"lukas-reineke/indent-blankline.nvim", branch = "lua"}
 
@@ -54,7 +54,7 @@ local cmd = vim.cmd
 local g = vim.g
 
 --gui
-g.neovide_fullscreen = true
+--g.neovide_fullscreen = true
 g.neovide_cursor_antialiasing=true
 g.neovide_cursor_vfx_mode = "pixiedust"
 vim.api.nvim_exec([[set guifont=FiraCode\ Nerd\ Font:h12]], false)
@@ -63,16 +63,16 @@ vim.api.nvim_exec([[set guifont=FiraCode\ Nerd\ Font:h12]], false)
 vim.api.nvim_exec([[let &fcs='eob: ']], false)
 
 --moonlight
-g.moonlight_style = "moonlight"
-g.moonlight_borders = false
-g.moonlight_contrast = false
-require('moonlight').set()
+--g.moonlight_style = "moonlight"
+--g.moonlight_borders = false
+--g.moonlight_contrast = false
+--require('moonlight').set()
 
 --nord
---g.nord_style = "nord"
---g.nord_borders = fasle
---g.nord_contrast = false
---require('nord').set()
+g.nord_style = "nord"
+g.nord_borders = false
+g.nord_contrast = false
+require('nord').set()
 
 --settings
 local scopes = {o = vim.o, b = vim.bo, w = vim.wo}
@@ -384,14 +384,22 @@ require('lspkind').init({
 })
 
 --lspconfig + lsp trouble + lspsaga
-require'lspconfig'.pyls.setup{}
-require'lspconfig'.kotlin_language_server.setup{}
+require'lspconfig'.pyls.setup{
+on_attach = function(client, bufnr)
+    require "lsp_signature".on_attach()  -- Note: add in lsp client on-attach
+  end,
+}
+require'lspconfig'.kotlin_language_server.setup{
+on_attach = function(client, bufnr)
+    require "lsp_signature".on_attach()  -- Note: add in lsp client on-attach
+  end,
+}
 require'lspconfig'.jdtls.setup{
   cmd = { 'jdtls' },
   require'lspconfig'.util.root_pattern("pom.xml", "gradle.build", ".git", vim.fn.getcwd()),
   on_attach = function(client)
     -- [[ other on_attach code ]]
-    require 'illuminate'.on_attach(client)
+    require "lsp_signature".on_attach()
   end,
 }
 
@@ -400,6 +408,7 @@ local function setup_servers()
   local servers = require'lspinstall'.installed_servers()
   for _, server in pairs(servers) do
     require'lspconfig'[server].setup{}
+    require "lsp_signature".on_attach()
   end
 end
 
@@ -558,34 +567,34 @@ local lualine = require'lualine'
 -- Color table for highlights
 
 --moonlight
-local colors = {
-  bg       = '#212337',
-  fg       = '#e4f3fa',
-  yellow   = '#ffc777',
-  cyan     = '#04d1f9',
-  darkblue = '#a1abe0',
-  green    = '#2df4c0',
-  orange   = '#f67f81',
-  violet   = '#ecb2f0',
-  magenta  = '#b4a4f4',
-  blue     = '#04d1f9';
-  red      = '#ff757f';
-}
+--local colors = {
+--  bg       = '#212337',
+--  fg       = '#e4f3fa',
+--  yellow   = '#ffc777',
+--  cyan     = '#04d1f9',
+--  darkblue = '#a1abe0',
+--  green    = '#2df4c0',
+--  orange   = '#f67f81',
+--  violet   = '#ecb2f0',
+--  magenta  = '#b4a4f4',
+--  blue     = '#04d1f9';
+--  red      = '#ff757f';
+--}
 
 --nord
---local colors = {
---  bg       = '#2E3440',
---  fg       = '#ECEFF4',
---  yellow   = '#EBCB8B',
---  cyan     = '#8FBCBB',
---  darkblue = '#5E81AC',
---  green    = '#A3BE8C',
---  orange   = '#D08770',
---  violet   = '#81A1C1',
---  magenta  = '#B48EAD',
---  blue     = '#81A1C1';
---  red      = '#BF616A';
---}
+local colors = {
+  bg       = '#2E3440',
+  fg       = '#ECEFF4',
+  yellow   = '#EBCB8B',
+  cyan     = '#8FBCBB',
+  darkblue = '#5E81AC',
+  green    = '#A3BE8C',
+  orange   = '#D08770',
+  violet   = '#81A1C1',
+  magenta  = '#B48EAD',
+  blue     = '#81A1C1';
+  red      = '#BF616A';
+}
 
 local conditions = {
   buffer_not_empty = function()
@@ -901,12 +910,12 @@ require('telescope').setup{
     use_less = true,
     set_env = { ['COLORTERM'] = 'truecolor' }, -- default = nil,
     file_previewer = require'telescope.previewers'.vim_buffer_cat.new,
-    grep_previewer = require'telescope.previewers'.vim_buffer_vimgrep.new,
-    qflist_previewer = require'telescope.previewers'.vim_buffer_qflist.new,
+    grep_previewer = require'telescope.previewers'.vim_buffer_cat.new,
+    qflist_previewer = require'telescope.previewers'.vim_buffer_cat.new,
 
     -- Developer configurations: Not meant for general override
     buffer_previewer_maker = require'telescope.previewers'.buffer_previewer_maker
-  }
+  },
 }
 
 
