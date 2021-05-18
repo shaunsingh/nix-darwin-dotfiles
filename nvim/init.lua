@@ -23,14 +23,16 @@ require('packer').startup(function()
   use 'junegunn/limelight.vim'
   use 'norcalli/nvim-colorizer.lua'
 
+  --use 'shaunsingh/flatwhite.nvim'
   use 'shaunsingh/nord.nvim'
-  --use 'shaunsingh/moonlight.nvim'
+ -- use 'shaunsingh/moonlight.nvim'
   use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
   use {"lukas-reineke/indent-blankline.nvim", branch = "lua"}
 
-  use 'mg979/vim-visual-multi'
   use 'phaazon/hop.nvim'
+
   use {'nvim-telescope/telescope.nvim', requires = {{'nvim-lua/popup.nvim'}, {'nvim-lua/plenary.nvim'}}}
+
   use 'axvr/org.vim'
 
   use 'hrsh7th/nvim-compe'
@@ -47,6 +49,8 @@ require('packer').startup(function()
   use 'rafamadriz/friendly-snippets'
 
   use 'folke/which-key.nvim'
+  use 'yuttie/comfortable-motion.vim'
+
 end)
 
 --make life easier
@@ -68,10 +72,17 @@ vim.api.nvim_exec([[let &fcs='eob: ']], false)
 --g.moonlight_contrast = false
 --require('moonlight').set()
 
+--flatwhite testing
+--g.flatwhite_style = "flatwhite"
+--g.flatwhite_borders = false
+--g.flatwhite_contrast = false
+--require('flatwhite').set()
+
 --nord
 g.nord_style = "nord"
 g.nord_borders = false
 g.nord_contrast = false
+g.nord_cursorline_transparent = true
 require('nord').set()
 
 --settings
@@ -166,14 +177,6 @@ map('n', '<leader>K', '<cmd>Lspsaga hover_doc<CR>')
 map('n', '<leader>s', '<cmd>Lspsaga signature_help<CR>')
 map('n', '<leader>r', '<cmd>Lspsaga rename<CR>')
 map('n', '<leader>d', '<cmd>Lspsaga show_line_diagnostics<CR>')
-
---visual multi
-vim.api.nvim_exec([[
-let g:VM_maps = {}
-let g:VM_default_mappings = 0
-let g:VM_maps["Add Cursor Down"] = '<A-j>'
-let g:VM_maps["Add Cursor Up"] = '<A-k>'
-]], false)
 
 --indentline
 g.indentLine_enabled = 1
@@ -910,8 +913,8 @@ require('telescope').setup{
     use_less = true,
     set_env = { ['COLORTERM'] = 'truecolor' }, -- default = nil,
     file_previewer = require'telescope.previewers'.vim_buffer_cat.new,
-    grep_previewer = require'telescope.previewers'.vim_buffer_cat.new,
-    qflist_previewer = require'telescope.previewers'.vim_buffer_cat.new,
+    grep_previewer = require'telescope.previewers'.vim_buffer_vimgrep.new,
+    qflist_previewer = require'telescope.previewers'.vim_buffer_qflist.new,
 
     -- Developer configurations: Not meant for general override
     buffer_previewer_maker = require'telescope.previewers'.buffer_previewer_maker
