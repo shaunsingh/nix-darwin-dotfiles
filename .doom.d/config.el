@@ -9,8 +9,8 @@
       doom-variable-pitch-font (font-spec :family "SF Pro Display" :size 12.5))
 
 ;;set theme
-(setq doom-theme 'doom-nord)
-;;(setq doom-theme 'doom-moonlight)
+;;(setq doom-theme 'doom-nord)
+(setq doom-theme 'doom-moonlight)
 
 ;;ivy vs-code style
 (require 'ivy-posframe)
