@@ -25,7 +25,7 @@ require('packer').startup(function()
 
   --use 'shaunsingh/flatwhite.nvim'
   use 'shaunsingh/nord.nvim'
- -- use 'shaunsingh/moonlight.nvim'
+  --use 'shaunsingh/moonlight.nvim'
   use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
   use {"lukas-reineke/indent-blankline.nvim", branch = "lua"}
 
@@ -83,6 +83,7 @@ g.nord_style = "nord"
 g.nord_borders = false
 g.nord_contrast = false
 g.nord_cursorline_transparent = true
+g.nord_disable_background = true
 require('nord').set()
 
 --settings
@@ -148,9 +149,9 @@ map('n', '<leader>l', '<cmd>HopLine<CR>')
 map('n', '<leader>/', '<cmd>HopPattern<CR>')
 map('n', '<leader>fr', '<cmd>Telescope oldfiles<CR>')                   --fuzzy
 map('n', '<leader><space>', '<cmd>Telescope find_files<CR>')
-map('n', '<leader>f', '<cmd>Telescope current_buffer_fuzzy_find<CR>')
+map('n', '<leader><S-f>', '<cmd>Telescope current_buffer_fuzzy_find<CR>')
 map('n', '<leader>fP', '<cmd>e ~/.config/nvim/init.lua<CR>')
-map('n', '<leader><S-f>', '<cmd>Telescope treesitter<CR>')
+map('n', '<leader>f', '<cmd>Telescope treesitter<CR>')
 map('n', '<leader><S-p>', '<cmd>Telescope commands<CR>')
 map('n', '<leader>z', '<cmd>TZAtaraxis<CR>')                           --ataraxis
 map('n', '<leader>x', '<cmd>TZAtaraxis l52 r52 t5 b5<CR>')
@@ -571,32 +572,32 @@ local lualine = require'lualine'
 
 --moonlight
 --local colors = {
---  bg       = '#212337',
---  fg       = '#e4f3fa',
---  yellow   = '#ffc777',
---  cyan     = '#04d1f9',
---  darkblue = '#a1abe0',
---  green    = '#2df4c0',
---  orange   = '#f67f81',
---  violet   = '#ecb2f0',
---  magenta  = '#b4a4f4',
---  blue     = '#04d1f9';
---  red      = '#ff757f';
+--bg       = '#212337',
+--fg       = '#e4f3fa',
+--yellow   = '#ffc777',
+--cyan     = '#04d1f9',
+--darkblue = '#a1abe0',
+--green    = '#2df4c0',
+--orange   = '#f67f81',
+--violet   = '#ecb2f0',
+--magenta  = '#b4a4f4',
+--blue     = '#04d1f9';
+--red      = '#ff757f';
 --}
 
 --nord
 local colors = {
-  bg       = '#2E3440',
-  fg       = '#ECEFF4',
-  yellow   = '#EBCB8B',
-  cyan     = '#8FBCBB',
-  darkblue = '#5E81AC',
-  green    = '#A3BE8C',
-  orange   = '#D08770',
-  violet   = '#81A1C1',
-  magenta  = '#B48EAD',
-  blue     = '#81A1C1';
-  red      = '#BF616A';
+ bg       = '#2E3440',
+ fg       = '#ECEFF4',
+ yellow   = '#EBCB8B',
+ cyan     = '#8FBCBB',
+ darkblue = '#5E81AC',
+ green    = '#A3BE8C',
+ orange   = '#D08770',
+ violet   = '#81A1C1',
+ magenta  = '#B48EAD',
+ blue     = '#81A1C1';
+ red      = '#BF616A';
 }
 
 local conditions = {
