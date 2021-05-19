@@ -1,0 +1,21 @@
+- clean: []
+- link:
+   .bashrc:
+        relink: true
+        relative: true
+        path: bashrc
+    .emacs.d:
+        relink: true
+        relative: true
+        path: spacemacs.d
+    .config/nvim:
+        relink: true
+        relative: true
+        create: true
+        path: vim/
+   .gitconfig:
+        relink: true
+        relative: true
+        path: gitconfig
+
+- shell: []
