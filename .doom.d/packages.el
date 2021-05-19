@@ -48,5 +48,9 @@
 ;(unpin! pinned-package another-pinned-package)
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;(unpin! t)
-;;
-
+(package! literate-calc-mode)
+(package! calctex
+  :recipe (:host github :repo "johnbcoughlin/calctex"
+           :files ("*.el" "calctex/*.el" "calctex-contrib/*.el"
+                   "org-calctex/*.el" "vendor"))
+  :pin "784cf911bc96aac0f47d529e8cee96ebd7cc31c9")
