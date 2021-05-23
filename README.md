@@ -1,5 +1,7 @@
 # Dotfiles
 
+<img width="1440" alt="image" src="https://user-images.githubusercontent.com/71196912/119280172-18608c80-bbfe-11eb-92aa-8a679b5800fc.png">
+
 Configurations for the following are included
 
 1. zsh
