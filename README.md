@@ -14,10 +14,12 @@ as well as
 1. neovim
 2. goneovim (gui)
 3. starship
+
 ~/.doom.d
-   doom emacs 
+1. doom emacs 
+   
 ~/extra
-   homebrew brewfile
+1. homebrew brewfile
 
 
 ## Installation
@@ -97,11 +99,11 @@ If you want to take advantage of the LSP, you can install language servers using
 
 `:LspInstall (language)` e.g. `:LspInstall java` to install the java LSP (jdtls)
 
-I also recommend installing [Neovide](https://github.com/Kethku/neovide) if you prefer a gui experience.
+I also recommend installing [Neovide](https://github.com/Kethku/neovide) or [goneovim](https://github.com/akiyosi/goneovim) if you prefer a gui experience.
 
 ## Yabai 
 
-Although it isn't required, you can install a toolbar such as [Pecan](https://github.com/zzzeyez/pecan) If you don't like the look of the default one.
+Although it isn't required, you can install a toolbar such as [Pecan](https://github.com/zzzeyez/pecan) If you don't like the look of the default one. (used in the screenshot). If you aren't using a toolbar, remove the menubar-specific configuration in .yabairc before installing
 
 ## Feedback
 
