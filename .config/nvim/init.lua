@@ -1,4 +1,3 @@
-
 --sumneko likes to be annoying about things sometimes
 ---@diagnostic disable: undefined-global
 
@@ -22,19 +21,18 @@ require('packer').startup(function()
 
   use 'kdav5758/TrueZen.nvim'
   use 'junegunn/limelight.vim'
-  use 'norcalli/nvim-colorizer.lua'
+  use 'norcalli/nvim-colorizer.lua' 
+  use 'junegunn/goyo.vim'
 
   --use 'shaunsingh/flatwhite.nvim'
-  use 'shaunsingh/nord.nvim'
-  --use 'shaunsingh/moonlight.nvim'
+  --use 'shaunsingh/nord.nvim'
+  use 'shaunsingh/moonlight.nvim'
   use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
   use {"lukas-reineke/indent-blankline.nvim", branch = "lua"}
 
   use 'phaazon/hop.nvim'
 
   use {'nvim-telescope/telescope.nvim', requires = {{'nvim-lua/popup.nvim'}, {'nvim-lua/plenary.nvim'}}}
-
-  use 'axvr/org.vim'
 
   use 'hrsh7th/nvim-compe'
   use 'onsails/lspkind-nvim'
@@ -43,6 +41,7 @@ require('packer').startup(function()
   use 'glepnir/lspsaga.nvim'
   use 'kabouzeid/nvim-lspinstall'
   use 'ray-x/lsp_signature.nvim'
+  use {"ahmedkhalf/lsp-rooter.nvim"}
 
   use 'jiangmiao/auto-pairs'
   use 'hrsh7th/vim-vsnip'
@@ -50,8 +49,6 @@ require('packer').startup(function()
   use 'rafamadriz/friendly-snippets'
 
   use 'folke/which-key.nvim'
-  use 'yuttie/comfortable-motion.vim'
-
 end)
 
 --make life easier
@@ -61,17 +58,39 @@ local g = vim.g
 --gui
 --g.neovide_fullscreen = true
 g.neovide_cursor_antialiasing=true
-g.neovide_cursor_vfx_mode = "pixiedust"
+--g.neovide_cursor_vfx_mode = "pixiedust"
 vim.api.nvim_exec([[set guifont=FiraCode\ Nerd\ Font:h12]], false)
+
+--uivonim
+  -- Only want to do this config when Uivonim is in use, so do a check for that.
+  if vim.g.uivonim == 1 then
+    -- Get the override callbacks.
+    local lsp_callbacks = require'uivonim.lsp'.callbacks
+
+    nvim_lsp.texlab.setup {
+      -- Pass in the callbacks to override the defaults with Uivonim's.
+      handlers = lsp_callbacks;
+
+      -- Can still use other options, like this on_attach function
+      -- from nvim-lua/completion-nvim (recommended).
+      on_attach = require('completion').on_attach
+    }
+
+    nvim_lsp.tsserver.setup {
+      callbacks = lsp_callbacks;
+    }
+
+    -- Etc.
+  end
 
 --Hide eob~
 vim.api.nvim_exec([[let &fcs='eob: ']], false)
 
 --moonlight
---g.moonlight_style = "moonlight"
---g.moonlight_borders = false
---g.moonlight_contrast = false
---require('moonlight').set()
+g.moonlight_style = "moonlight"
+g.moonlight_borders = false
+g.moonlight_contrast = false
+require('moonlight').set()
 
 --flatwhite testing
 --g.flatwhite_style = "flatwhite"
@@ -80,12 +99,12 @@ vim.api.nvim_exec([[let &fcs='eob: ']], false)
 --require('flatwhite').set()
 
 --nord
-g.nord_style = "nord"
-g.nord_borders = false
-g.nord_contrast = false
-g.nord_cursorline_transparent = true
-g.nord_disable_background = true
-require('nord').set()
+--g.nord_style = "nord"
+--g.nord_borders = false
+--g.nord_contrast = false
+--g.nord_cursorline_transparent = true
+--g.nord_disable_background = true -- doesn't work with neovide
+--require('nord').set()
 
 --settings
 local scopes = {o = vim.o, b = vim.bo, w = vim.wo}
@@ -125,7 +144,7 @@ opt('o', 'lazyredraw', true)
 opt('o', 'signcolumn', 'yes')
 opt('o', 'mouse', 'a')
 opt('o', 'cmdheight', 1)
-opt('o', 'spell', true)
+--opt('o', 'spell', true)
 --opt('o', 'wrap', false)
 opt('o', 'breakindent', true)
 opt('o', 'lbr', true)
@@ -155,7 +174,8 @@ map('n', '<leader>fP', '<cmd>e ~/.config/nvim/init.lua<CR>')
 map('n', '<leader>f', '<cmd>Telescope treesitter<CR>')
 map('n', '<leader><S-p>', '<cmd>Telescope commands<CR>')
 map('n', '<leader>z', '<cmd>TZAtaraxis<CR>')                           --ataraxis
-map('n', '<leader>x', '<cmd>TZAtaraxis l52 r52 t5 b5<CR>')
+map('n', '<leader><S-z>', '<cmd>TZAtaraxis l15 r15 t2 b2<CR>')
+map('n', '<leader>x', '<cmd>Goyo<CR>')
 map('n', '<leader>op', '<cmd>NvimTreeToggle<CR>')                      --nvimtree
 map('n', '<c-k>', '<cmd>wincmd k<CR>')                                 --ctrlhjkl to navigate splits
 map('n', '<c-j>', '<cmd>wincmd j<CR>')
@@ -187,6 +207,8 @@ g.indent_blankline_filetype_exclude = {"help", "terminal", "dashboard"}
 g.indent_blankline_buftype_exclude = {"terminal"}
 g.indent_blankline_show_trailing_blankline_indent = false
 g.indent_blankline_show_first_indent_level = false
+g.indent_blankline_use_treesitter = true
+
 g.indentline_setColors = 0
 
 --barbar
@@ -194,6 +216,12 @@ vim.api.nvim_exec([[
 let bufferline = get(g:, 'bufferline', {})
 let bufferline.animation = v:false
 let bufferline.auto_hide = v:true
+]], false)
+
+--goyo
+vim.api.nvim_exec([[
+autocmd! User GoyoEnter Limelight
+autocmd! User GoyoLeave Limelight!
 ]], false)
 
 --nvim-compe
@@ -394,20 +422,6 @@ on_attach = function(client, bufnr)
     require "lsp_signature".on_attach()  -- Note: add in lsp client on-attach
   end,
 }
-require'lspconfig'.kotlin_language_server.setup{
-on_attach = function(client, bufnr)
-    require "lsp_signature".on_attach()  -- Note: add in lsp client on-attach
-  end,
-}
-require'lspconfig'.jdtls.setup{
-  cmd = { 'jdtls' },
-  require'lspconfig'.util.root_pattern("pom.xml", "gradle.build", ".git", vim.fn.getcwd()),
-  on_attach = function(client)
-    -- [[ other on_attach code ]]
-    require "lsp_signature".on_attach()
-  end,
-}
-
 local function setup_servers()
   require'lspinstall'.setup()
   local servers = require'lspinstall'.installed_servers()
@@ -524,7 +538,7 @@ require'lspsaga'.init_lsp_saga{
     warn_sign = "",
     hint_sign = "",
     infor_sign = "",
-}
+} 
 
 --use tab to navigate autocomplete
 local t = function(str)
@@ -572,34 +586,34 @@ local lualine = require'lualine'
 -- Color table for highlights
 
 --moonlight
---local colors = {
---bg       = '#212337',
---fg       = '#e4f3fa',
---yellow   = '#ffc777',
---cyan     = '#04d1f9',
---darkblue = '#a1abe0',
---green    = '#2df4c0',
---orange   = '#f67f81',
---violet   = '#ecb2f0',
---magenta  = '#b4a4f4',
---blue     = '#04d1f9';
---red      = '#ff757f';
---}
+local colors = {
+bg       = '#212337',
+fg       = '#e4f3fa',
+yellow   = '#ffc777',
+cyan     = '#04d1f9',
+darkblue = '#a1abe0',
+green    = '#2df4c0',
+orange   = '#f67f81',
+violet   = '#ecb2f0',
+magenta  = '#b4a4f4',
+blue     = '#04d1f9';
+red      = '#ff757f';
+}
 
 --nord
-local colors = {
- bg       = '#2E3440',
- fg       = '#ECEFF4',
- yellow   = '#EBCB8B',
- cyan     = '#8FBCBB',
- darkblue = '#5E81AC',
- green    = '#A3BE8C',
- orange   = '#D08770',
- violet   = '#81A1C1',
- magenta  = '#B48EAD',
- blue     = '#81A1C1';
- red      = '#BF616A';
-}
+--local colors = {
+ --bg       = '#2E3440',
+ --fg       = '#ECEFF4',
+ --yellow   = '#EBCB8B',
+ --cyan     = '#8FBCBB',
+ --darkblue = '#5E81AC',
+ --green    = '#A3BE8C',
+ --orange   = '#D08770',
+ --violet   = '#81A1C1',
+ --magenta  = '#B48EAD',
+ --blue     = '#81A1C1';
+ --red      = '#BF616A';
+--}
 
 local conditions = {
   buffer_not_empty = function()
@@ -661,7 +675,7 @@ local function ins_right(component)
 end
 
 ins_left {
- function() return '▊ ' end,
+ function() return '▊' end,
  color = {fg = colors.blue}, -- Sets highlighting of component
  left_padding = 0 -- We don't need space before this
 }
@@ -674,13 +688,13 @@ ins_left {
       n      = colors.red,
       i      = colors.green,
       v      = colors.blue,
-      [''] = colors.blue,
+      ['^V'] = colors.blue,
       V      = colors.blue,
       c      = colors.magenta,
       no     = colors.red,
       s      = colors.orange,
       S      = colors.orange,
-      [''] = colors.orange,
+      ['^S'] = colors.orange,
       ic     = colors.yellow,
       R      = colors.violet,
       Rv     = colors.violet,
@@ -693,7 +707,7 @@ ins_left {
       t      = colors.red
     }
     vim.api.nvim_command('hi! LualineMode guifg='..mode_color[vim.fn.mode()] .. " guibg="..colors.bg)
-    return ''
+    return ''
   end,
   color = "LualineMode",
   left_padding = 0,
@@ -774,15 +788,6 @@ ins_right {
   function() return 'LF' end,
   color = {fg = colors.darkblue},
 }
-
--- Add components to right sections
-ins_right {
-  'o:encoding', -- option component same as &encoding in viml
-  condition = conditions.hide_in_width,
-  upper = true,
-  color = {fg = colors.darkblue}
-}
-
 ins_right {
   'fileformat', --same one just without the logo
   icons_enabled = true,
@@ -790,11 +795,10 @@ ins_right {
 }
 
 ins_right {
-    'filetype',
-    condition = conditions.buffer_not_empty,
-    icons_enabled = false,
-    upper = true,
-    color = {fg = colors.cyan, gui = 'bold'}
+  'o:encoding', -- option component same as &encoding in viml
+  upper = true, -- I'm not sure why it's upper case either ;)
+  condition = conditions.hide_in_width,
+  color = {fg = colors.darkblue, gui = 'bold'}
 }
 
 ins_right {
@@ -873,6 +877,21 @@ g.nvim_tree_icons = {
 }
 
 --telescope
+local previewers = require('telescope.previewers')
+local putils = require('telescope.previewers.utils')
+local pfiletype = require('plenary.filetype')
+
+local new_maker = function(filepath, bufnr, opts)
+  opts = opts or {}
+  if opts.use_ft_detect == nil then
+    local ft = pfiletype.detect(filepath)
+    -- Here for example you can say: if ft == "xyz" then this_regex_highlighing else nothing end
+    opts.use_ft_detect = false
+    putils.regex_highlighter(bufnr, ft)
+  end
+  previewers.buffer_previewer_maker(filepath, bufnr, opts)
+end
+
 require('telescope').setup{
   defaults = {
     vimgrep_arguments = {
@@ -919,7 +938,7 @@ require('telescope').setup{
     qflist_previewer = require'telescope.previewers'.vim_buffer_qflist.new,
 
     -- Developer configurations: Not meant for general override
-    buffer_previewer_maker = require'telescope.previewers'.buffer_previewer_maker
+    buffer_previewer_maker = new_maker,
   },
 }
 
