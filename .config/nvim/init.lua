@@ -12,7 +12,7 @@ end
 require('packer').startup(function()
   use "wbthomason/packer.nvim"
   use {'hoob3rt/lualine.nvim', requires = {'kyazdani42/nvim-web-devicons', opt = true}}
-  use 'romgrk/barbar.nvim'
+  use {'akinsho/nvim-bufferline.lua', requires = 'kyazdani42/nvim-web-devicons'}
   use 'kyazdani42/nvim-tree.lua'
   use 'glepnir/dashboard-nvim'
 
@@ -21,7 +21,7 @@ require('packer').startup(function()
 
   use 'kdav5758/TrueZen.nvim'
   use 'junegunn/limelight.vim'
-  use 'norcalli/nvim-colorizer.lua' 
+  use 'norcalli/nvim-colorizer.lua'
   use 'junegunn/goyo.vim'
 
   --use 'shaunsingh/flatwhite.nvim'
@@ -31,6 +31,7 @@ require('packer').startup(function()
   use {"lukas-reineke/indent-blankline.nvim", branch = "lua"}
 
   use 'phaazon/hop.nvim'
+  use 'ethanholz/nvim-lastplace'
 
   use {'nvim-telescope/telescope.nvim', requires = {{'nvim-lua/popup.nvim'}, {'nvim-lua/plenary.nvim'}}}
 
@@ -59,7 +60,7 @@ local g = vim.g
 --g.neovide_fullscreen = true
 g.neovide_cursor_antialiasing=true
 --g.neovide_cursor_vfx_mode = "pixiedust"
-vim.api.nvim_exec([[set guifont=FiraCode\ Nerd\ Font:h12]], false)
+vim.api.nvim_exec([[set guifont=FiraCode\ Nerd\ Font:h13]], false)
 
 --uivonim
   -- Only want to do this config when Uivonim is in use, so do a check for that.
@@ -88,7 +89,7 @@ vim.api.nvim_exec([[let &fcs='eob: ']], false)
 
 --moonlight
 g.moonlight_style = "moonlight"
-g.moonlight_borders = false
+g.moonlight_borders = true
 g.moonlight_contrast = false
 require('moonlight').set()
 
@@ -140,6 +141,7 @@ opt('o', 'showmode', false )
 opt('o', 'background', 'dark' )
 opt('o', 'backup', false )
 opt('w', 'number', true)                              -- Print line number
+opt('w', 'relativenumber', true)                              -- Print line number
 opt('o', 'lazyredraw', true)
 opt('o', 'signcolumn', 'yes')
 opt('o', 'mouse', 'a')
@@ -149,7 +151,7 @@ opt('o', 'cmdheight', 1)
 opt('o', 'breakindent', true)
 opt('o', 'lbr', true)
 opt('o', 'formatoptions', 'l')
-vim.o.shortmess = vim.o.shortmess .. "c"
+opt('o', 'pumheight', 10)
 
 --mappings
 local function map(mode, lhs, rhs, opts)
@@ -200,6 +202,90 @@ map('n', '<leader>s', '<cmd>Lspsaga signature_help<CR>')
 map('n', '<leader>r', '<cmd>Lspsaga rename<CR>')
 map('n', '<leader>d', '<cmd>Lspsaga show_line_diagnostics<CR>')
 
+--bufferline
+local bar_fg = "#757dac"
+local activeBuffer_fg = "#e4f3fa"
+
+require "bufferline".setup {
+    options = {
+        offsets = {{filetype = "NvimTree", text = "Explorer"}},
+        buffer_close_icon = "",
+        modified_icon = "",
+        close_icon = " ",
+        left_trunc_marker = "",
+        right_trunc_marker = "",
+        max_name_length = 14,
+        max_prefix_length = 13,
+        tab_size = 20,
+        show_tab_indicators = true,
+        enforce_regular_tabs = false,
+        view = "multiwindow",
+        show_buffer_close_icons = true,
+        separator_style = "thin",
+        mappings = "true"
+    },
+    -- bar colors!!
+    highlights = {
+        fill = {
+            guifg = bar_fg,
+            guibg = "#212337"
+        },
+        background = {
+            guifg = bar_fg,
+            guibg = "#212337"
+        },
+        -- buffer
+        buffer_selected = {
+            guifg = activeBuffer_fg,
+            guibg = "#1B1E2B",
+            gui = "bold"
+        },
+        buffer_visible = {
+            guifg = "#9298a0",
+            guibg = "#212337"
+        },
+        -- tabs over right
+        tab = {
+            guifg = "#9298a0",
+            guibg = "#30343c"
+        },
+        tab_selected = {
+            guifg = "#30343c",
+            guibg = "#9298a0"
+        },
+        tab_close = {
+            guifg = "#f9929b",
+            guibg = "#212337"
+        },
+        -- buffer separators
+        separator = {
+            guifg = "#212337",
+            guibg = "#212337"
+        },
+        separator_selected = {
+            guifg = "#1B1E2B",
+            guibg = "#1B1E2B"
+        },
+        separator_visible = {
+            guifg = "#212337",
+            guibg = "#212337"
+        },
+        indicator_selected = {
+            guifg = "#212337",
+            guibg = "#212337"
+        },
+        -- modified files (but not saved)
+        modified_selected = {
+            guifg = "#A3BE8C",
+            guibg = "#1B1E2B"
+        },
+        modified_visible = {
+            guifg = "#BF616A",
+            guibg = "#23272f"
+        }
+    }
+}
+
 --indentline
 g.indentLine_enabled = 1
 g.indent_blankline_char = "|"
@@ -210,13 +296,6 @@ g.indent_blankline_show_first_indent_level = false
 g.indent_blankline_use_treesitter = true
 
 g.indentline_setColors = 0
-
---barbar
-vim.api.nvim_exec([[
-let bufferline = get(g:, 'bufferline', {})
-let bufferline.animation = v:false
-let bufferline.auto_hide = v:true
-]], false)
 
 --goyo
 vim.api.nvim_exec([[
@@ -255,67 +334,67 @@ require'compe'.setup {
 local true_zen = require("true-zen")
 true_zen.setup({
     true_false_commands = false,
-	cursor_by_mode = false,
-	bottom = {
-		hidden_laststatus = 0,
-		hidden_ruler = false,
-		hidden_showmode = false,
-		hidden_showcmd = false,
-		hidden_cmdheight = 1,
+  cursor_by_mode = false,
+  bottom = {
+    hidden_laststatus = 0,
+    hidden_ruler = false,
+    hidden_showmode = false,
+    hidden_showcmd = false,
+    hidden_cmdheight = 1,
 
-		shown_laststatus = 2,
-		shown_ruler = false,
-		shown_showmode = false,
-		shown_showcmd = false,
-		shown_cmdheight = 1
-	},
-	top = {
-		hidden_showtabline = 0,
+    shown_laststatus = 2,
+    shown_ruler = false,
+    shown_showmode = false,
+    shown_showcmd = false,
+    shown_cmdheight = 1
+  },
+  top = {
+    hidden_showtabline = 0,
 
-		shown_showtabline = 2
-	},
-	left = {
-		hidden_number = false,
-		hidden_relativenumber = false,
-		hidden_signcolumn = "no",
+    shown_showtabline = 2
+  },
+  left = {
+    hidden_number = false,
+    hidden_relativenumber = false,
+    hidden_signcolumn = "no",
 
-		shown_number = true,
-		shown_relativenumber = false,
-		shown_signcolumn = "yes"
-	},
-	ataraxis = {
-		just_do_it_for_me = true,
-		left_padding = 40,
-		right_padding = 40,
-		top_padding = 0,
-		bottom_padding = 0,
-		custome_bg = "#2f334d",
-		disable_bg_configuration = false,
-		disable_fillchars_configuration = false,
-		force_when_plus_one_window = true,
-		force_hide_statusline = true
-	},
-	focus = {
-		margin_of_error = 5,
-		focus_method = "experimental"
-	},
-	events = {
-		before_minimalist_mode_shown = false,
-		before_minimalist_mode_hidden = false,
+    shown_number = true,
+    shown_relativenumber = false,
+    shown_signcolumn = "yes"
+  },
+  ataraxis = {
+    just_do_it_for_me = true,
+    left_padding = 40,
+    right_padding = 40,
+    top_padding = 0,
+    bottom_padding = 0,
+    custome_bg = "#2f334d",
+    disable_bg_configuration = false,
+    disable_fillchars_configuration = false,
+    force_when_plus_one_window = true,
+    force_hide_statusline = true
+  },
+  focus = {
+    margin_of_error = 5,
+    focus_method = "experimental"
+  },
+  events = {
+    before_minimalist_mode_shown = false,
+    before_minimalist_mode_hidden = false,
         after_minimalist_mode_shown = false,
-		after_minimalist_mode_hidden = false
-	},
-	integrations = {
-		integration_galaxyline = false,
-		integration_vim_airline = false,
-		integration_vim_powerline = false,
-		integration_tmux = false,
-		integration_express_line = false,
-		integration_gitgutter = false,
-		integration_vim_signify = false,
-		integration_limelight = false,
-		integration_tzfocus_tzataraxis = true
-	}
+    after_minimalist_mode_hidden = false
+  },
+  integrations = {
+    integration_galaxyline = false,
+    integration_vim_airline = false,
+    integration_vim_powerline = false,
+    integration_tmux = false,
+    integration_express_line = false,
+    integration_gitgutter = false,
+    integration_vim_signify = false,
+    integration_limelight = false,
+    integration_tzfocus_tzataraxis = true
+  }
 })
 
 --nvim treesitter
@@ -538,7 +617,7 @@ require'lspsaga'.init_lsp_saga{
     warn_sign = "",
     hint_sign = "",
     infor_sign = "",
-} 
+}
 
 --use tab to navigate autocomplete
 local t = function(str)
@@ -579,6 +658,9 @@ vim.api.nvim_set_keymap("i", "<Tab>", "v:lua.tab_complete()", {expr = true})
 vim.api.nvim_set_keymap("s", "<Tab>", "v:lua.tab_complete()", {expr = true})
 vim.api.nvim_set_keymap("i", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
 vim.api.nvim_set_keymap("s", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
+
+--neovim lastplace
+require'nvim-lastplace'.setup{}
 
 --evilline
 local lualine = require'lualine'
@@ -688,13 +770,13 @@ ins_left {
       n      = colors.red,
       i      = colors.green,
       v      = colors.blue,
-      ['^V'] = colors.blue,
+      [''] = colors.blue,
       V      = colors.blue,
       c      = colors.magenta,
       no     = colors.red,
       s      = colors.orange,
       S      = colors.orange,
-      ['^S'] = colors.orange,
+      [''] = colors.orange,
       ic     = colors.yellow,
       R      = colors.violet,
       Rv     = colors.violet,

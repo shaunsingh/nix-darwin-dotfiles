@@ -9,8 +9,11 @@
       doom-variable-pitch-font (font-spec :family "SF Pro Display" :size 12.5))
 
 ;;set theme
-(setq doom-theme 'doom-nord)
-;;(setq doom-theme 'doom-moonlight)
+;;(setq doom-theme 'doom-nord)
+(setq doom-theme 'doom-moonlight)
+
+;;disable cursorline
+(remove-hook 'doom-first-buffer-hook #'global-hl-line-mode)
 
 ;;ivy vs-code style
 (require 'ivy-posframe)
@@ -50,9 +53,18 @@
     markdown-mode
     gfm-mode)
   '(:seperate
+    company-yasnippet
     company-ispell
-    company-files
-    company-yasnippet))
+    company-files))
+
+;;disable line numbers in writeroom mode
+(setq +zen-mixed-pitch-modes nil)
+(setq +zen-text-scale 0)
+(add-hook! 'writeroom-mode-hook (centaur-tabs-local-mode (if writeroom-mode +1 -1)))
+;;(add-hook! 'writeroom-mode-hook (minimap-mode (if writeroom-mode +1 -1)))
+(add-hook 'writeroom-mode-enable-hook #'doom-disable-line-numbers-h)
+(add-hook 'writeroom-mode-disable-hook #'doom-enable-line-numbers-h)
+
 
 ;;java home for java-lsp
 (setenv "JAVA_HOME"  "/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home")
@@ -70,47 +82,6 @@
 ;;(add-to-list 'default-frame-alist '(fullscreen . fullboth))
 ;;(setq ns-use-native-fullscreen t)
 
-;; calc configuration
-(setq calc-angle-mode 'deg  ; angles are degrees
-      calc-symbolic-mode t) ; keeps expressions like \sqrt{2} irrational for as long as possible
-;; calctex configuration (stolen from https://tecosaur.github.io/emacs-config/config.html#calc-calctex)
-(use-package! calctex
-  :commands calctex-mode
-  :init
-  (add-hook 'calc-mode-hook #'calctex-mode)
-  :config
-  (setq ;; calctex-additional-latex-packages "
-;; \\usepackage[usenames]{xcolor}
-;; \\usepackage{soul}
-;; \\usepackage{adjustbox}
-;; \\usepackage{amsmath}
-;; \\usepackage{amssymb}
-;; \\usepackage{siunitx}
-;; \\usepackage{cancel}
-;; \\usepackage{mathtools}
-;; \\usepackage{mathalpha}
-;; \\usepackage{xparse}
-;; \\usepack
-;; age{arevmath}"
-        calctex-additional-latex-macros
-        (concat calctex-additional-latex-macros
-                "\n\\let\\evalto\\Rightarrow"))
-  (defadvice! no-messaging-a (orig-fn &rest args)
-    :around #'calctex-default-dispatching-render-process
-    (let ((inhibit-message t) message-log-max)
-      (apply orig-fn args)))
-  ;; Fix hardcoded dvichop path (whyyyyyyy)
-  (let ((vendor-folder (concat (file-truename doom-local-dir)
-                               "straight/"
-                               (format "build-%s" emacs-version)
-                               "/calctex/vendor/")))
-    (setq calctex-dvichop-sty (concat vendor-folder "texd/dvichop")
-          calctex-dvichop-bin (concat vendor-folder "texd/dvichop")))
-  (unless (file-exists-p calctex-dvichop-bin)
-    (message "CalcTeX: Building dvichop binary")
-    (let ((default-directory (file-name-directory calctex-dvichop-bin)))
-      (call-process "make" nil nil nil))))
-
 ;;use pdf-tools (not installed rn)
 ;;(setq +latex-viewers '(pdf-tools))
 
@@ -118,8 +89,8 @@
 (setq load-prefer-newer t)
 
 ;; transparency for fun
-(set-frame-parameter (selected-frame) 'alpha '(85 85))
-(add-to-list 'default-frame-alist '(alpha 85 85))
+(set-frame-parameter (selected-frame) 'alpha '(92 92))
+(add-to-list 'default-frame-alist '(alpha 92 92))
 
 ;;minimap on start
 (add-hook 'window-setup-hook #'minimap-mode)
