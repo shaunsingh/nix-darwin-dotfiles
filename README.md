@@ -106,4 +106,4 @@ Although it isn't required, you can install a toolbar such as [Pecan](https://gi
 ## Feedback
 
 Suggestions/improvements
-[welcome](https://github.com/mathiasbynens/dotfiles/issues)!
+[welcome](https://github.com/shaunsingh/vimrc-dotfiles/issues)!
