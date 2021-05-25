@@ -83,7 +83,16 @@
 ;;(setq ns-use-native-fullscreen t)
 
 ;;use pdf-tools (not installed rn)
-;;(setq +latex-viewers '(pdf-tools))
+(setq +latex-viewers '(pdf-tools))
+
+;;start with latex preview
+(after! org (setq org-startup-with-latex-preview t))
+(use-package! org-fragtog
+:after org
+:hook (org-mode . org-fragtog) ; this auto-enables it when you enter an org-buffer, remove if you do not want this
+:config
+;; whatever you want
+)
 
 ;;stupid warnings
 (setq load-prefer-newer t)
