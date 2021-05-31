@@ -89,7 +89,11 @@ Drop my dotfiles under /.doom.d and run
 If you would like to take advantage of some of the org-mode latex features, and CalcTex, you need to install several packages 
 
 Option 1: Install MacTex (large download, includes everything)
-Option 2 (recommended): Install BasicTex, install whatever it tells you to
+Option 2 (recommended): Install BasicTex run the following command (as sudo)
+
+``zsh
+sudo tlmgr install dvipng l3packages xcolor soul adjustbox collectbox amsmath amssymb siunitx
+``
 
 
 For your convenience, you can also add the bin directory to your path 
