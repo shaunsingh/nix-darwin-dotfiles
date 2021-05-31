@@ -84,6 +84,13 @@ Drop my dotfiles under /.doom.d and run
 ```zsh
 ~/.emacs.d/bin/doom sync
 ```
+#### latex
+
+If you would like to take advantage of some of the org-mode latex features, and CalcTex, you need to install several packages 
+
+Option 1: Install MacTex (large download, includes everything)
+Option 2 (recommended): Install BasicTex, install whatever it tells you to
+
 
 For your convenience, you can also add the bin directory to your path 
 
