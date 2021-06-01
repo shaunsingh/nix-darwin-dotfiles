@@ -7,34 +7,46 @@ local install_path = vim.fn.stdpath('data') .. '/site/pack/packer/start/packer.n
 if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
   execute('!git clone https://github.com/wbthomason/packer.nvim '.. install_path)
 end
-
 --setup packer
 require('packer').startup(function()
+
+  --packer can manage itself
   use "wbthomason/packer.nvim"
+
+  --statusline, tabline, icons, tree, startmenu
   use {'hoob3rt/lualine.nvim', requires = {'kyazdani42/nvim-web-devicons', opt = true}}
   use {'akinsho/nvim-bufferline.lua', requires = 'kyazdani42/nvim-web-devicons'}
   use 'kyazdani42/nvim-tree.lua'
   use 'glepnir/dashboard-nvim'
 
+  --git
   use { 'TimUntersberger/neogit', requires = 'nvim-lua/plenary.nvim' }
   use { 'lewis6991/gitsigns.nvim', requires = 'nvim-lua/plenary.nvim'}
 
+  --distraction free and preview
   use 'kdav5758/TrueZen.nvim'
   use 'junegunn/limelight.vim'
   use 'norcalli/nvim-colorizer.lua'
   use 'junegunn/goyo.vim'
+  use {'iamcco/markdown-preview.nvim', run = 'cd app && npm install'}
 
+  --themes and syntax
   --use 'shaunsingh/flatwhite.nvim'
   --use 'shaunsingh/nord.nvim'
-  use 'shaunsingh/moonlight.nvim'
+  --use 'shaunsingh/moonlight.nvim'
+  --use 'shaunsingh/solarized.nvim'
+  use 'shaunsingh/seoul256.nvim'
   use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
   use {"lukas-reineke/indent-blankline.nvim", branch = "lua"}
 
+  --easy motions
   use 'phaazon/hop.nvim'
   use 'ethanholz/nvim-lastplace'
 
+  --fzf
   use {'nvim-telescope/telescope.nvim', requires = {{'nvim-lua/popup.nvim'}, {'nvim-lua/plenary.nvim'}}}
 
+  --completion
   use 'hrsh7th/nvim-compe'
   use 'onsails/lspkind-nvim'
   use 'neovim/nvim-lspconfig'
@@ -44,12 +56,15 @@ require('packer').startup(function()
   use 'ray-x/lsp_signature.nvim'
   use {"ahmedkhalf/lsp-rooter.nvim"}
 
+  --snippets, brackets,
   use 'jiangmiao/auto-pairs'
   use 'hrsh7th/vim-vsnip'
   use 'hrsh7th/vim-vsnip-integ'
   use 'rafamadriz/friendly-snippets'
 
+  --which key for neovim
   use 'folke/which-key.nvim'
+
 end)
 
 --make life easier
@@ -59,39 +74,42 @@ local g = vim.g
 --gui
 --g.neovide_fullscreen = true
 g.neovide_cursor_antialiasing=true
---g.neovide_cursor_vfx_mode = "pixiedust"
+g.neovide_cursor_vfx_mode = "pixiedust"
+neovide_cursor_animation_length = 0.05,
 vim.api.nvim_exec([[set guifont=FiraCode\ Nerd\ Font:h13]], false)
 
 --uivonim
-  -- Only want to do this config when Uivonim is in use, so do a check for that.
   if vim.g.uivonim == 1 then
-    -- Get the override callbacks.
     local lsp_callbacks = require'uivonim.lsp'.callbacks
-
     nvim_lsp.texlab.setup {
-      -- Pass in the callbacks to override the defaults with Uivonim's.
       handlers = lsp_callbacks;
-
-      -- Can still use other options, like this on_attach function
-      -- from nvim-lua/completion-nvim (recommended).
       on_attach = require('completion').on_attach
     }
-
     nvim_lsp.tsserver.setup {
       callbacks = lsp_callbacks;
     }
-
-    -- Etc.
   end
 
 --Hide eob~
 vim.api.nvim_exec([[let &fcs='eob: ']], false)
 
 --moonlight
-g.moonlight_style = "moonlight"
-g.moonlight_borders = true
-g.moonlight_contrast = false
-require('moonlight').set()
+--g.moonlight_style = "moonlight"
+--g.moonlight_borders = true
+--g.moonlight_contrast = false
+--require('moonlight').set()
+
+--solarized
+--g.solarized_style = "solarized"
+--g.solarized_borders = false
+--g.solarized_contrast = false
+--require('solarized').set()
+
+--seoul256
+g.seoul256_style = "seoul256"
+g.seoul256_borders = false
+g.seoul256_contrast = false
+require('seoul256').set()
 
 --flatwhite testing
 --g.flatwhite_style = "flatwhite"
@@ -140,8 +158,9 @@ opt('o', 'swapfile', false )
 opt('o', 'showmode', false )
 opt('o', 'background', 'dark' )
 opt('o', 'backup', false )
+opt('o', 'updatetime', 100)
 opt('w', 'number', true)                              -- Print line number
-opt('w', 'relativenumber', true)                              -- Print line number
+--opt('w', 'relativenumber', true)                              -- Print line number
 opt('o', 'lazyredraw', true)
 opt('o', 'signcolumn', 'yes')
 opt('o', 'mouse', 'a')
@@ -183,8 +202,11 @@ map('n', '<c-k>', '<cmd>wincmd k<CR>')                                 --ctrlhjk
 map('n', '<c-j>', '<cmd>wincmd j<CR>')
 map('n', '<c-h>', '<cmd>wincmd h<CR>')
 map('n', '<c-l>', '<cmd>wincmd l<CR>')
+
 cmd([[autocmd BufWritePre * %s/\s\+$//e]])                             --remove trailing whitespaces
 cmd([[autocmd BufWritePre * %s/\n\+\%$//e]])
+
+vim.api.nvim_set_keymap('n', '0', "getline('.')[0 : col('.') - 2] =~# '^\\s\\+$' ? '0' : '^'", {silent = true, noremap = true, expr = true}) --toggle between 0 and ^
 
 --lspcomplete binds
 vim.api.nvim_set_keymap('i', '<C-Space>', [[compe#complete()]], { noremap = true, silent = true, expr = true })
@@ -202,9 +224,37 @@ map('n', '<leader>s', '<cmd>Lspsaga signature_help<CR>')
 map('n', '<leader>r', '<cmd>Lspsaga rename<CR>')
 map('n', '<leader>d', '<cmd>Lspsaga show_line_diagnostics<CR>')
 
+--f5 to run
+vim.api.nvim_exec([[
+"f5 to run current filetype
+map <F5> :call CompileRunGcc()<CR>
+func! CompileRunGcc()
+exec "w"
+if &filetype == 'c'
+exec "!gcc % -o %<"
+exec "!time ./%<"
+elseif &filetype == 'cpp'
+exec "!g++ % -o %<"
+exec "!time ./%<"
+elseif &filetype == 'java'
+exec "!javac %"
+exec "!time java -cp %:p:h %:t:r"
+elseif &filetype == 'sh'
+exec "!time bash %"
+elseif &filetype == 'python'
+exec "!time python3 %"
+elseif &filetype == 'html'
+exec "!firefox % &"
+elseif &filetype == 'go'
+exec "!go build %<"
+exec "!time go run %"
+endif
+endfunc
+]], false)
+
 --bufferline
-local bar_fg = "#757dac"
-local activeBuffer_fg = "#e4f3fa"
+local bar_fg = "#002b36"
+local activeBuffer_fg = "#002b36"
 
 require "bufferline".setup {
     options = {
@@ -227,61 +277,61 @@ require "bufferline".setup {
     -- bar colors!!
     highlights = {
         fill = {
-            guifg = bar_fg,
-            guibg = "#212337"
+            guifg = "#fdf6e3",
+            guibg = "#fdf6e3"
         },
         background = {
             guifg = bar_fg,
-            guibg = "#212337"
+            guibg = "#fdf6e3"
         },
         -- buffer
         buffer_selected = {
             guifg = activeBuffer_fg,
-            guibg = "#1B1E2B",
+            guibg = "#eee8d5",
             gui = "bold"
         },
         buffer_visible = {
-            guifg = "#9298a0",
-            guibg = "#212337"
+            guifg = "#002b36",
+            guibg = "#fdf6e3"
         },
         -- tabs over right
         tab = {
-            guifg = "#9298a0",
-            guibg = "#30343c"
+            guifg = "#002b36",
+            guibg = "#fdf6e3"
         },
         tab_selected = {
-            guifg = "#30343c",
-            guibg = "#9298a0"
+            guifg = "#002b36",
+            guibg = "#fdf6e3"
         },
         tab_close = {
-            guifg = "#f9929b",
-            guibg = "#212337"
+            guifg = "#002b36",
+            guibg = "#fdf6e3"
         },
         -- buffer separators
         separator = {
-            guifg = "#212337",
-            guibg = "#212337"
+            guifg = "#fdf6e3",
+            guibg = "#fdf6e3"
         },
         separator_selected = {
-            guifg = "#1B1E2B",
-            guibg = "#1B1E2B"
+            guifg = "#fdf6e3",
+            guibg = "#fdf6e3"
         },
         separator_visible = {
-            guifg = "#212337",
-            guibg = "#212337"
+            guifg = "#fdf6e3",
+            guibg = "#fdf6e3"
         },
         indicator_selected = {
-            guifg = "#212337",
-            guibg = "#212337"
+            guifg = "#fdf6e3",
+            guibg = "#fdf6e3"
         },
         -- modified files (but not saved)
         modified_selected = {
             guifg = "#A3BE8C",
-            guibg = "#1B1E2B"
+            guibg = "#fdf6e3"
         },
         modified_visible = {
             guifg = "#BF616A",
-            guibg = "#23272f"
+            guibg = "#d8ccc4"
         }
     }
 }
@@ -334,81 +384,80 @@ require'compe'.setup {
 local true_zen = require("true-zen")
 true_zen.setup({
     true_false_commands = false,
-  cursor_by_mode = false,
-  bottom = {
-    hidden_laststatus = 0,
-    hidden_ruler = false,
-    hidden_showmode = false,
-    hidden_showcmd = false,
-    hidden_cmdheight = 1,
+	cursor_by_mode = false,
+	bottom = {
+		hidden_laststatus = 0,
+		hidden_ruler = false,
+		hidden_showmode = false,
+		hidden_showcmd = false,
+		hidden_cmdheight = 1,
 
-    shown_laststatus = 2,
-    shown_ruler = false,
-    shown_showmode = false,
-    shown_showcmd = false,
-    shown_cmdheight = 1
-  },
-  top = {
-    hidden_showtabline = 0,
+		shown_laststatus = 2,
+		shown_ruler = false,
+		shown_showmode = false,
+		shown_showcmd = false,
+		shown_cmdheight = 1
+	},
+	top = {
+		hidden_showtabline = 0,
 
-    shown_showtabline = 2
-  },
-  left = {
-    hidden_number = false,
-    hidden_relativenumber = false,
-    hidden_signcolumn = "no",
+		shown_showtabline = 2
+	},
+	left = {
+		hidden_number = false,
+		hidden_relativenumber = false,
+		hidden_signcolumn = "no",
 
-    shown_number = true,
-    shown_relativenumber = false,
-    shown_signcolumn = "yes"
-  },
-  ataraxis = {
-    just_do_it_for_me = true,
-    left_padding = 40,
-    right_padding = 40,
-    top_padding = 0,
-    bottom_padding = 0,
-    custome_bg = "#2f334d",
-    disable_bg_configuration = false,
-    disable_fillchars_configuration = false,
-    force_when_plus_one_window = true,
-    force_hide_statusline = true
-  },
-  focus = {
-    margin_of_error = 5,
-    focus_method = "experimental"
-  },
-  events = {
-    before_minimalist_mode_shown = false,
-    before_minimalist_mode_hidden = false,
+		shown_number = true,
+		shown_relativenumber = false,
+		shown_signcolumn = "yes"
+	},
+	ataraxis = {
+		just_do_it_for_me = true,
+		left_padding = 40,
+		right_padding = 40,
+		top_padding = 0,
+		bottom_padding = 0,
+		custome_bg = "#2f334d",
+		disable_bg_configuration = false,
+		disable_fillchars_configuration = false,
+		force_when_plus_one_window = true,
+		force_hide_statusline = true
+	},
+	focus = {
+		margin_of_error = 5,
+		focus_method = "experimental"
+	},
+	events = {
+		before_minimalist_mode_shown = false,
+		before_minimalist_mode_hidden = false,
         after_minimalist_mode_shown = false,
-    after_minimalist_mode_hidden = false
-  },
-  integrations = {
-    integration_galaxyline = false,
-    integration_vim_airline = false,
-    integration_vim_powerline = false,
-    integration_tmux = false,
-    integration_express_line = false,
-    integration_gitgutter = false,
-    integration_vim_signify = false,
-    integration_limelight = false,
-    integration_tzfocus_tzataraxis = true
-  }
+		after_minimalist_mode_hidden = false
+	},
+	integrations = {
+		integration_galaxyline = false,
+		integration_vim_airline = false,
+		integration_vim_powerline = false,
+		integration_tmux = false,
+		integration_express_line = false,
+		integration_gitgutter = false,
+		integration_vim_signify = false,
+		integration_limelight = false,
+		integration_tzfocus_tzataraxis = true
+	}
 })
 
 --nvim treesitter
 require'nvim-treesitter.configs'.setup {
   ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
   highlight = {
-    enable = true,              -- false will disable the whole extension
-    additional_vim_regex_highlighting = true -- <= THIS LINE is the magic!
-  },
-  rainbow = {
     enable = true,
-    extended_mode = true, -- Highlight also non-parentheses delimiters, boolean or table: lang -> boolean
-  }
+  },
+  indent = {
+    enable = true
+  },
 }
+
 
 --neogit
 local neogit = require('neogit')
@@ -669,17 +718,17 @@ local lualine = require'lualine'
 
 --moonlight
 local colors = {
-bg       = '#212337',
-fg       = '#e4f3fa',
-yellow   = '#ffc777',
-cyan     = '#04d1f9',
-darkblue = '#a1abe0',
-green    = '#2df4c0',
-orange   = '#f67f81',
-violet   = '#ecb2f0',
-magenta  = '#b4a4f4',
-blue     = '#04d1f9';
-red      = '#ff757f';
+bg       = '#eee8d5',
+fg       = '#002b36',
+yellow   = '#6c71c4',
+cyan     = '#7d8d09',
+darkblue = '#268bd2',
+green    = '#7d8d09',
+orange   = '#cb4b16',
+violet   = '#b58900',
+magenta  = '#7d8d09',
+blue     = '#268bd2';
+red      = '#dc322f';
 }
 
 --nord
