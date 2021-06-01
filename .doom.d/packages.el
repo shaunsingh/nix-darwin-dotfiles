@@ -20,7 +20,7 @@
  ;; `:files' in the `:recipe':
  ;(package! this-package
  ;  :recipe (:host github :repo "username/repo"
- ;           :files ("some-file.el" "src/lisp/*.el")))
+ ;           :files ("some-file.el" :q"src/lisp/*.el")))
 
  ;; If you'd like to disable a package included with Doom, you can do so here
  ;; with the `:disable' property:
@@ -49,3 +49,9 @@
  ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
  ;(unpin! t)
 (package! org-fragtog)
+(package! selectric-mode)
+(package! org-ref)
+(package! org-appear)
+(package! vlf :recipe (:host github :repo "m00natic/vlfi" :files ("*.el")))
+(package! calctex :recipe (:host github :repo "johnbcoughlin/calctex"
+                           :files ("*.el" "calctex/*.el" "calctex-contrib/*.el" "org-calctex/*.el" "vendor")))
