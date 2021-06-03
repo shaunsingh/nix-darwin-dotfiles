@@ -14,9 +14,9 @@
 
 ;;set theme
 ;;(setq doom-theme 'doom-flatwhite)
-;;(setq doom-theme 'doom-moonlight)
-;;(setq doom-theme 'doom-solarized-light)
-(setq doom-theme 'doom-monokai-pro)
+(setq doom-theme 'doom-solarized-light)
+;;(setq doom-theme 'doom-xcode)
+;;(setq doom-theme 'doom-horizon)
 
 ;;ask which buffer to see after splitting, let ivy handle it
 (setq evil-vsplit-window-right t
@@ -318,6 +318,7 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
                 (org-indent-mode -1))))
 
   (add-hook! 'writeroom-mode-hook (centaur-tabs-local-mode (if writeroom-mode +1 -1)))
+  ;;(add-hook! 'writeroom-mode-hook (focus-mode (if writeroom-mode +1 -1)))
   (add-hook 'writeroom-mode-enable-hook #'doom-disable-line-numbers-h)
   (add-hook 'writeroom-mode-disable-hook #'doom-enable-line-numbers-h)
   (add-hook 'writeroom-mode-disable-hook
@@ -798,6 +799,10 @@ Must be run as part of `org-font-lock-set-keywords-hook'."
 
 ;;make treemacs thinner
 (setq treemacs-width 25)
+
+;;set treemacs to use the theme
+(with-eval-after-load 'doom-themes
+  (doom-themes-treemacs-config))
 
 ;;modeline (icons, config, battery)
 (display-time-mode 1)                              ;Enable time in the mode-line
