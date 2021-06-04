@@ -93,7 +93,7 @@ Option 1: Install MacTex (large download, includes everything)
 Option 2 (recommended): Install BasicTex run the following command (as sudo)
 
 ```zsh
-sudo tlmgr install dvipng l3packages xcolor soul adjustbox collectbox amsmath
+sudo tlmgr install dvipng l3packages xcolor soul adjustbox collectbox amsmath siunitx cancel mathalpha
 ```
 
 
