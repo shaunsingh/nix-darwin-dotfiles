@@ -1,5 +1,6 @@
 # Dotfiles
 
+(old screenshot)
 <img width="1440" alt="image" src="https://user-images.githubusercontent.com/71196912/119280172-18608c80-bbfe-11eb-92aa-8a679b5800fc.png">
 
 Configurations for the following are included
@@ -16,7 +17,7 @@ as well as
 3. starship
 
 ~/.doom.d
-1. doom emacs 
+1. emacs 
    
 ~/extra
 1. homebrew brewfile
@@ -93,7 +94,7 @@ Option 1: Install MacTex (large download, includes everything)
 Option 2 (recommended): Install BasicTex run the following command (as sudo)
 
 ```zsh
-sudo tlmgr install dvipng l3packages xcolor soul adjustbox collectbox amsmath siunitx cancel mathalpha
+sudo tlmgr install dvipng dvisvgm l3packages xcolor soul adjustbox collectbox amsmath siunitx cancel mathalpha
 ```
 
 
