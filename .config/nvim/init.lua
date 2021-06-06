@@ -34,10 +34,11 @@ require('packer').startup(function()
   --use 'shaunsingh/flatwhite.nvim'
   --use 'shaunsingh/nord.nvim'
   --use 'shaunsingh/moonlight.nvim'
-  --use 'shaunsingh/solarized.nvim'
-  use 'shaunsingh/seoul256.nvim'
+  use 'shaunsingh/solarized.nvim'
+  --use 'shaunsingh/seoul256.nvim'
   use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
   use {"lukas-reineke/indent-blankline.nvim", branch = "lua"}
+  use 'nvim-treesitter/playground'
 
   --easy motions
   use 'phaazon/hop.nvim'
@@ -65,8 +66,15 @@ require('packer').startup(function()
   --which key for neovim
   use 'folke/which-key.nvim'
 
-end)
+  --neovim everywhere
+  use {
+    "glacambre/firenvim",
+    run = function()
+      vim.fn["firenvim#install"](0)
+    end,
+  }
 
+end)
 --make life easier
 local cmd = vim.cmd
 local g = vim.g
@@ -76,7 +84,8 @@ local g = vim.g
 g.neovide_cursor_antialiasing=true
 g.neovide_cursor_vfx_mode = "pixiedust"
 neovide_cursor_animation_length = 0.05,
-vim.api.nvim_exec([[set guifont=FiraCode\ Nerd\ Font:h13]], false)
+--vim.api.nvim_exec([[set guifont=FiraCode\ Nerd\ Font:h13]], false)
+vim.api.nvim_exec([[set guifont=SFMono\ Nerd\ Font:h14,SF\ Mono:h14,Liga\ Menlo:h14]], false)
 
 --uivonim
   if vim.g.uivonim == 1 then
@@ -100,16 +109,16 @@ vim.api.nvim_exec([[let &fcs='eob: ']], false)
 --require('moonlight').set()
 
 --solarized
---g.solarized_style = "solarized"
---g.solarized_borders = false
---g.solarized_contrast = false
---require('solarized').set()
+g.solarized_style = "solarized"
+g.solarized_borders = false
+g.solarized_contrast = false
+require('solarized').set()
 
 --seoul256
-g.seoul256_style = "seoul256"
-g.seoul256_borders = false
-g.seoul256_contrast = false
-require('seoul256').set()
+--g.seoul256_style = "seoul256"
+--g.seoul256_borders = false
+--g.seoul256_contrast = false
+--require('seoul256').set()
 
 --flatwhite testing
 --g.flatwhite_style = "flatwhite"
@@ -277,57 +286,57 @@ require "bufferline".setup {
     -- bar colors!!
     highlights = {
         fill = {
-            guifg = "#fdf6e3",
-            guibg = "#fdf6e3"
+            guifg = "#eee8d5",
+            guibg = "#eee8d5"
         },
         background = {
             guifg = bar_fg,
-            guibg = "#fdf6e3"
+            guibg = "#eee8d5"
         },
         -- buffer
         buffer_selected = {
             guifg = activeBuffer_fg,
-            guibg = "#eee8d5",
+            guibg = "#fdf6e3",
             gui = "bold"
         },
         buffer_visible = {
             guifg = "#002b36",
-            guibg = "#fdf6e3"
+            guibg = "#eee8d5"
         },
         -- tabs over right
         tab = {
             guifg = "#002b36",
-            guibg = "#fdf6e3"
+            guibg = "#eee8d5"
         },
         tab_selected = {
             guifg = "#002b36",
-            guibg = "#fdf6e3"
+            guibg = "#eee8d5"
         },
         tab_close = {
             guifg = "#002b36",
-            guibg = "#fdf6e3"
+            guibg = "#eee8d5"
         },
         -- buffer separators
         separator = {
-            guifg = "#fdf6e3",
-            guibg = "#fdf6e3"
+            guifg = "#eee8d5",
+            guibg = "#eee8d5"
         },
         separator_selected = {
-            guifg = "#fdf6e3",
-            guibg = "#fdf6e3"
+            guifg = "#eee8d5",
+            guibg = "#eee8d5"
         },
         separator_visible = {
-            guifg = "#fdf6e3",
-            guibg = "#fdf6e3"
+            guifg = "#eee8d5",
+            guibg = "#eee8d5"
         },
         indicator_selected = {
-            guifg = "#fdf6e3",
-            guibg = "#fdf6e3"
+            guifg = "#eee8d5",
+            guibg = "#eee8d5"
         },
         -- modified files (but not saved)
         modified_selected = {
             guifg = "#A3BE8C",
-            guibg = "#fdf6e3"
+            guibg = "#eee8d5"
         },
         modified_visible = {
             guifg = "#BF616A",
@@ -458,6 +467,26 @@ require'nvim-treesitter.configs'.setup {
   },
 }
 
+require "nvim-treesitter.configs".setup {
+  playground = {
+    enable = true,
+    disable = {},
+    updatetime = 25, -- Debounced time for highlighting nodes in the playground from source code
+    persist_queries = false, -- Whether the query persists across vim sessions
+    keybindings = {
+      toggle_query_editor = 'o',
+      toggle_hl_groups = 'i',
+      toggle_injected_languages = 't',
+      toggle_anonymous_nodes = 'a',
+      toggle_language_display = 'I',
+      focus_language = 'f',
+      unfocus_language = 'F',
+      update = 'R',
+      goto_node = '<cr>',
+      show_help = '?',
+    },
+  }
+}
 
 --neogit
 local neogit = require('neogit')
@@ -716,9 +745,9 @@ local lualine = require'lualine'
 
 -- Color table for highlights
 
---moonlight
+--solarized
 local colors = {
-bg       = '#eee8d5',
+bg       = '#fdf6e3',
 fg       = '#002b36',
 yellow   = '#6c71c4',
 cyan     = '#7d8d09',
@@ -730,6 +759,21 @@ magenta  = '#7d8d09',
 blue     = '#268bd2';
 red      = '#dc322f';
 }
+
+--soul356
+--local colors = {
+--bg       = '#545454',
+--fg       = '#dfe0e0',
+--yellow   = '#c3a769',
+--cyan     = '#c3a769',
+--darkblue = '#d0a39f',
+--green    = '#678568',
+--orange   = '#67a9aa',
+--violet   = '#84a4c1',
+--magenta  = '#d0a39f',
+--blue     = '#84a4c1';
+--red      = '#a07474';
+--}
 
 --nord
 --local colors = {
@@ -1086,12 +1130,7 @@ vim.api.nvim_exec([[
 ]], false)
 
 vim.g.dashboard_custom_section = {
-    a = {description = {'  Reload Last Session            SPC q l'}, command = 'SessionLoad'},
-    b = {description = {'  Recently Opened Files          SPC f r'}, command = 'Telescope oldfiles'},
-    c = {description = {'  Open Project                   SPC f p'}, command = 'Telescope project'},
-    e = {description = {'  Find File                      SPC spc'}, command = 'Telescope find_files'},
-    f = {description = {'  Open Neovim Configuration      SPC f P'}, command = ':e ~/.config/nvim/init.lua'}
-
+  a = {description = {'DOOM - its evil '}, command = 'qa!'},
 }
 
 vim.g.dashboard_custom_header = {
@@ -1129,7 +1168,4 @@ vim.g.dashboard_custom_header = {
        "        :dy+:`      .-::-..NNNhhd+``..`...````.-::-`                ",
        "                        .-:mNdhh:.......--::::-`                    ",
        "                           yNh/..------..`                          ",
-       "                                                                    ",
-       "                            DOOM - its evil                         ",
-       "                                                                    ",
 }
