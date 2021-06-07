@@ -152,9 +152,9 @@ Although it isn't required, you can install a toolbar such as [Pecan](https://gi
 <img width="1440" alt="image" src="https://user-images.githubusercontent.com/71196912/121067563-34853180-c799-11eb-8467-3b8b6810c414.png">
 
 ## Emacs
-<img width="1440" alt="image" src="https://user-images.githubusercontent.com/71196912/121067606-4070f380-c799-11eb-8e58-933855843084.png">
-<img width="1440" alt="image" src="https://user-images.githubusercontent.com/71196912/121067647-4cf54c00-c799-11eb-9546-159c295ed55a.png">
-<img width="1440" alt="image" src="https://user-images.githubusercontent.com/71196912/121067746-701ffb80-c799-11eb-8afe-d173afdda7ca.png">
+<img width="1440" alt="image" src="https://user-images.githubusercontent.com/71196912/121068244-09e7a880-c79a-11eb-8def-e5f393d51b95.png">
+<img width="1440" alt="image" src="https://user-images.githubusercontent.com/71196912/121068208-fa685f80-c799-11eb-9dd9-4cd7c06fcbc0.png">
+<img width="1440" alt="image" src="https://user-images.githubusercontent.com/71196912/121068132-e1f84500-c799-11eb-8a54-5da770c47ab1.png">
 
 ## Iterm
 <img width="1440" alt="image" src="https://user-images.githubusercontent.com/71196912/121067841-8c239d00-c799-11eb-8fcf-9f965fb007fa.png">
