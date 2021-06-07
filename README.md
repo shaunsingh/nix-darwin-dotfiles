@@ -1,7 +1,7 @@
 # Dotfiles
 
 (old screenshot)
-<img width="1440" alt="image" src="https://user-images.githubusercontent.com/71196912/119280172-18608c80-bbfe-11eb-92aa-8a679b5800fc.png">
+<img width="1440" alt="image" src="https://user-images.githubusercontent.com/71196912/121066834-55995280-c798-11eb-917b-553100597402.png">
 
 Configurations for the following are included
 
@@ -141,6 +141,23 @@ I also recommend installing [Neovide](https://github.com/Kethku/neovide) or [gon
 ## Yabai 
 
 Although it isn't required, you can install a toolbar such as [Pecan](https://github.com/zzzeyez/pecan) If you don't like the look of the default one. (used in the screenshot). If you aren't using a toolbar, remove the menubar-specific configuration in .yabairc before installing
+
+# Screenshots
+
+## Yabai + Peacan
+<img width="1440" alt="image" src="https://user-images.githubusercontent.com/71196912/121067371-f720a400-c798-11eb-85be-19646f0783df.png">
+
+## Neovim
+<img width="1440" alt="image" src="https://user-images.githubusercontent.com/71196912/121067395-00aa0c00-c799-11eb-964d-4fc1492e4849.png">
+<img width="1440" alt="image" src="https://user-images.githubusercontent.com/71196912/121067563-34853180-c799-11eb-8467-3b8b6810c414.png">
+
+## Emacs
+<img width="1440" alt="image" src="https://user-images.githubusercontent.com/71196912/121067606-4070f380-c799-11eb-8e58-933855843084.png">
+<img width="1440" alt="image" src="https://user-images.githubusercontent.com/71196912/121067647-4cf54c00-c799-11eb-9546-159c295ed55a.png">
+<img width="1440" alt="image" src="https://user-images.githubusercontent.com/71196912/121067746-701ffb80-c799-11eb-8afe-d173afdda7ca.png">
+
+## Iterm
+<img width="1440" alt="image" src="https://user-images.githubusercontent.com/71196912/121067841-8c239d00-c799-11eb-8fcf-9f965fb007fa.png">
 
 ## Feedback
 
