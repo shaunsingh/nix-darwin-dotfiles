@@ -5,18 +5,29 @@
       user-mail-address "shaunsingh0207@gmail.com")
 
 ;;fonts
-(setq doom-font (font-spec :family "SF Mono" :size 13)
-      doom-big-font (font-spec :family "SF Mono" :size 20)
-      doom-variable-pitch-font (font-spec :family "Roboto Mono" :size 14)
-      doom-unicode-font (font-spec :family "SF Mono")
-      ivy-posframe-font (font-spec :family "SF Mono" :size 13.5)
+(setq doom-font (font-spec :family "SF Mono" :size 13 :weight 'light)
+      doom-big-font (font-spec :family "SF Mono" :size 20 :weight 'light)
+      doom-variable-pitch-font (font-spec :family "Roboto Mono" :size 14 :weight 'light)
+      doom-unicode-font (font-spec :family "SF Mono":weight 'light)
+      ivy-posframe-font (font-spec :family "SF Mono" :size 13.5 :weight 'light)
       doom-serif-font (font-spec :family "Roboto Mono" :weight 'light))
 
 ;;set theme
+
+;;doom themes
+;;(setq doom-theme 'doom-one-light)
+;;(setq doom-theme 'doom-one)
+;;(setq doom-theme 'doom-vibrant)
+
+;;light themes
 ;;(setq doom-theme 'doom-flatwhite)
-(setq doom-theme 'doom-solarized-light)
-;;(setq doom-theme 'doom-xcode)
+;;(setq doom-theme 'doom-solarized-light)
+
+;;dark themes
 ;;(setq doom-theme 'doom-horizon)
+;;(setq doom-theme 'doom-moonlight)
+;;(setq doom-theme 'doom-xcode)
+(setq doom-theme 'doom-nord)
 
 ;;ask which buffer to see after splitting, let ivy handle it
 (setq evil-vsplit-window-right t
@@ -644,16 +655,18 @@ Must be run as part of `org-font-lock-set-keywords-hook'."
 (use-package! vlf-setup
   :defer-incrementally vlf-tune vlf-base vlf-write vlf-search vlf-occur vlf-follow vlf-ediff vlf)
 
-;;use pdf-tools
+;;use pdf-tools (with backups)
 (setq +latex-viewers '(pdf-tools evince zathura okular skim sumatrapdf))
 
 ;;start with latex preview
 (after! org (setq org-startup-with-latex-preview t)
-  (plist-put org-format-latex-options :background "Transparent")
-  (plist-put org-format-latex-options :scale 1)) ;make latex size the same as others
+  (plist-put org-format-latex-options :background "Transparent"))
+
+;;this was fixed recently, enable if you have issues
+;;(plist-put org-format-latex-options :scale 1)) ;make latex size the same as others
 
 ;;render as svgs (png doesn't work well on retina displays)
-(setq org-latex-create-formula-image-program 'dvisvgm)
+(setq org-preview-latex-default-process 'dvisvgm)
 
 ;;emacs-discord test
 (require 'org-src)
@@ -775,8 +788,8 @@ Must be run as part of `org-font-lock-set-keywords-hook'."
 (setq load-prefer-newer t)
 
 ;;transparency for fun (performance hit)
-(set-frame-parameter (selected-frame) 'alpha '(92 92))
-(add-to-list 'default-frame-alist '(alpha 92 92))
+;;(set-frame-parameter (selected-frame) 'alpha '(92 92))
+;;(add-to-list 'default-frame-alist '(alpha 92 92))
 
 ;;disable line dividers
 (custom-set-faces!
@@ -788,7 +801,7 @@ Must be run as part of `org-font-lock-set-keywords-hook'."
   `(minimap-active-region-background :background unspecified))
 
 ;;minimap on startup (big performance hit)
-(add-hook 'window-setup-hook #'minimap-mode)
+;;(add-hook 'window-setup-hook #'minimap-mode)
 
 ;;disable cursorline
 (remove-hook 'doom-first-buffer-hook #'global-hl-line-mode)
@@ -849,6 +862,9 @@ Must be run as part of `org-font-lock-set-keywords-hook'."
 ;; Implicit /g flag on evil ex substitution, because I less often want the
 ;; default behavior.
 (setq evil-ex-substitute-global t)
+
+;;disable antialiasing
+;;(setq-default mac-allow-anti-aliasing nil)
 
 ;;set emacs to fullscreen (i'm already using a wm)
 ;;(add-to-list 'default-frame-alist '(fullscreen . fullboth))

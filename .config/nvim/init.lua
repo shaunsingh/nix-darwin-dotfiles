@@ -31,11 +31,11 @@ require('packer').startup(function()
   use {'iamcco/markdown-preview.nvim', run = 'cd app && npm install'}
 
   --themes and syntax
-  --use 'shaunsingh/flatwhite.nvim'
-  --use 'shaunsingh/nord.nvim'
-  --use 'shaunsingh/moonlight.nvim'
+  use 'shaunsingh/nord.nvim'
+  use 'shaunsingh/moonlight.nvim'
   use 'shaunsingh/solarized.nvim'
-  --use 'shaunsingh/seoul256.nvim'
+  use 'shaunsingh/seoul256.nvim'
+
   use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
   use {"lukas-reineke/indent-blankline.nvim", branch = "lua"}
   use 'nvim-treesitter/playground'
@@ -109,10 +109,10 @@ vim.api.nvim_exec([[let &fcs='eob: ']], false)
 --require('moonlight').set()
 
 --solarized
-g.solarized_style = "solarized"
-g.solarized_borders = false
-g.solarized_contrast = false
-require('solarized').set()
+--g.solarized_style = "solarized"
+--g.solarized_borders = false
+--g.solarized_contrast = false
+--require('solarized').set()
 
 --seoul256
 --g.seoul256_style = "seoul256"
@@ -127,12 +127,12 @@ require('solarized').set()
 --require('flatwhite').set()
 
 --nord
---g.nord_style = "nord"
---g.nord_borders = false
---g.nord_contrast = false
---g.nord_cursorline_transparent = true
---g.nord_disable_background = true -- doesn't work with neovide
---require('nord').set()
+g.nord_style = "nord"
+g.nord_borders = false
+g.nord_contrast = false
+g.nord_cursorline_transparent = true
+g.nord_disable_background = false -- doesn't work with neovide
+require('nord').set()
 
 --settings
 local scopes = {o = vim.o, b = vim.bo, w = vim.wo}
@@ -262,15 +262,17 @@ endfunc
 ]], false)
 
 --bufferline
-local bar_fg = "#002b36"
-local activeBuffer_fg = "#002b36"
+local bar_fg = "#ECEFF4"
+local activeBuffer_fg = "#ECEFF4"
 
 require "bufferline".setup {
     options = {
+        numbers = "ordinal",
+        number_style = "none",
         offsets = {{filetype = "NvimTree", text = "Explorer"}},
         buffer_close_icon = "",
         modified_icon = "",
-        close_icon = " ",
+        close_icon = "",
         left_trunc_marker = "",
         right_trunc_marker = "",
         max_name_length = 14,
@@ -281,66 +283,68 @@ require "bufferline".setup {
         view = "multiwindow",
         show_buffer_close_icons = true,
         separator_style = "thin",
-        mappings = "true"
+        mappings = "true",
+        always_show_bufferline = false,
+        diagnostics = "nvim_lsp",
     },
     -- bar colors!!
     highlights = {
         fill = {
-            guifg = "#eee8d5",
-            guibg = "#eee8d5"
+            guifg = "#2e3440",
+            guibg = "#2e3440"
         },
         background = {
             guifg = bar_fg,
-            guibg = "#eee8d5"
+            guibg = "#2e3440"
         },
         -- buffer
         buffer_selected = {
             guifg = activeBuffer_fg,
-            guibg = "#fdf6e3",
+            guibg = "3b4252",
             gui = "bold"
         },
         buffer_visible = {
-            guifg = "#002b36",
-            guibg = "#eee8d5"
+            guifg = "#ECEFF4",
+            guibg = "#2e3440"
         },
         -- tabs over right
         tab = {
-            guifg = "#002b36",
-            guibg = "#eee8d5"
+            guifg = "#ECEFF4",
+            guibg = "#2e3440"
         },
         tab_selected = {
-            guifg = "#002b36",
-            guibg = "#eee8d5"
+            guifg = "#ECEFF4",
+            guibg = "#2e3440"
         },
         tab_close = {
-            guifg = "#002b36",
-            guibg = "#eee8d5"
+            guifg = "#ECEFF4",
+            guibg = "#2e3440"
         },
         -- buffer separators
         separator = {
-            guifg = "#eee8d5",
-            guibg = "#eee8d5"
+            guifg = "#2e3440",
+            guibg = "#2e3440"
         },
         separator_selected = {
-            guifg = "#eee8d5",
-            guibg = "#eee8d5"
+            guifg = "#2e3440",
+            guibg = "#2e3440"
         },
         separator_visible = {
-            guifg = "#eee8d5",
-            guibg = "#eee8d5"
+            guifg = "#2e3440",
+            guibg = "#2e3440"
         },
         indicator_selected = {
-            guifg = "#eee8d5",
-            guibg = "#eee8d5"
+            guifg = "#2e3440",
+            guibg = "#2e3440"
         },
         -- modified files (but not saved)
         modified_selected = {
             guifg = "#A3BE8C",
-            guibg = "#eee8d5"
+            guibg = "#2e3440"
         },
         modified_visible = {
             guifg = "#BF616A",
-            guibg = "#d8ccc4"
+            guibg = "#2e3440"
         }
     }
 }
@@ -746,19 +750,19 @@ local lualine = require'lualine'
 -- Color table for highlights
 
 --solarized
-local colors = {
-bg       = '#fdf6e3',
-fg       = '#002b36',
-yellow   = '#6c71c4',
-cyan     = '#7d8d09',
-darkblue = '#268bd2',
-green    = '#7d8d09',
-orange   = '#cb4b16',
-violet   = '#b58900',
-magenta  = '#7d8d09',
-blue     = '#268bd2';
-red      = '#dc322f';
-}
+--local colors = {
+--bg       = '#fdf6e3',
+--fg       = '#002b36',
+--yellow   = '#6c71c4',
+--cyan     = '#7d8d09',
+--darkblue = '#268bd2',
+--green    = '#7d8d09',
+--orange   = '#cb4b16',
+--violet   = '#b58900',
+--magenta  = '#7d8d09',
+--blue     = '#268bd2';
+--red      = '#dc322f';
+--}
 
 --soul356
 --local colors = {
@@ -776,19 +780,19 @@ red      = '#dc322f';
 --}
 
 --nord
---local colors = {
- --bg       = '#2E3440',
- --fg       = '#ECEFF4',
- --yellow   = '#EBCB8B',
- --cyan     = '#8FBCBB',
- --darkblue = '#5E81AC',
- --green    = '#A3BE8C',
- --orange   = '#D08770',
- --violet   = '#81A1C1',
- --magenta  = '#B48EAD',
- --blue     = '#81A1C1';
- --red      = '#BF616A';
---}
+local colors = {
+ bg       = '#2E3440',
+ fg       = '#ECEFF4',
+ yellow   = '#EBCB8B',
+ cyan     = '#8FBCBB',
+ darkblue = '#5E81AC',
+ green    = '#A3BE8C',
+ orange   = '#D08770',
+ violet   = '#81A1C1',
+ magenta  = '#B48EAD',
+ blue     = '#81A1C1';
+ red      = '#BF616A';
+}
 
 local conditions = {
   buffer_not_empty = function()
