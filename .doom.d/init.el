@@ -1,5 +1,10 @@
 ;;; init.el -*- lexical-binding: t; -*-
 
+;;for benchmarking purposes
+(when doom-debug-p
+  (require 'benchmark-init)
+  (add-hook 'doom-first-input-hook #'benchmark-init/deactivate))
+
 ;; This file controls what Doom modules are enabled and what order they load
 ;; in. Remember to run 'doom sync' after modifying it!
 
@@ -49,7 +54,7 @@
         +defaults)   ; tame sudden yet inevitable temporary windows
        (tabs
         +centaur-tabs)                                ; a tab bar for Emacs
-       (treemacs +lsp)
+       treemacs
         ;;unicode           ; extended unicode support for various languages
        vc-gutter         ; vcs diff in the fringe
        ;;vi-tilde-fringe   ; fringe tildes to mark beyond EOB
@@ -156,12 +161,14 @@
        ;;ocaml             ; an objective camel
       (org                         ; organize your plain life in plain text
        +pretty                     ; yessss my pretties! (nice unicode symbols)
-       +dragndrop)                  ; drag & drop files/images into org buffers
+       +dragndrop                  ; drag & drop files/images into org buffers
+       +jupyter                    ; notebook support
+       +gnuplot)
                      ; wander around notes org               ; organize your plain life in plain text
        ;;php               ; perl's insecure younger brother
        ;;plantuml          ; diagrams for confusing people more
        ;;purescript        ; javascript, but functional
-       ;;python            ; beautiful is better than ugly
+       (python +lsp +pyright)            ; beautiful is better than ugly
        ;;qt                ; the 'cutest' gui framework ever
        ;;racket            ; a DSL for DSLs
        ;;raku              ; the artist formerly known as perl6
@@ -181,7 +188,7 @@
        ;;zig               ; C, but simpler
 
        :email
-       ;;mu4e +gmail
+       ;;(:if (executable-find "mu") (mu4e +org +gmail))
        ;;notmuch
        ;;(wanderlust +gmail)
 
@@ -190,9 +197,9 @@
        ;;emms
        ;;everywhere        ; *leave* Emacs!? You must be joking
        ;;irc               ; how neckbeards socialize
-       ;;(rss +org)        ; emacs as an RSS reader
+       (rss +org)        ; emacs as an RSS reader
        ;;twitter           ; twitter client https://twitter.com/vnought
 
        :config
-       ;;literate
+       literate
        (default +bindings +smartparens))
