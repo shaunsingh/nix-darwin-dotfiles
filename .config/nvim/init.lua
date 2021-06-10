@@ -32,9 +32,9 @@ require('packer').startup(function()
 
   --themes and syntax
   use 'shaunsingh/nord.nvim'
-  use 'shaunsingh/moonlight.nvim'
-  use 'shaunsingh/solarized.nvim'
-  use 'shaunsingh/seoul256.nvim'
+  --use 'shaunsingh/moonlight.nvim'
+  --use 'shaunsingh/solarized.nvim'
+  --kuse 'shaunsingh/seoul256.nvim'
 
   use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
   use {"lukas-reineke/indent-blankline.nvim", branch = "lua"}
@@ -261,95 +261,113 @@ endif
 endfunc
 ]], false)
 
---bufferline
-local bar_fg = "#ECEFF4"
-local activeBuffer_fg = "#ECEFF4"
-
-require "bufferline".setup {
-    options = {
-        numbers = "ordinal",
-        number_style = "none",
-        offsets = {{filetype = "NvimTree", text = "Explorer"}},
-        buffer_close_icon = "",
-        modified_icon = "",
-        close_icon = "",
-        left_trunc_marker = "",
-        right_trunc_marker = "",
-        max_name_length = 14,
-        max_prefix_length = 13,
-        tab_size = 20,
-        show_tab_indicators = true,
-        enforce_regular_tabs = false,
-        view = "multiwindow",
-        show_buffer_close_icons = true,
-        separator_style = "thin",
-        mappings = "true",
-        always_show_bufferline = false,
-        diagnostics = "nvim_lsp",
+--bufferilne
+--require('bufferline').setup {
+--  options = {
+--    offsets = {{filetype = "NvimTree", text = "File Explorer", highlight = "Directory", text_align = "left"}}
+--  }
+--}
+local bg = "#2e3440"
+local bg2 = "#3b4252"
+local bg3 = "#282c34"
+local fg = "#CACed6"
+local accent = "#81a1c1"
+local accent2 = "#BF616A" -- Not saved
+local accent3 = "#EBCB8B" -- Not saved
+ require('bufferline').setup {
+  options = {
+    numbers = "none",
+    mappings = true,
+    -- NOTE: this plugin is designed with this icon in mind,
+    -- and so changing this is NOT recommended, this is intended
+    -- as an escape hatch for people who cannot bear it for whatever reason
+    indicator_icon = '▎',
+    buffer_close_icon = '',
+    modified_icon = '●',
+    close_icon = '',
+    left_trunc_marker = '',
+    right_trunc_marker = '',
+    max_name_length = 18,
+    max_prefix_length = 15, -- prefix used when a buffer is de-duplicated
+    tab_size = 18,
+    offsets = {
+      {
+          filetype = "NvimTree",
+          text = "Files"
+      }
     },
-    -- bar colors!!
+    show_buffer_icons = true, -- disable filetype icons for buffers
+    show_buffer_close_icons = true,
+    show_close_icon = true,
+    show_tab_indicators = true,
+    persist_buffer_sort = false, -- whether or not custom sorted buffers should persist
+    -- can also be a table containing 2 custom separators
+    -- [focused and unfocused]. eg: { '|', '|' }
+    separator_style = "thin",
+    enforce_regular_tabs = true,
+    always_show_bufferline = true,
+    sort_by = 'directory'
+    },
     highlights = {
-        fill = {
-            guifg = "#2e3440",
-            guibg = "#2e3440"
-        },
+         fill = {
+             guibg = bg
+         },
         background = {
-            guifg = bar_fg,
-            guibg = "#2e3440"
+            guibg = bg
         },
+
         -- buffer
         buffer_selected = {
-            guifg = activeBuffer_fg,
-            guibg = "3b4252",
+            guifg = fg,
+            guibg = bg2,
             gui = "bold"
         },
-        buffer_visible = {
-            guifg = "#ECEFF4",
-            guibg = "#2e3440"
-        },
-        -- tabs over right
-        tab = {
-            guifg = "#ECEFF4",
-            guibg = "#2e3440"
-        },
-        tab_selected = {
-            guifg = "#ECEFF4",
-            guibg = "#2e3440"
-        },
-        tab_close = {
-            guifg = "#ECEFF4",
-            guibg = "#2e3440"
-        },
-        -- buffer separators
         separator = {
-            guifg = "#2e3440",
-            guibg = "#2e3440"
+            guifg = bg3,
+            guibg = bg
         },
         separator_selected = {
-            guifg = "#2e3440",
-            guibg = "#2e3440"
+            guifg = bg3,
+            guibg = bg2
         },
         separator_visible = {
-            guifg = "#2e3440",
-            guibg = "#2e3440"
+            guifg = bg2,
+            guibg = bg2
         },
         indicator_selected = {
-            guifg = "#2e3440",
-            guibg = "#2e3440"
+            guifg = accent,
+            guibg = bg2
         },
-        -- modified files (but not saved)
+
+        -- tabs over right
+        tab = {
+            guifg = fg,
+            guibg = bg
+        },
+         tab_selected = {
+            guifg = accent,
+            guibg = bg2
+        },
+         tab_close = {
+            guifg = accent,
+            guibg = bg2
+        },
         modified_selected = {
-            guifg = "#A3BE8C",
-            guibg = "#2e3440"
+            guifg = accent2,
+            guibg = bg2
+        },
+        modified = {
+            guifg = accent3,
+            guibg = bg
         },
         modified_visible = {
-            guifg = "#BF616A",
-            guibg = "#2e3440"
+            guifg = accent,
+            guibg = bg
         }
     }
-}
 
---indentline
+
+}--indentline
 g.indentLine_enabled = 1
 g.indent_blankline_char = "|"
 g.indent_blankline_filetype_exclude = {"help", "terminal", "dashboard"}
