@@ -66,6 +66,10 @@ nvim --headless +PackerSync +qa
 echo "grabbing wallpapers"
 cp wallpapers ~ -r
 
+echo "Configuring Pecan"
+rm Library/Application Support/Übersicht/widgets/pecan/colors.css
+cp pecan/colors.css Library/Application Support/Übersicht/widgets/pecan/colors.css
+
 echo "Cleanup"
 cd .. 
 rm -r vimrc-dotfiles
