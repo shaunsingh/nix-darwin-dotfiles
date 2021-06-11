@@ -28,13 +28,12 @@ require('packer').startup(function()
   use 'junegunn/limelight.vim'
   use 'norcalli/nvim-colorizer.lua'
   use 'junegunn/goyo.vim'
-  use {'iamcco/markdown-preview.nvim', run = 'cd app && npm install'}
 
   --themes and syntax
   use 'shaunsingh/nord.nvim'
   --use 'shaunsingh/moonlight.nvim'
   --use 'shaunsingh/solarized.nvim'
-  --kuse 'shaunsingh/seoul256.nvim'
+  --use 'shaunsingh/seoul256.nvim'
 
   use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
   use {"lukas-reineke/indent-blankline.nvim", branch = "lua"}
@@ -262,11 +261,6 @@ endfunc
 ]], false)
 
 --bufferilne
---require('bufferline').setup {
---  options = {
---    offsets = {{filetype = "NvimTree", text = "File Explorer", highlight = "Directory", text_align = "left"}}
---  }
---}
 local bg = "#2e3440"
 local bg2 = "#3b4252"
 local bg3 = "#282c34"
@@ -375,8 +369,6 @@ g.indent_blankline_buftype_exclude = {"terminal"}
 g.indent_blankline_show_trailing_blankline_indent = false
 g.indent_blankline_show_first_indent_level = false
 g.indent_blankline_use_treesitter = true
-
-g.indentline_setColors = 0
 
 --goyo
 vim.api.nvim_exec([[
@@ -765,8 +757,10 @@ require'nvim-lastplace'.setup{}
 --evilline
 local lualine = require'lualine'
 
--- Color table for highlights
+--nvim-tree
+extensions = {'nvim-tree'}
 
+-- Color table for highlights
 --solarized
 --local colors = {
 --bg       = '#fdf6e3',

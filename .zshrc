@@ -1,10 +1,15 @@
-# homebrew custom install
-PATH="$HOME/homebrew/bin:$PATH"
+#latex
+export PATH="/Library/TeX/texbin/:$PATH"
+#emasc
+# PATH="/Applications/Emacs.app/Contents/MacOS:$PATH"
 # doom
 PATH="$HOME/.emacs.d/bin:$PATH"
 # neovide
-alias neovide="/Applications/NeovideNative.app/Contents/MacOS/neovide"
+alias neovide="/Users/shauryasingh/IdeaProjects/neovim/neovide/target/release/neovide --multiGrid --frameless"
 # starship
 eval "$(starship init zsh)"
-# syntax
-source $HOME/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+# highlighting
+source /opt/homebrew/Cellar/zsh-syntax-highlighting/0.7.1/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+# completion
+source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+

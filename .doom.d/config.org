@@ -144,6 +144,9 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 (set-char-table-range composition-function-table ?T '(["\\(?:Th\\)" 0 font-shape-gstring]))
 #+end_src 
 
+#+RESULTS:
+| [\(?:Th\) 0 font-shape-gstring] |
+
 ** Themes
 I. Love. Themes. Which is why I have so many. I switch between themes pretty often, so lets just leave them all here for now and uncomment the ones I need
 #+begin_src elisp

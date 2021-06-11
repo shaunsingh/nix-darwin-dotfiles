@@ -1,12 +1,15 @@
+tap "d12frosted/emacs-plus"
 tap "homebrew/bundle"
 tap "homebrew/cask"
 tap "homebrew/core"
 tap "homebrew/services"
 tap "k-vernooy/tap"
 tap "koekeishiya/formulae"
-tap "d12frosted/emacs-plus"
+tap "mscharley/homebrew"
+tap "railwaycat/emacsmacport"
 brew "aspell"
 brew "python@3.9"
+brew "htop"
 brew "luajit", args: ["HEAD"]
 brew "neovim", args: ["HEAD"]
 brew "ranger"
@@ -14,8 +17,9 @@ brew "ripgrep"
 brew "starship"
 brew "zsh-autosuggestions"
 brew "zsh-syntax-highlighting"
-brew "d12frosted/emacs-plus/emacs-plus@28", args: ["with-elrumo1-icon", "with-native-comp", "with-xwidgets"]
 brew "koekeishiya/formulae/skhd"
 brew "koekeishiya/formulae/yabai"
+brew "railwaycat/emacsmacport/emacs-mac", args: ["HEAD", "with-emacs-big-sur-icon", "with-no-title-bars"]
 cask "basictex"
+cask "firefox"
 cask "ubersicht"
