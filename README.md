@@ -26,9 +26,6 @@ as well as
 ~/extra
 1. wallpapers
 
-<img width="1440" alt="Screen Shot 2021-06-10 at 9 39 53 PM" src="https://user-images.githubusercontent.com/71196912/121620528-81d2fe80-ca38-11eb-9ec6-d2fa356bdbd3.png">
-<img width="1440" alt="Screen Shot 2021-06-10 at 9 44 20 PM" src="https://user-images.githubusercontent.com/71196912/121620529-826b9500-ca38-11eb-8e8b-f9b9c8eeee15.png">
-
 ## Installation
 
 **Warning:** If you want to give these dotfiles a try, you should first fork this repository, review the code, and remove things you don’t want or need. Don’t blindly use my settings unless you know what that entails.
