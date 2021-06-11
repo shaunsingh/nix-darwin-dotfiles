@@ -52,12 +52,9 @@ git clone https://github.com/shaunsingh/vimrc-dotfiles.git
 git clone https://github.com/zzzeyez/pecan.git "$HOME/Library/Application Support/Übersicht/widgets/pecan"
 cd vimrc-dotfiles
 
-echo "start ubersicht"
-brew services start ubersicht
-
 echo "Installing Dotfiles from Cloned Repository"
 cp -R .config ~
-cp .zshrc .shkdrc .yabairc .gitconfig ~
+cp .zshrc .skhdrc .yabairc .gitconfig ~
 cp -R .doom.d ~
 
 echo "Installing and syncing emacs"
@@ -69,12 +66,11 @@ nvim --headless +PackerSync +qa
 echo "grabbing wallpapers"
 cp -R wallpapers ~
 
-
 echo "Done!"
 
 echo "                Further User Setup                   "
 echo "-----------------------------------------------------"
-echo "                restart alacritty                    "
+echo "       You can copy over colors.css for pecan        "
 echo "   You can re-run doom sync to sync emacs plugins    "
 echo "  You can re-run :PackerSync to sync neovim plugins  "
-echo "       Thats it, thanks for downloading, enjoy :)    "
+echo "      Thats it, thanks for downloading, enjoy :)     "
