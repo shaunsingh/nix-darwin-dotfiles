@@ -11,7 +11,7 @@ Configurations for the following are included
 3. skhd
 4. ranger
 
-as well as 
+as well as
 
 ~/.config
 1. neovim
@@ -21,8 +21,8 @@ as well as
 5. alacritty
 
 ~/.doom.d
-1. emacs 
-   
+1. emacs
+
 ~/extra
 1. homebrew brewfile
 2. wallpapers
@@ -34,9 +34,9 @@ as well as
 
 **Warning:** If you want to give these dotfiles a try, you should first fork this repository, review the code, and remove things you don’t want or need. Don’t blindly use my settings unless you know what that entails.
 
-This setup was created first and foremost for macOS. Although most dotfiles should transfer well between macOS and Linux, some might not. 
+This setup was created first and foremost for macOS. Although most dotfiles should transfer well between macOS and Linux, some might not.
 
-## Prerequistes 
+## Prerequistes
 
 If you haven't already, install the Xcode CLT for macOS (this is needed for Git and our Homebrew Installation)
 
@@ -44,7 +44,7 @@ If you haven't already, install the Xcode CLT for macOS (this is needed for Git 
 sudo xcode-select --install
 ```
 
-Before you can install anything, you must install homebrew, a packagemanager for macOS. 
+Before you can install anything, you must install homebrew, a packagemanager for macOS.
 
 ```zsh
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -52,13 +52,13 @@ Before you can install anything, you must install homebrew, a packagemanager for
 
 ### Install Homebrew formulae
 
-If you have a mac, you can simply `cd` to the vimrc-dotfiles/extra/brew/brewfile, and run 
+If you have a mac, you can simply `cd` to the vimrc-dotfiles/extra/brew/brewfile, and run
 
 ```zsh
 brew bundle
 ```
 
-to automatically install all the apps and dependencies. If you have slower internet or an older computer, it may take a while as some dependencies need to build from source. If you're on linux, or don't want to use homebrew, then you can install the following manually 
+to automatically install all the apps and dependencies. If you have slower internet or an older computer, it may take a while as some dependencies need to build from source. If you're on linux, or don't want to use homebrew, then you can install the following manually
 
 ```
 python@3.9 (or latest)
@@ -76,24 +76,24 @@ MacOS Specific:
 ubersicht (toolbar)
 ```
 
-Note: Brew bundle will install the native-compilation version of emacs-plus, but it may be buggy on certain machines and configurations. You can install emacs-mac if you want emacs27 instead. 
+Note: Brew bundle will install the native-compilation version of emacs-plus, but it may be buggy on certain machines and configurations. You can install emacs-mac if you want emacs27 instead.
 
-For linux users, either install `emacs` (emacs 27) or `emacs-pgtk-native-comp` (emacs 28) via your package manager of choice. 
+For linux users, either install `emacs` (emacs 27) or `emacs-pgtk-native-comp` (emacs 28) via your package manager of choice.
 
-## Additional configuration 
+## Additional configuration
 
-For most dotfiles you can just drop and replace the existing ones. However a few may require extra steps 
+For most dotfiles you can just drop and replace the existing ones. However a few may require extra steps
 
-### Emacs 
+### Emacs
 
-As my config is built on doom emacs, you must install it first 
+As my config is built on doom emacs, you must install it first
 
 ```zsh
 git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
 ~/.emacs.d/bin/doom install
 ```
 
-Drop my dotfiles under /.doom.d and run 
+Drop my dotfiles under /.doom.d and run
 
 ```zsh
 ~/.emacs.d/bin/doom sync
@@ -101,11 +101,11 @@ Drop my dotfiles under /.doom.d and run
 
 #### latex
 
-If you would like to take advantage of some of the org-mode latex features, and CalcTex, you need to install several packages 
+If you would like to take advantage of some of the org-mode latex features, and CalcTex, you need to install several packages
 
 #### Automatic install
 
-Brew bundle will automatically install basictex for you. From there you can run the following command in the terminal to install all required dependencies: 
+Brew bundle will automatically install basictex for you. From there you can run the following command in the terminal to install all required dependencies:
 
 ```zsh
 sudo tlmgr install dvipng dvisvgm l3packages xcolor soul adjustbox collectbox amsmath siunitx cancel mathalpha
@@ -124,13 +124,13 @@ Option 2 (recommended): Install BasicTex run the following command (as sudo)
 sudo tlmgr install dvipng dvisvgm l3packages xcolor soul adjustbox collectbox amsmath siunitx cancel mathalpha
 ```
 
-For your convenience, you can also add the bin directory to your path 
+For your convenience, you can also add the bin directory to your path
 
 ##### Linux
 
-On linux you can install either full LaTeX (similar to MacTex) or you can install `TexLive-base` and install packages manually. 
+On linux you can install either full LaTeX (similar to MacTex) or you can install `TexLive-base` and install packages manually.
 
-### Neovim 
+### Neovim
 
 Upon starting Neovim, packer should automatically install. You will need to install and sync all plugins. You can do this by running the following.
 
@@ -138,7 +138,7 @@ Upon starting Neovim, packer should automatically install. You will need to inst
 
 The plugins will install. After restarting neovim, nvim-treesitter should install and configure parsers. Afterwards. run `:checkhealth` to check for possible issues.
 
-If you want to take advantage of the LSP, you can install language servers using the following command: 
+If you want to take advantage of the LSP, you can install language servers using the following command:
 
 `:LspInstall (language)` e.g. `:LspInstall java` to install the java LSP (jdtls)
 
