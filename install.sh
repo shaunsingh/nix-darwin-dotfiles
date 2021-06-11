@@ -53,12 +53,12 @@ git clone https://github.com/zzzeyez/pecan.git "$HOME/Library/Application Suppor
 cd vimrc-dotfiles
 
 echo "Installing Dotfiles from Cloned Repository"
-cp -r .config $HOME/.config
-cp .zshrc $HOME/.zshrc
-cp .skhdrc $HOME/.skhdrc
-cp .yabairc $HOME/.yabairc
-cp .gitconfig $HOME/.gitconfig
-cp -r .doom.d $HOME/.doom.d
+cp -r .config ~
+cp .zshrc ~/.zshrc
+cp .skhdrc ~/.skhdrc
+cp .yabairc ~/.yabairc
+cp .gitconfig ~/.gitconfig
+cp -r .doom.d ~
 
 echo "Installing and syncing emacs"
 doom sync -u
