@@ -66,10 +66,15 @@ nvim --headless +PackerSync +qa
 echo "grabbing wallpapers"
 cp wallpapers ~ -r
 
+echo "Cleanup"
+cd .. 
+rm -r vimrc-dotfiles
+
 echo "Done!"
 
 echo "                Further User Setup                   "
 echo "-----------------------------------------------------"
+echo "                restart alacritty                    "
 echo "   You can re-run doom sync to sync emacs plugins    "
 echo "  You can re-run :PackerSync to sync neovim plugins  "
 echo "       Thats it, thanks for downloading, enjoy :)    "
