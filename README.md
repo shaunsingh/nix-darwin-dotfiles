@@ -1,7 +1,8 @@
 # Dotfiles
 
-(old screenshot)
-<img width="1440" alt="image" src="https://user-images.githubusercontent.com/71196912/121066834-55995280-c798-11eb-917b-553100597402.png">
+<img width="1440" alt="Screen Shot 2021-06-10 at 9 39 53 PM" src="https://user-images.githubusercontent.com/71196912/121620539-84cdef00-ca38-11eb-9219-d2bb15cfcedc.png">
+<img width="1440" alt="Screen Shot 2021-06-10 at 9 44 20 PM" src="https://user-images.githubusercontent.com/71196912/121620543-84cdef00-ca38-11eb-9684-bbfd390aa4de.png">
+
 
 Configurations for the following are included
 
@@ -14,15 +15,20 @@ as well as
 
 ~/.config
 1. neovim
-2. goneovim (gui)
-3. starship
+2. neovide (gui)
+3. goneovim (gui)
+4. starship
+5. alacritty
 
 ~/.doom.d
 1. emacs 
    
 ~/extra
 1. homebrew brewfile
+2. wallpapers
 
+<img width="1440" alt="Screen Shot 2021-06-10 at 9 39 53 PM" src="https://user-images.githubusercontent.com/71196912/121620528-81d2fe80-ca38-11eb-9ec6-d2fa356bdbd3.png">
+<img width="1440" alt="Screen Shot 2021-06-10 at 9 44 20 PM" src="https://user-images.githubusercontent.com/71196912/121620529-826b9500-ca38-11eb-8e8b-f9b9c8eeee15.png">
 
 ## Installation
 
@@ -137,27 +143,6 @@ If you want to take advantage of the LSP, you can install language servers using
 `:LspInstall (language)` e.g. `:LspInstall java` to install the java LSP (jdtls)
 
 I also recommend installing [Neovide](https://github.com/Kethku/neovide) or [goneovim](https://github.com/akiyosi/goneovim) if you prefer a gui experience. A goneovim config is included in the dotfiles
-
-## Yabai 
-
-Although it isn't required, you can install a toolbar such as [Pecan](https://github.com/zzzeyez/pecan) If you don't like the look of the default one. (used in the screenshot). If you aren't using a toolbar, remove the menubar-specific configuration in .yabairc before installing
-
-# Screenshots
-
-## Yabai + Peacan
-<img width="1440" alt="image" src="https://user-images.githubusercontent.com/71196912/121067371-f720a400-c798-11eb-85be-19646f0783df.png">
-
-## Neovim
-<img width="1440" alt="image" src="https://user-images.githubusercontent.com/71196912/121067395-00aa0c00-c799-11eb-964d-4fc1492e4849.png">
-<img width="1440" alt="image" src="https://user-images.githubusercontent.com/71196912/121067563-34853180-c799-11eb-8467-3b8b6810c414.png">
-
-## Emacs
-<img width="1440" alt="image" src="https://user-images.githubusercontent.com/71196912/121068244-09e7a880-c79a-11eb-8def-e5f393d51b95.png">
-<img width="1440" alt="image" src="https://user-images.githubusercontent.com/71196912/121068208-fa685f80-c799-11eb-9dd9-4cd7c06fcbc0.png">
-<img width="1440" alt="image" src="https://user-images.githubusercontent.com/71196912/121068132-e1f84500-c799-11eb-8a54-5da770c47ab1.png">
-
-## Iterm
-<img width="1440" alt="image" src="https://user-images.githubusercontent.com/71196912/121067841-8c239d00-c799-11eb-8fcf-9f965fb007fa.png">
 
 ## Feedback
 
