@@ -53,19 +53,23 @@ git clone https://github.com/zzzeyez/pecan.git "$HOME/Library/Application Suppor
 cd vimrc-dotfiles
 
 echo "Installing Dotfiles from Cloned Repository"
-cp -r .config ~
-cp .zshrc ~/.zshrc
-cp .skhdrc ~/.skhdrc
-cp .yabairc ~/.yabairc
-cp .gitconfig ~/.gitconfig
-cp -r .doom.d ~
+cp .config ~ -r
+cp .zshrc .shkdrc .yabairc .gitconfig ~
+cp .doom.d ~ -r
 
 echo "Installing and syncing emacs"
 doom sync -u
+
+echo "Installing and syncing Neovim"
+nvim --headless +PackerSync +qa
+
+echo "grabbing wallpapers"
+cp wallpapers ~ -r
 
 echo "Done!"
 
 echo "                Further User Setup                   "
 echo "-----------------------------------------------------"
-echo "   Open vim and use :PackerSync to install plugins   "
+echo "   You can re-run doom sync to sync emacs plugins    "
+echo "  You can re-run :PackerSync to sync neovim plugins  "
 echo "       Thats it, thanks for downloading, enjoy :)    "
