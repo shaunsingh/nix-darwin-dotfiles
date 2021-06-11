@@ -37,6 +37,10 @@ brew update
 brew upgrade
 brew cleanup
 
+echo "Install doom emacs" 
+git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
+~/.emacs.d/bin/doom install
+
 echo "Installing Latex Packages"
 sudo tlmgr install dvipng dvisvgm l3packages xcolor soul adjustbox collectbox amsmath siunitx cancel mathalpha
 
@@ -49,16 +53,19 @@ git clone https://github.com/zzzeyez/pecan.git "$HOME/Library/Application Suppor
 cd vimrc-dotfiles
 
 echo "Installing Dotfiles from Cloned Repository"
-cp .config $HOME/.config
+cp -r .config $HOME/.config
 cp .zshrc $HOME/.zshrc
 cp .skhdrc $HOME/.skhdrc
 cp .yabairc $HOME/.yabairc
 cp .gitconfig $HOME/.gitconfig
-cp .doom.d $HOME/.doom.d
+cp -r .doom.d $HOME/.doom.d
+
+echo "Installing and syncing emacs"
+doom sync -u
 
 echo "Done!"
 
 echo "                Further User Setup                   "
 echo "-----------------------------------------------------"
-echo "Open vim and use :PackerSync to install plugins     "
+echo "   Open vim and use :PackerSync to install plugins   "
 echo "       Thats it, thanks for downloading, enjoy :)    "
