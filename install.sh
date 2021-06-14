@@ -7,37 +7,60 @@ echo "Installing Homebrew and it's custom packages"
 echo "Enrolling in homebrew dev branch"
 export HOMEBREW_DEVELOPER=1
 
-#Installing Packages
+echo "Tapping packages"
 brew tap homebrew/cask-fonts
 brew tap homebrew/cask
 brew tap homebrew/bundle
 brew tap homebrew/core
 brew tap homebrew/services
-brew tap railwaycat/emacsmacport
+brew tap d12frosted/emacs-plus
+#brew tap railwaycat/emacsmacport
 
+echo "Installing fonts"
 brew install --cask font-fira-code-nerd-font
+brew install --cask font-sf-mono
+brew install --cask font-roboto-mono-nerd-font
+brew install --cask font-alegreya
+
+echo "Installing apps"
 brew install --cask ubersicht
 brew install --cask basictex
-#brew install --cask alacritty
+brew install --cask alacritty
+brew install --cask intellij-idea
 
+echo "Installing Formula"
+brew install mas
 brew install ranger
-brew install luajit --HEAD
-brew install neovim --HEAD
 brew install ripgrep
 brew install aspell
-brew install python@3.9
+brew install fish
 brew install starship
-brew install zsh-autosuggestions
-brew install zsh-syntax-highlighting
-brew install emacs-mac --with-emacs-big-sur-icon --with-no-title-bars --HEAD
 
+echo "Building/Installing Neovim nightly"
+brew install luajit --HEAD
+brew install neovim --HEAD
+
+echo "Building/Installing Emacs native comp"
+brew install emacs-plus@28 --with-xwidgets --with-native-comp --with-no-titlebar --with-elrumo1-icon
+#brew install emacs-mac --with-emacs-big-sur-icon --with-no-title-bars --HEAD
+
+echo "Cleanup"
 brew services start yabai
 brew services start skhd
 brew update
 brew upgrade
 brew cleanup
 
-echo "Install doom emacs" 
+echo "setting up fish"
+sudo sh -c 'echo $(which fish) >> /etc/shells'
+chsh -s $(which fish)
+set -U fish_user_paths $(which brew) $fish_user_paths
+
+echo "Installing Apps from MAS"
+mas install 1480933944
+mas upgrade
+
+echo "Install doom emacs"
 git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
 ~/.emacs.d/bin/doom install
 
@@ -70,7 +93,9 @@ echo "Done!"
 
 echo "                Further User Setup                   "
 echo "-----------------------------------------------------"
+echo "                                                     "
 echo "       You can copy over colors.css for pecan        "
 echo "   You can re-run doom sync to sync emacs plugins    "
 echo "  You can re-run :PackerSync to sync neovim plugins  "
+echo "                                                     "
 echo "      Thats it, thanks for downloading, enjoy :)     "
