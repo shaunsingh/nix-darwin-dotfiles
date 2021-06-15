@@ -13,8 +13,8 @@ brew tap homebrew/cask
 brew tap homebrew/bundle
 brew tap homebrew/core
 brew tap homebrew/services
-brew tap d12frosted/emacs-plus
-#brew tap railwaycat/emacsmacport
+# brew tap d12frosted/emacs-plus
+brew tap railwaycat/emacsmacport
 
 echo "Installing fonts"
 brew install --cask font-fira-code-nerd-font
@@ -27,6 +27,7 @@ brew install --cask ubersicht
 brew install --cask basictex
 brew install --cask alacritty
 brew install --cask intellij-idea
+brew install --cask google-chrome
 
 echo "Installing Formula"
 brew install mas
@@ -41,8 +42,8 @@ brew install luajit --HEAD
 brew install neovim --HEAD
 
 echo "Building/Installing Emacs native comp"
-brew install emacs-plus@28 --with-xwidgets --with-native-comp --with-no-titlebar --with-elrumo1-icon
-#brew install emacs-mac --with-emacs-big-sur-icon --with-no-title-bars --HEAD
+#brew install emacs-plus@28 --with-xwidgets --with-native-comp --with-elrumo1-icon
+brew install emacs-mac --with-emacs-big-sur-icon --with-no-title-bars --HEAD
 
 echo "Cleanup"
 brew services start yabai
@@ -97,5 +98,7 @@ echo "                                                     "
 echo "       You can copy over colors.css for pecan        "
 echo "   You can re-run doom sync to sync emacs plugins    "
 echo "  You can re-run :PackerSync to sync neovim plugins  "
+echo "                                                     "
+echo "     Install Vimium and Firenvim for Vi in Chrome    "
 echo "                                                     "
 echo "      Thats it, thanks for downloading, enjoy :)     "
