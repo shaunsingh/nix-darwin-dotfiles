@@ -80,6 +80,6 @@ colors:
      cyan:    '#8FBCBB'
      white:   '#ECEFF4'
 
-cursor:
-  style:
-    shape: underline
+# cursor:
+  # style:
+  # shape: underline

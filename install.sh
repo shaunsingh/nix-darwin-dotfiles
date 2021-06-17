@@ -13,8 +13,7 @@ brew tap homebrew/cask
 brew tap homebrew/bundle
 brew tap homebrew/core
 brew tap homebrew/services
-# brew tap d12frosted/emacs-plus
-brew tap railwaycat/emacsmacport
+brew tap d12frosted/emacs-plus
 
 echo "Installing fonts"
 brew install --cask font-fira-code-nerd-font
@@ -22,50 +21,36 @@ brew install --cask font-sf-mono
 brew install --cask font-roboto-mono-nerd-font
 brew install --cask font-alegreya
 
-echo "Installing apps"
-brew install --cask ubersicht
-brew install --cask basictex
-brew install --cask alacritty
-brew install --cask intellij-idea
-brew install --cask google-chrome
-
-echo "Installing Formula"
-brew install mas
+echo "Installing Dependencies"
 brew install ranger
 brew install ripgrep
 brew install aspell
-brew install fish
-brew install starship
 
-echo "Building/Installing Neovim nightly"
+echo "Building Neovim nightly"
 brew install luajit --HEAD
 brew install neovim --HEAD
 
-echo "Building/Installing Emacs native comp"
-#brew install emacs-plus@28 --with-xwidgets --with-native-comp --with-elrumo1-icon
-brew install emacs-mac --with-emacs-big-sur-icon --with-no-title-bars --HEAD
-
-echo "Cleanup"
-brew services start yabai
-brew services start skhd
-brew update
-brew upgrade
-brew cleanup
-
 echo "setting up fish"
+brew install --cask alacritty
+brew install fish
+brew install starship
+brew install fortune cowsay
 sudo sh -c 'echo $(which fish) >> /etc/shells'
 chsh -s $(which fish)
 set -U fish_user_paths $(which brew) $fish_user_paths
 
 echo "Installing Apps from MAS"
+brew install mas
 mas install 1480933944
 mas upgrade
 
 echo "Install doom emacs"
+brew install emacs-plus@28 --with-xwidgets --with-native-comp --with-elrumo2-icon
 git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
 ~/.emacs.d/bin/doom install
 
 echo "Installing Latex Packages"
+brew install --cask basictex
 sudo tlmgr install dvipng dvisvgm l3packages xcolor soul adjustbox collectbox amsmath siunitx cancel mathalpha
 
 #Clone Dotfile Repo
@@ -73,6 +58,8 @@ echo "Cloning Dotfiles"
 git clone https://github.com/shaunsingh/vimrc-dotfiles.git
 
 #Clone bar into default Übersicht location
+echo "installing bar"
+brew install --cask ubersicht
 git clone https://github.com/zzzeyez/pecan.git "$HOME/Library/Application Support/Übersicht/widgets/pecan"
 cd vimrc-dotfiles
 
@@ -89,6 +76,17 @@ nvim --headless +PackerSync +qa
 
 echo "grabbing wallpapers"
 cp -R wallpapers ~
+
+echo "Cleanup"
+brew services start yabai
+brew services start skhd
+brew update
+brew upgrade
+brew cleanup
+
+cd
+rm -R vimrc-dotfiles
+
 
 echo "Done!"
 
