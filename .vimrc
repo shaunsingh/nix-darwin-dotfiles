@@ -3,7 +3,6 @@ set ignorecase
 set smartcase
 set scrolloff=2 " 3 lines above/below cursor when scrolling
 let &fcs='eob: '
-syntax on 
 
 set clipboard+=unnamed
 

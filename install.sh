@@ -23,33 +23,40 @@ brew tap homebrew/services
 brew tap d12frosted/emacs-plus
 
 echo "Installing fonts"
-brew install --cask font-fira-code-nerd-font
-brew install --cask font-sf-mono
-brew install --cask font-roboto-mono-nerd-font
 brew install --cask font-alegreya
+brew install --cask font-sf-mono
+brew install --cask font-fira-code-nerd-font
+brew install --cask font-roboto-mono-nerd-font
+
+# echo "Installing other apps"
+# brew install --cask intellij-idea
+# brew install --cask yt-music
+# brew install --cask vscodium
 
 echo "Installing Dependencies"
 brew install ranger
 brew install ripgrep
 brew install aspell
+brew install anaconda
 
 echo "Building Neovim nightly"
 brew install luajit --HEAD
 brew install neovim --HEAD
 
-echo "setting up fish"
+echo "Setting up fish"
 brew install --cask alacritty
 brew install fish
 brew install starship
 brew install fortune cowsay
+echo "Setting fish as Default Prompt"
 sudo sh -c 'echo $(which fish) >> /etc/shells'
 chsh -s $(which fish)
 set -U fish_user_paths $(which brew) $fish_user_paths
 
-echo "Installing Apps from MAS"
+echo "Installing Safari Extensions"
 brew install mas
 mas install 1480933944
-mas upgrade
+mas install 1440147259
 
 echo "Install doom emacs"
 brew install emacs-plus@28 --with-xwidgets --with-native-comp --with-elrumo2-icon
@@ -72,8 +79,8 @@ cd vimrc-dotfiles
 
 echo "Installing Dotfiles from Cloned Repository"
 cp -R .config ~
-cp .zshrc .skhdrc .yabairc .gitconfig ~
 cp -R .doom.d ~
+cp .zshrc .skhdrc .yabairc .ideavimrc .vimrc .gitconfig ~
 
 echo "Installing and syncing emacs"
 doom sync -u
@@ -87,13 +94,11 @@ cp -R wallpapers ~
 echo "Cleanup"
 brew services start yabai
 brew services start skhd
-brew update
-brew upgrade
-brew cleanup
-
-cd
-rm -R vimrc-dotfiles
-
+# brew update
+# brew upgrade
+brew cleanup -s
+# cd
+# rm -R vimrc-dotfiles
 
 echo "Done!"
 
@@ -103,7 +108,9 @@ echo "                                                     "
 echo "       You can copy over colors.css for pecan        "
 echo "   You can re-run doom sync to sync emacs plugins    "
 echo "  You can re-run :PackerSync to sync neovim plugins  "
-echo "                                                     "
 echo "     Install Vimium and Firenvim for Vi in Chrome    "
+echo "                                                     "
+echo "      Wallpapers are stored in ~/wallpapers          "
+echo "   Cloned dotfiles are stored in ~/vimrc-dotfiles    "
 echo "                                                     "
 echo "      Thats it, thanks for downloading, enjoy :)     "

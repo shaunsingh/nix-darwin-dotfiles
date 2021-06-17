@@ -14,7 +14,7 @@ alias neovide "/Users/shauryasingh/IdeaProjects/neovim/neovide/target/release/ne
 set -x EDITOR "nvim"
 set -x PATH .emacs.d/bin $PATH
 set -x PATH /opt/homebrew/Cellar/python@3.9/3.9.5/libexec/bin $PATH
-set -x PATH /Users/shauryasingh/opt/anaconda3/bin $PATH
+set -x PATH /opt/homebrew/anaconda3/bin $PATH
 set -x TERM xterm-256color
 set -x LC_ALL en_US.UTF-8
 set -x LANG en_US.UTF-8

@@ -149,8 +149,8 @@ I think the defualt thick toolbar looks quite nice on macOS. Lets keep that enab
 I like transparency. Emacs transparency is a bit annoying (it blurs everything), but I'll leave it enabled for now
 #+begin_src elisp
 ;;transparency
-;;(set-frame-parameter (selected-frame) 'alpha '(92 92))
-;;(add-to-list 'default-frame-alist '(alpha 92 92))
+(set-frame-parameter (selected-frame) 'alpha '(92 92))
+(add-to-list 'default-frame-alist '(alpha 92 92))
 #+end_src
 
 Usually I would tell emacs to fullscreen as well, but yabai handles this
