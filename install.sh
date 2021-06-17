@@ -53,10 +53,10 @@ sudo sh -c 'echo $(which fish) >> /etc/shells'
 chsh -s $(which fish)
 set -U fish_user_paths $(which brew) $fish_user_paths
 
-echo "Installing Safari Extensions"
-brew install mas
-mas install 1480933944
-mas install 1440147259
+# echo "Installing Safari Extensions"
+# brew install mas
+# mas install 1480933944
+# mas install 1440147259
 
 echo "Install doom emacs"
 brew install emacs-plus@28 --with-xwidgets --with-native-comp --with-elrumo2-icon
