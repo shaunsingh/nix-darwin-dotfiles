@@ -85,16 +85,7 @@ vim -es -u vimrc -i NONE -c "PlugInstall" -c "qa"
 echo "grabbing wallpapers"
 cp -R wallpapers ~
 
-echo "Setting up fish"
-brew install --cask alacritty
-brew install fish
-brew install starship
-brew install fortune cowsay
-echo "Setting fish as Default Prompt"
-sudo sh -c 'echo $(which fish) >> /etc/shells'
-chsh -s $(which fish)
-fish
-set -U fish_user_paths $(which brew) $fish_user_paths
+
 
 echo "Cleanup"
 brew services start yabai
@@ -105,10 +96,23 @@ brew cleanup -s
 # cd
 # rm -R vimrc-dotfiles
 
+echo "Setting up fish"
+brew install --cask alacritty
+brew install fish
+brew install starship
+brew install fortune cowsay
+echo "Setting fish as Default Prompt"
+sudo sh -c 'echo $(which fish) >> /etc/shells'
+chsh -s $(which fish)
+
 echo "Done!"
 
 echo "                Further User Setup                   "
 echo "-----------------------------------------------------"
+echo "                                                     "
+echo "                 reboot and run                      "
+echo "set -U fish_user_paths $(which brew) $fish_user_paths" 
+echo "              to configure homebrew                  "
 echo "                                                     "
 echo "       You can copy over colors.css for pecan        "
 echo "   You can re-run doom sync to sync emacs plugins    "
