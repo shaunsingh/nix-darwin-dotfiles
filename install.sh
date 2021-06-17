@@ -1,6 +1,13 @@
-# This is an installer of all the dependencies and my dotfiles
-# Prerequisites to all of the files
-# Homebrew PKGs moved to brewdepen.sh
+#!/bin/bash
+
+echo " "
+echo "Warning: the following script will install multiple applications, packages, and files on your computer. Make sure to read through the file before proceding"
+echo "The script will take a while to run, as several tools need to run from source. I recommend leaving it overnight if you have a slower machine"
+echo "Alternatively, you can Install the prebuilt releases for neovim and emacs, and run the select parts of the script manually"
+echo " "
+echo " "
+read -n 1 -s -r -p "Press any key to continue"
+
 echo "Installing Homebrew and it's custom packages"
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 
