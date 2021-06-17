@@ -37,7 +37,7 @@ echo "Installing Dependencies"
 brew install ranger
 brew install ripgrep
 brew install aspell
-brew install anaconda
+# brew install anaconda
 
 echo "Building Neovim nightly"
 brew install luajit --HEAD
@@ -67,15 +67,15 @@ echo "Installing Latex Packages"
 brew install --cask basictex
 sudo tlmgr install dvipng dvisvgm l3packages xcolor soul adjustbox collectbox amsmath siunitx cancel mathalpha
 
-#Clone Dotfile Repo
-echo "Cloning Dotfiles"
-git clone https://github.com/shaunsingh/vimrc-dotfiles.git
-
 #Clone bar into default Übersicht location
 echo "installing bar"
 brew install --cask ubersicht
-git clone https://github.com/zzzeyez/pecan.git "$HOME/Library/Application Support/Übersicht/widgets/pecan"
+git clone --depth 1 https://github.com/zzzeyez/pecan.git "$HOME/Library/Application Support/Übersicht/widgets/pecan"
 cd vimrc-dotfiles
+
+#Clone Dotfile Repo
+echo "Cloning Dotfiles"
+git clone --depth 1 https://github.com/shaunsingh/vimrc-dotfiles.git
 
 echo "Installing Dotfiles from Cloned Repository"
 cp -R .config ~
