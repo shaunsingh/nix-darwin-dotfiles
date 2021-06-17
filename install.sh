@@ -80,6 +80,7 @@ cd vimrc-dotfiles
 echo "Installing Dotfiles from Cloned Repository"
 cp -R .config ~
 cp -R .doom.d ~
+cp -R .vim ~
 cp .zshrc .skhdrc .yabairc .ideavimrc .vimrc .gitconfig ~
 
 echo "Installing and syncing emacs"
