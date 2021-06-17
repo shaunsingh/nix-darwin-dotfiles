@@ -43,16 +43,6 @@ echo "Building Neovim nightly"
 brew install luajit --HEAD
 brew install neovim --HEAD
 
-echo "Setting up fish"
-brew install --cask alacritty
-brew install fish
-brew install starship
-brew install fortune cowsay
-echo "Setting fish as Default Prompt"
-sudo sh -c 'echo $(which fish) >> /etc/shells'
-chsh -s $(which fish)
-set -U fish_user_paths $(which brew) $fish_user_paths
-
 # echo "Installing Safari Extensions"
 # brew install mas
 # mas install 1480933944
@@ -94,6 +84,17 @@ vim -es -u vimrc -i NONE -c "PlugInstall" -c "qa"
 
 echo "grabbing wallpapers"
 cp -R wallpapers ~
+
+echo "Setting up fish"
+brew install --cask alacritty
+brew install fish
+brew install starship
+brew install fortune cowsay
+echo "Setting fish as Default Prompt"
+sudo sh -c 'echo $(which fish) >> /etc/shells'
+chsh -s $(which fish)
+fish
+set -U fish_user_paths $(which brew) $fish_user_paths
 
 echo "Cleanup"
 brew services start yabai
