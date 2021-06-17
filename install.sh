@@ -73,10 +73,10 @@ cp -R .doom.d ~
 cp -R .vim ~
 cp .zshrc .skhdrc .yabairc .ideavimrc .vimrc .gitconfig ~
 
-echo "Installing and syncing emacs"
-doom sync -u
+echo "Syncing emacs"
+doom sync
 
-echo "Installing and syncing Neovim"
+echo "Syncing Neovim"
 nvim --headless +PackerSync +qa
 
 echo "Syncing vim"
@@ -84,8 +84,6 @@ vim -es -u vimrc -i NONE -c "PlugInstall" -c "qa"
 
 echo "grabbing wallpapers"
 cp -R wallpapers ~
-
-
 
 echo "Cleanup"
 brew services start yabai
