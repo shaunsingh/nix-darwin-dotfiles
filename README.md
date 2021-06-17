@@ -7,14 +7,12 @@
 
 Configurations for the following are included
 
-1. fish/starship 
-2. yabai
-3. skhd
-4. ranger
-5. neovim 
-6. alacritty
-7. neovide/goneovim
-8. emacs
+1. fish/starship/alacritty/zsh
+2. yabai/skhd
+3. neovim/vim/neovide
+4. emacs
+5. ranger
+6. IdeaVim (intellij)
 
 ## Installation
 
