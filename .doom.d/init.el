@@ -1,10 +1,5 @@
 ;;; init.el -*- lexical-binding: t; -*-
 
-;;for benchmarking purposes
-(when doom-debug-p
-  (require 'benchmark-init)
-  (add-hook 'doom-first-input-hook #'benchmark-init/deactivate))
-
 ;; This file controls what Doom modules are enabled and what order they load
 ;; in. Remember to run 'doom sync' after modifying it!
 
@@ -42,9 +37,9 @@
        ;;fill-column       ; a `fill-column' indicator
        hl-todo           ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
        ;;hydra
-       indent-guides     ; highlighted indent columns
+       ;;indent-guides     ; highlighted indent columns
        (ligatures +extra)         ; ligatures and symbols to make your code pretty again
-       minimap           ; show a map of the code on the side
+       ;;minimap           ; show a map of the code on the side
        modeline
        ;;nav-flash         ; blink cursor line after big motions
        ;;neotree           ; a project drawer, like NERDTree for vim
@@ -109,7 +104,7 @@
        (magit +forge)             ; a git porcelain for Emacs
        ;;make              ; run make tasks from Emacs
        ;;pass              ; password manager for nerds
-       pdf               ; pdf enhancements
+       ;;pdf               ; pdf enhancements
        ;;prodigy           ; FIXME managing external services & code builders
        ;;rgb               ; creating color strings
        ;;taskrunner        ; taskrunner for all your projects
@@ -154,7 +149,7 @@
        (latex +lsp)             ; writing papers in Emacs has never been so fun
        ;;lean              ; for folks with too much to prove
        ;;ledger            ; be audit you can be
-       (lua +lsp)               ; one-based indices? one-based indices
+       lua               ; one-based indices? one-based indices
        markdown          ; writing docs for people to ignore
        ;;nim               ; python + lisp at the speed of c
        ;;nix               ; I hereby declare "nix geht mehr!"
@@ -168,7 +163,7 @@
        ;;php               ; perl's insecure younger brother
        ;;plantuml          ; diagrams for confusing people more
        ;;purescript        ; javascript, but functional
-       (python +lsp +pyright)            ; beautiful is better than ugly
+      (python +lsp +pyright)            ; beautiful is better than ugly
        ;;qt                ; the 'cutest' gui framework ever
        ;;racket            ; a DSL for DSLs
        ;;raku              ; the artist formerly known as perl6
@@ -197,7 +192,7 @@
        ;;emms
        ;;everywhere        ; *leave* Emacs!? You must be joking
        ;;irc               ; how neckbeards socialize
-       (rss +org)        ; emacs as an RSS reader
+       ;;(rss +org)        ; emacs as an RSS reader
        ;;twitter           ; twitter client https://twitter.com/vnought
 
        :config

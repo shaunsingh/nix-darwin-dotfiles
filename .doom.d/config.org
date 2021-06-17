@@ -1,74 +1,20 @@
+
 #+title: Doom Emacs Configuration
 #+author: Shaurya Singh
 
 * Intro
-Note: half of this config is stolen from tecosaur, go look at his instead. This is trash
-
 Customising an editor can be very rewarding ... until you have to leave it.
 For years I have been looking for ways to avoid this pain.
 Then I discovered [[https://github.com/cknadler/vim-anywhere][vim-anywhere]]. The issue is
 
-1. I use neovim, not vim.
-2. Even if I found a neovim alternative, you can't do everything.
+1. I switched to neovim, not vim.
+2. Firenvim is only for browsers
+3. Even if I found a neovim alternative, you can't do everything.
 
 I wanted everything, in one place. Hence why I (mostly) switched to  emacs.
 
 This was enough for me to install Emacs, but I soon learned there are [[https://github.com/remacs/remacs#why-emacs][far more
 compelling reasons]] to keep using it.
-
-I tried out the =spacemacs= distribution a bit, but it wasn't quite to my liking.
-Then I heard about =doom emacs= and thought I may as well give that a try.
-
-** Why Emacs?
-(right now stolen from tecosaurs config, I'll fix it later)
-Emacs is [[https://www.eigenbahn.com/2020/01/12/emacs-is-no-editor][not a text editor]], this is a common misnomer. It is far more apt to
-describe Emacs as /a Lisp machine providing a generic user-centric text
-manipulation environment/. That's quite a mouthful.
-In simpler terms one can think of Emacs as a platform for text-related
-applications. It's a vague and generic definition because Emacs itself is
-generic.
-
-Good with text. How far does that go? A lot further than one initially thinks:
-+ [[https://orgmode.org/][Task planning]]
-+ [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Dired.html][File management]]
-+ [[https://github.com/akermu/emacs-libvterm][Terminal emulation]]
-+ [[https://www.djcbsoftware.nl/code/mu/mu4e.html][Email client]]
-+ [[https://www.gnu.org/software/tramp/][Remote server tool]]
-+ [[https://magit.vc/][Git frontend]]
-+ Web [[https://github.com/pashky/restclient.el][client]]/[[https://github.com/skeeto/emacs-web-server][server]]
-+ and more...
-
-Ideally, one may use Emacs as /the/ interface to perform =input → transform →
-output= cycles, i.e. form a bridge between the human mind and information
-manipulation.
-
-*** The enveloping editor
-Emacs allows one to do more in one place than any other application. Why is this
-good?
-+ Enables one to complete tasks with a consistent, standard set of keybindings,
-  GUI and editing methods --- learn once, use everywhere
-+ Reduced context-switching
-+ Compressing the stages of a project --- a more centralised workflow can progress
-  with greater ease
-+ Integration between tasks previously relegated to different applications, but
-  with a common subject --- e.g. linking to an email in a to-do list
-
-Emacs can be thought of as a platform within which various elements of your
-workflow may settle, with the potential for rich integrations between them --- a
-/life/ IDE if you will.
-
-Today, many aspects of daily computer usage are split between different
-applications which act like islands, but this often doesn't mirror how we
-/actually use/ our computers. Emacs, if one goes down the rabbit hole, can give
-users the power to bridge this gap.
-
-** Notes for the unwary adventurer
-If you like the look of this, that's marvellous, and I'm really happy that I've
-made something which you may find interesting, however:
-#+begin_warning
-This config is /insidious/. Copying the whole thing blindly can easily lead to
-undesired effects. I recommend copying chunks instead.
-#+end_warning
 
 * Basic Configuration
 Make this file run (slightly) faster with lexical binding
@@ -80,7 +26,7 @@ Sometimes I run into issue where there are two compiled versions for one file. T
 #+begin_src elisp
 ;;If there are two files for a plugin, load the newer one
 (setq load-prefer-newer t)
-#+end_src 
+#+end_src
 
 I also don't want to compile my org config every time I make a change. Lets fix that
 #+begin_src elisp
@@ -93,19 +39,24 @@ Of course we need to tell emacs who I am
 ;;personal info
 (setq user-full-name "Shaurya Singh"
       user-mail-address "shaunsingh0207@gmail.com")
-#+end_src 
-
+#+end_src
+** Shell
+I use the fish shell. If you use zsh/bash, be sure to change this
+#+begin_src elisp
+(setq explicit-shell-file-name (executable-find "fish"))
+(setq vterm-shell (executable-find "fish"))
+#+end_src
 ** Fonts
-I like the apple fonts for programming, so I'll go with SF Mono. I prefer a rounder font for plain text, so I'll go with Roboto Mono for that. I have a retina display as well, so lets keep the fonts light. 
+I like the apple fonts for programming, so I'll go with SF Mono. I prefer a rounder font for plain text, so I'll go with Roboto Mono for that. I have a retina display as well, so lets keep the fonts light.
 #+begin_src elisp
 ;;fonts
-(setq doom-font (font-spec :family "SF Mono" :size 13 :weight 'light)
+(setq doom-font (font-spec :family "SF Mono" :size 14 :weight 'light)
       doom-big-font (font-spec :family "SF Mono" :size 20 :weight 'light)
-      doom-variable-pitch-font (font-spec :family "Roboto Mono" :size 14 :weight 'light)
+      doom-variable-pitch-font (font-spec :family "Roboto Mono" :size 15 :weight 'light)
       doom-unicode-font (font-spec :family "SF Mono":weight 'light)
-      ivy-posframe-font (font-spec :family "SF Mono" :size 13.5 :weight 'light)
+      ivy-posframe-font (font-spec :family "SF Mono" :size 14.5 :weight 'light)
       doom-serif-font (font-spec :family "Roboto Mono" :weight 'light))
-#+end_src 
+#+end_src
 
 For mixed pitch, I would go with something proportional. +I like alegreya, so lets go with that+ actually I decided that I have a deep hatred of proportional fonts and went with Roboto Mono anyways
 
@@ -138,45 +89,37 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
     (interactive)
     (let ((mixed-pitch-face 'variable-pitch-serif))
       (mixed-pitch-mode (or arg 'toggle)))))
-      
+
 ;;add the few missing Alegreya Nerd Font ligatures
 (set-char-table-range composition-function-table ?f '(["\\(?:ff?[fijlt]\\)" 0 font-shape-gstring]))
 (set-char-table-range composition-function-table ?T '(["\\(?:Th\\)" 0 font-shape-gstring]))
-#+end_src 
+#+end_src
 
 #+RESULTS:
 | [\(?:Th\) 0 font-shape-gstring] |
 
 ** Themes
-I. Love. Themes. Which is why I have so many. I switch between themes pretty often, so lets just leave them all here for now and uncomment the ones I need
+I prefer to sync my colorscheme with that of my system. Doom-light for light mode, nord for dark mode
 #+begin_src elisp
-;;doom themes
-;(setq doom-theme 'doom-one-light)
-;(setq doom-theme 'doom-one)
-;(setq doom-theme 'doom-vibrant)
-;;light themes
-;(setq doom-theme 'doom-flatwhite)
-;(setq doom-theme 'doom-solarized-light)
-;;dark themes
-;(setq doom-theme 'doom-solarized-dark)
-;(setq doom-theme 'doom-horizon)
-;(setq doom-theme 'doom-moonlight)
-;(setq doom-theme 'doom-xcode)
 (setq doom-theme 'doom-nord)
+;;(setq doom-nord-brighter-modeline t)
+(setq doom-nord-padded-modeline t)
 #+end_src
 
 ** Better Defaults
-The defaults for emacs aren't so good nowadays. Lets fix that up a bit 
+The defaults for emacs aren't so good nowadays. Lets fix that up a bit
 #+begin_src elisp
 (setq undo-limit 80000000                          ;I mess up too much
       evil-want-fine-undo t                        ;By default while in insert all changes are one big blob. Be more granular
       scroll-margin 2                              ;having a little margin is nice
       auto-save-default t)                         ;I dont like to lose work
+
 (setq org-startup-with-inline-images t)            ;inline images in org mode
 (setq truncate-string-ellipsis "…")        ;default ellipses suck
 (setq-default delete-by-moving-to-trash t) ;delete to system trash instead
 (add-to-list 'default-frame-alist '(inhibit-double-buffering . t)) ;;stops flickering
 (setq-default x-stretch-cursor t)          ;make the cursor the size of the char under it (tabs)
+(setq browse-url-browser-function 'xwidget-webkit-browse-url) ;use xwidgets as my broweser
 (setq display-line-numbers-type t) ;; line numbers
 #+end_src
 
@@ -188,33 +131,35 @@ I like fancy ligatures in org mode, so lets enable that as well
 
 Fundemental mode doesn't make much sense either, default should be the superior org mode
 #+begin_src emacs-lisp
-;; (setq-default major-mode 'org-mode)
+(setq-default major-mode 'org-mode)
 #+end_src
 
-I tried to disable antialiasing, but the results are subpar. Ill leave it commented out for now 
+I tried to disable antialiasing, but the results are subpar. Ill leave it commented out for now
 #+begin_src elisp
 ;;disable antialiasing
 ;;(setq-default mac-allow-anti-aliasing nil)
 #+end_src
 
-I think the defualt thicc toolbar looks quite nice on macOS. Lets keep that enabled against dooms will
+I think the defualt thick toolbar looks quite nice on macOS. Lets keep that enabled against dooms will
 #+begin_src elisp
 ;;enable toolbar
 (tool-bar-mode 1)
 #+end_src
 
-I like transparency, but it doesn't look too good. for now lets leave it commented out
+I like transparency. Emacs transparency is a bit annoying (it blurs everything), but I'll leave it enabled for now
 #+begin_src elisp
 ;;transparency
 ;;(set-frame-parameter (selected-frame) 'alpha '(92 92))
 ;;(add-to-list 'default-frame-alist '(alpha 92 92))
 #+end_src
 
-Usually I would tell emacs to fullscreen as well, but yabai handles this 
-#+begin_src elisp 
+Usually I would tell emacs to fullscreen as well, but yabai handles this
+#+begin_src elisp
+(setq frame-resize-pixelwise t)
+(setq split-width-threshold nil)
 ;;set emacs to fullscreen (i'm already using a wm)
-;;(add-to-list 'default-frame-alist '(fullscreen . fullboth))
-;;(setq ns-use-native-fullscreen t)
+(add-to-list 'default-frame-alist '(fullscreen . fullboth))
+(setq ns-use-native-fullscreen t)
 #+end_src
 
 The default bindings of doom are pretty good. I'm not so good with motions though, so lets make life easier with avy
@@ -225,36 +170,37 @@ The default bindings of doom are pretty good. I'm not so good with motions thoug
 (map! :leader
       :desc "hop to line"
       "l" #'avy-goto-line)
+(after! evil
+  (map! :nmv ";" #'evil-ex))
 #+end_src
 
-While we're at it, lets make emacs scroll by visual lines instead of actual ones, so its much easier to work with wrapsjkA
+While we're at it, lets make emacs scroll by visual lines instead of actual ones, so its much easier to work with wraps
 #+begin_src elisp
-(use-package evil-better-visual-line
-  :ensure t
+(use-package! evil-better-visual-line
   :config
   (evil-better-visual-line-on))
 #+end_src
 
-When im doing regexes, its usually with /g anyways, lets make that the default 
+When im doing regexes, its usually with /g anyways, lets make that the default
 #+begin_src elisp
 ;; Implicit /g flag on evil ex substitution, because I less often want the default behavior.
 (setq evil-ex-substitute-global t)
 #+end_src
 
-Doom looks much cleaner with the dividers removed. Not sure why it isn't the default honestly 
-#+begin_src elisp 
+Doom looks much cleaner with the dividers removed. Not sure why it isn't the default honestly
+#+begin_src elisp
 ;;disable line dividers
 (custom-set-faces!
   `(vertical-border :background ,(doom-color 'bg) :foreground ,(doom-color 'bg)))
-#+end_src 
+#+end_src
 
-I don't like seeing the cursorline, especialy while writing. Lets disable that
+I don't like seeing the cursorline, especially while writing. Lets disable that
 #+begin_src elisp
 ;;disable cursorline
 (remove-hook 'doom-first-buffer-hook #'global-hl-line-mode)
 #+end_src
 
-Doom has a weird bug with emacs-plus where the cursor will just turn white on a light theme. Lets fix that
+Doom has a weird bug with emacs-plus where the cursor will just turn white on a light theme. Lets fix that.
 #+begin_src elisp
 ;;fixes cursorbug for the time being
 (defadvice! fix-+evil-default-cursor-fn ()
@@ -265,13 +211,12 @@ Doom has a weird bug with emacs-plus where the cursor will just turn white on a 
   (evil-set-cursor-color (face-foreground 'warning)))
 #+end_src
 
-I like using the minimap, even if its slow. Looks cool in my opinion. Anyways, lets make it a little cooler by removing the scroll highlighting
+I like using the minimap, even if its slow. Looks cool in my opinion, lets make it a little cooler by removing the scroll highlighting
 #+begin_src elisp
 ;;make minimap transparent
 (setq minimap-highlight-line nil)
 (custom-set-faces!
   `(minimap-active-region-background :background unspecified))
-;;minimap on startup (big performance hit)
 #+end_src
 
 I used to have the minimap on all the time, but performance was terrible. By popular demand, ill keep it disabled on start
@@ -282,12 +227,12 @@ I used to have the minimap on all the time, but performance was terrible. By pop
 ** Visual configuration
 
 Treemacs is a bit big for my tastes, lets make it a tad bit thinner. Lets use the doom theme to style it as well
-#+begin_src elisp 
+#+begin_src elisp
 ;;make treemacs thinner
 (setq treemacs-width 23)
 ;;set treemacs to use the theme
 (setq doom-themes-treemacs-theme "doom-colors")
-#+end_src 
+#+end_src
 
 Doom modeline already looks good, but it can be better. Lets add some icons, the battery status, and make sure we don't lose track of time
 #+begin_src elisp
@@ -299,7 +244,7 @@ Doom modeline already looks good, but it can be better. Lets add some icons, the
 (setq doom-modeline-modal-icon t)
 #+end_src
 
-The encoding is always UTF-8, so its a bit redundant. Lets take that out 
+The encoding is always UTF-8, so its a bit redundant. Lets take that out
 #+begin_src elisp
 (defun doom-modeline-conditional-buffer-encoding ()
   "We expect the encoding to be LF UTF-8, so only show the modeline when this is not the case"
@@ -311,54 +256,54 @@ The encoding is always UTF-8, so its a bit redundant. Lets take that out
 (add-hook 'after-change-major-mode-hook #'doom-modeline-conditional-buffer-encoding) ;;remove encoding
 #+end_src
 
-Centaur tabs look pretty good out of the box. I like to keep inactive panes grey, so lets make inactive tabs grey as well
-#+begin_src
-;;tabs
-(setq centaur-tabs-gray-out-icons 'buffer)
+Centaur tabs look pretty good out of the box. I like to keep inactive panes grey, so lets make inactive tabs grey as well. I don't see the point in having tabs if theres only one buffer, so lets disable that with a hacky script
+#+begin_src elisp
+(defun centaur-tabs-get-total-tab-length ()
+  (length (centaur-tabs-tabs (centaur-tabs-current-tabset))))
+
+(defun centaur-tabs-hide-on-window-change ()
+  (run-at-time nil nil
+               (lambda ()
+                 (centaur-tabs-hide-check (centaur-tabs-get-total-tab-length)))))
+
+(defun centaur-tabs-hide-check (len)
+  (shut-up
+    (cond
+     ((and (= len 1) (not (centaur-tabs-local-mode))) (call-interactively #'centaur-tabs-local-mode))
+     ((and (>= len 2) (centaur-tabs-local-mode)) (call-interactively #'centaur-tabs-local-mode)))))
+
+(use-package! centaur-tabs
+  :config
+  (centaur-tabs-mode t)
+  (setq centaur-tabs-gray-out-icons 'buffer)
+  (add-hook 'window-configuration-change-hook 'centaur-tabs-hide-on-window-change))
 #+end_src
 
 ** Ivy, Lsp, and Company
 
 Ivy takes forever to load. Defering it means I gain startuptime but it takes longer to pull up the search.
 #+begin_src elisp
-(use-package ivy
+(use-package! ivy
   :defer t)
-(use-package ivy-posframe
+(use-package! ivy-posframe
   :defer t)
 #+end_src
 
-I want to have ivy ask me what file I want to see after creating a split. Lets adjust the ivy search a bit, and put it at the top
+Lets adjust the ivy search a bit, and put it at the top
 #+begin_src elisp
-;;ask which buffer to see after splitting, let ivy handle it
-(setq evil-vsplit-window-right t
-      evil-split-window-below t)
-(defadvice! prompt-for-buffer (&rest _)
-  :after '(evil-window-split evil-window-vsplit)
-  (+ivy/switch-buffer))
-(setq +ivy-buffer-preview t)
-;;completion ivy
-(after! ivy
-   ;;I prefer search matching to be ordered; it's more precise
-  (add-to-list 'ivy-re-builders-alist '(counsel-projectile-find-file . ivy--regex-plus)))
-
-;;ivy center top
 (after! ivy-posframe
+;;(setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center))))
 (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-top-center))))
+;;(setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-center))))
 #+end_src
 
 The default lsp config is nice, but has a few invasive features we can disable. Lets set up the java LSP as well
 #+begin_src elisp
 
-(use-package company
-  :defer t)
-
-;;yasnippet
-(setq yas-triggers-in-field t) ;;nested snippets
-
-;;tell company to always do autocomplete
+;;tell company to only complete manually
 (after! company
-  (setq company-idle-delay 0.4
-        company-dabbrev-downcase 0))
+  (setq company-idle-delay nil
+        company-show-numbers t))
 (set-company-backend!
   '(text-mode
     markdown-mode
@@ -368,18 +313,64 @@ The default lsp config is nice, but has a few invasive features we can disable. 
     company-ispell
     company-files))
 
-;;improve by remembering history
-(setq-default history-length 1000)
-(setq-default prescient-history-length 1000)
+(use-package! lsp-ui
+  :hook (lsp-mode . lsp-ui-mode)
+  ;;:init
+  ;;(setq lsp-ui-doc-use-webkit t)
+  :config
+  (setq lsp-ui-sideline-enable nil; not anymore useful than flycheck
+        lsp-ui-doc-enable t; slow and redundant with K
+        lsp-ui-doc-delay 2
+        lsp-ui-doc-header nil
+        lsp-ui-doc-include-signature nil
+        lsp-ui-doc-position 'at-point
+        lsp-ui-doc-alignment 'window
+        lsp-enable-symbol-highlighting nil))
 
-;; Disable invasive lsp-mode features
-(setq lsp-ui-sideline-enable nil   ; not anymore useful than flycheck
-      lsp-ui-doc-enable nil        ; slow and redundant with K
-      lsp-enable-symbol-highlighting nil)
+(setq-default lsp-ui-doc-frame-parameters
+                '((left . -1)
+                  (top . -1)
+                  (no-accept-focus . t)
+                  (min-width . 0)
+                  (width . 0)
+                  (min-height . 0)
+                  (height . 0)
+                  (internal-border-width . 0)
+                  (vertical-scroll-bars)
+                  (horizontal-scroll-bars)
+                  (left-fringe . 0)
+                  (right-fringe . 0)
+                  (menu-bar-lines . 0)
+                  (tool-bar-lines . 0)
+                  (line-spacing . 0.1)
+                  (unsplittable . t)
+                  (undecorated . t)
+                  (minibuffer . nil)
+                  (visibility . nil)
+                  (mouse-wheel-frame . nil)
+                  (no-other-frame . t)
+                  (cursor-type)
+                  (no-special-glyphs . t)))
+
+
+(custom-set-faces!
+  `(lsp-ui-doc-background :background ,(doom-color 'bg-alt)))
 
 ;;java home for java-lsp
 (setenv "JAVA_HOME"  "/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home")
 (setq lsp-java-java-path "/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home/bin/java")
+#+end_src
+
+** Python/jupyter
+EIN is slow, use use-package
+#+begin_src elisp
+(use-package! ein)
+#+end_src
+
+Lets change it so it looks half decent too
+#+begin_src elisp
+(custom-set-faces!
+  `(ein:cell-input-area :background ,(doom-color 'base3)))
 #+end_src
 
 ** Splash screen
@@ -589,17 +580,16 @@ the modeline and ~hl-line-mode~, then also hide the cursor.
 
 Org mode is the best writing format, no contest. The defaults are more terminal-oriented, so lets make it look a little better
 
-I like a little padding on my org blocks, just a millimeter or two on the top and bototm should do 
+I like a little padding on my org blocks, just a millimeter or two on the top and bottom should do
 #+begin_src elisp
 ;;add padding in org
-(use-package org-padding
-  :ensure t)
+(use-package! org-padding)
 (add-hook 'org-mode-hook #'org-padding-mode)
 (setq org-padding-block-begin-line-padding '(1.15 . 0.15))
 (setq org-padding-block-end-line-padding '(1.15 . 0.15))
 #+end_src
 
-org-ref is an awesome package, so lets get that set up as well
+Org-ref is an awesome package, so lets get that set up as well
 #+begin_src elisp
 ;;make references much easier
 (use-package! org-ref
@@ -633,8 +623,8 @@ org-ref is an awesome package, so lets get that set up as well
           (org-ref-open-bibtex-pdf))))))
 #+end_src
 
-I prefer /.org instead of just /org as my directory. Lets change some other defaults too 
-#+begin_src elisp 
+I prefer /.org instead of just /org as my directory. Lets change some other defaults too
+#+begin_src elisp
 ;;org directory
 (setq org-directory "~/.org"                      ; let's put files here
       org-use-property-inheritance t              ; it's convenient to have properties inherited
@@ -648,6 +638,27 @@ I prefer /.org instead of just /org as my directory. Lets change some other defa
 Lets add some spellcheck
 #+begin_src ellipses
 (add-hook 'org-mode-hook 'turn-on-flyspell)
+#+end_src
+
+*** Markdown
+Even though markdown is crap, I still need to use it. Lets make it bearable
+#+begin_src elisp
+(use-package! ox-gfm
+  :after org)
+
+(add-hook! (gfm-mode markdown-mode) #'visual-line-mode #'turn-off-auto-fill)
+
+(custom-set-faces!
+  '(markdown-header-face-1 :height 1.25 :weight extra-bold :inherit markdown-header-face)
+  '(markdown-header-face-2 :height 1.15 :weight bold       :inherit markdown-header-face)
+  '(markdown-header-face-3 :height 1.08 :weight bold       :inherit markdown-header-face)
+  '(markdown-header-face-4 :height 1.00 :weight bold       :inherit markdown-header-face)
+  '(markdown-header-face-5 :height 0.90 :weight bold       :inherit markdown-header-face)
+  '(markdown-header-face-6 :height 0.75 :weight extra-bold :inherit markdown-header-face))
+#+end_src
+Lets add a markdown preview as well, using xwidgets
+#+begin_src elisp
+(use-package! grip-mode)
 #+end_src
 
 ** Writeroom
@@ -716,14 +727,14 @@ tweaks. Namely:
 I'm a big fan of limelight for neovim, Lets get in on some of that action with focus
 #+begin_src elisp
 ;;limelight-like focus mode
-(use-package focus
+(use-package! focus
   :commands focus-mode
   :config
   (add-to-list 'focus-mode-to-thing '(org-mode . paragraph)))
 #+end_src
 
-I have to export files pretty often, lets setup some keybindings to make it easier 
-#+begin_src elisp 
+I have to export files pretty often, lets setup some keybindings to make it easier
+#+begin_src elisp
 ;;spc+v = view exported file
 (map! :map org-mode-map
       :localleader
@@ -744,7 +755,7 @@ I have to export files pretty often, lets setup some keybindings to make it easi
     (if output-file
         (if (member (file-name-extension output-file) org-view-external-file-extensions)
             (browse-url-xdg-open output-file)
-          (pop-to-buffer (or (find-buffer-visiting output-file)
+          (pop-to-bufferpop-to-buffer (or (find-buffer-visiting output-file)
                              (find-file-noselect output-file))))
       (message "No exported file found"))))
 
@@ -752,7 +763,7 @@ I have to export files pretty often, lets setup some keybindings to make it easi
   "Search for output files with these extensions, in order, viewing the first that matches")
 (defvar org-view-external-file-extensions '("html")
   "File formats that should be opened externally.")
-#+end_src 
+#+end_src
 
 ** Font Display
 Mixed pitch is great. As is ~+org-pretty-mode~, let's use them.
@@ -782,7 +793,7 @@ And the same with the title.
 It seems reasonable to have deadlines in the error face when they're passed.
 #+begin_src emacs-lisp
 (setq org-agenda-deadline-faces
-      '((1.001 . error)
+      '((1.0 . error)
         (1.0 . org-warning)
         (0.5 . org-upcoming-deadline)
         (0.0 . org-upcoming-distant-deadline)))
@@ -1029,22 +1040,22 @@ Must be run as part of `org-font-lock-set-keywords-hook'."
 
 ** Latex
 
-I like latex. Looks awesome and I get to be lazy, but it can be better. 
+I like latex. Looks awesome and I get to be lazy, but it can be better.
 
-First of all, lets use pdf-tools to preview pdfs by defaults 
+First of all, lets use pdf-tools to preview pdfs by defaults
 #+begin_src elisp
 ;;use pdf-tools (with backups)
 (setq +latex-viewers '(pdf-tools evince zathura okular skim sumatrapdf))
 #+end_src
 
-I want to preview all my latex by default. 
+I want to preview all my latex by default.
 #+begin_src elisp
 ;;start with latex preview
 (after! org (setq org-startup-with-latex-preview t)
   (plist-put org-format-latex-options :background "Transparent"))
 #+end_src
 
-+I want my latex to be the same size as the rest of my text+ -This was fixed a while back. If it gives issues, just uncomment the line 
++I want my latex to be the same size as the rest of my text+ -This was fixed a while back. If it gives issues, just uncomment the line
 #+begin_src elisp
 ;;this was fixed recently, enable if you have issues
 ;;(plist-put org-format-latex-options :scale 1)) ;make latex size the same as others
@@ -1056,7 +1067,7 @@ I prefer svgs to pngs. It takes a little more time, but scales better on HiDPI d
 (setq org-preview-latex-default-process 'dvisvgm)
 #+end_src
 
-Obviously we can't edit a png though. Let use org-fragtog to toggle between previews and text mode 
+Obviously we can't edit a png though. Let use org-fragtog to toggle between previews and text mode
 #+begin_src elisp
 ;;required for fragtog
 (require 'org-src)
@@ -1068,7 +1079,7 @@ Obviously we can't edit a png though. Let use org-fragtog to toggle between prev
   :hook (org-mode . org-fragtog-mode))
 #+end_src
 
-Here's just my private LaTeX config. 
+Here's just my private LaTeX config.
 #+begin_src elisp
 (setq org-format-latex-header "\\documentclass{article}
 \\usepackage[usenames]{xcolor}

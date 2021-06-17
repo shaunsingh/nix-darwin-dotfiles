@@ -13,6 +13,9 @@ require('packer').startup(function()
   --packer can manage itself
   use "wbthomason/packer.nvim"
 
+  --profiling
+  use 'dstein64/vim-startuptime'
+
   --statusline, tabline, icons, tree, startmenu
   use {'hoob3rt/lualine.nvim', requires = {'kyazdani42/nvim-web-devicons', opt = true}}
   use {'akinsho/nvim-bufferline.lua', requires = 'kyazdani42/nvim-web-devicons'}
@@ -79,7 +82,7 @@ local cmd = vim.cmd
 local g = vim.g
 
 --gui
---g.neovide_fullscreen = true
+g.neovide_fullscreen = true
 --g.neovide_cursor_antialiasing=true
 --g.neovide_cursor_vfx_mode = "pixiedust"
 --neovide_cursor_animation_length = 0.05,
@@ -260,7 +263,7 @@ endif
 endfunc
 ]], false)
 
---bufferilne
+--bufferline
 local bg = "#2e3440"
 local bg2 = "#3b4252"
 local bg3 = "#282c34"
@@ -276,7 +279,7 @@ local accent3 = "#EBCB8B" -- Not saved
     -- and so changing this is NOT recommended, this is intended
     -- as an escape hatch for people who cannot bear it for whatever reason
     indicator_icon = '▎',
-    buffer_close_icon = '',
+    buffer_close_icon = '',
     modified_icon = '●',
     close_icon = '',
     left_trunc_marker = '',
@@ -292,13 +295,13 @@ local accent3 = "#EBCB8B" -- Not saved
     },
     show_buffer_icons = true, -- disable filetype icons for buffers
     show_buffer_close_icons = true,
-    show_close_icon = true,
+    show_close_icon = false,
     show_tab_indicators = true,
     persist_buffer_sort = false, -- whether or not custom sorted buffers should persist
     -- can also be a table containing 2 custom separators
     -- [focused and unfocused]. eg: { '|', '|' }
     separator_style = "thin",
-    enforce_regular_tabs = true,
+    enforce_regular_tabs = false,
     always_show_bufferline = true,
     sort_by = 'directory'
     },
@@ -359,9 +362,9 @@ local accent3 = "#EBCB8B" -- Not saved
             guibg = bg
         }
     }
+}
 
-
-}--indentline
+--indentline
 g.indentLine_enabled = 1
 g.indent_blankline_char = "|"
 g.indent_blankline_filetype_exclude = {"help", "terminal", "dashboard"}
@@ -369,6 +372,9 @@ g.indent_blankline_buftype_exclude = {"terminal"}
 g.indent_blankline_show_trailing_blankline_indent = false
 g.indent_blankline_show_first_indent_level = false
 g.indent_blankline_use_treesitter = true
+
+--terminal
+vim.api.nvim_exec([[autocmd TermOpen * setlocal nonumber norelativenumber]], false)
 
 --goyo
 vim.api.nvim_exec([[
@@ -1141,10 +1147,13 @@ vim.api.nvim_exec([[
 ]], false)
 
 vim.g.dashboard_custom_section = {
-  a = {description = {'DOOM - its evil '}, command = 'qa!'},
+  a = {description = {'DOOM - Its EVIL'}, command = 'qa!'},
 }
 
 --vim.g.dashboard_custom_header = {
+       --"                                                                    ",
+       --"                                                                    ",
+       --"                                                                    ",
        --"                                                                    ",
        --"            :h-                                  Nhy`               ",
        --"           -mh.                           h.    `Ndho               ",
@@ -1202,4 +1211,4 @@ vim.g.dashboard_custom_header = {
                   "\\   _-'                                                                `-_   /",
                   " `''                                                                      ``'  ",
                   "                                                                               ",
- }
+}
