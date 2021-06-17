@@ -88,6 +88,9 @@ doom sync -u
 echo "Installing and syncing Neovim"
 nvim --headless +PackerSync +qa
 
+echo "Syncing vim"
+vim -es -u vimrc -i NONE -c "PlugInstall" -c "qa"
+
 echo "grabbing wallpapers"
 cp -R wallpapers ~
 
