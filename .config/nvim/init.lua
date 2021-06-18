@@ -170,7 +170,8 @@ opt('o', 'showmode', false )
 opt('o', 'background', 'dark' )
 opt('o', 'backup', false )
 opt('o', 'updatetime', 100)
-opt('w', 'number', true)                              -- Print line number
+--opt('w', 'number', true)                              -- Print line number
+opt('w', 'number', false)                              -- Print line number
 --opt('w', 'relativenumber', true)                              -- Print line number
 opt('o', 'lazyredraw', true)
 opt('o', 'signcolumn', 'yes')

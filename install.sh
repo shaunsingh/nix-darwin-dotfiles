@@ -73,15 +73,6 @@ cp -R .doom.d ~
 cp -R .vim ~
 cp .zshrc .skhdrc .yabairc .ideavimrc .vimrc .gitconfig ~
 
-echo "Installing EAF"
-brew install git-lfs 
-git lfs install
-git clone --depth=1 -b master https://github.com/manateelazycat/emacs-application-framework.git ~/.emacs.d/site-lisp/emacs-application-framework/
-
-cd ~/.emacs.d/site-lisp/emacs-application-framework/
-chmod +x ./install-eaf-mac.sh
-./install-eaf-mac.sh
-
 echo "Syncing emacs"
 doom sync
 

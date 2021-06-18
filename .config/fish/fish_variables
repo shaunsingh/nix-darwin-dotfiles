@@ -29,4 +29,4 @@ SETUVAR fish_pager_color_completion:normal
 SETUVAR fish_pager_color_description:B3A06D\x1eyellow
 SETUVAR fish_pager_color_prefix:white\x1e\x2d\x2dbold\x1e\x2d\x2dunderline
 SETUVAR fish_pager_color_progress:brwhite\x1e\x2d\x2dbackground\x3dcyan
-SETUVAR fish_user_paths:/opt/homebrew/sbin\x1e/usr/local/bin\x1e/opt/homebrew/bin
+SETUVAR fish_user_paths:/opt/homebrew/bin/brew\x1e/opt/homebrew/bin\x1e/opt/homebrew/sbin\x1e/opt/homebrew/bin/brew
