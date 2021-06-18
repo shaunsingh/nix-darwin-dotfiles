@@ -59,7 +59,7 @@ sudo tlmgr install dvipng dvisvgm l3packages xcolor soul adjustbox collectbox am
 #Clone bar into default Übersicht location
 echo "installing bar"
 brew install --cask ubersicht
-git clone --depth 1 https://github.com/zzzeyez/pecan.git "$HOME/Library/Application Support/Übersicht/widgets/pecan"
+git clone --depth 1 https://github.com/shaunsingh/zenbar $HOME/Library/Application\ Support/Übersicht/widgets/zenbar
 cd vimrc-dotfiles
 
 #Clone Dotfile Repo
