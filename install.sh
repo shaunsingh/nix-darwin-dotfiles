@@ -60,6 +60,8 @@ sudo tlmgr install dvipng dvisvgm l3packages xcolor soul adjustbox collectbox am
 echo "installing bar"
 brew install --cask ubersicht
 git clone --depth 1 https://github.com/shaunsingh/zenbar $HOME/Library/Application\ Support/Übersicht/widgets/zenbar
+defaults write NSGlobalDomain _HIHideMenuBar -bool true
+defaults write com.apple.dock autohide -bool true
 cd vimrc-dotfiles
 
 #Clone Dotfile Repo
@@ -86,6 +88,9 @@ cd ~vimrc-dotfiles
 cp -R wallpapers ~
 
 echo "Cleanup"
+killall Finder
+killall Dock
+osascript -l JavaScript -e "Application('System Events').appearancePreferences.darkMode = true"
 brew services start yabai
 brew services start skhd
 brew cleanup -s
