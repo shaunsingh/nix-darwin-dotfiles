@@ -51,3 +51,6 @@ nmap <C-h> <c-w>h
 nmap <C-l> <c-w>l
 nmap <C-k> <c-w>k
 nmap <C-j> <c-w>j
+
+let &t_SI = "\e[6 q"
+let &t_EI = "\e[2 q"

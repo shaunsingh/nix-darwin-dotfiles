@@ -40,12 +40,14 @@ Of course we need to tell emacs who I am
 (setq user-full-name "Shaurya Singh"
       user-mail-address "shaunsingh0207@gmail.com")
 #+end_src
+
 ** Shell
 I use the fish shell. If you use zsh/bash, be sure to change this
 #+begin_src elisp
 (setq explicit-shell-file-name (executable-find "fish"))
 (setq vterm-shell (executable-find "fish"))
 #+end_src
+
 ** Fonts
 I like the apple fonts for programming, so I'll go with SF Mono. I prefer a rounder font for plain text, so I'll go with Roboto Mono for that. I have a retina display as well, so lets keep the fonts light.
 #+begin_src elisp
@@ -120,7 +122,7 @@ The defaults for emacs aren't so good nowadays. Lets fix that up a bit
 (add-to-list 'default-frame-alist '(inhibit-double-buffering . t)) ;;stops flickering
 (setq-default x-stretch-cursor t)          ;make the cursor the size of the char under it (tabs)
 (setq browse-url-browser-function 'xwidget-webkit-browse-url) ;use xwidgets as my broweser
-(setq display-line-numbers-type t) ;; line numbers
+(setq display-line-numbers-type nil) ;; line numbers are slow I hate it
 #+end_src
 
 I like fancy ligatures in org mode, so lets enable that as well
@@ -149,8 +151,8 @@ I think the defualt thick toolbar looks quite nice on macOS. Lets keep that enab
 I like transparency. Emacs transparency is a bit annoying (it blurs everything), but I'll leave it enabled for now
 #+begin_src elisp
 ;;transparency
-(set-frame-parameter (selected-frame) 'alpha '(92 92))
-(add-to-list 'default-frame-alist '(alpha 92 92))
+;;(set-frame-parameter (selected-frame) 'alpha '(92 92))
+;;(add-to-list 'default-frame-alist '(alpha 92 92))
 #+end_src
 
 Usually I would tell emacs to fullscreen as well, but yabai handles this
@@ -636,7 +638,7 @@ I prefer /.org instead of just /org as my directory. Lets change some other defa
 #+end_src
 
 Lets add some spellcheck
-#+begin_src ellipses
+#+begin_src elisp
 (add-hook 'org-mode-hook 'turn-on-flyspell)
 #+end_src
 
