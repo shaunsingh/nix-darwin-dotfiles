@@ -37,7 +37,6 @@ echo "Installing Dependencies"
 brew install ranger
 brew install ripgrep
 brew install aspell
-# brew install anaconda
 
 echo "Building Neovim nightly"
 brew install luajit --HEAD
@@ -89,11 +88,7 @@ cp -R wallpapers ~
 echo "Cleanup"
 brew services start yabai
 brew services start skhd
-# brew update
-# brew upgrade
 brew cleanup -s
-# cd
-# rm -R vimrc-dotfiles
 
 echo "Setting up fish"
 brew install --cask alacritty
@@ -110,9 +105,9 @@ echo "                Further User Setup                   "
 echo "-----------------------------------------------------"
 echo "                                                     "
 echo "               reboot and run (intel)                "
-echo " set -U fish_user_paths /usr/local/bin $fish_user_paths" 
+echo " set -U fish_user_paths /usr/local/bin $fish_user_paths"
 echo "                    or (arm64)                       "
-echo " set -U fish_user_paths /opt/homebrew/bin $fish_user_paths" 
+echo " set -U fish_user_paths /opt/homebrew/bin $fish_user_paths"
 echo "               to configure homebrew                  "
 echo "                                                     "
 echo "       You can copy over colors.css for pecan        "
