@@ -73,13 +73,17 @@ cp -R .doom.d ~
 cp -R .vim ~
 cp .zshrc .skhdrc .yabairc .ideavimrc .vimrc .gitconfig ~
 
-echo "Syncing emacs"
-doom sync
-
 echo "Installing EAF"
 brew install git-lfs 
 git lfs install
 git clone --depth=1 -b master https://github.com/manateelazycat/emacs-application-framework.git ~/.emacs.d/site-lisp/emacs-application-framework/
+
+cd ~/.emacs.d/site-lisp/emacs-application-framework/
+chmod +x ./install-eaf-mac.sh
+./install-eaf-mac.sh
+
+echo "Syncing emacs"
+doom sync
 
 echo "Syncing Neovim"
 nvim --headless +PackerSync +qa
@@ -88,6 +92,7 @@ echo "Syncing vim"
 vim -es -u vimrc -i NONE -c "PlugInstall" -c "qa"
 
 echo "grabbing wallpapers"
+cd ~vimrc-dotfiles
 cp -R wallpapers ~
 
 echo "Cleanup"
