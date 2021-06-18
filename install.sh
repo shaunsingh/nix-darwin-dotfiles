@@ -76,6 +76,11 @@ cp .zshrc .skhdrc .yabairc .ideavimrc .vimrc .gitconfig ~
 echo "Syncing emacs"
 doom sync
 
+echo "Installing EAF"
+brew install git-lfs 
+git lfs install
+git clone --depth=1 -b master https://github.com/manateelazycat/emacs-application-framework.git ~/.emacs.d/site-lisp/emacs-application-framework/
+
 echo "Syncing Neovim"
 nvim --headless +PackerSync +qa
 
