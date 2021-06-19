@@ -35,6 +35,8 @@ The Install script will do the following:
 9. Copy dotfiles to their recommend locations
 10. Grab wallpapers and move them to the home folder 
 
+# Old Guide
+
 ## Prerequistes
 
 On macOS, all the prequesites should be automatically installed. On linux, make sure you have a package manager, as well as git installed.
