@@ -48,9 +48,11 @@ brew install neovim --HEAD
 # mas install 1440147259
 
 echo "Install doom emacs"
-brew install emacs-plus@28 --with-xwidgets --with-native-comp --with-elrumo2-icon
+brew install emacs-plus@28 --with-mailutils --with-xwidgets --with-native-comp --with-elrumo2-icon
 git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
 ~/.emacs.d/bin/doom install
+brew install mu
+brew install isync  # mbsync
 
 echo "Installing Latex Packages"
 brew install --cask basictex
