@@ -20,13 +20,11 @@ brew tap homebrew/cask
 brew tap homebrew/bundle
 brew tap homebrew/core
 brew tap homebrew/services
-brew tap d12frosted/emacs-plus
 
 echo "Installing fonts"
 brew install --cask font-alegreya
 brew install --cask font-sf-mono
 brew install --cask font-fira-code-nerd-font
-brew install --cask font-roboto-mono-nerd-font
 
 # echo "Installing other apps"
 # brew install --cask intellij-idea
@@ -48,11 +46,13 @@ brew install neovim --HEAD
 # mas install 1440147259
 
 echo "Install doom emacs"
-brew install emacs-plus@28 --with-mailutils --with-xwidgets --with-native-comp --with-elrumo2-icon
+brew tap d12frosted/emacs-plus
+#brew install emacs-plus@28 --with-mailutils --with-xwidgets --with-native-comp --with-elrumo1-icon
+brew install emacs-plus@28 --with-xwidgets --with-native-comp --with-elrumo2-icon
 git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
 ~/.emacs.d/bin/doom install
-brew install mu
-brew install isync  # mbsync
+# brew install mu
+# brew install isync  # mbsync
 
 echo "Installing Latex Packages"
 brew install --cask basictex
