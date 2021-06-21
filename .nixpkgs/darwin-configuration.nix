@@ -2,43 +2,21 @@
 
 {
   system.defaults.NSGlobalDomain._HIHideMenuBar = true;
-
   system.defaults.dock.autohide = true;
   system.defaults.dock.showhidden = true;
-
   system.defaults.finder.AppleShowAllExtensions = true;
-  system.defaults.finder.QuitMenuItem = true;
 
   # List packages installed in system profile. To search by name, run:
   # $ nix-env -qaP | grep wget
+  
+  environment.systemPackages = with pkgs; [ vim cowsay lolcat curl git htop ripgrep neofetch alacritty starship fortune fish ranger aspell neovim-nightly emacsMacport ];
   environment.systemPackages =
-    [ config.programs.vim.package
-      pkgs.curl
-      pkgs.git
-      pkgs.htop
-      pkgs.ripgrep
-      pkgs.neofetch
 
-      pkgs.alacritty
-      pkgs.starship
-      pkgs.cowsay
-      pkgs.fortune
-      pkgs.fish
+  services = {
+    yabai.enable = true;
+    skhd.enable = true;
+  };
 
-      pkgs.ranger
-      pkgs.aspell
-      pkgs.neovim-nightly
-      pkgs.emacsMacport
-    ];
-
-  services.yabai.enable = true;
-  services.yabai.package = pkgs.yabai;
-  services.skhd.enable = true;
-  services.skhd.package = pkgs.skhd;
-
-  nix.useSandbox = true;
-  nix.sandboxPaths = [ "/private/tmp" "/private/var/tmp" "/usr/bin/env" ];
-  programs.nix-index.enable = true;
   nixpkgs.config.allowUnfree = true;
 
   nixpkgs.overlays = [
@@ -53,7 +31,7 @@
 
   # Auto upgrade nix package and the daemon service.
   # services.nix-daemon.enable = true;
-  nix.package = pkgs.nix;
+  nix.package = pkgs.nixUnstable;
 
   # Create /etc/bashrc that loads the nix-darwin environment.
   programs.zsh.enable = true;  # default shell on catalina
