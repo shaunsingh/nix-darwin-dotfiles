@@ -49,18 +49,18 @@ I use the fish shell. If you use zsh/bash, be sure to change this
 #+end_src
 
 ** Fonts
-I like the apple fonts for programming, so I'll go with SF Mono. I prefer a rounder font for plain text, so I'll go with Roboto Mono for that. I have a retina display as well, so lets keep the fonts light.
+I like the apple fonts for programming, so I'll go with SF Mono. I prefer a rounder font for plain text, so I'll go with Menlo for that. I have a retina display as well, so lets keep the fonts light.
 #+begin_src elisp
 ;;fonts
 (setq doom-font (font-spec :family "SF Mono" :size 14 :weight 'light)
       doom-big-font (font-spec :family "SF Mono" :size 20 :weight 'light)
-      doom-variable-pitch-font (font-spec :family "Roboto Mono" :size 15 :weight 'Regular)
+      doom-variable-pitch-font (font-spec :family "Menlo" :size 15 :weight 'Regular)
       doom-unicode-font (font-spec :family "SF Mono":weight 'light)
       ivy-posframe-font (font-spec :family "SF Mono" :size 14.5 :weight 'light)
-      doom-serif-font (font-spec :family "Roboto Mono" :weight 'Regular))
+      doom-serif-font (font-spec :family "Menlo" :weight 'Regular))
 #+end_src
 
-For mixed pitch, I would go with something proportional. +I like alegreya, so lets go with that+ actually I decided that I have a deep hatred of proportional fonts and went with Roboto Mono anyways
+For mixed pitch, I would go with something proportional. +I like alegreya, so lets go with that+ actually I decided that I have a deep hatred of proportional fonts and went with Menlo anyways
 
 #+begin_src elisp
 ;;mixed pitch modes
@@ -84,7 +84,7 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
     :group 'basic-faces)
   (setq mixed-pitch-set-height t)
   ;;(setq variable-pitch-serif-font (font-spec :family "Alegreya" :size 14))
-  (setq variable-pitch-serif-font (font-spec :family "Roboto Mono" :size 14))
+  (setq variable-pitch-serif-font (font-spec :family "Menlo" :size 14))
   (set-face-attribute 'variable-pitch-serif nil :font variable-pitch-serif-font)
   (defun mixed-pitch-serif-mode (&optional arg)
     "Change the default face of the current buffer to a serifed variable pitch, while keeping some faces fixed pitch."
@@ -123,6 +123,8 @@ The defaults for emacs aren't so good nowadays. Lets fix that up a bit
 (setq-default x-stretch-cursor t)          ;make the cursor the size of the char under it (tabs)
 (setq browse-url-browser-function 'xwidget-webkit-browse-url) ;use xwidgets as my broweser
 (setq display-line-numbers-type nil) ;; line numbers are slow I hate it
+
+;;(setq mac-mouse-wheel-smooth-scroll t) ;;macOS smooth scroll
 #+end_src
 
 I like fancy ligatures in org mode, so lets enable that as well
@@ -160,8 +162,8 @@ Usually I would tell emacs to fullscreen as well, but yabai handles this
 (setq frame-resize-pixelwise t)
 (setq split-width-threshold nil)
 ;;set emacs to fullscreen (i'm already using a wm)
-(add-to-list 'default-frame-alist '(fullscreen . fullboth))
-(setq ns-use-native-fullscreen t)
+;;(add-to-list 'default-frame-alist '(fullscreen . fullboth))
+;;(setq ns-use-native-fullscreen t)
 #+end_src
 
 The default bindings of doom are pretty good. I'm not so good with motions though, so lets make life easier with avy
@@ -172,6 +174,10 @@ The default bindings of doom are pretty good. I'm not so good with motions thoug
 (map! :leader
       :desc "hop to line"
       "l" #'avy-goto-line)
+#+end_src
+
+I also fine ; more intuitive than : for entering command mode
+#+begin_src elisp
 (after! evil
   (map! :nmv ";" #'evil-ex))
 #+end_src
@@ -283,20 +289,10 @@ Centaur tabs look pretty good out of the box. I like to keep inactive panes grey
 
 ** Ivy, Lsp, and Company
 
-Ivy takes forever to load. Defering it means I gain startuptime but it takes longer to pull up the search.
-#+begin_src elisp
-(use-package! ivy
-  :defer t)
-(use-package! ivy-posframe
-  :defer t)
-#+end_src
-
 Lets adjust the ivy search a bit, and put it at the top
 #+begin_src elisp
 (after! ivy-posframe
-;;(setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center))))
 (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-top-center))))
-;;(setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-center))))
 #+end_src
 
 The default lsp config is nice, but has a few invasive features we can disable. Lets set up the java LSP as well
@@ -304,7 +300,8 @@ The default lsp config is nice, but has a few invasive features we can disable. 
 
 ;;tell company to only complete manually
 (after! company
-  (setq company-idle-delay nil
+  (setq company-idle-delay 0.2
+        company-minimum-prefix-length 1
         company-show-numbers t))
 (set-company-backend!
   '(text-mode
@@ -355,12 +352,30 @@ The default lsp config is nice, but has a few invasive features we can disable. 
                   (no-special-glyphs . t)))
 
 
-(custom-set-faces!
-  `(lsp-ui-doc-background :background ,(doom-color 'bg-alt)))
+;;(custom-set-faces!
+  ;;`(lsp-ui-doc-background :background ,(doom-color 'bg-alt)))
 
 ;;java home for java-lsp
 (setenv "JAVA_HOME"  "/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home")
 (setq lsp-java-java-path "/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home/bin/java")
+#+end_src
+
+I also would like F5 to run file (similar to intellij)
+#+begin_src elisp
+(defun java-eval-nofocus ()
+  "run current program (that requires no input)"
+  (interactive)
+  (let* ((source (file-name-nondirectory buffer-file-name))
+     (out    (file-name-sans-extension source))
+     (class  (concat out ".class")))
+    (save-buffer)
+    (shell-command (format "rm -f %s && javac %s" class source))
+    (if (file-exists-p class)
+    (shell-command (format "java %s" out) "*scratch*")
+      (progn
+    (set (make-local-variable 'compile-command)
+         (format "javac %s" source))
+    (command-execute 'compile)))))
 #+end_src
 
 ** Python/jupyter
@@ -666,7 +681,7 @@ Lets add a markdown preview as well, using xwidgets
 ** Writeroom
 For starters, I think Doom is a bit over-zealous when zooming in
 #+begin_src emacs-lisp
-(setq +zen-text-scale 0.12)
+(setq +zen-text-scale 0.8)
 #+end_src
 
 Then, when using Org it would be nice to make a number of other aesthetic
@@ -1208,3 +1223,105 @@ panel.
       (switch-to-buffer "*Calculator*")
       (select-window main-window))))
 #+end_src
+
+** Emacs Anywhere
+#+begin_src elisp
+(use-package! emacs-everywhere
+  :if (daemonp)
+  :config
+  (require 'spell-fu)
+  (setq emacs-everywhere-major-mode-function #'org-mode
+        emacs-everywhere-frame-name-format "Edit ∷ %s — %s")
+  (defadvice! emacs-everywhere-raise-frame ()
+    :after #'emacs-everywhere-set-frame-name
+    (setq emacs-everywhere-frame-name (format emacs-everywhere-frame-name-format
+                                (emacs-everywhere-app-class emacs-everywhere-current-app)
+                                (truncate-string-to-width
+                                 (emacs-everywhere-app-title emacs-everywhere-current-app)
+                                 45 nil nil "…")))
+    ;; need to wait till frame refresh happen before really set
+    (run-with-timer 0.1 nil #'emacs-everywhere-raise-frame-1))
+  (defun emacs-everywhere-raise-frame-1 ()
+    (call-process "wmctrl" nil nil nil "-a" emacs-everywhere-frame-name)))
+#+end_src
+
+** ELCord
+#+begin_src elisp
+;;(setq elcord-use-major-mode-as-main-icon t
+#+end_src
+
+** ORG Plot
+Tell it to use the doom theme colors
+#+begin_src elisp
+(after! org-plot
+  (defun org-plot/generate-theme (_type)
+    "Use the current Doom theme colours to generate a GnuPlot preamble."
+    (format "
+fgt = \"textcolor rgb '%s'\" # foreground text
+fgat = \"textcolor rgb '%s'\" # foreground alt text
+fgl = \"linecolor rgb '%s'\" # foreground line
+fgal = \"linecolor rgb '%s'\" # foreground alt line
+
+# foreground colors
+set border lc rgb '%s'
+# change text colors of  tics
+set xtics @fgt
+set ytics @fgt
+# change text colors of labels
+set title @fgt
+set xlabel @fgt
+set ylabel @fgt
+# change a text color of key
+set key @fgt
+
+# line styles
+set linetype 1 lw 2 lc rgb '%s' # red
+set linetype 2 lw 2 lc rgb '%s' # blue
+set linetype 3 lw 2 lc rgb '%s' # green
+set linetype 4 lw 2 lc rgb '%s' # magenta
+set linetype 5 lw 2 lc rgb '%s' # orange
+set linetype 6 lw 2 lc rgb '%s' # yellow
+set linetype 7 lw 2 lc rgb '%s' # teal
+set linetype 8 lw 2 lc rgb '%s' # violet
+
+# palette
+set palette maxcolors 8
+set palette defined ( 0 '%s',\
+1 '%s',\
+2 '%s',\
+3 '%s',\
+4 '%s',\
+5 '%s',\
+6 '%s',\
+7 '%s' )
+"
+            (doom-color 'fg)
+            (doom-color 'fg-alt)
+            (doom-color 'fg)
+            (doom-color 'fg-alt)
+            (doom-color 'fg)
+            ;; colours
+            (doom-color 'red)
+            (doom-color 'blue)
+            (doom-color 'green)
+            (doom-color 'magenta)
+            (doom-color 'orange)
+            (doom-color 'yellow)
+            (doom-color 'teal)
+            (doom-color 'violet)
+            ;; duplicated
+            (doom-color 'red)
+            (doom-color 'blue)
+            (doom-color 'green)
+            (doom-color 'magenta)
+            (doom-color 'orange)
+            (doom-color 'yellow)
+            (doom-color 'teal)
+            (doom-color 'violet)
+            ))
+  (defun org-plot/gnuplot-term-properties (_type)
+    (format "background rgb '%s' size 1050,650"
+            (doom-color 'bg)))
+  (setq org-plot/gnuplot-script-preamble #'org-plot/generate-theme)
+  (setq org-plot/gnuplot-term-extra #'org-plot/gnuplot-term-properties))
+#+end_src 

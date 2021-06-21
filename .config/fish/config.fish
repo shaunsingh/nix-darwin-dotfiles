@@ -16,4 +16,10 @@ set -x PATH .emacs.d/bin $PATH
 set PATH $HOME/.cargo/bin $PATH
 fish_add_path /opt/homebrew/sbin
 
+# Add fenv to path
+set fish_function_path $fish_function_path ~/plugin-foreign-env/functions
+
+# Source Nix setup script
+fenv source ~/.nix-profile/etc/profile.d/nix.sh
+
 starship init fish | source

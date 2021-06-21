@@ -18,4 +18,7 @@
 ;;markdown/org preview
 (package! ox-gfm)
 (package! grip-mode)
+;;jupyter notebooks
 (package! ein)
+;;elcord
+(package! elcord)

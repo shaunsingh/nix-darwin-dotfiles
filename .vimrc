@@ -5,7 +5,6 @@ set nobackup
 set nocompatible
 set noswapfile
 set ttyfast
-set viminfo=
 set updatetime=250
 set clipboard+=unnamed
 
@@ -21,8 +20,6 @@ set noshowcmd
 set novisualbell
 "set number
 set nowrap
-set t_vb=
-set tm=500
 set mouse=a
 let &fcs='eob: '
 
@@ -35,9 +32,6 @@ set scrolloff=2
 set autoindent
 set backspace=indent,eol,start
 set colorcolumn=160
-set expandtab
-set foldcolumn=1
-set foldenable
 
 nmap ; :
 
