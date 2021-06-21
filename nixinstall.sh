@@ -9,9 +9,9 @@ read -n 1 -s -r -p "Press any key to continue"
 echo "Install Nix"
 curl -L https://nixos.org/nix/install --darwin-use-unencrypted-nix-store-volume
 
-echo "Install Nix-darwin"
-nix-build https://github.com/LnL7/nix-darwin/archive/master.tar.gz -A installer
-./result/bin/darwin-installer
+# echo "Install Nix-darwin"
+# nix-build https://github.com/LnL7/nix-darwin/archive/master.tar.gz -A installer
+# ./result/bin/darwin-installer
 
 echo "Installing Dependencies"
 nix-env -iA nixpkgs.ranger
@@ -24,7 +24,7 @@ echo "Installing Neovim nightly"
 nix-env -iA nixpkgs.neovim
 
 echo "Install doom emacs"
-nix-env -iA nixpkgs.emacsMacport
+#nix-env -iA nixpkgs.emacsMacport
 git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
 ~/.emacs.d/bin/doom install
 
