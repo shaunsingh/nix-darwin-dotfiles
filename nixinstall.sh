@@ -24,18 +24,18 @@ echo "Installing Neovim nightly"
 nix-env -iA nixpkgs.neovim
 
 echo "Install doom emacs"
-#nix-env -iA nixpkgs.emacsMacport
+nix-env -iA nixpkgs.emacsMacport
 git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
 ~/.emacs.d/bin/doom install
 
-echo "Installing Latex Packages"
-nix-env -iA nixpkgs.texlive.combined.scheme-med
+# echo "Installing Latex Packages"
+# nix-env -iA nixpkgs.texlive.combined.scheme-med
 # sudo tlmgr install dvipng dvisvgm l3packages xcolor soul adjustbox collectbox amsmath siunitx cancel mathalpha
 
 #Clone bar into default Übersicht location
 echo "installing bar"
 # brew install --cask ubersicht
-# git clone --depth 1 https://github.com/shaunsingh/zenbar $HOME/Library/Application\ Support/Übersicht/widgets/zenbar
+git clone --depth 1 https://github.com/shaunsingh/zenbar $HOME/Library/Application\ Support/Übersicht/widgets/zenbar
 defaults write NSGlobalDomain _HIHideMenuBar -bool true
 defaults write com.apple.dock autohide -bool true
 cd vimrc-dotfiles
