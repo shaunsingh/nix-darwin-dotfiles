@@ -14,7 +14,6 @@ alias neovide "/Users/shauryasingh/IdeaProjects/neovim/neovide/target/release/ne
 set -x EDITOR "nvim"
 set -x PATH .emacs.d/bin $PATH
 set PATH $HOME/.cargo/bin $PATH
-fish_add_path /opt/homebrew/sbin
 
 # Add fenv to path
 set fish_function_path $fish_function_path ~/plugin-foreign-env/functions

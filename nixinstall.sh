@@ -2,24 +2,26 @@
 
 echo " "
 echo "Warning: the following script will install multiple applications, packages, and files on your computer. Make sure to read through the file before proceding"
-echo "The script will take a while to run, as several tools need to run from source. I recommend leaving it overnight if you have a slower machine"
-echo "Alternatively, you can Install the prebuilt releases for neovim and emacs, and run the select parts of the script manually"
 echo " "
 echo " "
 read -n 1 -s -r -p "Press any key to continue"
 
 echo "Install Nix"
-sh <(curl -L https://nixos.org/nix/install) --darwin-use-unencrypted-nix-store-volume
+curl -L https://nixos.org/nix/install --darwin-use-unencrypted-nix-store-volume
+
+echo "Install Nix-darwin"
+nix-build https://github.com/LnL7/nix-darwin/archive/master.tar.gz -A installer
+./result/bin/darwin-installer
 
 echo "Installing Dependencies"
 nix-env -iA nixpkgs.ranger
 nix-env -iA nixpkgs.ripgrep
 nix-env -iA nixpkgs.aspell
+nix-env -iA nixpkgs.yabai
+nix-env -iA nixpkgs.skhd
 
 echo "Installing Neovim nightly"
-curl -LO https://github.com/neovim/neovim/releases/download/nightly/nvim-macos.tar.gz
-tar xzf nvim-macos.tar.gz
-./nvim-osx64/bin/nvim
+nix-env -iA nixpkgs.neovim
 
 echo "Install doom emacs"
 nix-env -iA nixpkgs.emacsMacport
@@ -27,7 +29,7 @@ git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
 ~/.emacs.d/bin/doom install
 
 echo "Installing Latex Packages"
-# brew install --cask basictex
+nix-env -iA nixpkgs.texlive.combined.scheme-med
 # sudo tlmgr install dvipng dvisvgm l3packages xcolor soul adjustbox collectbox amsmath siunitx cancel mathalpha
 
 #Clone bar into default Übersicht location
@@ -43,10 +45,10 @@ echo "Cloning Dotfiles"
 git clone --depth 1 https://github.com/shaunsingh/vimrc-dotfiles.git
 
 echo "Installing Dotfiles from Cloned Repository"
-cp -R .config ~
-cp -R .doom.d ~
-cp -R .vim ~
-cp .zshrc .skhdrc .yabairc .ideavimrc .vimrc .gitconfig ~
+cp -u -R .config ~
+cp -u -R .doom.d ~
+cp -u -R .vim ~
+cp -u .zshrc .skhdrc .yabairc .ideavimrc .vimrc .gitconfig ~
 
 echo "Syncing emacs"
 doom sync
@@ -61,14 +63,6 @@ echo "grabbing wallpapers"
 cd ~vimrc-dotfiles
 cp -R wallpapers ~
 
-echo "Cleanup"
-killall Finder
-killall Dock
-osascript -l JavaScript -e "Application('System Events').appearancePreferences.darkMode = true"
-brew services start yabai
-brew services start skhd
-brew cleanup -s
-
 echo "Setting up fish"
 nix-env -iA nixpkgs.alacritty
 nix-env -iA nixpkgs.fish
@@ -82,6 +76,11 @@ git clone https://github.com/oh-my-fish/plugin-foreign-env.git
 echo "Setting fish as Default Prompt"
 sudo sh -c 'echo $(which fish) >> /etc/shells'
 chsh -s $(which fish)
+
+echo "Cleanup"
+killall Finder
+killall Dock
+osascript -l JavaScript -e "Application('System Events').appearancePreferences.darkMode = true"
 
 echo "Done!"
 
