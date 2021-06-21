@@ -13,8 +13,6 @@
   # $ nix-env -qaP | grep wget
   environment.systemPackages =
     [ config.programs.vim.package
-      config.services.chunkwm.package
-
       pkgs.curl
       pkgs.git
       pkgs.htop
@@ -31,8 +29,6 @@
       pkgs.aspell
       pkgs.neovim-nightly
       pkgs.emacsMacport
-      
-      
     ];
 
   services.yabai.enable = true;
