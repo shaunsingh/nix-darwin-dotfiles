@@ -17,23 +17,23 @@ echo "Installing Dependencies"
 nix-env -iA nixpkgs.ranger
 nix-env -iA nixpkgs.ripgrep
 nix-env -iA nixpkgs.aspell
-nix-env -iA nixpkgs.yabai
-nix-env -iA nixpkgs.skhd
+# nix-env -iA nixpkgs.yabai
+# nix-env -iA nixpkgs.skhd
 
-echo "Installing Neovim nightly"
-nix-env -iA nixpkgs.neovim
+# echo "Installing Neovim nightly"
+# nix-env -iA nixpkgs.neovim
 
-echo "Install doom emacs"
-nix-env -iA nixpkgs.emacsMacport
-git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
-~/.emacs.d/bin/doom install
+# echo "Install doom emacs"
+# nix-env -iA nixpkgs.emacsMacport
+# git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
+# ~/.emacs.d/bin/doom install
 
 # echo "Installing Latex Packages"
 # nix-env -iA nixpkgs.texlive.combined.scheme-med
 # sudo tlmgr install dvipng dvisvgm l3packages xcolor soul adjustbox collectbox amsmath siunitx cancel mathalpha
 
 #Clone bar into default Übersicht location
-echo "installing bar"
+# echo "installing bar"
 # brew install --cask ubersicht
 git clone --depth 1 https://github.com/shaunsingh/zenbar $HOME/Library/Application\ Support/Übersicht/widgets/zenbar
 defaults write NSGlobalDomain _HIHideMenuBar -bool true
@@ -50,11 +50,11 @@ cp -u -R .doom.d ~
 cp -u -R .vim ~
 cp -u .zshrc .skhdrc .yabairc .ideavimrc .vimrc .gitconfig ~
 
-echo "Syncing emacs"
-doom sync
+# echo "Syncing emacs"
+# doom sync
 
-echo "Syncing Neovim"
-nvim --headless +PackerSync +qa
+# echo "Syncing Neovim"
+# nvim --headless +PackerSync +qa
 
 echo "Syncing vim"
 vim -es -u vimrc -i NONE -c "PlugInstall" -c "qa"
@@ -64,7 +64,7 @@ cd ~vimrc-dotfiles
 cp -R wallpapers ~
 
 echo "Setting up fish"
-nix-env -iA nixpkgs.alacritty
+# nix-env -iA nixpkgs.alacritty
 nix-env -iA nixpkgs.fish
 nix-env -iA nixpkgs.starship
 nix-env -iA nixpkgs.fortune
