@@ -20,9 +20,18 @@ Configurations for the following are included
 
 This setup was created first and foremost for macOS. Although most dotfiles should transfer well between macOS and Linux, some might not. Nix should allow it to work well on linux, but some packages may not translate as well (e.g. emacsMacport)
 
-**NOTE** There is now an install file in the repo (`nixinstall.sh`), just download the .sh file and run it. If you have a previous version of the dotfiles, You can simply delete the directories and re-install using the script 
+# New Guide
 
-The new install script (nixinstall.sh) uses nix instead of homebrew. Although nix is much easier to work with, it dosen't include all the features of homebrew yet. Notably, some packages don't build as well (yabai, skhd, emacs), so you may have to install them seperately 
+# Installing Nix
+
+1. Run `preinstall.sh` to install and move the required dotfiles 
+2. Install nix (daemon) by running the following: `sh <(curl -L https://nixos.org/nix/install) --darwin-use-unencrypted-nix-store-volume --daemon`
+3. Install nix-darwin via: 
+```
+nix-build https://github.com/LnL7/nix-darwin/archive/master.tar.gz -A installer
+./result/bin/darwin-installer
+```
+4. Run `postinstall.sh` to finalize setup
 
 # Old Guide
 
