@@ -18,22 +18,11 @@ Configurations for the following are included
 
 **Warning:** If you want to give these dotfiles a try, you should first fork this repository, review the code, and remove things you don’t want or need. Don’t blindly use my settings unless you know what that entails.
 
-This setup was created first and foremost for macOS. Although most dotfiles should transfer well between macOS and Linux, some might not.
+This setup was created first and foremost for macOS. Although most dotfiles should transfer well between macOS and Linux, some might not. Nix should allow it to work well on linux, but some packages may not translate as well (e.g. emacsMacport)
 
-**NOTE** There is now an install file in the repo (`install.sh`), just download the .sh file and run it. If you have a previous version of the dotfiles, You can simply delete the directories and re-install using the script 
+**NOTE** There is now an install file in the repo (`nixinstall.sh`), just download the .sh file and run it. If you have a previous version of the dotfiles, You can simply delete the directories and re-install using the script 
 
-The Install script will do the following: 
-
-1. Install Homebrew. 
-2. Tap and Install fonts, apps, formula, and cleanup brew. 
-3. Build and Install Neovim Nightly 
-4. Build and Install Emacs native-comp (28)
-5. Install and Setup fish shell
-6. Install Vimari (vim emulation for safari)
-7. Install Doom Emacs and the required LaTeX packages
-8. Clone dotfiles 
-9. Copy dotfiles to their recommend locations
-10. Grab wallpapers and move them to the home folder 
+The new install script (nixinstall.sh) uses nix instead of homebrew. Although nix is much easier to work with, it dosen't include all the features of homebrew yet. Notably, some packages don't build as well (yabai, skhd, emacs), so you may have to install them seperately 
 
 # Old Guide
 
