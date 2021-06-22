@@ -6,55 +6,41 @@ echo " "
 echo " "
 read -n 1 -s -r -p "Press any key to continue"
 
-echo "Install Nix"
-curl -L https://nixos.org/nix/install --darwin-use-unencrypted-nix-store-volume
-
-# echo "Install Nix-darwin"
-# nix-build https://github.com/LnL7/nix-darwin/archive/master.tar.gz -A installer
-# ./result/bin/darwin-installer
-
-echo "Installing Dependencies"
-nix-env -iA nixpkgs.ranger
-nix-env -iA nixpkgs.ripgrep
-nix-env -iA nixpkgs.aspell
-# nix-env -iA nixpkgs.yabai
-# nix-env -iA nixpkgs.skhd
-
-# echo "Installing Neovim nightly"
-# nix-env -iA nixpkgs.neovim
-
-# echo "Install doom emacs"
-# nix-env -iA nixpkgs.emacsMacport
-# git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
-# ~/.emacs.d/bin/doom install
-
-# echo "Installing Latex Packages"
-# nix-env -iA nixpkgs.texlive.combined.scheme-med
-# sudo tlmgr install dvipng dvisvgm l3packages xcolor soul adjustbox collectbox amsmath siunitx cancel mathalpha
-
-#Clone bar into default Übersicht location
-# echo "installing bar"
-# brew install --cask ubersicht
-git clone --depth 1 https://github.com/shaunsingh/zenbar $HOME/Library/Application\ Support/Übersicht/widgets/zenbar
-defaults write NSGlobalDomain _HIHideMenuBar -bool true
-defaults write com.apple.dock autohide -bool true
-cd vimrc-dotfiles
-
 #Clone Dotfile Repo
 echo "Cloning Dotfiles"
 git clone --depth 1 https://github.com/shaunsingh/vimrc-dotfiles.git
+cd vimrc-dotfiles
 
 echo "Installing Dotfiles from Cloned Repository"
 cp -u -R .config ~
 cp -u -R .doom.d ~
 cp -u -R .vim ~
+cp -u -R .nixpkgs ~
 cp -u .zshrc .skhdrc .yabairc .ideavimrc .vimrc .gitconfig ~
 
+echo "Install Nix"
+curl -L https://nixos.org/nix/install --darwin-use-unencrypted-nix-store-volume
+
+echo "Install Nix-darwin"
+nix-build https://github.com/LnL7/nix-darwin/archive/master.tar.gz -A installer
+ ./result/bin/darwin-installer
+
+# echo "Install doom emacs"
+git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
+ ~/.emacs.d/bin/doom install
+
+# echo "Installing Latex Packages"
+# sudo tlmgr install dvipng dvisvgm l3packages xcolor soul adjustbox collectbox amsmath siunitx cancel mathalpha
+
+#Clone bar into default Übersicht location
+echo "installing bar"
+git clone --depth 1 https://github.com/shaunsingh/zenbar $HOME/Library/Application\ Support/Übersicht/widgets/zenbar
+
 # echo "Syncing emacs"
-# doom sync
+doom sync
 
 # echo "Syncing Neovim"
-# nvim --headless +PackerSync +qa
+nvim --headless +PackerSync +qa
 
 echo "Syncing vim"
 vim -es -u vimrc -i NONE -c "PlugInstall" -c "qa"
@@ -64,12 +50,6 @@ cd ~vimrc-dotfiles
 cp -R wallpapers ~
 
 echo "Setting up fish"
-# nix-env -iA nixpkgs.alacritty
-nix-env -iA nixpkgs.fish
-nix-env -iA nixpkgs.starship
-nix-env -iA nixpkgs.fortune
-nix-env -iA nixpkgs.cowsay
-
 cd ~
 git clone https://github.com/oh-my-fish/plugin-foreign-env.git
 
