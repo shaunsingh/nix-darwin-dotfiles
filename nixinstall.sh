@@ -19,7 +19,7 @@ cp -u -R .nixpkgs ~
 cp -u .zshrc .skhdrc .yabairc .ideavimrc .vimrc .gitconfig ~
 
 echo "Install Nix"
-curl -L https://nixos.org/nix/install --darwin-use-unencrypted-nix-store-volume
+sh <(curl https://nixos.org/nix/install) --darwin-use-unencrypted-nix-store-volume
 
 echo " "
 echo "Nix-darwin will ask you if you want to edit configuration.nix. Either take a look and :q, or hit n (no)"
@@ -28,7 +28,7 @@ read -n 1 -s -r -p "Press any key to continue"
 
 echo "Install Nix-darwin"
 nix-build https://github.com/LnL7/nix-darwin/archive/master.tar.gz -A installer
-n | ./result/bin/darwin-installer
+./result/bin/darwin-installer
 
 # echo "Install doom emacs"
 git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
