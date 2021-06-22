@@ -28,7 +28,7 @@ read -n 1 -s -r -p "Press any key to continue"
 
 echo "Install Nix-darwin"
 nix-build https://github.com/LnL7/nix-darwin/archive/master.tar.gz -A installer
- ./result/bin/darwin-installer
+n | ./result/bin/darwin-installer
 
 # echo "Install doom emacs"
 git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
