@@ -21,6 +21,11 @@ cp -u .zshrc .skhdrc .yabairc .ideavimrc .vimrc .gitconfig ~
 echo "Install Nix"
 curl -L https://nixos.org/nix/install --darwin-use-unencrypted-nix-store-volume
 
+echo " "
+echo "Nix-darwin will ask you if you want to edit configuration.nix. Either take a look and :q, or hit n (no)"
+echo " "
+read -n 1 -s -r -p "Press any key to continue"
+
 echo "Install Nix-darwin"
 nix-build https://github.com/LnL7/nix-darwin/archive/master.tar.gz -A installer
  ./result/bin/darwin-installer
