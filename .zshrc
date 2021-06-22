@@ -1,5 +1,3 @@
-#latex
-export PATH="/Library/TeX/texbin/:$PATH"
 # doom
 PATH="$HOME/.emacs.d/bin:$PATH"
 # neovide

@@ -10,7 +10,6 @@
   # $ nix-env -qaP | grep wget
   
   environment.systemPackages = with pkgs; [ vim cowsay lolcat curl git htop ripgrep neofetch alacritty starship fortune fish ranger aspell neovim-nightly emacsMacport ];
-  environment.systemPackages =
 
   services = {
     yabai.enable = true;

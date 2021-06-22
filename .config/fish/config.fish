@@ -11,12 +11,12 @@ set fish_greeting
 
 alias neovide "/Users/shauryasingh/IdeaProjects/neovim/neovide/target/release/neovide --multiGrid --frameless"
 
-set -x EDITOR "nvim"
+set -x EDITOR "vim"
 set -x PATH .emacs.d/bin $PATH
 set PATH $HOME/.cargo/bin $PATH
 
 # Add fenv to path
-set fish_function_path $fish_function_path ~/plugin-foreign-env/functions
+set fish_function_path $fish_function_path ~/IdeaProjects/plugin-foreign-env/functions
 
 # Source Nix setup script
 fenv source ~/.nix-profile/etc/profile.d/nix.sh
