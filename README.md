@@ -25,14 +25,9 @@ This setup was created first and foremost for macOS. Although most dotfiles shou
 # Installing Nix
 
 1. Run `preinstall.sh` to install and move the required dotfiles 
-2. Install nix (daemon) by running the following: 
+2. Install nix by running the following: 
 ```
-sh <(curl -L https://nixos.org/nix/install) --darwin-use-unencrypted-nix-store-volume --daemon
-```
-4. Install nix-darwin via: 
-```
-nix-build https://github.com/LnL7/nix-darwin/archive/master.tar.gz -A installer
-./result/bin/darwin-installer
+sh <(curl -L https://nixos.org/nix/install) --darwin-use-unencrypted-nix-store-volume
 ```
 4. Run `postinstall.sh` to finalize setup
 

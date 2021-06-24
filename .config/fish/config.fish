@@ -13,6 +13,7 @@ alias neovide "/Users/shauryasingh/IdeaProjects/neovim/neovide/target/release/ne
 
 set -x EDITOR "vim"
 set -x PATH .emacs.d/bin $PATH
+set -x PATH /Library/TeX/texbin/ $PATH
 set PATH $HOME/.cargo/bin $PATH
 
 # Add fenv to path

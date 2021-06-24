@@ -1,0 +1,20 @@
+{
+    "workbench.colorTheme": "Nord",
+    "editor.fontSize": 14,
+    "editor.fontFamily": "SF Mono, Menlo, Monaco, 'Courier New', monospace",
+    "editor.cursorBlinking": "phase",
+    "editor.cursorSmoothCaretAnimation": true,
+    "security.workspace.trust.untrustedFiles": "open",
+    "editor.minimap.renderCharacters": false,
+    "workbench.experimental.useCustomHover": true,
+    "workbench.list.smoothScrolling": true,
+    "workbench.preferredDarkColorTheme": "Nord",
+    "workbench.preferredLightColorTheme": "Solarized Light",
+    "vim.easymotion": true,
+    "vim.hlsearch": true,
+    "vim.leader": " ",
+    "vim.useSystemClipboard": true,
+    "vim.vimrc.enable": true,
+    "editor.overviewRulerBorder": false,
+    "editor.codeActionsOnSave": null
+}
