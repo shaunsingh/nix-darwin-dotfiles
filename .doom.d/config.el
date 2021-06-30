@@ -56,6 +56,8 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 (setq doom-theme 'doom-nord)
 ;;(setq doom-nord-brighter-modeline t)
 (setq doom-nord-padded-modeline t)
+;;(setq doom-theme 'doom-one)
+;;(setq doom-one-padded-modeline t)
 
 (setq undo-limit 80000000                          ;I mess up too much
       evil-want-fine-undo t                        ;By default while in insert all changes are one big blob. Be more granular
@@ -129,6 +131,10 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
   `(minimap-active-region-background :background unspecified))
 
 ;;(add-hook 'window-setup-hook #'minimap-mode)
+
+(setq-default left-margin-width 2)
+(setq-default right-margin-width 2)
+(setq-default line-spacing 0.35)
 
 ;;make treemacs thinner
 (setq treemacs-width 23)
@@ -235,20 +241,101 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 (setenv "JAVA_HOME"  "/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home")
 (setq lsp-java-java-path "/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home/bin/java")
 
-(defun java-eval-nofocus ()
-  "run current program (that requires no input)"
+(use-package company-tabnine :ensure t)
+(add-to-list 'company-backends #'company-tabnine)
+
+(cl-defmacro lsp-org-babel-enable (lang)
+  "Support LANG in org source code block."
+  (setq centaur-lsp 'lsp-mode)
+  (cl-check-type lang stringp)
+  (let* ((edit-pre (intern (format "org-babel-edit-prep:%s" lang)))
+         (intern-pre (intern (format "lsp--%s" (symbol-name edit-pre)))))
+    `(progn
+       (defun ,intern-pre (info)
+         (let ((file-name (->> info caddr (alist-get :file))))
+           (unless file-name
+             (setq file-name (make-temp-file "babel-lsp-")))
+           (setq buffer-file-name file-name)
+           (lsp-deferred)))
+       (put ',intern-pre 'function-documentation
+            (format "Enable lsp-mode in the buffer of org source block (%s)."
+                    (upcase ,lang)))
+       (if (fboundp ',edit-pre)
+           (advice-add ',edit-pre :after ',intern-pre)
+         (progn
+           (defun ,edit-pre (info)
+             (,intern-pre info))
+           (put ',edit-pre 'function-documentation
+                (format "Prepare local buffer environment for org source block (%s)."
+                        (upcase ,lang))))))))
+(defvar org-babel-lang-list
+  '("go" "python" "ipython" "bash" "sh"))
+(dolist (lang org-babel-lang-list)
+  (eval `(lsp-org-babel-enable ,lang)))
+
+(defvar run-current-file-before-hook nil "Hook for `xah-run-current-file'. Before the file is run.")
+(defvar run-current-file-after-hook nil "Hook for `xah-run-current-file'. After the file is run.")
+
+(defvar run-current-file-map nil "A association list that maps file extension to program path, used by `xah-run-current-file'. First element is file suffix, second is program name or path. You can add items to it.")
+(setq
+ run-current-file-map
+ '(
+   ("php" . "php")
+   ("pl" . "perl")
+   ("py" . "python")
+   ("py2" . "python2")
+   ("py3" . "python3")
+   ("rb" . "ruby")
+   ("go" . "go run")
+   ("hs" . "runhaskell")
+   ("js" . "deno run")
+   ("ts" . "deno run") ; TypeScript
+   ("tsx" . "tsc")
+   ("mjs" . "node --experimental-modules ")
+   ("sh" . "bash")
+   ("clj" . "java -cp ~/apps/clojure-1.6.0/clojure-1.6.0.jar clojure.main")
+   ("rkt" . "racket")
+   ("ml" . "ocaml")
+   ("vbs" . "cscript")
+   ("tex" . "pdflatex")
+   ("latex" . "pdflatex")
+   ("java" . "javac")
+   ;; ("pov" . "/usr/local/bin/povray +R2 +A0.1 +J1.2 +Am2 +Q9 +H480 +W640")
+   ))
+
+ (defun run-current-file ()
   (interactive)
-  (let* ((source (file-name-nondirectory buffer-file-name))
-     (out    (file-name-sans-extension source))
-     (class  (concat out ".class")))
-    (save-buffer)
-    (shell-command (format "rm -f %s && javac %s" class source))
-    (if (file-exists-p class)
-    (shell-command (format "java %s" out) "*scratch*")
+  (let (
+        ($outBuffer "*run output*")
+        (resize-mini-windows nil)
+        ($suffixMap run-current-file-map )
+        $fname
+        $fSuffix
+        $progName
+        $cmdStr)
+    (when (not (buffer-file-name)) (save-buffer))
+    (when (buffer-modified-p) (save-buffer))
+    (setq $fname (buffer-file-name))
+    (setq $fSuffix (file-name-extension $fname))
+    (setq $progName (cdr (assoc $fSuffix $suffixMap)))
+    (setq $cmdStr (concat $progName " \""   $fname "\" &"))
+    (run-hooks 'run-current-file-before-hook)
+    (cond
+     ((string-equal $fSuffix "el")
+      (load $fname))
+     ((string-equal $fSuffix "go")
+      (run-current-go-file))
+     ((string-equal $fSuffix "java")
       (progn
-    (set (make-local-variable 'compile-command)
-         (format "javac %s" source))
-    (command-execute 'compile)))))
+        (shell-command (format "javac %s" $fname) $outBuffer )
+        (shell-command (format "java %s" (file-name-sans-extension
+                                          (file-name-nondirectory $fname))) $outBuffer )))
+     (t (if $progName
+            (progn
+              (message "Running")
+              (shell-command $cmdStr $outBuffer ))
+          (error "No recognized program file suffix for this file."))))
+    (run-hooks 'run-current-file-after-hook)))
 
 (use-package! ein)
 
@@ -260,6 +347,11 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 (add-hook 'org-mode-hook #'org-padding-mode)
 (setq org-padding-block-begin-line-padding '(1.15 . 0.15))
 (setq org-padding-block-end-line-padding '(1.15 . 0.15))
+
+ (defadvice! shut-up-org-problematic-hooks (orig-fn &rest args)
+  :around #'org-fancy-priorities-mode
+  :around #'org-superstar-mode
+  (ignore-errors (apply orig-fn args)))
 
 ;;make references much easier
 (use-package! org-ref
@@ -398,6 +490,14 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 (defvar org-view-external-file-extensions '("html")
   "File formats that should be opened externally.")
 
+;;(defun kdm/org-save-and-export ()
+;;(interactive)
+;;(if (and (eq major-mode 'org-mode)
+    ;;(ido-local-file-exists-p (concat (file-name-sans-extension (buffer-name)) ".tex")))
+  ;;(org-latex-export-to-pdf)))
+
+;;(add-hook 'after-save-hook 'kdm/org-save-and-export)
+
 ;;use pdf-tools (with backups)
 (setq +latex-viewers '(pdf-tools evince zathura okular skim sumatrapdf))
 
@@ -409,6 +509,7 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 ;;(plist-put org-format-latex-options :scale 1)) ;make latex size the same as others
 
 ;;render as svgs (png doesn't work well on retina displays)
+(setq-default org-html-with-latex `dvisvgm)
 (setq org-preview-latex-default-process 'dvisvgm)
 
 ;;required for fragtog

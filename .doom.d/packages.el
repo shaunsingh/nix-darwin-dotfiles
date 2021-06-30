@@ -20,5 +20,5 @@
 (package! grip-mode)
 ;;jupyter notebooks
 (package! ein)
-;;elcord
-(package! elcord)
+;;tabnine completion
+(package! company-tabnine)

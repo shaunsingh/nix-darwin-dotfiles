@@ -1,4 +1,3 @@
-
 #+title: Doom Emacs Configuration
 #+author: Shaurya Singh
 
@@ -106,6 +105,8 @@ I prefer to sync my colorscheme with that of my system. Doom-light for light mod
 (setq doom-theme 'doom-nord)
 ;;(setq doom-nord-brighter-modeline t)
 (setq doom-nord-padded-modeline t)
+;;(setq doom-theme 'doom-one)
+;;(setq doom-one-padded-modeline t)
 #+end_src
 
 ** Better Defaults
@@ -231,6 +232,16 @@ I used to have the minimap on all the time, but performance was terrible. By pop
 #+begin_src elisp
 ;;(add-hook 'window-setup-hook #'minimap-mode)
 #+end_src
+
+I like a bit of padding on the left hand side, and lets make the line spacing comfier
+#+begin_src elisp
+(setq-default left-margin-width 2)
+(setq-default right-margin-width 2)
+(setq-default line-spacing 0.35)
+#+end_src
+
+#+RESULTS:
+: 0.35
 
 ** Visual configuration
 
@@ -359,23 +370,109 @@ The default lsp config is nice, but has a few invasive features we can disable. 
 (setenv "JAVA_HOME"  "/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home")
 (setq lsp-java-java-path "/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home/bin/java")
 #+end_src
+Lets use tabnine for completion
+#+begin_src elisp
+(use-package company-tabnine)
+(add-to-list 'company-backends #'company-tabnine)
+#+end_src
+
+Lets also have completion and lsp within src code blocks
+#+begin_src elisp
+(cl-defmacro lsp-org-babel-enable (lang)
+  "Support LANG in org source code block."
+  (setq centaur-lsp 'lsp-mode)
+  (cl-check-type lang stringp)
+  (let* ((edit-pre (intern (format "org-babel-edit-prep:%s" lang)))
+         (intern-pre (intern (format "lsp--%s" (symbol-name edit-pre)))))
+    `(progn
+       (defun ,intern-pre (info)
+         (let ((file-name (->> info caddr (alist-get :file))))
+           (unless file-name
+             (setq file-name (make-temp-file "babel-lsp-")))
+           (setq buffer-file-name file-name)
+           (lsp-deferred)))
+       (put ',intern-pre 'function-documentation
+            (format "Enable lsp-mode in the buffer of org source block (%s)."
+                    (upcase ,lang)))
+       (if (fboundp ',edit-pre)
+           (advice-add ',edit-pre :after ',intern-pre)
+         (progn
+           (defun ,edit-pre (info)
+             (,intern-pre info))
+           (put ',edit-pre 'function-documentation
+                (format "Prepare local buffer environment for org source block (%s)."
+                        (upcase ,lang))))))))
+(defvar org-babel-lang-list
+  '("go" "python" "ipython" "bash" "sh"))
+(dolist (lang org-babel-lang-list)
+  (eval `(lsp-org-babel-enable ,lang)))
+#+end_src
 
 I also would like F5 to run file (similar to intellij)
 #+begin_src elisp
-(defun java-eval-nofocus ()
-  "run current program (that requires no input)"
+(defvar run-current-file-before-hook nil "Hook for `xah-run-current-file'. Before the file is run.")
+(defvar run-current-file-after-hook nil "Hook for `xah-run-current-file'. After the file is run.")
+
+(defvar run-current-file-map nil "A association list that maps file extension to program path, used by `xah-run-current-file'. First element is file suffix, second is program name or path. You can add items to it.")
+(setq
+ run-current-file-map
+ '(
+   ("php" . "php")
+   ("pl" . "perl")
+   ("py" . "python")
+   ("py2" . "python2")
+   ("py3" . "python3")
+   ("rb" . "ruby")
+   ("go" . "go run")
+   ("hs" . "runhaskell")
+   ("js" . "deno run")
+   ("ts" . "deno run") ; TypeScript
+   ("tsx" . "tsc")
+   ("mjs" . "node --experimental-modules ")
+   ("sh" . "bash")
+   ("clj" . "java -cp ~/apps/clojure-1.6.0/clojure-1.6.0.jar clojure.main")
+   ("rkt" . "racket")
+   ("ml" . "ocaml")
+   ("vbs" . "cscript")
+   ("tex" . "pdflatex")
+   ("latex" . "pdflatex")
+   ("java" . "javac")
+   ;; ("pov" . "/usr/local/bin/povray +R2 +A0.1 +J1.2 +Am2 +Q9 +H480 +W640")
+   ))
+
+ (defun run-current-file ()
   (interactive)
-  (let* ((source (file-name-nondirectory buffer-file-name))
-     (out    (file-name-sans-extension source))
-     (class  (concat out ".class")))
-    (save-buffer)
-    (shell-command (format "rm -f %s && javac %s" class source))
-    (if (file-exists-p class)
-    (shell-command (format "java %s" out) "*scratch*")
+  (let (
+        ($outBuffer "*run output*")
+        (resize-mini-windows nil)
+        ($suffixMap run-current-file-map )
+        $fname
+        $fSuffix
+        $progName
+        $cmdStr)
+    (when (not (buffer-file-name)) (save-buffer))
+    (when (buffer-modified-p) (save-buffer))
+    (setq $fname (buffer-file-name))
+    (setq $fSuffix (file-name-extension $fname))
+    (setq $progName (cdr (assoc $fSuffix $suffixMap)))
+    (setq $cmdStr (concat $progName " \""   $fname "\" &"))
+    (run-hooks 'run-current-file-before-hook)
+    (cond
+     ((string-equal $fSuffix "el")
+      (load $fname))
+     ((string-equal $fSuffix "go")
+      (run-current-go-file))
+     ((string-equal $fSuffix "java")
       (progn
-    (set (make-local-variable 'compile-command)
-         (format "javac %s" source))
-    (command-execute 'compile)))))
+        (shell-command (format "javac %s" $fname) $outBuffer )
+        (shell-command (format "java %s" (file-name-sans-extension
+                                          (file-name-nondirectory $fname))) $outBuffer )))
+     (t (if $progName
+            (progn
+              (message "Running")
+              (shell-command $cmdStr $outBuffer ))
+          (error "No recognized program file suffix for this file."))))
+    (run-hooks 'run-current-file-after-hook)))
 #+end_src
 
 ** Python/jupyter
@@ -604,6 +701,11 @@ I like a little padding on my org blocks, just a millimeter or two on the top an
 (add-hook 'org-mode-hook #'org-padding-mode)
 (setq org-padding-block-begin-line-padding '(1.15 . 0.15))
 (setq org-padding-block-end-line-padding '(1.15 . 0.15))
+
+ (defadvice! shut-up-org-problematic-hooks (orig-fn &rest args)
+  :around #'org-fancy-priorities-mode
+  :around #'org-superstar-mode
+  (ignore-errors (apply orig-fn args)))
 #+end_src
 
 Org-ref is an awesome package, so lets get that set up as well
@@ -780,6 +882,17 @@ I have to export files pretty often, lets setup some keybindings to make it easi
   "Search for output files with these extensions, in order, viewing the first that matches")
 (defvar org-view-external-file-extensions '("html")
   "File formats that should be opened externally.")
+#+end_src
+
+I would also like to export to $LaTeX$ on save, assuming I've exported manually at least once
+#+begin_src elisp
+;;(defun kdm/org-save-and-export ()
+;;(interactive)
+;;(if (and (eq major-mode 'org-mode)
+    ;;(ido-local-file-exists-p (concat (file-name-sans-extension (buffer-name)) ".tex")))
+  ;;(org-latex-export-to-pdf)))
+
+;;(add-hook 'after-save-hook 'kdm/org-save-and-export)
 #+end_src
 
 ** Font Display
@@ -1081,6 +1194,7 @@ I want to preview all my latex by default.
 I prefer svgs to pngs. It takes a little more time, but scales better on HiDPI displays
 #+begin_src elisp
 ;;render as svgs (png doesn't work well on retina displays)
+(setq-default org-html-with-latex `dvisvgm)
 (setq org-preview-latex-default-process 'dvisvgm)
 #+end_src
 
@@ -1324,4 +1438,4 @@ set palette defined ( 0 '%s',\
             (doom-color 'bg)))
   (setq org-plot/gnuplot-script-preamble #'org-plot/generate-theme)
   (setq org-plot/gnuplot-term-extra #'org-plot/gnuplot-term-properties))
-#+end_src 
+#+end_src

@@ -27,26 +27,28 @@ font:
     # Font face
     style: Retina
 
+    # Font name
+    # family: scientifica
+    # Font face
+    # style: Medium
+
   # Bold font face
   bold:
     family: FiraCode Nerd Font
     style: Bold
+    # family: scientifica
+    # style: Bold
 
   # Italic font face
   italic:
     family: FiraCode Nerd Font
     style: Italic
-
-  # Bold italic font face
-  # Note: Since i don't have a font italic version of this font, I just specified
-  # italic & it just works. You may specifiy the bold italic version if it exists
-  # for your font
-  bold_italic:
-    family: FiraCode Nerd Font
-    style: Italic
+    # family: scientifica
+    # style: Italic
 
   # Font size
   size: 14.0
+  # size: 19.0
 
   # Better font rendering for mac
   use_thin_strokes: true
