@@ -51,12 +51,12 @@ I use the fish shell. If you use zsh/bash, be sure to change this
 I like the apple fonts for programming, so I'll go with SF Mono. I prefer a rounder font for plain text, so I'll go with Menlo for that. I have a retina display as well, so lets keep the fonts light.
 #+begin_src elisp
 ;;fonts
-(setq doom-font (font-spec :family "SF Mono" :size 14 :weight 'light)
-      doom-big-font (font-spec :family "SF Mono" :size 20 :weight 'light)
-      doom-variable-pitch-font (font-spec :family "Menlo" :size 15 :weight 'Regular)
-      doom-unicode-font (font-spec :family "SF Mono":weight 'light)
-      ivy-posframe-font (font-spec :family "SF Mono" :size 14.5 :weight 'light)
-      doom-serif-font (font-spec :family "Menlo" :weight 'Regular))
+(setq doom-font (font-spec :family "ttf-fira-code" :size 14 :weight 'light)
+      doom-big-font (font-spec :family "ttf-fira-code" :size 20 :weight 'light)
+      doom-variable-pitch-font (font-spec :family "ttf-roboto-mono" :size 15 :weight 'Regular)
+      doom-unicode-font (font-spec :family "ttf-fira-code":weight 'light)
+      ivy-posframe-font (font-spec :family "ttf-fira-code" :size 14.5 :weight 'light)
+      doom-serif-font (font-spec :family "ttf-roboto-mono" :weight 'Regular))
 #+end_src
 
 For mixed pitch, I would go with something proportional. +I like alegreya, so lets go with that+ actually I decided that I have a deep hatred of proportional fonts and went with Menlo anyways
@@ -82,8 +82,8 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
     "A variable-pitch face with serifs."
     :group 'basic-faces)
   (setq mixed-pitch-set-height t)
-  ;;(setq variable-pitch-serif-font (font-spec :family "Alegreya" :size 14))
-  (setq variable-pitch-serif-font (font-spec :family "Menlo" :size 14))
+  ;;(setq variable-pitch-serif-font (font-spec :family "ttf-roboto-mono" :size 14))
+  (setq variable-pitch-serif-font (font-spec :family "ttf-roboto-mono" :size 14))
   (set-face-attribute 'variable-pitch-serif nil :font variable-pitch-serif-font)
   (defun mixed-pitch-serif-mode (&optional arg)
     "Change the default face of the current buffer to a serifed variable pitch, while keeping some faces fixed pitch."
@@ -148,7 +148,7 @@ I tried to disable antialiasing, but the results are subpar. Ill leave it commen
 I think the defualt thick toolbar looks quite nice on macOS. Lets keep that enabled against dooms will
 #+begin_src elisp
 ;;enable toolbar
-(tool-bar-mode 1)
+;;(tool-bar-mode 1)
 #+end_src
 
 I like transparency. Emacs transparency is a bit annoying (it blurs everything), but I'll leave it enabled for now
@@ -372,8 +372,8 @@ The default lsp config is nice, but has a few invasive features we can disable. 
 #+end_src
 Lets use tabnine for completion
 #+begin_src elisp
-(use-package company-tabnine)
-(add-to-list 'company-backends #'company-tabnine)
+;;(use-package company-tabnine)
+;;(add-to-list 'company-backends #'company-tabnine)
 #+end_src
 
 Lets also have completion and lsp within src code blocks
