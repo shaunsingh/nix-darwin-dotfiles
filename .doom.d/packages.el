@@ -21,4 +21,4 @@
 ;;jupyter notebooks
 (package! ein)
 ;;tabnine completion
-(package! company-tabnine)
+;;(package! company-tabnine)
