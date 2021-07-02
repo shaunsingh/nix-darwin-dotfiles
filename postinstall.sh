@@ -33,7 +33,7 @@ doom sync
 
 # echo "Installing Latex Packages"
 brew install --cask basictex
-sudo tlmgr install dvipng dvisvgm l3packages xcolor soul adjustbox collectbox amsmath siunitx cancel mathalpha capt-of
+sudo tlmgr install dvipng dvisvgm l3packages xcolor soul adjustbox collectbox amsmath siunitx cancel mathalpha capt-of chemfig
 
 #Clone bar into default Übersicht location
 brew install --cask ubersicht
