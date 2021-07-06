@@ -182,7 +182,7 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 
 ;;tell company to only complete manually
 (after! company
-  (setq company-idle-delay 0.2
+  (setq company-idle-delay 0.1
         company-minimum-prefix-length 1
         company-show-numbers t))
 (set-company-backend!
@@ -240,9 +240,6 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 ;;java home for java-lsp
 (setenv "JAVA_HOME"  "/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home")
 (setq lsp-java-java-path "/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home/bin/java")
-
-(use-package company-tabnine :ensure t)
-(add-to-list 'company-backends #'company-tabnine)
 
 (cl-defmacro lsp-org-babel-enable (lang)
   "Support LANG in org source code block."
@@ -407,8 +404,6 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
   '(markdown-header-face-4 :height 1.00 :weight bold       :inherit markdown-header-face)
   '(markdown-header-face-5 :height 0.90 :weight bold       :inherit markdown-header-face)
   '(markdown-header-face-6 :height 0.75 :weight extra-bold :inherit markdown-header-face))
-
-(use-package! grip-mode)
 
 (defvar +zen-serif-p t
   "Whether to use a serifed font with `mixed-pitch-mode'.")

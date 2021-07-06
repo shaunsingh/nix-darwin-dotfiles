@@ -17,8 +17,5 @@
 (package! evil-better-visual-line)
 ;;markdown/org preview
 (package! ox-gfm)
-(package! grip-mode)
 ;;jupyter notebooks
 (package! ein)
-;;tabnine completion
-;;(package! company-tabnine)
