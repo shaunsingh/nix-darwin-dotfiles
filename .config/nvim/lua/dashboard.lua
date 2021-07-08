@@ -2,18 +2,20 @@ local M = {}
 M.config = function()
 
 local g = vim.g
+local fn = vim.fn
 
-g.dashboard_disable_at_vimenter = 0 -- dashboard is disabled by default
+local plugins_count = fn.len(fn.globpath('~/.local/share/nvim/site/pack/packer/start', '*', 0, 1))
+
+g.dashboard_disable_at_vimenter = 1 -- dashboard is disabled by default
+g.dashboard_disable_statusline = 0
 g.dashboard_default_executive = 'telescope'
 
-vim.cmd("let packages = len(globpath('~/.local/share/nvim/site/pack/packer/start', '*', 0, 1))")
-
-vim.api.nvim_exec([[
-    let g:dashboard_custom_footer = ['LuaJIT loaded '..packages..' packages']
-]], false)
+g.dashboard_custom_footer = {
+        "DOOM Loaded " .. plugins_count .. ' plugins',
+    }
 
 g.dashboard_custom_section = {
-  a = {description = {'DOOM - Its EVIL'}, command = 'qa!'},
+  a = {description = {'Its EVIL'}, command = 'qa!'},
 }
 
 --[[

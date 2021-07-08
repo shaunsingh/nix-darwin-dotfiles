@@ -1,34 +1,5 @@
 local lualine = require'lualine'
 
--- Color table for highlights
---solarized
---local colors = {
---bg       = '#fdf6e3',
---fg       = '#002b36',
---yellow   = '#6c71c4',
---cyan     = '#7d8d09',
---orange   = '#cb4b16',
---violet   = '#b58900',
---magenta  = '#7d8d09',
---blue     = '#268bd2';
---red      = '#dc322f';
---}
-
---soul356
---local colors = {
---bg       = '#545454',
---fg       = '#dfe0e0',
---yellow   = '#c3a769',
---cyan     = '#c3a769',
---darkblue = '#d0a39f',
---green    = '#678568',
---orange   = '#67a9aa',
---violet   = '#84a4c1',
---magenta  = '#d0a39f',
---blue     = '#84a4c1';
---red      = '#a07474';
---}
-
 --nord
 local colors = {
  bg       = '#2E3440',

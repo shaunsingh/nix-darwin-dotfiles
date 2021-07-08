@@ -1,5 +1,3 @@
-local cmd = vim.cmd
-
 local function map(mode, lhs, rhs, opts)
     local options = {noremap = true, silent = true}
     if opts then
@@ -10,43 +8,43 @@ end
 
 local opt = {}
 
+-- dont copy any deleted text , this is disabled by default so uncomment the below mappings if you want them
+--[[ remove this line
+
+map("n", "dd", [=[ "_dd ]=], opt)
+map("v", "dd", [=[ "_dd ]=], opt)
+map("v", "x", [=[ "_x ]=], opt)
+
+ this line too ]]
+--
+
 -- OPEN TERMINALS --
 map("n", "<C-l>", [[<Cmd>vnew term://fish <CR>]], opt) -- term over right
 map("n", "<C-x>", [[<Cmd> split term://fish | resize 10 <CR>]], opt) --  term bottom
 map("n", "<C-t>t", [[<Cmd> tabnew | term <CR>]], opt) -- term newtab
 
+-- copy whole file content
+map("n", "<C-a>", [[ <Cmd> %y+<CR>]], opt)
+
 -- toggle numbers
 map("n", "<leader>n", [[ <Cmd> set nu!<CR>]], opt)
 
 -- Truezen.nvim
-map('n', '<leader>tz', [[<Cmd>TZAtaraxis<CR>]], opt)                           --ataraxis
+map("n", "<leader>zz", ":TZAtaraxis<CR>", opt)
+map("n", "<leader>zm", ":TZMinimalist<CR>", opt)
+map("n", "<leader>zf", ":TZFocus<CR>", opt)
+
+map("n", "<C-s>", ":w <CR>", opt)
+-- vim.cmd("inoremap jh <Esc>")
 
 -- Commenter Keybinding
 map("n", "<leader>/", ":CommentToggle<CR>", opt)
 map("v", "<leader>/", ":CommentToggle<CR>", opt)
 
--- NvimTree
-map("n", "<leader>op", ":NvimTree<CR>", opt)
-
-map('i', 'jk', '<esc>')                                               --jk to exit
-map('c', 'jk', '<C-C>')
-map('n', ';', ':')                                                     --semicolon to enter command mode
-map('n', 'j', 'gj')                                                    --move by visual line not actual line
-map('n', 'k', 'gk')
-map('n', '<leader>ww', [[<Cmd>HopWord<CR>]], opt)                              --easymotion/hop
-map('n', '<leader>l', [[<Cmd>HopLine<CR>]], opt)
-map('n', '<leader>/', [[<Cmd>HopPattern<CR>]], opt)
-map('n', '<leader>fP', [[<Cmd>e ~/.config/nvim/init.lua<CR>]], opt)
-
-map('n', '<c-k>', [[<Cmd>wincmd k<CR>]], opt)                                 --ctrlhjkl to navigate splits
-map('n', '<c-j>', [[<Cmd>wincmd j<CR>]], opt)
-map('n', '<c-h>', [[<Cmd>wincmd h<CR>]], opt)
-map('n', '<c-l>', [[<Cmd>wincmd l<CR>]], opt)
-
-cmd([[autocmd BufWritePre * %s/\s\+$//e]])                             --remove trailing whitespaces
-cmd([[autocmd BufWritePre * %s/\n\+\%$//e]])
+map("n", "<C-q>", ":bp<bar>sp<bar>bn<bar>bd! <CR>", opt)
 
 -- compe stuff
+
 local t = function(str)
     return vim.api.nvim_replace_termcodes(str, true, true, true)
 end
@@ -97,13 +95,28 @@ map("i", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
 map("s", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
 map("i", "<CR>", "v:lua.completions()", {expr = true})
 
+-- nvimtree
+map("n", "<C-n>", ":NvimTreeToggle<CR>", opt)
+
+-- format code
+map("n", "<Leader>fm", [[<Cmd> Neoformat<CR>]], opt)
+
+-- dashboard stuff
+map("n", "<Leader>fw", [[<Cmd> Telescope live_grep<CR>]], opt)
+map("n", "<Leader>db", [[<Cmd> Dashboard<CR>]], opt)
+map("n", "<Leader>fn", [[<Cmd> DashboardNewFile<CR>]], opt)
+map("n", "<Leader>bm", [[<Cmd> DashboardJumpMarks<CR>]], opt)
+map("n", "<C-s>l", [[<Cmd> SessionLoad<CR>]], opt)
+map("n", "<C-s>s", [[<Cmd> SessionSave<CR>]], opt)
+
 -- Telescope
 map("n", "<Leader>gt", [[<Cmd> Telescope git_status <CR>]], opt)
 map("n", "<Leader>cm", [[<Cmd> Telescope git_commits <CR>]], opt)
-map("n", "<Leader>.", [[<Cmd> Telescope find_files <CR>]], opt)
-map("n", "<Leader>bb", [[<Cmd>Telescope buffers<CR>]], opt)
+map("n", "<Leader>ff", [[<Cmd> Telescope find_files <CR>]], opt)
+map("n", "<Leader>fp", [[<Cmd>lua require('telescope').extensions.media_files.media_files()<CR>]], opt)
+map("n", "<Leader>fb", [[<Cmd>Telescope buffers<CR>]], opt)
 map("n", "<Leader>fh", [[<Cmd>Telescope help_tags<CR>]], opt)
-map("n", "<Leader>fr", [[<Cmd>Telescope oldfiles<CR>]], opt)
+map("n", "<Leader>fo", [[<Cmd>Telescope oldfiles<CR>]], opt)
 
 -- bufferline tab stuff
 map("n", "<S-t>", ":tabnew<CR>", opt) -- new tab

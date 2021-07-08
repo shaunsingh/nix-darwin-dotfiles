@@ -99,33 +99,20 @@ _G.packer_plugins = {
     loaded = true,
     path = "/Users/shauryasingh/.local/share/nvim/site/pack/packer/start/friendly-snippets"
   },
+  ["galaxyline.nvim"] = {
+    loaded = true,
+    path = "/Users/shauryasingh/.local/share/nvim/site/pack/packer/start/galaxyline.nvim"
+  },
   ["gitsigns.nvim"] = {
     config = { "\27LJ\2\n<\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\vconfig\18gitsigns-nvim\frequire\0" },
     loaded = false,
     needs_bufread = false,
     path = "/Users/shauryasingh/.local/share/nvim/site/pack/packer/opt/gitsigns.nvim"
   },
-  hop = {
-    config = { "\27LJ\2\n5\0\0\3\0\3\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0004\2\0\0B\0\2\1K\0\1\0\nsetup\bhop\frequire\0" },
-    loaded = false,
-    needs_bufread = false,
-    path = "/Users/shauryasingh/.local/share/nvim/site/pack/packer/opt/hop"
-  },
   ["indent-blankline.nvim"] = {
     loaded = false,
     needs_bufread = false,
     path = "/Users/shauryasingh/.local/share/nvim/site/pack/packer/opt/indent-blankline.nvim"
-  },
-  ["limelight.vim"] = {
-    commands = { "TZAtaraxis", "TZMinimalist", "TZFocus", "Limelight" },
-    loaded = false,
-    needs_bufread = false,
-    path = "/Users/shauryasingh/.local/share/nvim/site/pack/packer/opt/limelight.vim"
-  },
-  ["lsp-rooter.nvim"] = {
-    loaded = false,
-    needs_bufread = false,
-    path = "/Users/shauryasingh/.local/share/nvim/site/pack/packer/opt/lsp-rooter.nvim"
   },
   ["lspkind-nvim"] = {
     config = { "\27LJ\2\n4\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\tinit\flspkind\frequire\0" },
@@ -133,9 +120,11 @@ _G.packer_plugins = {
     needs_bufread = false,
     path = "/Users/shauryasingh/.local/share/nvim/site/pack/packer/opt/lspkind-nvim"
   },
-  ["lualine.nvim"] = {
-    loaded = true,
-    path = "/Users/shauryasingh/.local/share/nvim/site/pack/packer/start/lualine.nvim"
+  neoformat = {
+    commands = { "Neoformat" },
+    loaded = false,
+    needs_bufread = false,
+    path = "/Users/shauryasingh/.local/share/nvim/site/pack/packer/opt/neoformat"
   },
   ["neoscroll.nvim"] = {
     config = { "\27LJ\2\n7\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\14neoscroll\frequire\0" },
@@ -143,18 +132,18 @@ _G.packer_plugins = {
     needs_bufread = false,
     path = "/Users/shauryasingh/.local/share/nvim/site/pack/packer/opt/neoscroll.nvim"
   },
-  ["nord.nvim"] = {
-    loaded = true,
-    path = "/Users/shauryasingh/.local/share/nvim/site/pack/packer/start/nord.nvim"
-  },
   ["nvim-autopairs"] = {
-    config = { "\27LJ\2\n\1\0\0\3\0\5\0\f6\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\0016\0\0\0'\2\3\0B\0\2\0029\0\2\0005\2\4\0B\0\2\1K\0\1\0\1\0\2\vmap_cr\2\17map_complete\2$nvim-autopairs.completion.compe\nsetup\19nvim-autopairs\frequire\0" },
+    config = { "\27LJ\2\n\1\0\0\3\0\5\0\f6\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\0016\0\0\0'\2\3\0B\0\2\0029\0\2\0005\2\4\0B\0\2\1K\0\1\0\1\0\2\17map_complete\2\vmap_cr\2$nvim-autopairs.completion.compe\nsetup\19nvim-autopairs\frequire\0" },
     load_after = {
       ["nvim-compe"] = true
     },
     loaded = false,
     needs_bufread = false,
     path = "/Users/shauryasingh/.local/share/nvim/site/pack/packer/opt/nvim-autopairs"
+  },
+  ["nvim-base16.lua"] = {
+    loaded = true,
+    path = "/Users/shauryasingh/.local/share/nvim/site/pack/packer/start/nvim-base16.lua"
   },
   ["nvim-bufferline.lua"] = {
     loaded = true,
@@ -189,9 +178,8 @@ _G.packer_plugins = {
     path = "/Users/shauryasingh/.local/share/nvim/site/pack/packer/opt/nvim-lspconfig"
   },
   ["nvim-lspinstall"] = {
-    loaded = false,
-    needs_bufread = false,
-    path = "/Users/shauryasingh/.local/share/nvim/site/pack/packer/opt/nvim-lspinstall"
+    loaded = true,
+    path = "/Users/shauryasingh/.local/share/nvim/site/pack/packer/start/nvim-lspinstall"
   },
   ["nvim-tree.lua"] = {
     commands = { "NvimTreeToggle" },
@@ -209,12 +197,6 @@ _G.packer_plugins = {
   ["nvim-web-devicons"] = {
     loaded = true,
     path = "/Users/shauryasingh/.local/share/nvim/site/pack/packer/start/nvim-web-devicons"
-  },
-  ["orgmode.nvim"] = {
-    config = { "\27LJ\2\n9\0\0\3\0\3\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0004\2\0\0B\0\2\1K\0\1\0\nsetup\forgmode\frequire\0" },
-    loaded = false,
-    needs_bufread = true,
-    path = "/Users/shauryasingh/.local/share/nvim/site/pack/packer/opt/orgmode.nvim"
   },
   ["packer.nvim"] = {
     loaded = true,
@@ -248,6 +230,12 @@ _G.packer_plugins = {
     loaded = false,
     needs_bufread = false,
     path = "/Users/shauryasingh/.local/share/nvim/site/pack/packer/opt/telescope.nvim"
+  },
+  ["vim-matchup"] = {
+    after_files = { "/Users/shauryasingh/.local/share/nvim/site/pack/packer/opt/vim-matchup/after/plugin/matchit.vim" },
+    loaded = false,
+    needs_bufread = true,
+    path = "/Users/shauryasingh/.local/share/nvim/site/pack/packer/opt/vim-matchup"
   }
 }
 
@@ -280,41 +268,30 @@ end
 -- Command lazy-loads
 time([[Defining lazy-load commands]], true)
 vim.cmd [[command! -nargs=* -range -bang -complete=file CommentToggle lua require("packer.load")({'nvim-comment'}, { cmd = "CommentToggle", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args> }, _G.packer_plugins)]]
-vim.cmd [[command! -nargs=* -range -bang -complete=file Dashboard lua require("packer.load")({'dashboard-nvim'}, { cmd = "Dashboard", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args> }, _G.packer_plugins)]]
 vim.cmd [[command! -nargs=* -range -bang -complete=file Telescope lua require("packer.load")({'telescope.nvim'}, { cmd = "Telescope", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args> }, _G.packer_plugins)]]
-vim.cmd [[command! -nargs=* -range -bang -complete=file TZFocus lua require("packer.load")({'limelight.vim', 'TrueZen.nvim'}, { cmd = "TZFocus", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args> }, _G.packer_plugins)]]
-vim.cmd [[command! -nargs=* -range -bang -complete=file Limelight lua require("packer.load")({'limelight.vim'}, { cmd = "Limelight", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args> }, _G.packer_plugins)]]
-vim.cmd [[command! -nargs=* -range -bang -complete=file SessionSave lua require("packer.load")({'dashboard-nvim'}, { cmd = "SessionSave", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args> }, _G.packer_plugins)]]
-vim.cmd [[command! -nargs=* -range -bang -complete=file SessionLoad lua require("packer.load")({'dashboard-nvim'}, { cmd = "SessionLoad", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args> }, _G.packer_plugins)]]
-vim.cmd [[command! -nargs=* -range -bang -complete=file StartupTime lua require("packer.load")({'startuptime.vim'}, { cmd = "StartupTime", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args> }, _G.packer_plugins)]]
-vim.cmd [[command! -nargs=* -range -bang -complete=file DashboardJumpMarks lua require("packer.load")({'dashboard-nvim'}, { cmd = "DashboardJumpMarks", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args> }, _G.packer_plugins)]]
-vim.cmd [[command! -nargs=* -range -bang -complete=file NvimTreeToggle lua require("packer.load")({'nvim-tree.lua'}, { cmd = "NvimTreeToggle", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args> }, _G.packer_plugins)]]
+vim.cmd [[command! -nargs=* -range -bang -complete=file Dashboard lua require("packer.load")({'dashboard-nvim'}, { cmd = "Dashboard", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args> }, _G.packer_plugins)]]
 vim.cmd [[command! -nargs=* -range -bang -complete=file DashboardNewFile lua require("packer.load")({'dashboard-nvim'}, { cmd = "DashboardNewFile", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args> }, _G.packer_plugins)]]
-vim.cmd [[command! -nargs=* -range -bang -complete=file TZMinimalist lua require("packer.load")({'limelight.vim', 'TrueZen.nvim'}, { cmd = "TZMinimalist", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args> }, _G.packer_plugins)]]
-vim.cmd [[command! -nargs=* -range -bang -complete=file TZAtaraxis lua require("packer.load")({'limelight.vim', 'TrueZen.nvim'}, { cmd = "TZAtaraxis", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args> }, _G.packer_plugins)]]
+vim.cmd [[command! -nargs=* -range -bang -complete=file DashboardJumpMarks lua require("packer.load")({'dashboard-nvim'}, { cmd = "DashboardJumpMarks", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args> }, _G.packer_plugins)]]
+vim.cmd [[command! -nargs=* -range -bang -complete=file SessionLoad lua require("packer.load")({'dashboard-nvim'}, { cmd = "SessionLoad", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args> }, _G.packer_plugins)]]
+vim.cmd [[command! -nargs=* -range -bang -complete=file SessionSave lua require("packer.load")({'dashboard-nvim'}, { cmd = "SessionSave", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args> }, _G.packer_plugins)]]
+vim.cmd [[command! -nargs=* -range -bang -complete=file Neoformat lua require("packer.load")({'neoformat'}, { cmd = "Neoformat", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args> }, _G.packer_plugins)]]
+vim.cmd [[command! -nargs=* -range -bang -complete=file StartupTime lua require("packer.load")({'startuptime.vim'}, { cmd = "StartupTime", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args> }, _G.packer_plugins)]]
+vim.cmd [[command! -nargs=* -range -bang -complete=file NvimTreeToggle lua require("packer.load")({'nvim-tree.lua'}, { cmd = "NvimTreeToggle", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args> }, _G.packer_plugins)]]
+vim.cmd [[command! -nargs=* -range -bang -complete=file TZFocus lua require("packer.load")({'TrueZen.nvim'}, { cmd = "TZFocus", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args> }, _G.packer_plugins)]]
+vim.cmd [[command! -nargs=* -range -bang -complete=file TZMinimalist lua require("packer.load")({'TrueZen.nvim'}, { cmd = "TZMinimalist", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args> }, _G.packer_plugins)]]
+vim.cmd [[command! -nargs=* -range -bang -complete=file TZAtaraxis lua require("packer.load")({'TrueZen.nvim'}, { cmd = "TZAtaraxis", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args> }, _G.packer_plugins)]]
 time([[Defining lazy-load commands]], false)
 
 vim.cmd [[augroup packer_load_aucmds]]
 vim.cmd [[au!]]
-  -- Filetype lazy-loads
-time([[Defining lazy-load filetype autocommands]], true)
-vim.cmd [[au FileType org ++once lua require("packer.load")({'orgmode.nvim'}, { ft = "org" }, _G.packer_plugins)]]
-time([[Defining lazy-load filetype autocommands]], false)
   -- Event lazy-loads
 time([[Defining lazy-load event autocommands]], true)
-vim.cmd [[au BufRead * ++once lua require("packer.load")({'nvim-colorizer.lua', 'nvim-treesitter', 'indent-blankline.nvim', 'nvim-lspinstall', 'lsp-rooter.nvim', 'lspkind-nvim', 'hop', 'gitsigns.nvim', 'nvim-lspconfig'}, { event = "BufRead *" }, _G.packer_plugins)]]
-vim.cmd [[au InsertCharPre * ++once lua require("packer.load")({'LuaSnip'}, { event = "InsertCharPre *" }, _G.packer_plugins)]]
+vim.cmd [[au CursorMoved * ++once lua require("packer.load")({'vim-matchup'}, { event = "CursorMoved *" }, _G.packer_plugins)]]
+vim.cmd [[au BufRead * ++once lua require("packer.load")({'gitsigns.nvim', 'nvim-colorizer.lua', 'indent-blankline.nvim', 'nvim-treesitter', 'lspkind-nvim', 'nvim-lspconfig'}, { event = "BufRead *" }, _G.packer_plugins)]]
 vim.cmd [[au WinScrolled * ++once lua require("packer.load")({'neoscroll.nvim'}, { event = "WinScrolled *" }, _G.packer_plugins)]]
 vim.cmd [[au InsertEnter * ++once lua require("packer.load")({'nvim-compe'}, { event = "InsertEnter *" }, _G.packer_plugins)]]
+vim.cmd [[au InsertCharPre * ++once lua require("packer.load")({'LuaSnip'}, { event = "InsertCharPre *" }, _G.packer_plugins)]]
 time([[Defining lazy-load event autocommands]], false)
-vim.cmd("augroup END")
-vim.cmd [[augroup filetypedetect]]
-time([[Sourcing ftdetect script at: /Users/shauryasingh/.local/share/nvim/site/pack/packer/opt/orgmode.nvim/ftdetect/org.vim]], true)
-vim.cmd [[source /Users/shauryasingh/.local/share/nvim/site/pack/packer/opt/orgmode.nvim/ftdetect/org.vim]]
-time([[Sourcing ftdetect script at: /Users/shauryasingh/.local/share/nvim/site/pack/packer/opt/orgmode.nvim/ftdetect/org.vim]], false)
-time([[Sourcing ftdetect script at: /Users/shauryasingh/.local/share/nvim/site/pack/packer/opt/orgmode.nvim/ftdetect/org_archive.vim]], true)
-vim.cmd [[source /Users/shauryasingh/.local/share/nvim/site/pack/packer/opt/orgmode.nvim/ftdetect/org_archive.vim]]
-time([[Sourcing ftdetect script at: /Users/shauryasingh/.local/share/nvim/site/pack/packer/opt/orgmode.nvim/ftdetect/org_archive.vim]], false)
 vim.cmd("augroup END")
 if should_profile then save_profiles() end
 

@@ -6,21 +6,10 @@ return packer.startup(
         use "wbthomason/packer.nvim"
 
         use "akinsho/nvim-bufferline.lua"
-        use {'hoob3rt/lualine.nvim'}
+        use "glepnir/galaxyline.nvim"
 
         -- color related stuff
-        use {
-            'shaunsingh/nord.nvim',
-        }
-
-        use {
-            'phaazon/hop.nvim',
-            as = 'hop',
-            event = "BufRead",
-            config = function()
-                require'hop'.setup {}
-            end
-        }
+        use "siduck76/nvim-base16.lua"
 
         use {
             "norcalli/nvim-colorizer.lua",
@@ -48,23 +37,7 @@ return packer.startup(
             end
         }
 
-        use {
-            "ahmedkhalf/lsp-rooter.nvim",
-            event = "BufRead",
-        }
-
-        use {
-            "kabouzeid/nvim-lspinstall",
-            event = "BufRead",
-        }
-
-        use {
-            'kristijanhusak/orgmode.nvim',
-            ft = {'org'},
-            config = function()
-                require('orgmode').setup{}
-            end
-        }
+        use "kabouzeid/nvim-lspinstall"
 
         use {
             "onsails/lspkind-nvim",
@@ -94,6 +67,8 @@ return packer.startup(
                 "rafamadriz/friendly-snippets"
             }
         }
+
+        use {"sbdchd/neoformat", cmd = "Neoformat"}
 
         -- file managing , picker etc
         use {
@@ -143,6 +118,8 @@ return packer.startup(
             end
         }
 
+        use {"andymass/vim-matchup", event = "CursorMoved"}
+
         use {
             "terrortylor/nvim-comment",
             cmd = "CommentToggle",
@@ -188,16 +165,11 @@ return packer.startup(
         }
 
         use {
-            "junegunn/limelight.vim",
-            cmd = {"TZAtaraxis", "TZMinimalist", "TZFocus", "Limelight"},
-        }
-
-        use {
             "Pocco81/TrueZen.nvim",
             cmd = {"TZAtaraxis", "TZMinimalist", "TZFocus"},
             config = function()
                 require("zenmode").config()
-            end,
+            end
         }
 
         --   use "alvan/vim-closetag" -- for html autoclosing tag

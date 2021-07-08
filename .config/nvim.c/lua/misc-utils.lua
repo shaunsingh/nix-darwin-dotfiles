@@ -13,11 +13,9 @@ opt.cmdheight = 1
 opt.updatetime = 250 -- update interval for gitsigns
 opt.timeoutlen = 200
 opt.clipboard = "unnamedplus"
-opt.scrolloff = 3
-opt.lazyredraw = true
 
 -- Numbers
-opt.number = false
+opt.number = true
 opt.numberwidth = 2
 -- opt.relativenumber = true
 
@@ -65,15 +63,5 @@ M.blankline = function()
     vim.g.indent_blankline_show_trailing_blankline_indent = false
     vim.g.indent_blankline_show_first_indent_level = false
 end
-
---terminal
-vim.api.nvim_exec([[autocmd TermOpen * setlocal nonumber norelativenumber]], false)
-
---neovide
-vim.g.neovide_fullscreen = true
-vim.api.nvim_exec([[set guifont=FiraCode\ Nerd\ Font:h14]], false)
-
---remove vim tilde
-vim.api.nvim_exec([[let &fcs='eob: ']], false)
 
 return M
