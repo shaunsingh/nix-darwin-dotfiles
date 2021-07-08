@@ -71,7 +71,7 @@ vim.api.nvim_exec([[autocmd TermOpen * setlocal nonumber norelativenumber]], fal
 
 --neovide
 vim.g.neovide_fullscreen = true
-vim.api.nvim_exec([[set guifont=FiraCode\ Nerd\ Font:h14]], false)
+vim.o.guifont = "FiraCode Nerd Font"
 
 --remove vim tilde
 vim.api.nvim_exec([[let &fcs='eob: ']], false)
