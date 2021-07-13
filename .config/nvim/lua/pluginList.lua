@@ -62,7 +62,11 @@ return packer.startup(
             'kristijanhusak/orgmode.nvim',
             ft = {'org'},
             config = function()
-                require('orgmode').setup{}
+                require("orgmode").setup(
+                    {
+                        org_highlight_latex_and_related = 'entities'
+                    }
+                )
             end
         }
 

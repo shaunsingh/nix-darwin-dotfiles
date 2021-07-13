@@ -10,7 +10,6 @@
       user-mail-address "shaunsingh0207@gmail.com")
 
 (setq explicit-shell-file-name (executable-find "fish"))
-(setq vterm-shell (executable-find "fish"))
 
 ;;fonts
 (setq doom-font (font-spec :family "SF Mono" :size 14 :weight 'light)
@@ -54,10 +53,7 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 (set-char-table-range composition-function-table ?T '(["\\(?:Th\\)" 0 font-shape-gstring]))
 
 (setq doom-theme 'doom-nord)
-;;(setq doom-nord-brighter-modeline t)
 (setq doom-nord-padded-modeline t)
-;;(setq doom-theme 'doom-one)
-;;(setq doom-one-padded-modeline t)
 
 (setq undo-limit 80000000                          ;I mess up too much
       evil-want-fine-undo t                        ;By default while in insert all changes are one big blob. Be more granular
@@ -72,28 +68,11 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 (setq browse-url-browser-function 'xwidget-webkit-browse-url) ;use xwidgets as my broweser
 (setq display-line-numbers-type nil) ;; line numbers are slow I hate it
 
-;;(setq mac-mouse-wheel-smooth-scroll t) ;;macOS smooth scroll
-
 (setq +ligatures-in-modes '(org-mode))
 (setq +ligatures-extras-in-modes '(org-mode))      ;ligatures in org mode
 
-;;disable antialiasing
-;;(setq-default mac-allow-anti-aliasing nil)
-
-;;enable toolbar
 (tool-bar-mode 1)
 
-;;transparency
-;;(set-frame-parameter (selected-frame) 'alpha '(92 92))
-;;(add-to-list 'default-frame-alist '(alpha 92 92))
-
-(setq frame-resize-pixelwise t)
-(setq split-width-threshold nil)
-;;set emacs to fullscreen (i'm already using a wm)
-;;(add-to-list 'default-frame-alist '(fullscreen . fullboth))
-;;(setq ns-use-native-fullscreen t)
-
-;;easymotion-style keybindings
 (map! :leader
       :desc "hop to word" "w w" #'avy-goto-word-0)
 (map! :leader
@@ -117,7 +96,6 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 ;;disable cursorline
 (remove-hook 'doom-first-buffer-hook #'global-hl-line-mode)
 
-;;fixes cursorbug for the time being
 (defadvice! fix-+evil-default-cursor-fn ()
   :override #'+evil-default-cursor-fn
   (evil-set-cursor-color (face-background 'cursor)))
@@ -130,16 +108,9 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 (custom-set-faces!
   `(minimap-active-region-background :background unspecified))
 
-;;(add-hook 'window-setup-hook #'minimap-mode)
-
 (setq-default left-margin-width 2)
 (setq-default right-margin-width 2)
 (setq-default line-spacing 0.35)
-
-;;make treemacs thinner
-(setq treemacs-width 23)
-;;set treemacs to use the theme
-(setq doom-themes-treemacs-theme "doom-colors")
 
 ;;modeline (icons, config, battery)
 (display-time-mode 1)                              ;Enable time in the mode-line
@@ -157,32 +128,11 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
                 t)))
 (add-hook 'after-change-major-mode-hook #'doom-modeline-conditional-buffer-encoding) ;;remove encoding
 
-(defun centaur-tabs-get-total-tab-length ()
-  (length (centaur-tabs-tabs (centaur-tabs-current-tabset))))
-
-(defun centaur-tabs-hide-on-window-change ()
-  (run-at-time nil nil
-               (lambda ()
-                 (centaur-tabs-hide-check (centaur-tabs-get-total-tab-length)))))
-
-(defun centaur-tabs-hide-check (len)
-  (shut-up
-    (cond
-     ((and (= len 1) (not (centaur-tabs-local-mode))) (call-interactively #'centaur-tabs-local-mode))
-     ((and (>= len 2) (centaur-tabs-local-mode)) (call-interactively #'centaur-tabs-local-mode)))))
-
-(use-package! centaur-tabs
-  :config
-  (centaur-tabs-mode t)
-  (setq centaur-tabs-gray-out-icons 'buffer)
-  (add-hook 'window-configuration-change-hook 'centaur-tabs-hide-on-window-change))
-
 (after! ivy-posframe
 (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-top-center))))
 
-;;tell company to only complete manually
 (after! company
-  (setq company-idle-delay 0.1
+  (setq company-idle-delay nil
         company-minimum-prefix-length 1
         company-show-numbers t))
 (set-company-backend!
@@ -196,8 +146,6 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 
 (use-package! lsp-ui
   :hook (lsp-mode . lsp-ui-mode)
-  ;;:init
-  ;;(setq lsp-ui-doc-use-webkit t)
   :config
   (setq lsp-ui-sideline-enable nil; not anymore useful than flycheck
         lsp-ui-doc-enable t; slow and redundant with K
@@ -234,113 +182,13 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
                   (no-special-glyphs . t)))
 
 
-;;(custom-set-faces!
-  ;;`(lsp-ui-doc-background :background ,(doom-color 'bg-alt)))
-
 ;;java home for java-lsp
 (setenv "JAVA_HOME"  "/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home")
 (setq lsp-java-java-path "/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home/bin/java")
 
-(cl-defmacro lsp-org-babel-enable (lang)
-  "Support LANG in org source code block."
-  (setq centaur-lsp 'lsp-mode)
-  (cl-check-type lang stringp)
-  (let* ((edit-pre (intern (format "org-babel-edit-prep:%s" lang)))
-         (intern-pre (intern (format "lsp--%s" (symbol-name edit-pre)))))
-    `(progn
-       (defun ,intern-pre (info)
-         (let ((file-name (->> info caddr (alist-get :file))))
-           (unless file-name
-             (setq file-name (make-temp-file "babel-lsp-")))
-           (setq buffer-file-name file-name)
-           (lsp-deferred)))
-       (put ',intern-pre 'function-documentation
-            (format "Enable lsp-mode in the buffer of org source block (%s)."
-                    (upcase ,lang)))
-       (if (fboundp ',edit-pre)
-           (advice-add ',edit-pre :after ',intern-pre)
-         (progn
-           (defun ,edit-pre (info)
-             (,intern-pre info))
-           (put ',edit-pre 'function-documentation
-                (format "Prepare local buffer environment for org source block (%s)."
-                        (upcase ,lang))))))))
-(defvar org-babel-lang-list
-  '("go" "python" "ipython" "bash" "sh"))
-(dolist (lang org-babel-lang-list)
-  (eval `(lsp-org-babel-enable ,lang)))
-
-(defvar run-current-file-before-hook nil "Hook for `xah-run-current-file'. Before the file is run.")
-(defvar run-current-file-after-hook nil "Hook for `xah-run-current-file'. After the file is run.")
-
-(defvar run-current-file-map nil "A association list that maps file extension to program path, used by `xah-run-current-file'. First element is file suffix, second is program name or path. You can add items to it.")
-(setq
- run-current-file-map
- '(
-   ("php" . "php")
-   ("pl" . "perl")
-   ("py" . "python")
-   ("py2" . "python2")
-   ("py3" . "python3")
-   ("rb" . "ruby")
-   ("go" . "go run")
-   ("hs" . "runhaskell")
-   ("js" . "deno run")
-   ("ts" . "deno run") ; TypeScript
-   ("tsx" . "tsc")
-   ("mjs" . "node --experimental-modules ")
-   ("sh" . "bash")
-   ("clj" . "java -cp ~/apps/clojure-1.6.0/clojure-1.6.0.jar clojure.main")
-   ("rkt" . "racket")
-   ("ml" . "ocaml")
-   ("vbs" . "cscript")
-   ("tex" . "pdflatex")
-   ("latex" . "pdflatex")
-   ("java" . "javac")
-   ;; ("pov" . "/usr/local/bin/povray +R2 +A0.1 +J1.2 +Am2 +Q9 +H480 +W640")
-   ))
-
- (defun run-current-file ()
-  (interactive)
-  (let (
-        ($outBuffer "*run output*")
-        (resize-mini-windows nil)
-        ($suffixMap run-current-file-map )
-        $fname
-        $fSuffix
-        $progName
-        $cmdStr)
-    (when (not (buffer-file-name)) (save-buffer))
-    (when (buffer-modified-p) (save-buffer))
-    (setq $fname (buffer-file-name))
-    (setq $fSuffix (file-name-extension $fname))
-    (setq $progName (cdr (assoc $fSuffix $suffixMap)))
-    (setq $cmdStr (concat $progName " \""   $fname "\" &"))
-    (run-hooks 'run-current-file-before-hook)
-    (cond
-     ((string-equal $fSuffix "el")
-      (load $fname))
-     ((string-equal $fSuffix "go")
-      (run-current-go-file))
-     ((string-equal $fSuffix "java")
-      (progn
-        (shell-command (format "javac %s" $fname) $outBuffer )
-        (shell-command (format "java %s" (file-name-sans-extension
-                                          (file-name-nondirectory $fname))) $outBuffer )))
-     (t (if $progName
-            (progn
-              (message "Running")
-              (shell-command $cmdStr $outBuffer ))
-          (error "No recognized program file suffix for this file."))))
-    (run-hooks 'run-current-file-after-hook)))
-
-(use-package! ein)
-
-(custom-set-faces!
-  `(ein:cell-input-area :background ,(doom-color 'base3)))
-
 ;;add padding in org
-(use-package! org-padding)
+(use-package! org-padding
+  :after org)
 (add-hook 'org-mode-hook #'org-padding-mode)
 (setq org-padding-block-begin-line-padding '(1.15 . 0.15))
 (setq org-padding-block-end-line-padding '(1.15 . 0.15))
@@ -382,6 +230,12 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
           (org-ref-open-bibtex-pdf))))))
 
 ;;org directory
+(use-package! ox-gfm
+  :after org)
+
+(use-package! org-pandoc-import
+  :after org)
+
 (setq org-directory "~/.org"                      ; let's put files here
       org-use-property-inheritance t              ; it's convenient to have properties inherited
 ;;      org-log-done 'time                          ; having the time a item is done sounds convenient
@@ -391,9 +245,6 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
       org-export-with-sub-superscripts '{})       ; don't treat lone _ / ^ as sub/superscripts, require _{} / ^{}
 
 (add-hook 'org-mode-hook 'turn-on-flyspell)
-
-(use-package! ox-gfm
-  :after org)
 
 (add-hook! (gfm-mode markdown-mode) #'visual-line-mode #'turn-off-auto-fill)
 
@@ -438,7 +289,6 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
                  +zen--original-org-indent-mode-p org-indent-mode)
                 (org-indent-mode -1))))
 
-  (add-hook! 'writeroom-mode-hook (centaur-tabs-local-mode (if writeroom-mode +1 -1)))
   ;;(add-hook! 'writeroom-mode-hook (focus-mode (if writeroom-mode +1 -1)))
   (add-hook 'writeroom-mode-enable-hook #'doom-disable-line-numbers-h)
   (add-hook 'writeroom-mode-disable-hook #'doom-enable-line-numbers-h)
@@ -485,14 +335,6 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 (defvar org-view-external-file-extensions '("html")
   "File formats that should be opened externally.")
 
-;;(defun kdm/org-save-and-export ()
-;;(interactive)
-;;(if (and (eq major-mode 'org-mode)
-    ;;(ido-local-file-exists-p (concat (file-name-sans-extension (buffer-name)) ".tex")))
-  ;;(org-latex-export-to-pdf)))
-
-;;(add-hook 'after-save-hook 'kdm/org-save-and-export)
-
 ;;use pdf-tools (with backups)
 (setq +latex-viewers '(pdf-tools evince zathura okular skim sumatrapdf))
 
@@ -500,10 +342,10 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 (after! org (setq org-startup-with-latex-preview t)
   (plist-put org-format-latex-options :background "Transparent"))
 
-;;this was fixed recently, enable if you have issues
-;;(plist-put org-format-latex-options :scale 1)) ;make latex size the same as others
+(setq org-display-inline-images t)
+(setq org-redisplay-inline-images t)
+(setq org-startup-with-inline-images "inlineimages")
 
-;;render as svgs (png doesn't work well on retina displays)
 (setq-default org-html-with-latex `dvisvgm)
 (setq org-preview-latex-default-process 'dvisvgm)
 
@@ -538,26 +380,6 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 \\setlength{\\topmargin}{1.5cm}
 \\addtolength{\\topmargin}{-2.54cm}
 ")
-
-(use-package! emacs-everywhere
-  :if (daemonp)
-  :config
-  (require 'spell-fu)
-  (setq emacs-everywhere-major-mode-function #'org-mode
-        emacs-everywhere-frame-name-format "Edit ∷ %s — %s")
-  (defadvice! emacs-everywhere-raise-frame ()
-    :after #'emacs-everywhere-set-frame-name
-    (setq emacs-everywhere-frame-name (format emacs-everywhere-frame-name-format
-                                (emacs-everywhere-app-class emacs-everywhere-current-app)
-                                (truncate-string-to-width
-                                 (emacs-everywhere-app-title emacs-everywhere-current-app)
-                                 45 nil nil "…")))
-    ;; need to wait till frame refresh happen before really set
-    (run-with-timer 0.1 nil #'emacs-everywhere-raise-frame-1))
-  (defun emacs-everywhere-raise-frame-1 ()
-    (call-process "wmctrl" nil nil nil "-a" emacs-everywhere-frame-name)))
-
-;;(setq elcord-use-major-mode-as-main-icon t
 
 (after! org-plot
   (defun org-plot/generate-theme (_type)
@@ -725,90 +547,6 @@ set palette defined ( 0 '%s',\
 (add-hook 'window-size-change-functions #'set-appropriate-splash)
 (add-hook 'doom-load-theme-hook #'set-appropriate-splash)
 
-(defvar phrase-api-url
-  (nth (random 3)
-       '(("https://corporatebs-generator.sameerkumar.website/" :phrase)
-         ("https://useless-facts.sameerkumar.website/api" :data)
-         ("https://dev-excuses-api.herokuapp.com/" :text))))
-
-(defmacro phrase-generate-callback (token &optional format-fn ignore-read-only callback buffer-name)
-  `(lambda (status)
-     (unless (plist-get status :error)
-       (goto-char url-http-end-of-headers)
-       (let ((phrase (plist-get (json-parse-buffer :object-type 'plist) (cadr phrase-api-url)))
-             (inhibit-read-only ,(when (eval ignore-read-only) t)))
-         (setq phrase-last (cons phrase (float-time)))
-         (with-current-buffer ,(or (eval buffer-name) (buffer-name (current-buffer)))
-           (save-excursion
-             (goto-char (point-min))
-             (when (search-forward ,token nil t)
-               (with-silent-modifications
-                 (replace-match "")
-                 (insert ,(if format-fn format-fn 'phrase)))))
-           ,callback)))))
-
-(defvar phrase-last nil)
-(defvar phrase-timeout 5)
-
-(defmacro phrase-insert-async (&optional format-fn token ignore-read-only callback buffer-name)
-  `(let ((inhibit-message t))
-     (if (and phrase-last
-              (> phrase-timeout (- (float-time) (cdr phrase-last))))
-         (let ((phrase (car phrase-last)))
-           ,(if format-fn format-fn 'phrase))
-       (url-retrieve (car phrase-api-url)
-                     (phrase-generate-callback ,(or token "\ufeff") ,format-fn ,ignore-read-only ,callback ,buffer-name))
-       ;; For reference, \ufeff = Zero-width no-break space / BOM
-       ,(or token "\ufeff"))))
-
-(defun doom-dashboard-phrase ()
-  (phrase-insert-async
-   (progn
-     (setq-local phrase-position (point))
-     (mapconcat
-      (lambda (line)
-        (+doom-dashboard--center
-         +doom-dashboard--width
-         (with-temp-buffer
-           (insert-text-button
-            line
-            'action
-            (lambda (_)
-              (setq phrase-last nil)
-              (+doom-dashboard-reload t))
-            'face 'doom-dashboard-menu-title
-            'mouse-face 'doom-dashboard-menu-title
-            'help-echo "Random phrase"
-            'follow-link t)
-           (buffer-string))))
-      (split-string
-       (with-temp-buffer
-         (insert phrase)
-         (setq fill-column (min 70 (/ (* 2 (window-width)) 3)))
-         (fill-region (point-min) (point-max))
-         (buffer-string))
-       "\n")
-      "\n"))
-   nil t
-   (progn
-     (goto-char phrase-position)
-     (forward-whitespace 1))
-   +doom-dashboard-name))
-
-(defadvice! doom-dashboard-widget-loaded-with-phrase ()
-  :override #'doom-dashboard-widget-loaded
-  (setq line-spacing 0.2)
-  (insert
-   "\n\n"
-   (propertize
-    (+doom-dashboard--center
-     +doom-dashboard--width
-     (doom-display-benchmark-h 'return))
-    'face 'doom-dashboard-loaded)
-   "\n"
-   (doom-dashboard-phrase)
-   "\n"))
-
 (remove-hook '+doom-dashboard-functions #'doom-dashboard-widget-shortmenu)
 (add-hook! '+doom-dashboard-mode-hook (hide-mode-line-mode 1) (hl-line-mode -1))
 (setq-hook! '+doom-dashboard-mode-hook evil-normal-state-cursor (list nil))
@@ -844,8 +582,6 @@ set palette defined ( 0 '%s',\
   (setq org-appear-autoemphasis t
         org-appear-autosubmarkers t
         org-appear-autolinks nil)
-  ;; for proper first-time setup, `org-appear--set-elements'
-  ;; needs to be run after other hooks have acted.
   (run-at-time nil nil #'org-appear--set-elements))
 
 (defun locally-defer-font-lock ()
@@ -1068,15 +804,15 @@ Must be run as part of `org-font-lock-set-keywords-hook'."
 
 (map! :map calc-mode-map
       :after calc
-      :localleader
+      :leader
       :desc "Embedded calc (toggle)" "e" #'calc-embedded)
 (map! :map org-mode-map
       :after org
-      :localleader
+      :leader
       :desc "Embedded calc (toggle)" "E" #'calc-embedded)
 (map! :map latex-mode-map
       :after latex
-      :localleader
+      :leader
       :desc "Embedded calc (toggle)" "e" #'calc-embedded)
 
 (defvar calc-embedded-trail-window nil)
