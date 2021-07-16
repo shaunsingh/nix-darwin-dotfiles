@@ -66,6 +66,7 @@
 (package! focus)
 ;;always get the latest doom themes
 (unpin! doom-themes)
+(unpin! org-mode)
 ;;scroll by visual lines, not lines
 (package! evil-better-visual-line)
 ;;markdown

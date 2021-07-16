@@ -14,9 +14,9 @@
 ;;fonts
 (setq doom-font (font-spec :family "SF Mono" :size 14 :weight 'light)
       doom-big-font (font-spec :family "SF Mono" :size 20 :weight 'light)
-      doom-variable-pitch-font (font-spec :family "Menlo" :size 15 :weight 'Regular)
+      doom-variable-pitch-font (font-spec :family "Helvetica Neue" :size 16 :weight 'Regular)
       doom-unicode-font (font-spec :family "SF Mono":weight 'light)
-      ivy-posframe-font (font-spec :family "SF Mono" :size 14.5 :weight 'light)
+      ivy-posframe-font (font-spec :family "SF Mono" :size 15 :weight 'light)
       doom-serif-font (font-spec :family "Menlo" :weight 'Regular))
 
 ;;mixed pitch modes
@@ -39,8 +39,7 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
     "A variable-pitch face with serifs."
     :group 'basic-faces)
   (setq mixed-pitch-set-height t)
-  ;;(setq variable-pitch-serif-font (font-spec :family "Alegreya" :size 14))
-  (setq variable-pitch-serif-font (font-spec :family "Menlo" :size 14))
+  (setq variable-pitch-serif-font (font-spec :family "Helvetica Neue" :size 16))
   (set-face-attribute 'variable-pitch-serif nil :font variable-pitch-serif-font)
   (defun mixed-pitch-serif-mode (&optional arg)
     "Change the default face of the current buffer to a serifed variable pitch, while keeping some faces fixed pitch."
@@ -48,12 +47,10 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
     (let ((mixed-pitch-face 'variable-pitch-serif))
       (mixed-pitch-mode (or arg 'toggle)))))
 
-;;add the few missing Alegreya Nerd Font ligatures
-(set-char-table-range composition-function-table ?f '(["\\(?:ff?[fijlt]\\)" 0 font-shape-gstring]))
-(set-char-table-range composition-function-table ?T '(["\\(?:Th\\)" 0 font-shape-gstring]))
-
-(setq doom-theme 'doom-nord)
-(setq doom-nord-padded-modeline t)
+(setq doom-theme 'doom-vibrant)
+(setq doom-vibrant-padded-modeline t)
+;;(setq doom-theme 'doom-flatwhite)
+;;(setq doom-fw-padded-modeline t)
 
 (setq undo-limit 80000000                          ;I mess up too much
       evil-want-fine-undo t                        ;By default while in insert all changes are one big blob. Be more granular
@@ -64,7 +61,6 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 (setq truncate-string-ellipsis "…")        ;default ellipses suck
 (setq-default delete-by-moving-to-trash t) ;delete to system trash instead
 (add-to-list 'default-frame-alist '(inhibit-double-buffering . t)) ;;stops flickering
-(setq-default x-stretch-cursor t)          ;make the cursor the size of the char under it (tabs)
 (setq browse-url-browser-function 'xwidget-webkit-browse-url) ;use xwidgets as my broweser
 (setq display-line-numbers-type nil) ;; line numbers are slow I hate it
 
@@ -89,9 +85,14 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 ;; Implicit /g flag on evil ex substitution, because I less often want the default behavior.
 (setq evil-ex-substitute-global t)
 
-;;disable line dividers
 (custom-set-faces!
   `(vertical-border :background ,(doom-color 'bg) :foreground ,(doom-color 'bg)))
+
+(when (boundp 'window-divider-mode)
+  (setq window-divider-default-places nil
+        window-divider-default-bottom-width 0
+        window-divider-default-right-width 0)
+  (window-divider-mode -1))
 
 ;;disable cursorline
 (remove-hook 'doom-first-buffer-hook #'global-hl-line-mode)
@@ -108,8 +109,8 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 (custom-set-faces!
   `(minimap-active-region-background :background unspecified))
 
+(set-frame-parameter nil 'internal-border-width 15)
 (setq-default left-margin-width 2)
-(setq-default right-margin-width 2)
 (setq-default line-spacing 0.35)
 
 ;;modeline (icons, config, battery)
@@ -128,8 +129,44 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
                 t)))
 (add-hook 'after-change-major-mode-hook #'doom-modeline-conditional-buffer-encoding) ;;remove encoding
 
+(defun centaur-tabs-get-total-tab-length ()
+  (length (centaur-tabs-tabs (centaur-tabs-current-tabset))))
+
+(defun centaur-tabs-hide-on-window-change ()
+  (run-at-time nil nil
+               (lambda ()
+                 (centaur-tabs-hide-check (centaur-tabs-get-total-tab-length)))))
+
+(defun centaur-tabs-hide-check (len)
+  (shut-up
+    (cond
+     ((and (= len 1) (not (centaur-tabs-local-mode))) (call-interactively #'centaur-tabs-local-mode))
+     ((and (>= len 2) (centaur-tabs-local-mode)) (call-interactively #'centaur-tabs-local-mode)))))
+
+(after! centaur-tabs
+  (centaur-tabs-mode -1)
+  (setq centaur-tabs-height 36
+        centaur-tabs-set-icons t
+        centaur-tabs-gray-out-icons 'buffer)
+  (add-hook 'window-configuration-change-hook 'centaur-tabs-hide-on-window-change)
+  (centaur-tabs-change-fonts "Menlo" 140)
+  (centaur-tabs-headline-match))
+
+(custom-set-faces!
+  `(centaur-tabs-default :background ,(doom-color 'bg))
+  `(centaur-tabs-selected :background ,(doom-color 'bg_alt))
+  `(centaur-tabs-unselected :background ,(doom-color 'bg)))
+
+;;make treemacs thinner
+(setq treemacs-width 25)
+;;set treemacs to use the theme
+(setq doom-themes-treemacs-theme "doom-colors")
+
+(after! solaire-mode
+  (remove-hook 'solaire-global-mode-hook #'solaire-mode-fix-minibuffer))
+
 (after! ivy-posframe
-(setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-top-center))))
+(setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center))))
 
 (after! company
   (setq company-idle-delay nil
@@ -148,7 +185,7 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
   :hook (lsp-mode . lsp-ui-mode)
   :config
   (setq lsp-ui-sideline-enable nil; not anymore useful than flycheck
-        lsp-ui-doc-enable t; slow and redundant with K
+        lsp-ui-doc-enable t
         lsp-ui-doc-delay 2
         lsp-ui-doc-header nil
         lsp-ui-doc-include-signature nil
@@ -241,8 +278,7 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 ;;      org-log-done 'time                          ; having the time a item is done sounds convenient
       org-list-allow-alphabetical t               ; have a. A. a) A) list bullets
 ;;      org-export-in-background t                  ; run export processes in external emacs process
-      org-catch-invisible-edits 'smart            ; try not to accidently do weird stuff in invisible regions
-      org-export-with-sub-superscripts '{})       ; don't treat lone _ / ^ as sub/superscripts, require _{} / ^{}
+      org-catch-invisible-edits 'smart)            ; try not to accidently do weird stuff in invisible regions
 
 (add-hook 'org-mode-hook 'turn-on-flyspell)
 
@@ -335,10 +371,8 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 (defvar org-view-external-file-extensions '("html")
   "File formats that should be opened externally.")
 
-;;use pdf-tools (with backups)
 (setq +latex-viewers '(pdf-tools evince zathura okular skim sumatrapdf))
 
-;;start with latex preview
 (after! org (setq org-startup-with-latex-preview t)
   (plist-put org-format-latex-options :background "Transparent"))
 
