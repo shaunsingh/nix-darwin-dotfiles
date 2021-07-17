@@ -14,7 +14,7 @@
 ;;fonts
 (setq doom-font (font-spec :family "SF Mono" :size 14 :weight 'light)
       doom-big-font (font-spec :family "SF Mono" :size 20 :weight 'light)
-      doom-variable-pitch-font (font-spec :family "Helvetica Neue" :size 16 :weight 'Regular)
+      doom-variable-pitch-font (font-spec :family "Helvetica Neue" :size 16 :weight 'Medium)
       doom-unicode-font (font-spec :family "SF Mono":weight 'light)
       ivy-posframe-font (font-spec :family "SF Mono" :size 15 :weight 'light)
       doom-serif-font (font-spec :family "Menlo" :weight 'Regular))
@@ -39,7 +39,7 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
     "A variable-pitch face with serifs."
     :group 'basic-faces)
   (setq mixed-pitch-set-height t)
-  (setq variable-pitch-serif-font (font-spec :family "Helvetica Neue" :size 16))
+  (setq variable-pitch-serif-font (font-spec :family "Helvetica Neue" :size 16 :weight 'Medium))
   (set-face-attribute 'variable-pitch-serif nil :font variable-pitch-serif-font)
   (defun mixed-pitch-serif-mode (&optional arg)
     "Change the default face of the current buffer to a serifed variable pitch, while keeping some faces fixed pitch."
@@ -49,8 +49,6 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 
 (setq doom-theme 'doom-vibrant)
 (setq doom-vibrant-padded-modeline t)
-;;(setq doom-theme 'doom-flatwhite)
-;;(setq doom-fw-padded-modeline t)
 
 (setq undo-limit 80000000                          ;I mess up too much
       evil-want-fine-undo t                        ;By default while in insert all changes are one big blob. Be more granular
@@ -63,6 +61,8 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 (add-to-list 'default-frame-alist '(inhibit-double-buffering . t)) ;;stops flickering
 (setq browse-url-browser-function 'xwidget-webkit-browse-url) ;use xwidgets as my broweser
 (setq display-line-numbers-type nil) ;; line numbers are slow I hate it
+(setq frame-resize-pixelwise t) ;;needed for twm
+(fringe-mode 0) ;;disable fringe
 
 (setq +ligatures-in-modes '(org-mode))
 (setq +ligatures-extras-in-modes '(org-mode))      ;ligatures in org mode
@@ -111,6 +111,7 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 
 (set-frame-parameter nil 'internal-border-width 15)
 (setq-default left-margin-width 2)
+(setq-default right-margin-width 2)
 (setq-default line-spacing 0.35)
 
 ;;modeline (icons, config, battery)

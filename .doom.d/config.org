@@ -52,7 +52,7 @@ I like the apple fonts for programming, so I'll go with SF Mono. I prefer a roun
 ;;fonts
 (setq doom-font (font-spec :family "SF Mono" :size 14 :weight 'light)
       doom-big-font (font-spec :family "SF Mono" :size 20 :weight 'light)
-      doom-variable-pitch-font (font-spec :family "Helvetica Neue" :size 16 :weight 'Regular)
+      doom-variable-pitch-font (font-spec :family "Helvetica Neue" :size 16 :weight 'Medium)
       doom-unicode-font (font-spec :family "SF Mono":weight 'light)
       ivy-posframe-font (font-spec :family "SF Mono" :size 15 :weight 'light)
       doom-serif-font (font-spec :family "Menlo" :weight 'Regular))
@@ -80,7 +80,7 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
     "A variable-pitch face with serifs."
     :group 'basic-faces)
   (setq mixed-pitch-set-height t)
-  (setq variable-pitch-serif-font (font-spec :family "Helvetica Neue" :size 16))
+  (setq variable-pitch-serif-font (font-spec :family "Helvetica Neue" :size 16 :weight 'Medium))
   (set-face-attribute 'variable-pitch-serif nil :font variable-pitch-serif-font)
   (defun mixed-pitch-serif-mode (&optional arg)
     "Change the default face of the current buffer to a serifed variable pitch, while keeping some faces fixed pitch."
@@ -105,8 +105,6 @@ Right now I usually use doom-vibrant
 #+begin_src elisp
 (setq doom-theme 'doom-vibrant)
 (setq doom-vibrant-padded-modeline t)
-;;(setq doom-theme 'doom-flatwhite)
-;;(setq doom-fw-padded-modeline t)
 #+end_src
 
 ** Better Defaults
@@ -123,6 +121,8 @@ The defaults for emacs aren't so good nowadays. Lets fix that up a bit
 (add-to-list 'default-frame-alist '(inhibit-double-buffering . t)) ;;stops flickering
 (setq browse-url-browser-function 'xwidget-webkit-browse-url) ;use xwidgets as my broweser
 (setq display-line-numbers-type nil) ;; line numbers are slow I hate it
+(setq frame-resize-pixelwise t) ;;needed for twm
+(fringe-mode 0) ;;disable fringe
 #+end_src
 
 I like fancy ligatures in org mode, so lets enable that as well
@@ -209,6 +209,7 @@ I like a bit of padding on the left hand side, and lets make the line spacing co
 #+begin_src elisp
 (set-frame-parameter nil 'internal-border-width 15)
 (setq-default left-margin-width 2)
+(setq-default right-margin-width 2)
 (setq-default line-spacing 0.35)
 #+end_src
 
