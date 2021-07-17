@@ -56,6 +56,18 @@ doom sync -u
 
 If you modify your shell configuration, run `doom env` to regenerate env vars
 
+You may get errors due to missing fonts on linux. In which case either switch the fonts to what you need, or use DejaVu fonts: 
+```lisp
+;;fonts
+(setq doom-font (font-spec :family "DejaVu Sans Mono" :size 14 :weight 'light)
+      doom-big-font (font-spec :family "DejaVu Sans Mono" :size 20 :weight 'light)
+      doom-variable-pitch-font (font-spec :family "DejaVu Sans" :size 16 :weight 'Medium)
+      doom-unicode-font (font-spec :family "DejaVu Sans Mono":weight 'light)
+      ivy-posframe-font (font-spec :family "DejaVu Sans Mono" :size 15 :weight 'light)
+      doom-serif-font (font-spec :family "DejaVu Sans Mono" :weight 'Regular))
+```
+(and adjust the serif writeroom font)
+
 ### Neovim
 
 My neovim configuration is designed for programming and quick text editing. As such, it opens in under 40ms.
