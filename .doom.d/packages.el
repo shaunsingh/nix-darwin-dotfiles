@@ -60,13 +60,15 @@
            :files ("*.el" "filters" "preprocessors")))
 ;;add some padding in org mode
 (package! org-padding :recipe (:host github :repo "TonCherAmi/org-padding" ))
+;;latex snippets
+(package! aas :recipe (:host github :repo "ymarco/auto-activating-snippets"))
+(package! laas :recipe (:host github :repo "tecosaur/LaTeX-auto-activating-snippets"))
 ;;use latex in the emacs calaculator
 (package! calctex :recipe (:host github :repo "johnbcoughlin/calctex" :files ("*.el" "calctex/*.el" "calctex-contrib/*.el" "org-calctex/*.el" "vendor")))
 ;;focus mode in writeroom mode
 (package! focus)
 ;;always get the latest doom themes
 (unpin! doom-themes)
-(unpin! org-mode)
 ;;scroll by visual lines, not lines
 (package! evil-better-visual-line)
 ;;markdown

@@ -14,7 +14,7 @@
 ;;fonts
 (setq doom-font (font-spec :family "SF Mono" :size 14 :weight 'light)
       doom-big-font (font-spec :family "SF Mono" :size 20 :weight 'light)
-      doom-variable-pitch-font (font-spec :family "Helvetica Neue" :size 16 :weight 'Medium)
+      doom-variable-pitch-font (font-spec :family "SF Pro" :size 16 :weight 'Medium)
       doom-unicode-font (font-spec :family "SF Mono":weight 'light)
       ivy-posframe-font (font-spec :family "SF Mono" :size 15 :weight 'light)
       doom-serif-font (font-spec :family "Menlo" :weight 'Regular))
@@ -39,7 +39,7 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
     "A variable-pitch face with serifs."
     :group 'basic-faces)
   (setq mixed-pitch-set-height t)
-  (setq variable-pitch-serif-font (font-spec :family "Helvetica Neue" :size 16 :weight 'Medium))
+  (setq variable-pitch-serif-font (font-spec :family "SF Pro" :size 16 :weight 'Medium))
   (set-face-attribute 'variable-pitch-serif nil :font variable-pitch-serif-font)
   (defun mixed-pitch-serif-mode (&optional arg)
     "Change the default face of the current buffer to a serifed variable pitch, while keeping some faces fixed pitch."
@@ -63,6 +63,9 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 (setq display-line-numbers-type nil) ;; line numbers are slow I hate it
 (setq frame-resize-pixelwise t) ;;needed for twm
 (fringe-mode 0) ;;disable fringe
+(setq mac-mouse-wheel-smooth-scroll t) ;;emacs-mac smooth scroll
+  ;;(setq mouse-wheel-scroll-amount '(3 ((shift) . 1) ((control) . nil)))
+  ;;:(setq mouse-wheel-progressive-speed nil)
 
 (setq +ligatures-in-modes '(org-mode))
 (setq +ligatures-extras-in-modes '(org-mode))      ;ligatures in org mode
@@ -150,7 +153,7 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
         centaur-tabs-set-icons t
         centaur-tabs-gray-out-icons 'buffer)
   (add-hook 'window-configuration-change-hook 'centaur-tabs-hide-on-window-change)
-  (centaur-tabs-change-fonts "Menlo" 140)
+  (centaur-tabs-change-fonts "SF Pro" 140)
   (centaur-tabs-headline-match))
 
 (custom-set-faces!
@@ -170,9 +173,8 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center))))
 
 (after! company
-  (setq company-idle-delay nil
-        company-minimum-prefix-length 1
-        company-show-numbers t))
+  (setq company-idle-delay 0.5
+        company-minimum-prefix-length 1))
 (set-company-backend!
   '(text-mode
     markdown-mode
@@ -182,47 +184,59 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
     company-ispell
     company-files))
 
+(use-package! aas
+  :commands aas-mode)
+
+(use-package! laas
+  :hook (LaTeX-mode . laas-mode)
+  :config
+  (defun laas-tex-fold-maybe ()
+    (unless (equal "/" aas-transient-snippet-key)
+      (+latex-fold-last-macro-a)))
+  (add-hook 'aas-post-snippet-expand-hook #'laas-tex-fold-maybe))
+
 (use-package! lsp-ui
   :hook (lsp-mode . lsp-ui-mode)
   :config
   (setq lsp-ui-sideline-enable nil; not anymore useful than flycheck
-        lsp-ui-doc-enable t
-        lsp-ui-doc-delay 2
-        lsp-ui-doc-header nil
-        lsp-ui-doc-include-signature nil
-        lsp-ui-doc-position 'at-point
-        lsp-ui-doc-alignment 'window
+        lsp-ui-doc-enable nil
         lsp-enable-symbol-highlighting nil))
-
-(setq-default lsp-ui-doc-frame-parameters
-                '((left . -1)
-                  (top . -1)
-                  (no-accept-focus . t)
-                  (min-width . 0)
-                  (width . 0)
-                  (min-height . 0)
-                  (height . 0)
-                  (internal-border-width . 0)
-                  (vertical-scroll-bars)
-                  (horizontal-scroll-bars)
-                  (left-fringe . 0)
-                  (right-fringe . 0)
-                  (menu-bar-lines . 0)
-                  (tool-bar-lines . 0)
-                  (line-spacing . 0.1)
-                  (unsplittable . t)
-                  (undecorated . t)
-                  (minibuffer . nil)
-                  (visibility . nil)
-                  (mouse-wheel-frame . nil)
-                  (no-other-frame . t)
-                  (cursor-type)
-                  (no-special-glyphs . t)))
-
 
 ;;java home for java-lsp
 (setenv "JAVA_HOME"  "/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home")
 (setq lsp-java-java-path "/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home/bin/java")
+
+;;latex
+(setq lsp-tex-server 'digestif)
+
+(cl-defmacro lsp-org-babel-enable (lang)
+  "Support LANG in org source code block."
+  (setq centaur-lsp 'lsp-mode)
+  (cl-check-type lang stringp)
+  (let* ((edit-pre (intern (format "org-babel-edit-prep:%s" lang)))
+         (intern-pre (intern (format "lsp--%s" (symbol-name edit-pre)))))
+    `(progn
+       (defun ,intern-pre (info)
+         (let ((file-name (->> info caddr (alist-get :file))))
+           (unless file-name
+             (setq file-name (make-temp-file "babel-lsp-")))
+           (setq buffer-file-name file-name)
+           (lsp-deferred)))
+       (put ',intern-pre 'function-documentation
+            (format "Enable lsp-mode in the buffer of org source block (%s)."
+                    (upcase ,lang)))
+       (if (fboundp ',edit-pre)
+           (advice-add ',edit-pre :after ',intern-pre)
+         (progn
+           (defun ,edit-pre (info)
+             (,intern-pre info))
+           (put ',edit-pre 'function-documentation
+                (format "Prepare local buffer environment for org source block (%s)."
+                        (upcase ,lang))))))))
+(defvar org-babel-lang-list
+  '("go" "python" "ipython" "bash" "sh" "java" "latex"))
+(dolist (lang org-babel-lang-list)
+  (eval `(lsp-org-babel-enable ,lang)))
 
 ;;add padding in org
 (use-package! org-padding
@@ -375,6 +389,7 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 (setq +latex-viewers '(pdf-tools evince zathura okular skim sumatrapdf))
 
 (after! org (setq org-startup-with-latex-preview t)
+  (plist-put org-format-latex-options :scale 1)
   (plist-put org-format-latex-options :background "Transparent"))
 
 (setq org-display-inline-images t)
@@ -709,7 +724,6 @@ Must be run as part of `org-font-lock-set-keywords-hook'."
 ;;make bullets look better
 (after! org-superstar
   (setq org-superstar-headline-bullets-list '("◉" "○" "✸" "✿" "✤" "✜" "◆" "▶")
-        ;; org-superstar-headline-bullets-list '("Ⅰ" "Ⅱ" "Ⅲ" "Ⅳ" "Ⅴ" "Ⅵ" "Ⅶ" "Ⅷ" "Ⅸ" "Ⅹ")
         org-superstar-prettify-item-bullets t ))
 
 (setq org-ellipsis " ▾ "
@@ -849,34 +863,3 @@ Must be run as part of `org-font-lock-set-keywords-hook'."
       :after latex
       :leader
       :desc "Embedded calc (toggle)" "e" #'calc-embedded)
-
-(defvar calc-embedded-trail-window nil)
-(defvar calc-embedded-calculator-window nil)
-
-(defadvice! calc-embedded-with-side-pannel (&rest _)
-  :after #'calc-do-embedded
-  (when calc-embedded-trail-window
-    (ignore-errors
-      (delete-window calc-embedded-trail-window))
-    (setq calc-embedded-trail-window nil))
-  (when calc-embedded-calculator-window
-    (ignore-errors
-      (delete-window calc-embedded-calculator-window))
-    (setq calc-embedded-calculator-window nil))
-  (when (and calc-embedded-info
-             (> (* (window-width) (window-height)) 1200))
-    (let ((main-window (selected-window))
-          (vertical-p (> (window-width) 80)))
-      (select-window
-       (setq calc-embedded-trail-window
-             (if vertical-p
-                 (split-window-horizontally (- (max 30 (/ (window-width) 3))))
-               (split-window-vertically (- (max 8 (/ (window-height) 4)))))))
-      (switch-to-buffer "*Calc Trail*")
-      (select-window
-       (setq calc-embedded-calculator-window
-             (if vertical-p
-                 (split-window-vertically -6)
-               (split-window-horizontally (- (/ (window-width) 2))))))
-      (switch-to-buffer "*Calculator*")
-      (select-window main-window))))
