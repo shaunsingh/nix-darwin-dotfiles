@@ -1,3 +1,9 @@
+local present1, gl = pcall(require, "lualine")
+local present2, condition = pcall(require, "lualine.condition")
+if not (present1 or present2) then
+    return
+end
+
 local lualine = require'lualine'
 
 --nord

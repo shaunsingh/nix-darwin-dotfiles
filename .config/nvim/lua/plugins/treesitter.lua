@@ -1,9 +1,9 @@
-local M = {}
+local present, ts_config = pcall(require, "nvim-treesitter.configs")
+if not present then
+    return
+end
 
-M.config = function()
-    local ts_config = require("nvim-treesitter.configs")
-
-    ts_config.setup {
+ts_config.setup {
         ensure_installed = {
             "java",
             "kotlin",
@@ -22,6 +22,3 @@ M.config = function()
             use_languagetree = true
         }
     }
-end
-
-return M

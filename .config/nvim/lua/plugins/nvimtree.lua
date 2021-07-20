@@ -1,6 +1,9 @@
-local M = {}
+local present, tree_c = pcall(require, "nvim-tree.config")
+if not present then
+    return
+end
 
-M.config = function()
+local tree_cb = tree_c.nvim_tree_callback
 local g = vim.g
 
 vim.o.termguicolors = true
@@ -53,15 +56,3 @@ g.nvim_tree_icons = {
         }
 }
 
--- hide line numbers , statusline in specific buffers!
-vim.api.nvim_exec(
-    [[
-   au BufEnter term://* setlocal nonumber
-   au BufEnter,BufWinEnter,WinEnter,CmdwinEnter * if bufname('%') == "NvimTree" | set laststatus=0 | else | set laststatus=2 | endif
-   au BufEnter term://* set laststatus=0
-]],
-    false
-)
-end
-
-return M

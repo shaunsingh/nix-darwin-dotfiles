@@ -1,20 +1,17 @@
--- load all plugins
-require "pluginList"
-require "misc-utils"
+require "options"
 
-local g = vim.g
+local async
+async =
+    vim.loop.new_async(
+    vim.schedule_wrap(
+        function()
+            require "pluginList"
+            require "plugins.bufferline"
+            require "mappings"
+            require("utils").hideStuff()
 
-g.mapleader = " "
-g.auto_save = false
-
---nord
-g.nord_style = "nord"
-g.nord_borders = false
-g.nord_contrast = false
-g.nord_cursorline_transparent = true
-g.nord_disable_background = false -- doesn't work with neovide
-require('nord').set()
-
-require "mappings"
-require "statusline"
-require "top-bufferline"
+            async:close()
+        end
+    )
+)
+async:send()

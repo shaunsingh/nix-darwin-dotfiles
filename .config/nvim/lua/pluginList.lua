@@ -1,24 +1,38 @@
-local packer = require("packer")
+local present, _ = pcall(require, "packerInit")
+local packer
+
+if present then
+    packer = require "packer"
+else
+    return false
+end
+
 local use = packer.use
 
 return packer.startup(
     function()
-        use "wbthomason/packer.nvim"
+        use {
+            "wbthomason/packer.nvim",
+            event = "VimEnter"
+        }
 
-        use "akinsho/nvim-bufferline.lua"
-        use {'hoob3rt/lualine.nvim'}
+        use {
+            "akinsho/nvim-bufferline.lua",
+        }
+
+        use {
+            'hoob3rt/lualine.nvim',
+            config = function()
+                require "plugins.statusline"
+            end
+        }
 
         -- color related stuff
         use {
             'shaunsingh/nord.nvim',
-        }
-
-        use {
-            'phaazon/hop.nvim',
-            as = 'hop',
-            event = "BufRead",
+            after = "packer.nvim",
             config = function()
-                require'hop'.setup {}
+                require "theme"
             end
         }
 
@@ -26,8 +40,7 @@ return packer.startup(
             "norcalli/nvim-colorizer.lua",
             event = "BufRead",
             config = function()
-                require("colorizer").setup()
-                vim.cmd("ColorizerReloadAllBuffers")
+                require("plugins.others").colorizer()
             end
         }
 
@@ -36,37 +49,20 @@ return packer.startup(
             "nvim-treesitter/nvim-treesitter",
             event = "BufRead",
             config = function()
-                require("treesitter-nvim").config()
+                require "plugins.treesitter"
             end
-        }
-
-        use {
-            "neovim/nvim-lspconfig",
-            event = "BufRead",
-            config = function()
-                require("nvim-lspconfig").config()
-            end
-        }
-
-        use {
-            "ahmedkhalf/lsp-rooter.nvim",
-            event = "BufRead",
         }
 
         use {
             "kabouzeid/nvim-lspinstall",
-            event = "BufRead",
+            event = "BufRead"
         }
 
         use {
-            'kristijanhusak/orgmode.nvim',
-            ft = {'org'},
+            "neovim/nvim-lspconfig",
+            after = "nvim-lspinstall",
             config = function()
-                require("orgmode").setup(
-                    {
-                        org_highlight_latex_and_related = 'entities'
-                    }
-                )
+                require "plugins.lspconfig"
             end
         }
 
@@ -74,7 +70,7 @@ return packer.startup(
             "onsails/lspkind-nvim",
             event = "BufRead",
             config = function()
-                require("lspkind").init()
+                require("plugins.others").lspkind()
             end
         }
 
@@ -83,19 +79,22 @@ return packer.startup(
             "hrsh7th/nvim-compe",
             event = "InsertEnter",
             config = function()
-                require("compe-completion").config()
+                require "plugins.compe"
             end,
-            wants = {"LuaSnip"},
+            wants = "LuaSnip",
             requires = {
                 {
                     "L3MON4D3/LuaSnip",
                     wants = "friendly-snippets",
                     event = "InsertCharPre",
                     config = function()
-                        require("compe-completion").snippets()
+                        require "plugins.luasnip"
                     end
                 },
-                "rafamadriz/friendly-snippets"
+                {
+                    "rafamadriz/friendly-snippets",
+                    event = "InsertCharPre"
+                }
             }
         }
 
@@ -104,31 +103,48 @@ return packer.startup(
             "kyazdani42/nvim-tree.lua",
             cmd = "NvimTreeToggle",
             config = function()
-                require("nvimTree").config()
+                require "plugins.nvimtree"
             end
         }
 
-        use "kyazdani42/nvim-web-devicons"
+        use {
+            "kyazdani42/nvim-web-devicons",
+            after = "nord.nvim",
+        }
+
+        use {
+            "nvim-lua/plenary.nvim",
+            event = "BufRead"
+        }
+        use {
+            "nvim-lua/popup.nvim",
+            after = "plenary.nvim"
+        }
+
         use {
             "nvim-telescope/telescope.nvim",
-            requires = {
-                {"nvim-lua/popup.nvim"},
-                {"nvim-lua/plenary.nvim"},
-                {"nvim-telescope/telescope-fzf-native.nvim", run = "make"},
-                {"nvim-telescope/telescope-media-files.nvim"}
-            },
             cmd = "Telescope",
             config = function()
-                require("telescope-nvim").config()
+                require "plugins.telescope"
             end
+        }
+
+        use {
+            "nvim-telescope/telescope-fzf-native.nvim",
+            run = "make",
+            cmd = "Telescope"
+        }
+        use {
+            "nvim-telescope/telescope-media-files.nvim",
+            cmd = "Telescope"
         }
 
         -- git stuff
         use {
             "lewis6991/gitsigns.nvim",
-            event = "BufRead",
+            after = "plenary.nvim",
             config = function()
-                require("gitsigns-nvim").config()
+                require "plugins.gitsigns"
             end
         }
 
@@ -137,21 +153,20 @@ return packer.startup(
             "windwp/nvim-autopairs",
             after = "nvim-compe",
             config = function()
-                require("nvim-autopairs").setup()
-                require("nvim-autopairs.completion.compe").setup(
-                    {
-                        map_cr = true,
-                        map_complete = true -- insert () func completion
-                    }
-                )
+                require "plugins.autopairs"
             end
+        }
+
+        use {
+            "andymass/vim-matchup",
+            event = "CursorMoved"
         }
 
         use {
             "terrortylor/nvim-comment",
             cmd = "CommentToggle",
             config = function()
-                require("nvim_comment").setup()
+                require("plugins.others").comment()
             end
         }
 
@@ -165,21 +180,13 @@ return packer.startup(
                 "SessionSave"
             },
             setup = function()
-                require("dashboard").config()
+                require "plugins.dashboard"
             end
         }
 
-        use {"tweekmonster/startuptime.vim", cmd = "StartupTime"}
-
-        -- load autosave only if its globally enabled
         use {
-            "Pocco81/AutoSave.nvim",
-            config = function()
-                require("zenmode").autoSave()
-            end,
-            cond = function()
-                return vim.g.auto_save == true
-            end
+            "tweekmonster/startuptime.vim",
+            cmd = "StartupTime"
         }
 
         -- smooth scroll
@@ -187,21 +194,20 @@ return packer.startup(
             "karb94/neoscroll.nvim",
             event = "WinScrolled",
             config = function()
-                require("neoscroll").setup()
+                require("plugins.others").neoscroll()
             end
         }
 
         use {
-            "junegunn/limelight.vim",
-            cmd = {"TZAtaraxis", "TZMinimalist", "TZFocus", "Limelight"},
-        }
-
-        use {
             "Pocco81/TrueZen.nvim",
-            cmd = {"TZAtaraxis", "TZMinimalist", "TZFocus"},
+            cmd = {
+                "TZAtaraxis",
+                "TZMinimalist",
+                "TZFocus"
+            },
             config = function()
-                require("zenmode").config()
-            end,
+                require "plugins.zenmode"
+            end
         }
 
         --   use "alvan/vim-closetag" -- for html autoclosing tag
@@ -210,13 +216,8 @@ return packer.startup(
             "lukas-reineke/indent-blankline.nvim",
             event = "BufRead",
             setup = function()
-                require("misc-utils").blankline()
+                require("plugins.others").blankline()
             end
         }
-    end,
-    {
-        display = {
-            border = {"┌", "─", "┐", "│", "┘", "─", "└", "│"}
-        }
-    }
+    end
 )

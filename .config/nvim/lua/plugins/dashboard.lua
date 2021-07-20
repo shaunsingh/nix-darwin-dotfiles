@@ -1,6 +1,3 @@
-local M = {}
-M.config = function()
-
 local g = vim.g
 local fn = vim.fn
 
@@ -81,6 +78,3 @@ vim.g.dashboard_custom_header = {
                   " `''                                                                      ``'  ",
                   "                                                                               ",
 }
-end
-
-return M

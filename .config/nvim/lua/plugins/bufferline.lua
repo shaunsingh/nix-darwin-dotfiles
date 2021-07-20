@@ -1,3 +1,8 @@
+local present, bufferline = pcall(require, "bufferline")
+if not present then
+    return
+end
+
 local bg = "#2e3440"
 local bg2 = "#3b4252"
 local bg3 = "#282c34"
@@ -5,8 +10,9 @@ local fg = "#CACed6"
 local accent = "#81a1c1"
 local accent2 = "#BF616A" -- Not saved
 local accent3 = "#EBCB8B" -- Not saved
- require('bufferline').setup {
-  options = {
+
+bufferline.setup {
+    options = {
     numbers = "none",
     mappings = true,
     -- NOTE: this plugin is designed with this icon in mind,

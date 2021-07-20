@@ -1,5 +1,3 @@
-local cmd = vim.cmd
-
 local function map(mode, lhs, rhs, opts)
     local options = {noremap = true, silent = true}
     if opts then
@@ -8,7 +6,10 @@ local function map(mode, lhs, rhs, opts)
     vim.api.nvim_set_keymap(mode, lhs, rhs, options)
 end
 
+local cmd = vim.cmd
 local opt = {}
+
+vim.g.mapleader = " "
 
 -- OPEN TERMINALS --
 map("n", "<C-l>", [[<Cmd>vnew term://fish <CR>]], opt) -- term over right
@@ -81,7 +82,17 @@ _G.s_tab_complete = function()
 end
 
 function _G.completions()
-    local npairs = require("nvim-autopairs")
+    local npairs
+    if
+        not pcall(
+            function()
+                npairs = require "nvim-autopairs"
+            end
+        )
+     then
+        return
+    end
+
     if vim.fn.pumvisible() == 1 then
         if vim.fn.complete_info()["selected"] ~= -1 then
             return vim.fn["compe#confirm"]("<CR>")
@@ -112,3 +123,4 @@ map("n", "<S-x>", ":bd!<CR>", opt) -- close tab
 -- move between tabs
 map("n", "<TAB>", [[<Cmd>BufferLineCycleNext<CR>]], opt)
 map("n", "<S-TAB>", [[<Cmd>BufferLineCyclePrev<CR>]], opt)
+
