@@ -1,7 +1,5 @@
 local g = vim.g
 
-g.mapleader = " "
-
 --nord
 g.nord_style = "nord"
 g.nord_borders = false
@@ -15,5 +13,3 @@ vim.cmd([[
     filetype on
     filetype plugin indent on
 ]])
-
-

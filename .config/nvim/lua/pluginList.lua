@@ -18,10 +18,13 @@ return packer.startup(
 
         use {
             "akinsho/nvim-bufferline.lua",
+            after = "nord.nvim",
         }
 
+
         use {
-            'hoob3rt/lualine.nvim',
+            "glepnir/galaxyline.nvim",
+            after = "nord.nvim",
             config = function()
                 require "plugins.statusline"
             end
@@ -209,8 +212,6 @@ return packer.startup(
                 require "plugins.zenmode"
             end
         }
-
-        --   use "alvan/vim-closetag" -- for html autoclosing tag
 
         use {
             "lukas-reineke/indent-blankline.nvim",

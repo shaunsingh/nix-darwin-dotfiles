@@ -1,232 +1,241 @@
-local present1, gl = pcall(require, "lualine")
-local present2, condition = pcall(require, "lualine.condition")
+local present1, gl = pcall(require, "galaxyline")
+local present2, condition = pcall(require, "galaxyline.condition")
 if not (present1 or present2) then
     return
 end
 
-local lualine = require'lualine'
+local gls = gl.section
 
---nord
+gl.short_line_list = {" "}
+
 local colors = {
- bg       = '#2E3440',
- fg       = '#ECEFF4',
- yellow   = '#EBCB8B',
- cyan     = '#8FBCBB',
- darkblue = '#5E81AC',
- green    = '#A3BE8C',
- orange   = '#D08770',
- violet   = '#81A1C1',
- magenta  = '#B48EAD',
- blue     = '#81A1C1';
- red      = '#BF616A';
+  bg = "NONE",
+  white = "#ECEFF4",
+  fg = "#E5E9F0",
+  yellow = "#EBCB8B",
+  cyan = "#A3BE8C",
+  darkblue = "#81A1C1",
+  green = "#8FBCBB",
+  orange = "#D08770",
+  purple = "#B48EAD",
+  magenta = "#BF616A",
+  gray = "#616E88",
+  blue = "#5E81AC",
+  red = "#BF616A"
 }
 
-local conditions = {
-  buffer_not_empty = function()
-    return vim.fn.empty(vim.fn.expand('%:t')) ~= 1
-  end,
-  hide_in_width = function()
-    return vim.fn.winwidth(0) > 80
-  end,
-  check_git_workspace = function()
-    local filepath = vim.fn.expand('%:p:h')
-    local gitdir = vim.fn.finddir('.git', filepath .. ';')
-    return gitdir and #gitdir > 0 and #gitdir < #filepath
-  end
+gls.left[1] = {
+    RainbowRed = {
+    provider = function() return '▊ ' end,
+    highlight = {colors.blue,colors.bg}
+  },
 }
-
--- Config
-local config = {
-  options = {
-    -- Disable sections and component separators
-    component_separators = "",
-    section_separators = "",
-    theme = {
-      -- We are going to use lualine_c and lualine_x as left and
-      -- right section. Both are highlighted by c theme .  So we
-      -- are just setting default looks o statusline
-      normal = { c = {fg = colors.fg, bg = colors.bg}},
-      inactive = { c = {fg = colors.fg, bg = colors.bg}}
+gls.left[2] = {
+    ViMode = {
+        provider = function()
+            -- auto change color according the vim mode
+            local mode_color = {
+                n = colors.cyan, i = colors.blue, v = colors.yellow,
+                [''] = colors.orange, V = colors.yellow,
+                c = colors.magenta, no = colors.green, s = colors.green,
+                S = colors.orange, [''] = colors.orange,
+                ic = colors.yellow, R = colors.magenta, Rv = colors.magenta,
+                cv = colors.red, ce = colors.red, r = colors.cyan,
+                rm = colors.cyan, ['r?'] = colors.cyan,
+                ['!'] = colors.red, t = colors.red
+            }
+            vim.api.nvim_command('hi GalaxyViMode guifg='..mode_color[vim.fn.mode()])
+            return '  '
+        end,
+        highlight = {colors.red,colors.bg,'bold'},
     },
-  },
-  sections = {
-    -- these are to remove the defaults
-    lualine_a = {},
-    lualine_b = {},
-    lualine_y = {},
-    lualine_z = {},
-    -- These will be filled later
-    lualine_c = {},
-    lualine_x = {},
-  },
-  inactive_sections = {
-    -- these are to remove the defaults
-    lualine_a = {},
-    lualine_v = {},
-    lualine_y = {},
-    lualine_z = {},
-    lualine_c = {},
-    lualine_x = {},
+}
+gls.left[3] = {
+  Space = {
+    provider = function () return ' ' end
   }
 }
-
--- Inserts a component in lualine_c at left section
-local function ins_left(component)
-  table.insert(config.sections.lualine_c, component)
-end
-
--- Inserts a component in lualine_x ot right section
-local function ins_right(component)
-  table.insert(config.sections.lualine_x, component)
-end
-
-ins_left {
- function() return '▊' end,
- color = {fg = colors.blue}, -- Sets highlighting of component
- left_padding = 0 -- We don't need space before this
+gls.left[4] = {
+    FileSize = {
+        provider = 'FileSize',
+        separator = '',
+        condition = condition.buffer_not_empty,
+        highlight = {colors.fg,colors.bg}
+    },
 }
-
-ins_left {
-  -- mode component
-  function()
-    -- auto change color according to neovims mode
-    local mode_color = {
-      n      = colors.red,
-      i      = colors.green,
-      v      = colors.blue,
-      [''] = colors.blue,
-      V      = colors.blue,
-      c      = colors.magenta,
-      no     = colors.red,
-      s      = colors.orange,
-      S      = colors.orange,
-      [''] = colors.orange,
-      ic     = colors.yellow,
-      R      = colors.violet,
-      Rv     = colors.violet,
-      cv     = colors.red,
-      ce     = colors.red,
-      r      = colors.cyan,
-      rm     = colors.cyan,
-      ['r?'] = colors.cyan,
-      ['!']  = colors.red,
-      t      = colors.red
+gls.left[5] = {
+  Space = {
+    provider = function () return ' ' end
+  }
+}
+gls.left[6] ={
+    FileIcon = {
+        provider = 'FileIcon',
+        condition = condition.buffer_not_empty,
+        highlight = {require('galaxyline.provider_fileinfo').get_file_icon_color,colors.bg},
+    },
+}
+gls.left[7] = {
+    FileName = {
+        provider = {'FileName'},
+        separator = '',
+        condition = condition.buffer_not_empty,
+        highlight = {colors.green, colors.bg,'bold'}
     }
-    vim.api.nvim_command('hi! LualineMode guifg='..mode_color[vim.fn.mode()] .. " guibg="..colors.bg)
-    return ''
-  end,
-  color = "LualineMode",
-  left_padding = 0,
+
+}
+gls.left[8] = {
+  Space = {
+    provider = function () return ' ' end
+  }
+}
+gls.left[9] = {
+    LineInfo = {
+        provider = 'LineColumn',
+        separator = '',
+        separator_highlight = {'NONE',colors.bg},
+        highlight = {colors.fg,colors.bg},
+    },
+}
+gls.left[10] = {
+    PerCent = {
+        provider = 'LinePercent',
+        separator = '',
+        separator_highlight = {'NONE',colors.bg},
+        highlight = {colors.grey,colors.bg,'bold'},
+    }
+}
+gls.left[11] = {
+    DiagnosticError = {
+        provider = 'DiagnosticError',
+        icon = '  ',
+        highlight = {colors.red,colors.bg}
+    }
+}
+gls.left[12] = {
+    DiagnosticWarn = {
+        provider = 'DiagnosticWarn',
+        icon = '  ',
+        highlight = {colors.yellow,colors.bg},
+    }
+}
+gls.left[13] = {
+    DiagnosticHint = {
+        provider = 'DiagnosticHint',
+        icon = '  ',
+        highlight = {colors.cyan,colors.bg},
+    }
+}
+gls.left[14] = {
+    DiagnosticInfo = {
+        provider = 'DiagnosticInfo',
+        icon = '  ',
+        highlight = {colors.blue,colors.bg},
+    }
+}
+gls.right[1] = {
+    FileEncode = {
+        provider = 'FileEncode',
+        condition = condition.hide_in_width,
+        separator = '  ',
+        separator_highlight = {'NONE',colors.bg},
+        highlight = {colors.green,colors.bg,'bold'}
+    }
 }
 
-ins_left {
-  -- filesize component
-  function()
-    local function format_file_size(file)
-      local size = vim.fn.getfsize(file)
-      if size <= 0 then return '' end
-      local sufixes = {'b', 'k', 'm', 'g'}
-      local i = 1
-      while size > 1024 do
-        size = size / 1024
-        i = i + 1
-      end
-      return string.format('%.1f%s', size, sufixes[i])
-    end
-    local file = vim.fn.expand('%:p')
-    if string.len(file) == 0 then return '' end
-    return format_file_size(file)
-  end,
-  condition = conditions.buffer_not_empty,
+gls.right[2] = {
+    ShowLspClient = {
+        provider = 'GetLspClient',
+        condition = function ()
+          local tbl = {['dashboard'] = true,['']=true}
+          if tbl[vim.bo.filetype] then
+            return false
+          end
+          return true
+        end,
+        icon = '   ',
+        highlight = {colors.yellow,colors.bg,'bold'}
+    }
+}
+gls.right[3] = {
+    FileFormat = {
+        provider = 'FileFormat',
+        condition = condition.hide_in_width,
+        separator = '  ',
+        separator_highlight = {'NONE',colors.bg},
+        highlight = {colors.green,colors.bg,'bold'}
+    }
+}
+gls.right[4] = {
+    GitIcon = {
+        provider = function() return '  ' end,
+        condition = condition.check_git_workspace,
+        separator = ' ',
+        separator_highlight = {'NONE',colors.bg},
+        highlight = {colors.magenta,colors.bg,'bold'},
+    }
+}
+gls.right[5] = {
+    GitBranch = {
+        provider = 'GitBranch',
+        condition = condition.check_git_workspace,
+        highlight = {colors.magenta,colors.bg,'bold'},
+    }
+}
+gls.right[6] = {
+    DiffAdd = {
+        provider = 'DiffAdd',
+        condition = condition.hide_in_width,
+        icon = '    ',
+        highlight = {colors.green,colors.bg},
+    }
+}
+gls.right[7] = {
+    DiffModified = {
+        provider = 'DiffModified',
+        condition = condition.hide_in_width,
+        icon = ' 柳',
+        highlight = {colors.orange,colors.bg},
+    }
+}
+gls.right[8] = {
+    DiffRemove = {
+        provider = 'DiffRemove',
+        condition = condition.hide_in_width,
+        icon = '  ',
+        highlight = {colors.red,colors.bg},
+    }
+}
+gls.right[9] = {
+  Space = {
+    provider = function () return ' ' end
+  }
+}
+gls.right[10] = {
+    RainbowRed = {
+    provider = function() return ' ▊' end,
+    highlight = {colors.blue,colors.bg}
+  },
+}
+gls.short_line_left[1] = {
+    BufferType = {
+        provider = 'FileTypeName',
+        separator = ' ',
+        separator_highlight = {'NONE',colors.bg},
+        highlight = {colors.blue,colors.bg,'bold'}
+    }
+}
+gls.short_line_left[2] = {
+    SFileName = {
+        provider =  'SFileName',
+        condition = condition.buffer_not_empty,
+        highlight = {colors.fg,colors.bg,'bold'}
+    }
 }
 
-ins_left {
-'filetype', format = function() return " " end, right_padding=0
+gls.short_line_right[1] = {
+    BufferIcon = {
+        provider= 'BufferIcon',
+        highlight = {colors.fg,colors.bg}
+    }
 }
-
-ins_left {
-  'filename',
-  condition = conditions.buffer_not_empty,
-  path = 1,
-  color = {fg = colors.yellow, gui = 'bold'},
-  left_padding=0
-}
-
-ins_left {
-  'location',
-  color = {fg = colors.darkblue, gui = 'bold'}
-}
-
-ins_left {
-  'progress',
-  color = {fg = colors.darkblue, gui = 'bold'},
-}
-
-ins_left {
-  'diagnostics',
-  sources = {'nvim_lsp'},
-  symbols = {error = ' ', warn = ' ', info= ' '},
-  color_error = colors.red,
-  color_warn = colors.yellow,
-  color_info = colors.cyan,
-}
-
-ins_right {
-  -- Lsp server name .
-  function ()
-    local msg = 'none'
-    local buf_ft = vim.api.nvim_buf_get_option(0,'filetype')
-    local clients = vim.lsp.get_active_clients()
-    if next(clients) == nil then return msg end
-    for _, client in ipairs(clients) do
-      local filetypes = client.config.filetypes
-      if filetypes and vim.fn.index(filetypes, buf_ft) ~= -1 then
-        return client.name
-      end
-    end
-    return msg
-  end,
-  icon = '[LSP]',
-  color = {fg = colors.fg, gui = 'bold'}
-}
-
-ins_right {
-  function() return 'LF' end,
-  color = {fg = colors.darkblue},
-}
-ins_right {
-  'fileformat', --same one just without the logo
-  icons_enabled = true,
-  color = {fg = colors.darkblue, gui='bold'},
-}
-
-ins_right {
-  'o:encoding', -- option component same as &encoding in viml
-  upper = true, -- I'm not sure why it's upper case either ;)
-  condition = conditions.hide_in_width,
-  color = {fg = colors.darkblue, gui = 'bold'}
-}
-
-ins_right {
-  'branch',
-  icon = '',
-  condition = conditions.check_git_workspace,
-  color = {fg = colors.green, gui = 'bold'},
-}
-
-ins_right {
-  'diff',
-  -- Is it me or the symbol for modified us really weird
-  symbols = {added= ' ', modified= ' ', removed= ' '},
-  color_added = colors.green,
-  color_modified = colors.orange,
-  color_removed = colors.red,
-  condition = conditions.hide_in_width
-}
-
-ins_right {
-  function() return '▊' end,
-  color = {fg = colors.blue},
-  right_padding = 0,
-}
-lualine.setup(config)

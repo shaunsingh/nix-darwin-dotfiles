@@ -10,7 +10,6 @@ ts_config.setup {
             "comment",
             "bash",
             "lua",
-            "fish",
             "python",
             "json",
             "latex",
