@@ -48,10 +48,16 @@ For linux users, either install `emacs` (emacs 27) or [recommended] `emacs-pgtk-
 
 My emacs configuration is designed for org-mode editing, as well as moderate programming use.
 
-If you want to upgrade or sync emacs, you can run
+If you want to recompile the literate configuration, you can run
 
 ```zsh
 doom sync -u
+```
+
+If you want to update the doom configuration, you can run
+
+```zsh
+doom upgrade
 ```
 
 If you modify your shell configuration, run `doom env` to regenerate env vars
