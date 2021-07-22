@@ -11,6 +11,9 @@ vim.cmd([[
 --don't write to the ShaDa file on startup
 vim.opt.shadafile = "NONE"
 
+--set termguicolors
+vim.o.termguicolors = true
+
 --fish slows things down
 vim.opt.shell = "/bin/bash"
 
@@ -40,7 +43,6 @@ opt.smartindent = true
 
 -- shortmess options
 opt.shortmess:append("asI") --disable intro
-
 
 -- disable tilde on end of buffer:
 vim.cmd("let &fcs='eob: '")

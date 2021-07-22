@@ -11,11 +11,6 @@ local opt = {}
 
 vim.g.mapleader = " "
 
--- OPEN TERMINALS --
-map("n", "<C-l>", [[<Cmd>vnew term://fish <CR>]], opt) -- term over right
-map("n", "<C-x>", [[<Cmd> split term://fish | resize 10 <CR>]], opt) --  term bottom
-map("n", "<C-t>t", [[<Cmd> tabnew | term <CR>]], opt) -- term newtab
-
 -- toggle numbers
 map("n", "<leader>n", [[ <Cmd> set nu!<CR>]], opt)
 
@@ -36,7 +31,6 @@ map('n', 'j', 'gj')                                                    --move by
 map('n', 'k', 'gk')
 map('n', '<leader>ww', [[<Cmd>HopWord<CR>]], opt)                              --easymotion/hop
 map('n', '<leader>l', [[<Cmd>HopLine<CR>]], opt)
-map('n', '<leader>/', [[<Cmd>HopPattern<CR>]], opt)
 map('n', '<leader>fP', [[<Cmd>e ~/.config/nvim/init.lua<CR>]], opt)
 
 map('n', '<c-k>', [[<Cmd>wincmd k<CR>]], opt)                                 --ctrlhjkl to navigate splits
@@ -116,11 +110,6 @@ map("n", "<Leader>bb", [[<Cmd>Telescope buffers<CR>]], opt)
 map("n", "<Leader>fh", [[<Cmd>Telescope help_tags<CR>]], opt)
 map("n", "<Leader>fr", [[<Cmd>Telescope oldfiles<CR>]], opt)
 
--- bufferline tab stuff
-map("n", "<S-t>", ":tabnew<CR>", opt) -- new tab
-map("n", "<S-x>", ":bd!<CR>", opt) -- close tab
-
 -- move between tabs
 map("n", "<TAB>", [[<Cmd>BufferLineCycleNext<CR>]], opt)
 map("n", "<S-TAB>", [[<Cmd>BufferLineCyclePrev<CR>]], opt)
-

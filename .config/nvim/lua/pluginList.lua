@@ -220,5 +220,22 @@ return packer.startup(
                 require("plugins.others").blankline()
             end
         }
+
+        use {
+            "phaazon/hop.nvim",
+            cmd = {
+                "HopWord",
+                "HopLine",
+                "HopChar1",
+                "HopChar2",
+                "HopPattern"
+            },
+            as = 'hop',
+            config = function()
+                -- you can configure Hop the way you like here; see :h hop-config
+                require'hop'.setup()
+            end
+        }
+
     end
 )
