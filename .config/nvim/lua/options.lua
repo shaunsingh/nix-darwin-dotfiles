@@ -31,6 +31,9 @@ opt.timeoutlen = 400
 opt.clipboard = "unnamedplus"
 opt.scrolloff = 3
 opt.lazyredraw = true
+opt.linebreak = true
+opt.wrap = true
+opt.textwidth = 80
 
 -- Numbers
 opt.number = false

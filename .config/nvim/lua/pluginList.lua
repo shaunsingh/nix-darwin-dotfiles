@@ -19,6 +19,9 @@ return packer.startup(
         use {
             "akinsho/nvim-bufferline.lua",
             after = "nord.nvim",
+            config = function()
+                require "plugins.bufferline"
+            end
         }
 
 
@@ -98,7 +101,7 @@ return packer.startup(
                     "rafamadriz/friendly-snippets",
                     event = "InsertCharPre"
                 }
-            }
+            },
         }
 
         -- file managing , picker etc
@@ -234,6 +237,16 @@ return packer.startup(
             config = function()
                 -- you can configure Hop the way you like here; see :h hop-config
                 require'hop'.setup()
+            end
+        }
+        use {
+            'kristijanhusak/orgmode.nvim',
+            ft = {'org'},
+            config = function()
+            require('orgmode').setup({
+                org_hide_emphasis_markers = true,
+                org_highlight_latex_and_related = 'entities',
+            })
             end
         }
 

@@ -2,7 +2,6 @@ require "options"
 
 local doom_modules = {
     "pluginList",
-    "plugins.bufferline",
     "mappings",
     "utils"
 }
@@ -13,11 +12,7 @@ async =
     vim.schedule_wrap(
         function()
             for i = 1, #doom_modules, 1 do
-                local ok, res = xpcall(require, debug.traceback, doom_modules[i])
-                if not (ok) then
-                    print("Error loading module : " .. doom_modules[i])
-                    print(res) -- print stack traceback of the error
-                end
+                 pcall(require, doom_modules[i])
             end
             async:close()
         end
