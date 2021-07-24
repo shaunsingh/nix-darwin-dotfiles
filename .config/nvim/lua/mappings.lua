@@ -113,3 +113,13 @@ map("n", "<Leader>fr", [[<Cmd>Telescope oldfiles<CR>]], opt)
 -- move between tabs
 map("n", "<TAB>", [[<Cmd>BufferLineCycleNext<CR>]], opt)
 map("n", "<S-TAB>", [[<Cmd>BufferLineCyclePrev<CR>]], opt)
+
+--sniprun
+map("n", "<Leader>gR", [[<Cmd>SnipRun<CR>]], opt)
+
+-- Packer commands till because we are not loading it at startup
+vim.cmd("silent! command PackerCompile lua require 'pluginList' require('packer').compile()")
+vim.cmd("silent! command PackerInstall lua require 'pluginList' require('packer').install()")
+vim.cmd("silent! command PackerStatus lua require 'pluginList' require('packer').status()")
+vim.cmd("silent! command PackerSync lua require 'pluginList' require('packer').sync()")
+vim.cmd("silent! command PackerUpdate lua require 'pluginList' require('packer').update()")

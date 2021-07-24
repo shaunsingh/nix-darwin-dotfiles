@@ -191,7 +191,7 @@ return packer.startup(
         }
 
         use {
-            "tweekmonster/startuptime.vim",
+            "dstein64/vim-startuptime",
             cmd = "StartupTime"
         }
 
@@ -249,6 +249,22 @@ return packer.startup(
             })
             end
         }
-
+        use {
+            'michaelb/sniprun',
+            run = 'bash ./install.sh',
+            cmd = {
+                "SnipRun",
+                "SnipReset",
+                "SnipClose",
+                "HopPattern"
+            },
+            config = function()
+            require('sniprun').setup({
+                display = {
+                    "Terminal",
+                },
+            })
+            end
+        }
     end
 )

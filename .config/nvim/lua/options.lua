@@ -1,21 +1,14 @@
 local opt = vim.opt
 local g = vim.g
 
--- Turn these off at startup, will be enabled later just before loading the theme
-vim.cmd([[
-    syntax off
-    filetype off
-    filetype plugin indent off
-]])
-
 --don't write to the ShaDa file on startup
-vim.opt.shadafile = "NONE"
+opt.shadafile = "NONE"
 
 --set termguicolors
-vim.o.termguicolors = true
+opt.termguicolors = true
 
 --fish slows things down
-vim.opt.shell = "/bin/bash"
+--opt.shell = "/bin/bash"
 
 opt.ruler = false
 opt.hidden = true
@@ -34,6 +27,8 @@ opt.lazyredraw = true
 opt.linebreak = true
 opt.wrap = true
 opt.textwidth = 80
+opt.wildmenu = true
+opt.wildmode = 'longest:list:full'
 
 -- Numbers
 opt.number = false

@@ -108,7 +108,8 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] =
             spacing = 0
         },
         signs = true,
-        underline = true
+        underline = true,
+        update_in_insert = false
     }
 )
 
