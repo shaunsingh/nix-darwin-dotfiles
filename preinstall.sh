@@ -10,4 +10,4 @@ echo "Installing Dotfiles from Cloned Repository"
 cp -u -R .config ~
 cp -u -R .doom.d ~
 cp -u -R .vim ~
-cp -u .vimrc .gitconfig .ideavimrc .zshrc ~
+cp -u .vimrc .gitconfig .ideavimrc .zshrc .mbsyncrc ~
