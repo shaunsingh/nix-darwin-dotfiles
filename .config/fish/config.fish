@@ -23,3 +23,4 @@ set fish_function_path $fish_function_path ~/IdeaProjects/plugin-foreign-env/fun
 fenv source ~/.nix-profile/etc/profile.d/nix.sh
 
 starship init fish | source
+fish_add_path /opt/homebrew/opt/openssl@1.1/bin

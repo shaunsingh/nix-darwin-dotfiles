@@ -16,7 +16,6 @@
       doom-big-font (font-spec :family "SF Mono" :size 20 :weight 'light)
       doom-variable-pitch-font (font-spec :family "SF Pro" :size 16 :weight 'Medium)
       doom-unicode-font (font-spec :family "SF Mono":weight 'light)
-      ivy-posframe-font (font-spec :family "SF Mono" :size 15 :weight 'light)
       doom-serif-font (font-spec :family "Menlo" :weight 'Regular))
 
 ;;mixed pitch modes
@@ -47,25 +46,29 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
     (let ((mixed-pitch-face 'variable-pitch-serif))
       (mixed-pitch-mode (or arg 'toggle)))))
 
-(setq doom-theme 'doom-vibrant)
-(setq doom-vibrant-padded-modeline t)
+;;(setq doom-theme 'doom-vibrant)
+;;(setq doom-vibrant-padded-modeline t)
+(setq doom-theme 'doom-flatwhite)
+(setq doom-fw-padded-modeline t)
 
 (setq undo-limit 80000000                          ;I mess up too much
       evil-want-fine-undo t                        ;By default while in insert all changes are one big blob. Be more granular
       scroll-margin 2                              ;having a little margin is nice
-      auto-save-default t)                         ;I dont like to lose work
+      auto-save-default t                          ;I dont like to lose work
+      fringe-mode 0                                ;I don't like fringes
+      display-line-numbers-type nil                ;I dislike line numbers
+      truncate-string-ellipsis "…"                 ;default ellipses suck
+      browse-url-browser-function 'xwidget-webkit-browse-url
+      frame-resize-pixelwise t)                    ;needed for twms
 
-(setq org-startup-with-inline-images t)            ;inline images in org mode
-(setq truncate-string-ellipsis "…")        ;default ellipses suck
 (setq-default delete-by-moving-to-trash t) ;delete to system trash instead
 (add-to-list 'default-frame-alist '(inhibit-double-buffering . t)) ;;stops flickering
-(setq browse-url-browser-function 'xwidget-webkit-browse-url) ;use xwidgets as my broweser
-(setq display-line-numbers-type nil) ;; line numbers are slow I hate it
-(setq frame-resize-pixelwise t) ;;needed for twm
 (fringe-mode 0) ;;disable fringe
+
+;I don't use emacs-mac anymore
 (setq mac-mouse-wheel-smooth-scroll t) ;;emacs-mac smooth scroll
-  ;;(setq mouse-wheel-scroll-amount '(3 ((shift) . 1) ((control) . nil)))
-  ;;:(setq mouse-wheel-progressive-speed nil)
+(setq mouse-wheel-scroll-amount '(3 ((shift) . 1) ((control) . nil)))
+:(setq mouse-wheel-progressive-speed nil)
 
 (setq +ligatures-in-modes '(org-mode))
 (setq +ligatures-extras-in-modes '(org-mode))      ;ligatures in org mode
@@ -119,10 +122,11 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 
 ;;modeline (icons, config, battery)
 (display-time-mode 1)                              ;Enable time in the mode-line
-(display-battery-mode 1)
-(setq doom-modeline-major-mode-icon t)
-(setq doom-modeline-enable-word-count t)
-(setq doom-modeline-modal-icon t)
+(display-battery-mode 1)                           ;Enable battery in modeline
+(setq doom-modeline-major-mode-icon t)             ;Show major mode name
+(setq doom-modeline-enable-word-count t)           ;Show word count
+(setq doom-modeline-modal-icon t)                  ;Show vim mode icon
+(setq inhibit-compacting-font-caches t)            ;Don't compact font caches in gc
 
 (defun doom-modeline-conditional-buffer-encoding ()
   "We expect the encoding to be LF UTF-8, so only show the modeline when this is not the case"
@@ -166,12 +170,6 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 ;;set treemacs to use the theme
 (setq doom-themes-treemacs-theme "doom-colors")
 
-(after! solaire-mode
-  (remove-hook 'solaire-global-mode-hook #'solaire-mode-fix-minibuffer))
-
-(after! ivy-posframe
-(setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-frame-center))))
-
 (after! company
   (setq company-idle-delay 0.5
         company-minimum-prefix-length 1))
@@ -194,6 +192,39 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
     (unless (equal "/" aas-transient-snippet-key)
       (+latex-fold-last-macro-a)))
   (add-hook 'aas-post-snippet-expand-hook #'laas-tex-fold-maybe))
+
+(defadvice! fixed-org-yas-expand-maybe-h ()
+  "Expand a yasnippet snippet, if trigger exists at point or region is active.
+Made for `org-tab-first-hook'."
+  :override #'+org-yas-expand-maybe-h
+  (when (and (featurep! :editor snippets)
+             (require 'yasnippet nil t)
+             (bound-and-true-p yas-minor-mode))
+    (and (let ((major-mode (cond ((org-in-src-block-p t)
+                                  (org-src-get-lang-mode (org-eldoc-get-src-lang)))
+                                 ((org-inside-LaTeX-fragment-p)
+                                  'latex-mode)
+                                 (major-mode)))
+               (org-src-tab-acts-natively nil) ; causes breakages
+               ;; Smart indentation doesn't work with yasnippet, and painfully slow
+               ;; in the few cases where it does.
+               (yas-indent-line 'fixed))
+           (cond ((and (or (not (bound-and-true-p evil-local-mode))
+                           (evil-insert-state-p)
+                           (evil-emacs-state-p))
+                       (or (and (bound-and-true-p yas--tables)
+                                (gethash major-mode yas--tables))
+                           (progn (yas-reload-all) t))
+                       (yas--templates-for-key-at-point))
+                  (yas-expand)
+                  t)
+                 ((use-region-p)
+                  (yas-insert-snippet)
+                  t)))
+         ;; HACK Yasnippet breaks org-superstar-mode because yasnippets is
+         ;;      overzealous about cleaning up overlays.
+         (when (bound-and-true-p org-superstar-mode)
+           (org-superstar-restart)))))
 
 (use-package! lsp-ui
   :hook (lsp-mode . lsp-ui-mode)
@@ -234,9 +265,14 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
                 (format "Prepare local buffer environment for org source block (%s)."
                         (upcase ,lang))))))))
 (defvar org-babel-lang-list
-  '("go" "python" "ipython" "bash" "sh" "java" "latex"))
+  '("go" "python" "ipython" "bash" "sh" ))
 (dolist (lang org-babel-lang-list)
   (eval `(lsp-org-babel-enable ,lang)))
+
+(setq org-roam-directory "~/org/roam/")
+
+;;use image previews
+(setq org-startup-with-inline-images t)            ;inline images in org mode
 
 ;;add padding in org
 (use-package! org-padding
@@ -254,7 +290,6 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 (use-package! org-ref
   :after org
   :config
-  (setq org-ref-completion-library 'org-ref-ivy-cite)
   (defadvice! org-ref-open-bibtex-pdf-a ()
     :override #'org-ref-open-bibtex-pdf
     (save-excursion
@@ -288,12 +323,15 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 (use-package! org-pandoc-import
   :after org)
 
-(setq org-directory "~/.org"                      ; let's put files here
+(setq org-directory "~/org"                      ; let's put files here
       org-use-property-inheritance t              ; it's convenient to have properties inherited
-;;      org-log-done 'time                          ; having the time a item is done sounds convenient
+      org-log-done 'time                          ; having the time a item is done sounds convenient
       org-list-allow-alphabetical t               ; have a. A. a) A) list bullets
-;;      org-export-in-background t                  ; run export processes in external emacs process
+      org-export-in-background t                  ; run export processes in external emacs process
       org-catch-invisible-edits 'smart)            ; try not to accidently do weird stuff in invisible regions
+
+(setq org-agenda-files (list "~/org/work.org"
+                             "~/org/school.org"))
 
 (add-hook 'org-mode-hook 'turn-on-flyspell)
 
@@ -388,8 +426,11 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 
 (setq +latex-viewers '(pdf-tools evince zathura okular skim sumatrapdf))
 
+(require 'org-src)
+(setq org-highlight-latex-and-related '(native script entities))
+(add-to-list 'org-src-block-faces '("latex" (:inherit default :extend t)))
+
 (after! org (setq org-startup-with-latex-preview t)
-  (plist-put org-format-latex-options :scale 1)
   (plist-put org-format-latex-options :background "Transparent"))
 
 (setq org-display-inline-images t)
@@ -399,11 +440,6 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 (setq-default org-html-with-latex `dvisvgm)
 (setq org-preview-latex-default-process 'dvisvgm)
 
-;;required for fragtog
-(require 'org-src)
-;;latex visuals
-(setq org-highlight-latex-and-related '(native script entities))
-(add-to-list 'org-src-block-faces '("latex" (:inherit default :extend t)))
 ;;auto toggle between preview/raw latex
 (use-package! org-fragtog
   :hook (org-mode . org-fragtog-mode))
@@ -502,6 +538,24 @@ set palette defined ( 0 '%s',\
             (doom-color 'bg)))
   (setq org-plot/gnuplot-script-preamble #'org-plot/generate-theme)
   (setq org-plot/gnuplot-term-extra #'org-plot/gnuplot-term-properties))
+
+(setq-default pdf-view-display-size 'fit-page)
+(setq pdf-view-resize-factor 1.1)
+
+(set-email-account! "shaunsingh0207"
+  '((mu4e-sent-folder       . "/.mbsync/[Gmail].Sent Mail")
+    (mu4e-drafts-folder     . "/.mbsync/drafts")
+    (mu4e-trash-folder      . "/.mbsync/trash")
+    (mu4e-refile-folder     . "/.mbsync/[Gmail].All Mail")
+    (smtpmail-smtp-user     . "shaunsingh0207@gmail.com")
+    (mu4e-compose-signature . "---\nShaurya Singjh"))
+  t)
+
+;; don't need to run cleanup after indexing for gmail
+(setq mu4e-index-cleanup nil
+      ;; because gmail uses labels as folders we can use lazy check since
+      ;; messages don't really "move"
+      mu4e-index-lazy-check t)
 
 (setq-default major-mode 'org-mode)
 
@@ -604,6 +658,7 @@ set palette defined ( 0 '%s',\
 (setq +zen-text-scale 0.8)
 
 (add-hook 'org-mode-hook #'+org-pretty-mode)
+(setq org-pretty-entities-include-sub-superscripts nil) ;;doesn't play well with latex
 
 (custom-set-faces!
   '(outline-1 :weight extra-bold :height 1.25)

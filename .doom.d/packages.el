@@ -67,9 +67,12 @@
 (package! calctex :recipe (:host github :repo "johnbcoughlin/calctex" :files ("*.el" "calctex/*.el" "calctex-contrib/*.el" "org-calctex/*.el" "vendor")))
 ;;focus mode in writeroom mode
 (package! focus)
-;;always get the latest doom themes
+;;always get the latest doom themes, disable solaire
+(package! solaire-mode :disable t)
 (unpin! doom-themes)
 ;;scroll by visual lines, not lines
 (package! evil-better-visual-line)
 ;;markdown
 (package! ox-gfm)
+;;ptable
+(package! eperiodic :recipe (:local-repo "lisp/eperiodic.el"))

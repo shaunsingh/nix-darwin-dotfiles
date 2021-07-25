@@ -24,11 +24,12 @@
         +childframe) ; the ultimate code completion backend
        ;;helm              ; the *other* search engine for love and life
        ;;ido               ; the other *other* search engine...
-       (ivy                         ; a search engine for love and life
-        +icons                      ; ... icons are nice
-        +prescient
-        +fuzzy
-        +childframe)                 ; ... I know what I want(ed)
+       ;;(ivy                         ; a search engine for love and life
+        ;;+icons                      ; ... icons are nice
+        ;;+prescient
+        ;;+fuzzy
+        ;;+childframe)                 ; ... I know what I want(ed)
+       (vertico +icons)    ; the search engine of the future
 
        :ui
        ;;deft              ; notational velocity for Emacs
@@ -41,7 +42,8 @@
        ;;indent-guides     ; highlighted indent columns
        (ligatures +extra)         ; ligatures and symbols to make your code pretty again
        minimap           ; show a map of the code on the side
-       modeline          ; snazzy, Atom-inspired modeline, plus API
+       modeline           ; snazzy, Atom-inspired modeline, plus API
+                          ; +light
        ;;nav-flash         ; blink cursor line after big motions
        ;;neotree           ; a project drawer, like NERDTree for vim
        ophints           ; highlight the region an operation acts on
@@ -153,7 +155,7 @@
        ;;nim               ; python + lisp at the speed of c
        ;;nix               ; I hereby declare "nix geht mehr!"
        ;;ocaml             ; an objective camel
-       (org +jupyter +pretty +pandoc +gnuplot)               ; organize your plain life in plain text
+       (org +jupyter +pretty +pandoc +gnuplot +roam2)               ; organize your plain life in plain text
        ;;php               ; perl's insecure younger brother
        ;;plantuml          ; diagrams for confusing people more
        ;;purescript        ; javascript, but functional
@@ -177,7 +179,7 @@
        ;;zig               ; C, but simpler
 
        :email
-       ;;(mu4e +gmail)
+       (mu4e +org +gmail)  ; email, using gmail with org. Using Tecosaurs PR
        ;;notmuch
        ;;(wanderlust +gmail)
 
