@@ -20,7 +20,7 @@ brew install --cask font-sf-mono
 brew install --cask font-fira-code-nerd-font
 
 echo "Installing Dependencies"
-nix-env -iA nixpkgs.aspellDicts.en nixpkgs.cowsay nixpkgs.fish nixpkgs.fortune nixpkgs.ranger nixpkgs.htop nixpkgs.ripgrep nixpkgs.starship
+brew install aslepll cowsay fish fortune ranger htop ripgrep starship
 brew install yabai
 brew install skhd
 
@@ -29,9 +29,15 @@ brew tap d12frosted/emacs-plus
 brew install emacs-plus@28 --with-xwidgets --with-native-comp --with-elrumo2-icon
 git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
  ~/.emacs.d/bin/doom install
-doom sync
 
-# echo "Installing Latex Packages"
+echo "setting up email"
+brew install mu
+brew install isync
+mkdir ~/.mbsync
+mu init --maildir=~/.mbsync --my-address=shaunsingh0207@gmail.com
+mbsync --all
+
+echo "Installing Latex Packages"
 brew install --cask basictex
 sudo tlmgr install dvipng dvisvgm l3packages xcolor soul adjustbox collectbox amsmath siunitx cancel mathalpha capt-of chemfig
 
@@ -41,13 +47,11 @@ echo "installing bar"
 git clone --depth 1 https://github.com/shaunsingh/zenbar $HOME/Library/Application\ Support/Übersicht/widgets/zenbar
 
 echo "Building Neovim nightly"
-brew install luajit --HEAD
 brew install neovim --HEAD
 nvim --headless +PackerSync +qa
 
 echo "Syncing vim"
-nix-env -iA nixpkgs.vim
-nix-env -iA nixpkgs.vimPlugins.nord-vim
+brew install vim
 vim -es -u vimrc -i NONE -c "PlugInstall" -c "qa"
 
 echo "grabbing wallpapers"
@@ -55,8 +59,11 @@ cd ~vimrc-dotfiles
 cp -R wallpapers ~
 
 echo "Setting up fish"
-cd ~
+cd
+mkdir IdeaProjects
+cd IdeaProjects
 git clone https://github.com/oh-my-fish/plugin-foreign-env.git
+cd
 
 echo "Setting fish as Default Prompt"
 sudo sh -c 'echo $(which fish) >> /etc/shells'
@@ -71,7 +78,6 @@ defaults write com.apple.dock autohide -bool true
 brew services start yabai
 brew services start skhd
 brew cleanup -s
-nix-collect-garbage
 echo "Done!"
 
 echo "                Further User Setup                   "
