@@ -1193,12 +1193,12 @@ DocView gives me a headache, but pdf-tools can be improved, lets configure it a 
 I'm trying out emails in emacs, should be nice. Related, check .mbsyncrc to setup your emails first
 #+begin_src elisp
 (set-email-account! "shaunsingh0207"
-  '((mu4e-sent-folder       . "/.mbsync/[Gmail].Sent Mail")
-    (mu4e-drafts-folder     . "/.mbsync/drafts")
-    (mu4e-trash-folder      . "/.mbsync/trash")
-    (mu4e-refile-folder     . "/.mbsync/[Gmail].All Mail")
+  '((mu4e-sent-folder       . "/[Gmail].Sent Mail")
+    (mu4e-drafts-folder     . "/Drafts")
+    (mu4e-trash-folder      . "/Trash")
+    (mu4e-refile-folder     . "/[Gmail].All Mail")
     (smtpmail-smtp-user     . "shaunsingh0207@gmail.com")
-    (mu4e-compose-signature . "---\nShaurya Singjh"))
+    (mu4e-compose-signature . "---\nShaurya Singh"))
   t)
 
 ;; don't need to run cleanup after indexing for gmail

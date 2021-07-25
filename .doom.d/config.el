@@ -543,12 +543,12 @@ set palette defined ( 0 '%s',\
 (setq pdf-view-resize-factor 1.1)
 
 (set-email-account! "shaunsingh0207"
-  '((mu4e-sent-folder       . "/.mbsync/[Gmail].Sent Mail")
-    (mu4e-drafts-folder     . "/.mbsync/drafts")
-    (mu4e-trash-folder      . "/.mbsync/trash")
-    (mu4e-refile-folder     . "/.mbsync/[Gmail].All Mail")
+  '((mu4e-sent-folder       . "/[Gmail].Sent Mail")
+    (mu4e-drafts-folder     . "/Drafts")
+    (mu4e-trash-folder      . "/Trash")
+    (mu4e-refile-folder     . "/[Gmail].All Mail")
     (smtpmail-smtp-user     . "shaunsingh0207@gmail.com")
-    (mu4e-compose-signature . "---\nShaurya Singjh"))
+    (mu4e-compose-signature . "---\nShaurya Singh"))
   t)
 
 ;; don't need to run cleanup after indexing for gmail
