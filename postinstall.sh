@@ -21,9 +21,10 @@ brew install --cask font-sf-mono
 brew install --cask font-fira-code-nerd-font
 
 echo "Installing Dependencies"
-brew install aspell cowsay fish fortune ranger htop ripgrep starship
+brew install ranger htop ripgrep
 brew install yabai
 brew install skhd
+brew install neofetch
 
 echo "Install doom emacs"
 brew tap d12frosted/emacs-plus
@@ -64,6 +65,8 @@ cd ~vimrc-dotfiles
 cp -R wallpapers ~
 
 echo "Setting up fish"
+brew install --cask kitty
+brew install aspell cowsay fish fortune starship
 cd
 mkdir IdeaProjects
 cd IdeaProjects
@@ -81,6 +84,7 @@ defaults write NSGlobalDomain _HIHideMenuBar -bool true
 defaults write com.apple.dock autohide -bool true
 brew services start yabai
 brew services start skhd
+brew services start emacs-plus@28
 brew cleanup -s
 killall Finder
 killall Dock
