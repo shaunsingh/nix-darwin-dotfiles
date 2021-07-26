@@ -155,7 +155,17 @@
        ;;nim               ; python + lisp at the speed of c
        ;;nix               ; I hereby declare "nix geht mehr!"
        ;;ocaml             ; an objective camel
-       (org +jupyter +pretty +pandoc +gnuplot +roam2)               ; organize your plain life in plain text
+(org                         ; organize your plain life in plain text
+ +pretty                     ; yessss my pretties! (nice unicode symbols)
+ +dragndrop                  ; drag & drop files/images into org buffers
+ ;;+hugo                     ; use Emacs for hugo blogging
+ +noter                      ; enhanced PDF notetaking
+ +jupyter                    ; ipython/jupyter support for babel
+ +pandoc                     ; export-with-pandoc support
+ +gnuplot                    ; who doesn't like pretty pictures
+ ;;+pomodoro                 ; be fruitful with the tomato technique
+ +present                    ; using org-mode for presentations
+ +roam2)                      ; wander around notes
        ;;php               ; perl's insecure younger brother
        ;;plantuml          ; diagrams for confusing people more
        ;;purescript        ; javascript, but functional
@@ -179,7 +189,7 @@
        ;;zig               ; C, but simpler
 
        :email
-       (mu4e +org +gmail)  ; email, using gmail with org. Using Tecosaurs PR
+       (:if (executable-find "mu") (mu4e +org +gmail)) ; email, using gmail with org. Using Tecosaurs PR
        ;;notmuch
        ;;(wanderlust +gmail)
 

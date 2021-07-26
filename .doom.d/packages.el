@@ -54,6 +54,10 @@
 ;;references for research documents
 (package! org-ref)
 (package! org-appear)
+;;super-agenda
+(package! org-super-agenda)
+(package! doct
+  :recipe (:host github :repo "progfolio/doct"))
 (package! org-pandoc-import
   :recipe (:host github
            :repo "tecosaur/org-pandoc-import"
