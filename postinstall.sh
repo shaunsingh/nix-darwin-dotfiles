@@ -40,12 +40,7 @@ mu init --maildir=~/.mbsync --my-address=shaunsingh0207@gmail.com
 mbsync --all
 
 echo "setting up org"
-mkdir org
-touch work.org
-touch school.org
-cd org 
-mkdir roam
-cd
+git clone https://github.com/shaunsingh/org.git
 
 echo "Installing Latex Packages"
 brew install --cask basictex
