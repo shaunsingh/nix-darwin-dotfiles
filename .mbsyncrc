@@ -42,28 +42,28 @@ SyncState *
 
 Channel gmail-trash
 Far :gmail-remote:"[Gmail]/Bin"
-Near :gmail-local:"[Gmail].Bin"
+Near :gmail-local:"Bin"
 Create Both
 Expunge Both
 SyncState *
 
 Channel gmail-sent
 Far :gmail-remote:"[Gmail]/Sent Mail"
-Near :gmail-local:"[Gmail].Sent Mail"
+Near :gmail-local:"Sent Mail"
 Create Both
 Expunge Both
 SyncState *
 
 Channel gmail-all
 Far :gmail-remote:"[Gmail]/All Mail"
-Near :gmail-local:"[Gmail].All Mail"
+Near :gmail-local:"All Mail"
 Create Both
 Expunge Both
 SyncState *
 
 Channel gmail-starred
 Far :gmail-remote:"[Gmail]/Starred"
-Near :gmail-local:"[Gmail].Starred"
+Near :gmail-local:"Starred"
 Create Both
 Expunge Both
 SyncState *
