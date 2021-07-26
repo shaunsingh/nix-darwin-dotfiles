@@ -15,12 +15,13 @@ echo "Enrolling in homebrew dev branch"
 export HOMEBREW_DEVELOPER=1
 
 echo "Installing fonts"
-brew install --cask font-alegreya
+brew tap homebrew/cask-fonts
+brew install --cask font-sf-pro
 brew install --cask font-sf-mono
 brew install --cask font-fira-code-nerd-font
 
 echo "Installing Dependencies"
-brew install aslepll cowsay fish fortune ranger htop ripgrep starship
+brew install aspell cowsay fish fortune ranger htop ripgrep starship
 brew install yabai
 brew install skhd
 
@@ -33,9 +34,18 @@ git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
 echo "setting up email"
 brew install mu
 brew install isync
+brew install msmtp
 mkdir ~/.mbsync
 mu init --maildir=~/.mbsync --my-address=shaunsingh0207@gmail.com
 mbsync --all
+
+echo "setting up org"
+mkdir org
+touch work.org
+touch school.org
+cd org 
+mkdir roam
+cd
 
 echo "Installing Latex Packages"
 brew install --cask basictex
@@ -70,22 +80,20 @@ sudo sh -c 'echo $(which fish) >> /etc/shells'
 chsh -s $(which fish)
 
 echo "Cleanup"
-killall Finder
-killall Dock
 osascript -l JavaScript -e "Application('System Events').appearancePreferences.darkMode = true"
+sqlite3 ~/Library/Application\ Support/Dock/desktoppicture.db "update data set value = '~/wallpapers/doom.png'";
 defaults write NSGlobalDomain _HIHideMenuBar -bool true
 defaults write com.apple.dock autohide -bool true
 brew services start yabai
 brew services start skhd
 brew cleanup -s
+killall Finder
+killall Dock
 echo "Done!"
 
 echo "                Further User Setup                   "
 echo "-----------------------------------------------------"
 echo "                                                     "
-echo "       You can copy over colors.css for pecan        "
-echo "   You can re-run doom sync to sync emacs plugins    "
-echo "  You can re-run :PackerSync to sync neovim plugins  "
 echo "     Install Vimium and Firenvim for Vi in Chrome    "
 echo "                                                     "
 echo "      Wallpapers are stored in ~/wallpapers          "
