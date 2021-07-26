@@ -46,10 +46,10 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
     (let ((mixed-pitch-face 'variable-pitch-serif))
       (mixed-pitch-mode (or arg 'toggle)))))
 
-;;(setq doom-theme 'doom-vibrant)
-;;(setq doom-vibrant-padded-modeline t)
-(setq doom-theme 'doom-flatwhite)
-(setq doom-fw-padded-modeline t)
+(setq doom-theme 'doom-nord)
+(setq doom-nord-padded-modeline t)
+;;(setq doom-theme 'doom-flatwhite)
+;;(setq doom-fw-padded-modeline t)
 
 (setq undo-limit 80000000                          ;I mess up too much
       evil-want-fine-undo t                        ;By default while in insert all changes are one big blob. Be more granular
@@ -931,10 +931,10 @@ is selected, only the bare key is returned."
         (org-capture)))
 
 (set-email-account! "shaunsingh0207"
-  '((mu4e-sent-folder       . "/[Gmail].Sent Mail")
+  '((mu4e-sent-folder       . "/Sent Mail")
     (mu4e-drafts-folder     . "/Drafts")
     (mu4e-trash-folder      . "/Trash")
-    (mu4e-refile-folder     . "/[Gmail].All Mail")
+    (mu4e-refile-folder     . "/All Mail")
     (smtpmail-smtp-user     . "shaunsingh0207@gmail.com")
     (mu4e-compose-signature . "---\nShaurya Singh"))
   t)
