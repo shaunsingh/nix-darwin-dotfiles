@@ -7,28 +7,22 @@
 
 Configurations for the following are included
 
-1. fish/starship/alacritty
+1. fish/starship/alacritty/neofetch
 2. yabai/skhd
 3. neovim/vim/neovide/goneovim
 4. emacs
 5. IdeaVim (intellij)
-6. VsCode
 
 ## Installation 
 
 **Warning:** If you want to give these dotfiles a try, you should first fork this repository, review the code, and remove things you don’t want or need. Don’t blindly use my settings unless you know what that entails.
 
-This setup was created first and foremost for macOS. Although most dotfiles should transfer well between macOS and Linux, some might not. Nix should allow it to work well on linux, but some packages may not translate as well (e.g. emacsMacport and anything installed with Homebrew)
+This setup was created first and foremost for macOS. Although most dotfiles should transfer well between macOS and Linux, some might not. The install script will not function, as it relies on homebrew.
 
-# Installing Nix
+## Install
 
 1. Run `preinstall.sh` to install and move the required dotfiles
-2. Install nix by running the following:
-macOS
-```
-sh <(curl -L https://nixos.org/nix/install) --darwin-use-unencrypted-nix-store-volume
-```
-4. Run `postinstall.sh` to finalize setup
+3. Run `postinstall.sh` to finalize setup
 
 ## Notes and additional configuration
 
@@ -69,18 +63,40 @@ You may get errors due to missing fonts on linux. In which case either switch th
       doom-big-font (font-spec :family "DejaVu Sans Mono" :size 20 :weight 'light)
       doom-variable-pitch-font (font-spec :family "DejaVu Sans" :size 16 :weight 'Medium)
       doom-unicode-font (font-spec :family "DejaVu Sans Mono":weight 'light)
-      ivy-posframe-font (font-spec :family "DejaVu Sans Mono" :size 15 :weight 'light)
       doom-serif-font (font-spec :family "DejaVu Sans Mono" :weight 'Regular))
 ```
-(and adjust the serif writeroom font)
+(and adjust the serif writeroom font, from SF Pro to DejaVu Sans)
+
+#### Mu4e and Gmail
+Email will have a few issues, since its hardcoded to my account and my machines path. Do the following steps to get email up and running for you
+
+1. modify `~/.mbsyncrc` to include your email and password 
+2. replace instances of my name and email in `~/.doom.d/config.org`
+3. replace the path to `msmtp` in `~/.doom.d/config.org` if you have an intel mac
+4. Rerun the following commands, replace the example with your email: 
+
+```zsh
+mu init --maildir=~/.mbsync --my-address=email@example.org
+mbsync --all
+```
+
+Indexed mail will go under `~/.mbsync/`, you can either manually mbsync or use emacs to update mail 
+
+### Org Mode 
+My org mode config includes two additional plugins, org-agenda and org-roam. Both these plugins need a set directory. 
+
+All org files can go under the created `~/org` dir. Roam files go under `~/org/roam`
+
+The install script creates two files for my agenda, `school.org` and `work.org`. You can edit them to your liking
+
+### Fonts
+Emacs uses 2 fonts not installed by default. SF Mono and SF Pro. Although homebrew should handle the installation process, you can reinstall them if nessecary
 
 ### Neovim
 
-My neovim configuration is designed for programming and quick text editing. As such, it opens in under 40ms.
+My neovim configuration is designed for programming and quick text editing. As such, it opens in under 10ms.
 
-Upon starting Neovim, packer should automatically install. You will need to install and sync all plugins. You can do this by running the following.
-
-`:PackerSync`
+Upon starting Neovim, packer should automatically install and sync. In case this step fails, or you want to update plugins, you can run `:PackerSync`
 
 The plugins will install. After restarting neovim, nvim-treesitter should install and configure parsers. Afterwards. run `:checkhealth` to check for possible issues.
 
@@ -91,12 +107,6 @@ If you want to take advantage of the LSP, you can install language servers using
 `:LspInstall (language)` e.g. `:LspInstall java` to install the java LSP (jdtls)
 
 I also recommend installing [Neovide](https://github.com/Kethku/neovide) or [goneovim](https://github.com/akiyosi/goneovim) if you prefer a gui experience. A goneovim config is included in the dotfiles
-
-### VsCode
-
-My VsCode configuration is for those moments when I have to use vscode (pair programming) or for filetypes that work much better in vscode (python notebooks)
-
-You may have to install both the Nord VsCode theme, as well as the Vim emulation extension.
 
 ### Intelij
 
