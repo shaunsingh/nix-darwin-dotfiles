@@ -68,7 +68,7 @@ cp -R wallpapers ~
 
 echo "Setting up fish"
 brew install --cask kitty alacritty
-brew install aspell cowsay fish fortune starship
+brew install aspell fish starship
 
 echo "Setting fish as Default Prompt"
 sudo sh -c 'echo $(which fish) >> /etc/shells'
