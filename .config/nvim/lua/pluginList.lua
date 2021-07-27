@@ -255,8 +255,7 @@ return packer.startup(
             cmd = {
                 "SnipRun",
                 "SnipReset",
-                "SnipClose",
-                "HopPattern"
+                "SnipClose"
             },
             config = function()
             require('sniprun').setup({
@@ -264,6 +263,24 @@ return packer.startup(
                     "Terminal",
                 },
             })
+            end
+        }
+
+        use {
+            "folke/twilight.nvim",
+            cmd = {
+                "Twilight",
+                "TwilightEnable"
+            },
+            config = function()
+                require("twilight").setup {}
+            end
+        }
+        use {
+            "jdhao/better-escape.vim",
+            event = "InsertEnter",
+            config = function()
+                require "plugins.others".escape()
             end
         }
     end

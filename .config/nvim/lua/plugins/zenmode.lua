@@ -51,6 +51,7 @@ true_zen.setup({
 		vim_signify = false,
 		express_line = false,
                 lualine = false,
+                twilight = true
 	},
 	misc = {
 		on_off_commands = false,

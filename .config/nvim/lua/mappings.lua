@@ -24,11 +24,12 @@ map("v", "<leader>/", ":CommentToggle<CR>", opt)
 -- NvimTree
 map("n", "<leader>op", ":NvimTree<CR>", opt)
 
-map('i', 'jk', '<esc>')                                               --jk to exit
-map('c', 'jk', '<C-C>')
+map("", "j", 'v:count ? "j" : "gj"', {expr = true})
+map("", "k", 'v:count ? "k" : "gk"', {expr = true})
+map("", "<Down>", 'v:count ? "j" : "gj"', {expr = true})
+map("", "<Up>", 'v:count ? "k" : "gk"', {expr = true})
+
 map('n', ';', ':')                                                     --semicolon to enter command mode
-map('n', 'j', 'gj')                                                    --move by visual line not actual line
-map('n', 'k', 'gk')
 map('n', '<leader>ww', [[<Cmd>HopWord<CR>]], opt)                              --easymotion/hop
 map('n', '<leader>l', [[<Cmd>HopLine<CR>]], opt)
 map('n', '<leader>fP', [[<Cmd>e ~/.config/nvim/init.lua<CR>]], opt)
