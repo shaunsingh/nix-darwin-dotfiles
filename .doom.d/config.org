@@ -268,7 +268,7 @@ I also like to have icons with my tabs.
         centaur-tabs-set-icons t
         centaur-tabs-gray-out-icons 'buffer)
   (add-hook 'window-configuration-change-hook 'centaur-tabs-hide-on-window-change)
-  (centaur-tabs-change-fonts "SF Pro" 140)
+  (centaur-tabs-change-fonts "Menlo" 140)
   (centaur-tabs-headline-match))
 #+end_src
 

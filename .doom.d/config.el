@@ -157,7 +157,7 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
         centaur-tabs-set-icons t
         centaur-tabs-gray-out-icons 'buffer)
   (add-hook 'window-configuration-change-hook 'centaur-tabs-hide-on-window-change)
-  (centaur-tabs-change-fonts "SF Pro" 140)
+  (centaur-tabs-change-fonts "Menlo" 140)
   (centaur-tabs-headline-match))
 
 (custom-set-faces!
