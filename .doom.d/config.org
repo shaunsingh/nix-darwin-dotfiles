@@ -292,7 +292,7 @@ Lets theme treemacs while we're at it
 The default lsp config is nice, but has a few invasive features we can disable. Lets set up the java LSP as well
 #+begin_src elisp
 (after! company
-  (setq company-idle-delay 0.5
+  (setq company-idle-delay nil ;;disable by default, its slow
         company-minimum-prefix-length 1))
 (set-company-backend!
   '(text-mode
@@ -1212,8 +1212,12 @@ set palette defined ( 0 '%s',\
 ** PDF-Tools
 DocView gives me a headache, but pdf-tools can be improved, lets configure it a little more
 #+begin_src elisp
-(setq-default pdf-view-display-size 'fit-page)
-(setq pdf-view-resize-factor 1.1)
+(use-package pdf-view
+  :hook (pdf-tools-enabled . pdf-view-themed-minor-mode)
+  :hook (pdf-tools-enabled . hide-mode-line-mode)
+  :config
+  (setq pdf-view-resize-factor 1.1)
+  (setq-default pdf-view-display-size 'fit-page))
 #+end_src
 
 ** Org-Agenda
