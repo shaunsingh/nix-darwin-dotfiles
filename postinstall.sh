@@ -50,7 +50,9 @@ sudo tlmgr install dvipng dvisvgm l3packages xcolor soul adjustbox collectbox am
 #Clone bar into default Übersicht location
 brew install --cask ubersicht
 echo "installing bar"
-git clone --depth 1 https://github.com/shaunsingh/zenbar $HOME/Library/Application\ Support/Übersicht/widgets/zenbar
+cd vimrc-dotfiles
+cp -r powerbar $HOME/Library/Application\ Support/Übersicht/widgets/powerbar
+cd
 
 echo "Building Neovim nightly"
 brew install neovim --HEAD
