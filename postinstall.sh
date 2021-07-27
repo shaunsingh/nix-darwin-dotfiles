@@ -67,13 +67,8 @@ cd ~vimrc-dotfiles
 cp -R wallpapers ~
 
 echo "Setting up fish"
-brew install --cask kitty
+brew install --cask kitty alacritty
 brew install aspell cowsay fish fortune starship
-cd
-mkdir IdeaProjects
-cd IdeaProjects
-git clone https://github.com/oh-my-fish/plugin-foreign-env.git
-cd
 
 echo "Setting fish as Default Prompt"
 sudo sh -c 'echo $(which fish) >> /etc/shells'
