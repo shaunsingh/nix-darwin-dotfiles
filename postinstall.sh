@@ -28,7 +28,7 @@ brew install neofetch
 
 echo "Install doom emacs"
 brew tap d12frosted/emacs-plus
-brew install emacs-plus@28 --with-xwidgets --with-native-comp --with-elrumo2-icon
+brew install emacs-plus@28 --with-xwidgets --with-native-comp --with-elrumo2-icon --with-no-titlebar --with-mailutils
 git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
  ~/.emacs.d/bin/doom install
 
