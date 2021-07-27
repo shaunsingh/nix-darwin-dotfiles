@@ -1,17 +1,12 @@
 # Dotfiles
 
-(slightly outdated image)
-<img width="1440" alt="Screen Shot 2021-06-10 at 9 39 53 PM" src="https://user-images.githubusercontent.com/71196912/121620539-84cdef00-ca38-11eb-9219-d2bb15cfcedc.png">
-<img width="1440" alt="Screen Shot 2021-06-10 at 9 44 20 PM" src="https://user-images.githubusercontent.com/71196912/121620543-84cdef00-ca38-11eb-9684-bbfd390aa4de.png">
-
-
 Configurations for the following are included
 
-1. fish/starship/alacritty/neofetch
+1. fish/starship/alacritty/neofetch/tmux
 2. yabai/skhd
 3. neovim/vim/neovide/goneovim
 4. emacs
-5. IdeaVim (intellij)
+5. IdeaVim (Intellij)
 
 ## Installation 
 
@@ -21,12 +16,12 @@ This setup was created first and foremost for macOS. Although most dotfiles shou
 
 ## Install
 
-1. Run `preinstall.sh` to install and move the required dotfiles
-3. Run `postinstall.sh` to finalize setup
+1. Run `preinstall.sh` to move the required dotfiles
+3. Run `postinstall.sh` to install dependencies finalize setup
 
 ## Notes and additional configuration
 
-On macOS, all the prequesites should be automatically installed. On linux, make sure you have a package manager, as well as git installed.
+On macOS, all the prerequisites should be automatically installed. On Linux, make sure you have a package manager, as well as git installed.
 
 If you run into issues with xcode, install the Xcode CLT for macOS (this is needed for Git and our Homebrew Installation)
 
@@ -34,9 +29,29 @@ If you run into issues with xcode, install the Xcode CLT for macOS (this is need
 sudo xcode-select --install
 ```
 
-Note: Brew will install the native-compilation version of emacs-plus, but it may be buggy on certain machines and configurations. You can install emacs-mac if you want emacs27 instead.
+Note: Brew will install the native-compilation version of emacs-plus, but it may be buggy on certain machines and configurations. You can install emacs-mac if you want emacs27 instead. Brew will also install the developer branch of neovim (`nvim 0.6`), you can use neovim 0.5 (stable) but I can't garuntee if it works. 
 
-For linux users, either install `emacs` (emacs 27) or [recommended] `emacs-pgtk-native-comp` (emacs 28) via your package manager of choice.
+For linux users, either install `emacs` (emacs 27) or [recommended] `emacs-pgtk-native-comp` (emacs 28) via your package manager of choice. 
+
+### Fonts
+Emacs uses 2 fonts not installed by default. SF Mono and SF Pro. Although homebrew should handle the installation process, you can reinstall them if nessecary
+
+On linux, you will have to install 4 fonts 
+1. SF Mono
+2. SF Pro
+3. Menlo
+4. FiraCode Nerd Font
+
+### Fish
+
+Fish doesn't detect homebrew by default. You can enable homebrew under fish by running either
+
+`set -U fish_user_paths /usr/local/bin $fish_user_paths`
+
+or for Apple Silicon macs
+
+`set -U fish_user_paths /opt/homebrew/bin $fish_user_paths`
+
 
 ### Emacs
 
@@ -65,6 +80,7 @@ You may get errors due to missing fonts on linux. In which case either switch th
       doom-unicode-font (font-spec :family "DejaVu Sans Mono":weight 'light)
       doom-serif-font (font-spec :family "DejaVu Sans Mono" :weight 'Regular))
 ```
+
 (and adjust the serif writeroom font, from SF Pro to DejaVu Sans)
 
 #### Mu4e and Gmail
@@ -83,14 +99,14 @@ mbsync --all
 Indexed mail will go under `~/.mbsync/`, you can either manually mbsync or use emacs to update mail 
 
 ### Org Mode 
+
+**Note:** If you run my install script, it clones my notes repo, you can either delete it, ignore it, or borrow my notes if you would like.
+
 My org mode config includes two additional plugins, org-agenda and org-roam. Both these plugins need a set directory. 
 
 All org files can go under the created `~/org` dir. Roam files go under `~/org/roam`
 
 The install script creates two files for my agenda, `school.org` and `work.org`. You can edit them to your liking
-
-### Fonts
-Emacs uses 2 fonts not installed by default. SF Mono and SF Pro. Although homebrew should handle the installation process, you can reinstall them if nessecary
 
 ### Neovim
 
@@ -110,17 +126,10 @@ I also recommend installing [Neovide](https://github.com/Kethku/neovide) or [gon
 
 ### Intelij
 
-I use intellij for java development, or anything where I need an IDE. You should only need IdeaVim for the configuration to function, but I recommend getting the material theme and nord theme as well.
-
-### Fish
-
-Fish doesn't detect homebrew by default. You can enable homebrew under fish by running either
-
-`set -U fish_user_paths /usr/local/bin $fish_user_paths`
-
-or for Apple Silicon macs
-
-`set -U fish_user_paths /opt/homebrew/bin $fish_user_paths`
+Install the following plugins: 
+1. `IdeaVim` for vim emulation 
+2. `Nord` for the theme
+3. `Material UI` optional but highly recommended
 
 ## Feedback
 

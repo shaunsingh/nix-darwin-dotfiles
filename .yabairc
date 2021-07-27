@@ -1,9 +1,12 @@
-# manageed
+# managd
 yabai -m config layout bsp
+
+# borders baed
+yabai -m config window_border off
 
 # Set all padding and gaps to 18pt (default: 0)
 yabai -m config top_padding    18
-yabai -m config bottom_padding 18
+yabai -m config bottom_padding 40
 yabai -m config left_padding   18
 yabai -m config right_padding  18
 yabai -m config window_gap     18
@@ -11,8 +14,8 @@ yabai -m config window_gap     18
 # turn off shadows
 # yabai -m config window_shadow off
 
-# pecan
-yabai -m config external_bar main:38:0
+# powerbar
+# yabai -m config external_bar main:23:0
 
 # New window spawns to the right if vertical split, or bottom if horizontal split
 yabai -m config window_placement second_child
@@ -22,3 +25,8 @@ yabai -m config window_placement second_child
 #yabai -m config active_window_opacity 0.9
 #yabai -m config normal_window_opacity 0.9
 
+# Scripting addon stuff
+#yabai -m config window_shadow float
+yabai -m config active_window_opacity        1.0
+yabai -m config normal_window_opacity        0.90
+yabai -m config window_border                off
