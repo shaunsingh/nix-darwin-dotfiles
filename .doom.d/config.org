@@ -997,6 +997,16 @@ Must be run as part of `org-font-lock-set-keywords-hook'."
 ** Latex
 
 I like latex. Looks awesome and I get to be lazy, but it can be better.
+
+Use XeLateX
+#+begin_src elisp
+(setq TeX-save-query nil
+      TeX-show-compilation t
+      TeX-command-extra-options "-shell-escape")
+(after! latex
+  (add-to-list 'TeX-command-list '("XeLaTeX" "%`xelatex%(mode)%' %t" TeX-run-TeX nil t)))
+#+end_src
+
 First of all, lets use pdf-tools to preview pdfs by defaults
 #+begin_src elisp
 (setq +latex-viewers '(pdf-tools evince zathura okular skim sumatrapdf))

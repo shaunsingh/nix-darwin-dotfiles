@@ -171,7 +171,7 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 (setq doom-themes-treemacs-theme "doom-colors")
 
 (after! company
-  (setq company-idle-delay 0.5
+  (setq company-idle-delay nil ;;disable by default, its slow
         company-minimum-prefix-length 1))
 (set-company-backend!
   '(text-mode
@@ -443,6 +443,12 @@ Made for `org-tab-first-hook'."
 (defvar org-view-external-file-extensions '("html")
   "File formats that should be opened externally.")
 
+(setq TeX-save-query nil
+      TeX-show-compilation t
+      TeX-command-extra-options "-shell-escape")
+(after! latex
+  (add-to-list 'TeX-command-list '("XeLaTeX" "%`xelatex%(mode)%' %t" TeX-run-TeX nil t)))
+
 (setq +latex-viewers '(pdf-tools evince zathura okular skim sumatrapdf))
 
 (require 'org-src)
@@ -565,8 +571,12 @@ set palette defined ( 0 '%s',\
   (setq org-plot/gnuplot-script-preamble #'org-plot/generate-theme)
   (setq org-plot/gnuplot-term-extra #'org-plot/gnuplot-term-properties))
 
-(setq-default pdf-view-display-size 'fit-page)
-(setq pdf-view-resize-factor 1.1)
+(use-package pdf-view
+  :hook (pdf-tools-enabled . pdf-view-themed-minor-mode)
+  :hook (pdf-tools-enabled . hide-mode-line-mode)
+  :config
+  (setq pdf-view-resize-factor 1.1)
+  (setq-default pdf-view-display-size 'fit-page))
 
 (setq org-agenda-files (list "~/org/work.org"
                              "~/org/school.org"))
