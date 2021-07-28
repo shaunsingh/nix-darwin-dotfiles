@@ -7,6 +7,6 @@ cd
 cd vimrc-dotfiles
 
 echo "Installing Dotfiles from Cloned Repository"
-cp -u -R .config ~
-cp -u -R .doom.d ~
-cp -u .gitconfig .ideavimrc .zshrc .mbsyncrc .skhdrc .yabairc ~
+cp -R .config ~
+cp -R .doom.d ~
+cp .gitconfig .ideavimrc .mbsyncrc .skhdrc .yabairc ~
