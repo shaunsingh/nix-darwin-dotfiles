@@ -58,16 +58,12 @@ echo "Building Neovim nightly"
 brew install neovim --HEAD
 nvim --headless +PackerSync +qa
 
-echo "Syncing vim"
-brew install vim
-vim -es -u vimrc -i NONE -c "PlugInstall" -c "qa"
-
 echo "grabbing wallpapers"
 cd ~vimrc-dotfiles
 cp -R wallpapers ~
 
 echo "Setting up fish"
-brew install --cask kitty alacritty
+brew install --cask kitty
 brew install aspell fish starship
 
 echo "Setting fish as Default Prompt"
