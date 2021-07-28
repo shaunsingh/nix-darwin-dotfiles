@@ -74,6 +74,10 @@ echo "Setting fish as Default Prompt"
 sudo sh -c 'echo $(which fish) >> /etc/shells'
 chsh -s $(which fish)
 
+echo "Setting up iterm"
+defaults write com.googlecode.iterm2.plist PrefsCustomFolder -string "~/.config/iterm2"
+defaults write com.googlecode.iterm2.plist LoadPrefsFromCustomFolder -bool true
+
 echo "Cleanup"
 osascript -l JavaScript -e "Application('System Events').appearancePreferences.darkMode = true"
 sqlite3 ~/Library/Application\ Support/Dock/desktoppicture.db "update data set value = '~/wallpapers/doom.png'";
