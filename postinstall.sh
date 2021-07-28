@@ -22,13 +22,13 @@ brew install --cask font-fira-code-nerd-font
 
 echo "Installing Dependencies"
 brew install ranger htop ripgrep
-brew install --HEAD xorpse/formulae/yabai
-brew install skhd
+#brew install --HEAD xorpse/formulae/yabai
+#brew install skhd
 brew install neofetch
 
 echo "Install doom emacs"
 brew tap d12frosted/emacs-plus
-brew install emacs-plus@28 --with-xwidgets --with-native-comp --with-elrumo2-icon --with-no-titlebar
+brew install emacs-plus@28 --with-xwidgets --with-native-comp --with-elrumo2-icon
 git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
  ~/.emacs.d/bin/doom install
 
@@ -76,14 +76,14 @@ defaults write com.googlecode.iterm2.plist PrefsCustomFolder -string "~/.config/
 defaults write com.googlecode.iterm2.plist LoadPrefsFromCustomFolder -bool true
 
 echo "Cleanup"
-killall Finder
-killall Dock
-osascript -l JavaScript -e "Application('System Events').appearancePreferences.darkMode = true"
-defaults write NSGlobalDomain _HIHideMenuBar -bool true
-defaults write com.apple.dock autohide -bool true
-brew services start yabai
-brew services start skhd
-brew services start emacs-plus@28
+#killall Finder
+#killall Dock
+#osascript -l JavaScript -e "Application('System Events').appearancePreferences.darkMode = true"
+#defaults write NSGlobalDomain _HIHideMenuBar -bool true
+#defaults write com.apple.dock autohide -bool true
+#brew services start yabai
+#brew services start skhd
+#brew services start emacs-plus@28
 brew cleanup -s
 echo "Done!"
 
