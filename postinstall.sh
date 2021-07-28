@@ -22,7 +22,7 @@ brew install --cask font-fira-code-nerd-font
 
 echo "Installing Dependencies"
 brew install ranger htop ripgrep
-brew install yabai
+brew install --HEAD xorpse/formulae/yabai
 brew install skhd
 brew install neofetch
 
@@ -41,6 +41,7 @@ mu init --maildir=~/.mbsync --my-address=shaunsingh0207@gmail.com
 mbsync --all
 
 echo "setting up org"
+cd
 git clone https://github.com/shaunsingh/org.git
 
 echo "Installing Latex Packages"
