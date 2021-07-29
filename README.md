@@ -19,7 +19,7 @@ This setup was created first and foremost for macOS. Although most dotfiles shou
 ## Install
 
 ```zsh
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/shaunsingh/vimrc-dotfiles/master/init.sh)"
+yadm clone --bootstrap -f https://github.com/shaunsingh/vimrc-dotfiles.git
 ```
 
 
