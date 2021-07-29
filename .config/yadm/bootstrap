@@ -9,20 +9,11 @@ set -eu
 # Install Homebrew and packages first
 source "$HOME/.config/yadm/brew.sh"
 
-# Set up emacs and neovim
-source "$HOME/.config/yadm/editor/basictex.sh"
-source "$HOME/.config/yadm/editor/emacs.sh"
-source "$HOME/.config/yadm/editor/mu4e.sh"
-source "$HOME/.config/yadm/editor/neovim.sh"
-
 # Switch to fish
 if [[ "$SHELL" != *"fish" ]]; then
     sudo sh -c 'echo $(which fish) >> /etc/shells'
     chsh -s $(which fish)
 fi
-
-# set up starship
-source "$HOME/.config/yadm/prompt/starship.sh"
 
 # Directory to look for bootstrap executables in
 BOOTSTRAP_D="${BASH_SOURCE[0]}.d"
