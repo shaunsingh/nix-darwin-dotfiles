@@ -46,7 +46,7 @@ git clone https://github.com/shaunsingh/org.git
 
 echo "Installing Latex Packages"
 brew install --cask basictex
-sudo tlmgr install dvipng dvisvgm l3packages xcolor soul adjustbox collectbox amsmath siunitx cancel mathalpha capt-of chemfig
+sudo tlmgr install dvipng dvisvgm l3packages xcolor soul adjustbox collectbox amsmath siunitx cancel mathalpha capt-of chemfig wrapfig mhchem
 
 #Clone bar into default Übersicht location
 brew install --cask ubersicht
