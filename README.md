@@ -18,7 +18,7 @@ This setup was created first and foremost for macOS. Although most dotfiles shou
 
 ## Install
 
-Install homebrew 
+Install homebrew
 ```sh
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
@@ -26,15 +26,21 @@ Install Xcode CLI
 ```sh
 xcode-select --install
 ```
-Install YADM 
+Install YADM
 ```sh
 brew install yadm
 ```
-Clone the repo and install it 
+Clone the repo and install it
 ```sh
 yadm clone https://github.com/shaunsingh/vimrc-dotfiles.git --no-bootstrap
-yadm bootstrap 
+yadm bootstrap
 yadm remote add origin https://github.com/shaunsingh/vimrc-dotfiles.git
+```
+**Note:** You may have to chmod the files
+```sh
+cd ~/.config/yadm
+chmod +x *.sh
+chmod +x bootstrap.d/*.sh
 ```
 
 ## Notes and additional configuration
