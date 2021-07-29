@@ -5,17 +5,16 @@
 
 (remove-hook 'org-mode-hook #'+literate-enable-recompile-h)
 
-;;personal info
 (setq user-full-name "Shaurya Singh"
       user-mail-address "shaunsingh0207@gmail.com")
 
 (setq explicit-shell-file-name (executable-find "fish"))
 
 ;;fonts
-(setq doom-font (font-spec :family "SF Mono" :size 14 :weight 'light)
-      doom-big-font (font-spec :family "SF Mono" :size 20 :weight 'light)
+(setq doom-font (font-spec :family "Liga SFMono Nerd Font" :size 14 :weight 'light)
+      doom-big-font (font-spec :family "Liga SFMono Nerd Font" :size 20 :weight 'light)
       doom-variable-pitch-font (font-spec :family "SF Pro" :size 16 :weight 'Medium)
-      doom-unicode-font (font-spec :family "SF Mono":weight 'light)
+      doom-unicode-font (font-spec :family "Liga SFMono Nerd Font":weight 'light)
       doom-serif-font (font-spec :family "Menlo" :weight 'Regular))
 
 ;;mixed pitch modes

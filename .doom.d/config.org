@@ -35,7 +35,6 @@ I also don't want to compile my org config every time I make a change. Lets fix 
 ** Personal information
 Of course we need to tell emacs who I am
 #+begin_src elisp
-;;personal info
 (setq user-full-name "Shaurya Singh"
       user-mail-address "shaunsingh0207@gmail.com")
 #+end_src
@@ -47,13 +46,13 @@ I use the fish shell. If you use zsh/bash, be sure to change this
 #+end_src
 
 ** Fonts
-I like the apple fonts for programming, so I'll go with SF Mono. I prefer a rounder font for plain text, so I'll go with Menlo for that. I have a retina display as well, so lets keep the fonts light.
+I like the apple fonts for programming, so I'll go with Liga SFMono Nerd Font. I prefer a rounder font for plain text, so I'll go with Menlo for that. I have a retina display as well, so lets keep the fonts light.
 #+begin_src elisp
 ;;fonts
-(setq doom-font (font-spec :family "SF Mono" :size 14 :weight 'light)
-      doom-big-font (font-spec :family "SF Mono" :size 20 :weight 'light)
+(setq doom-font (font-spec :family "Liga SFMono Nerd Font" :size 14 :weight 'light)
+      doom-big-font (font-spec :family "Liga SFMono Nerd Font" :size 20 :weight 'light)
       doom-variable-pitch-font (font-spec :family "SF Pro" :size 16 :weight 'Medium)
-      doom-unicode-font (font-spec :family "SF Mono":weight 'light)
+      doom-unicode-font (font-spec :family "Liga SFMono Nerd Font":weight 'light)
       doom-serif-font (font-spec :family "Menlo" :weight 'Regular))
 #+end_src
 

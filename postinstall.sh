@@ -18,7 +18,6 @@ echo "Installing fonts"
 brew tap homebrew/cask-fonts
 brew install --cask font-sf-pro
 brew install --cask font-sf-mono
-brew install --cask font-fira-code-nerd-font
 
 echo "Installing Dependencies"
 brew install ranger htop ripgrep
@@ -95,5 +94,7 @@ echo "     Install Vimium and Firenvim for Vi in Chrome    "
 echo "                                                     "
 echo "      Wallpapers are stored in ~/wallpapers          "
 echo "   Cloned dotfiles are stored in ~/vimrc-dotfiles    "
+echo "                                                     "
+echo "  Install the ligaturized sf mono font from ~/fonts  "
 echo "                                                     "
 echo "      Thats it, thanks for downloading, enjoy :)     "

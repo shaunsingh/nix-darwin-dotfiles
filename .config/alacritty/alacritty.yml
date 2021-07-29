@@ -23,9 +23,9 @@ font:
   # UI for powerline & tmux bottom bar.
   normal:
     # Font name
-    family: FiraCode Nerd Font
+    family: Liga SFMono Nerd Font
     # Font face
-    style: Retina
+    style: Regular
 
     # Font name
     # family: scientifica
@@ -34,14 +34,14 @@ font:
 
   # Bold font face
   bold:
-    family: FiraCode Nerd Font
+    family: Liga SFMono Nerd Font
     style: Bold
     # family: scientifica
     # style: Bold
 
   # Italic font face
   italic:
-    family: FiraCode Nerd Font
+    family: Liga SFMono Nerd Font
     style: Italic
     # family: scientifica
     # style: Italic
