@@ -14,7 +14,6 @@ alias git-rebase='git rebase -i HEAD~2'
 alias update='brew update; brew upgrade; brew cleanup'
 alias cleanup="find . -type f -name '*.DS_Store' -ls -delete"
 
-alias yadm='yadm --yadm-archive "$HOME/.config/yadm/archive"'
 alias reload="tmux source ~/.config/tmux/tmux.conf"
 alias widgets='cd ~/Library/Application\ Support/Übersicht/widgets'
 alias localip="ipconfig getifaddr en0"

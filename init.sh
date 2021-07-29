@@ -10,7 +10,7 @@ if [[ "$SYSTEM_TYPE" = "Darwin" || "$SYSTEM_TYPE" = "Linux" ]]; then
     if [ "$SYSTEM_TYPE" = "Linux" ]; then
         sudo apt update && sudo apt -y upgrade && sudo apt install -y build-essential procps curl file git && sudo apt -y autoremove
     fi
-    
+
     if [ ! command -v brew >/dev/null 2>&1 ]; then
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         echo "Homebrew ✅"
@@ -31,7 +31,6 @@ if [[ "$SYSTEM_TYPE" = "Darwin" || "$SYSTEM_TYPE" = "Linux" ]]; then
     fi
 
     yadm bootstrap
-    yadm decrypt --yadm-archive "$HOME/.config/yadm/archive"
 
     if git config remote.faraway.url > /dev/null; then
         yadm remote add origin https://github.com/shaunsingh/vimrc-dotfiles.git
