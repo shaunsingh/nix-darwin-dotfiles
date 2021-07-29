@@ -6,9 +6,8 @@ Configurations for the following are included
 2. yabai/skhd
 3. neovim/vim/neovide/goneovim
 4. emacs
-5. IdeaVim (Intellij)
 
-Managed via YADM
+Managed via [YADM](https://github.com/TheLocehiliosan/yadm)
 
 ## Installation
 
@@ -56,8 +55,8 @@ Emacs uses 3 fonts not installed by default. Menlo, Liga SF Mono (nerd font) and
 
 You will have to manually install the otf files from ~/fonts
 
-On linux, you will have to install 4 fonts
-1. Fira SFMono Nerd Font (from this repo)
+On linux, you will have to install 3 fonts
+1. Fira SFMono Nerd Font (https://github.com/shaunsingh/SFMono-Nerd-Font-Ligaturized)
 2. SF Pro
 3. Menlo
 
@@ -145,13 +144,6 @@ If you want to take advantage of the LSP, you can install language servers using
 `:LspInstall (language)` e.g. `:LspInstall java` to install the java LSP (jdtls)
 
 I also recommend installing [Neovide](https://github.com/Kethku/neovide) or [goneovim](https://github.com/akiyosi/goneovim) if you prefer a gui experience. A goneovim config is included in the dotfiles
-
-### Intelij
-
-Install the following plugins:
-1. `IdeaVim` for vim emulation
-2. `Nord` for the theme
-3. `Material UI` optional but highly recommended
 
 ## Feedback
 
