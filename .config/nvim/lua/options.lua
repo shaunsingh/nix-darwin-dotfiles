@@ -39,7 +39,7 @@ opt.shiftwidth = 4
 opt.smartindent = true
 
 -- shortmess options
-opt.shortmess:append("asI") --disable intro
+opt.shortmess:append("casI") --disable intro
 
 -- disable tilde on end of buffer:
 vim.cmd("let &fcs='eob: '")
