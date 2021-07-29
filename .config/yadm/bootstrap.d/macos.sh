@@ -17,7 +17,7 @@ if [ "$SYSTEM_TYPE" = "Darwin" ]; then
     while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
     #===============
-    # General UI/UX 
+    # General UI/UX
     #===============
 
     # Set computer name (as done via System Preferences → Sharing)
@@ -56,9 +56,6 @@ if [ "$SYSTEM_TYPE" = "Darwin" ]; then
     #=============================================================
     # Trackpad, mouse, keyboard, Bluetooth accessories, and input
     #=============================================================
-
-    # Disable “natural” (Lion-style) scrolling
-    defaults write NSGlobalDomain com.apple.swipescrolldirection -bool false
 
     # Increase sound quality for Bluetooth headphones/headsets
     defaults write com.apple.BluetoothAudioAgent "Apple Bitpool Min (editable)" -int 40
@@ -309,4 +306,3 @@ if [ "$SYSTEM_TYPE" = "Darwin" ]; then
 
     echo "macOS system preferences ✅"
 fi
-
