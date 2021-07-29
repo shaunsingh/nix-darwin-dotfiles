@@ -4,8 +4,9 @@ set -eu
 
 SYSTEM_TYPE=$(uname -s)
 
-sudo tlmgr update --self
-sudo tlmgr install dvipng dvisvgm l3packages xcolor soul adjustbox collectbox amsmath siunitx cancel mathalpha capt-of chemfig wrapfig mhchem
+if [ "$SYSTEM_TYPE" = "Darwin" ]; then
 
-
-echo "LaTeX ✅"
+    sudo tlmgr update --self
+    sudo tlmgr install dvipng dvisvgm l3packages xcolor soul adjustbox collectbox amsmath siunitx cancel mathalpha capt-of chemfig wrapfig mhchem
+    echo "LaTeX ✅"
+fi
