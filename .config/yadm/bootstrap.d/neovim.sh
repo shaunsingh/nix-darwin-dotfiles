@@ -4,4 +4,4 @@ set -eu
 
 nvim --headless +PackerSync +qa
 
-echo "neovim✅"
+echo "neovim ✅"
