@@ -5,7 +5,7 @@ IMAPAccount gmail
 # Address to connect to
 Host imap.gmail.com
 User shaunsingh0207@gmail.com
-Pass 2BigBoysrule
+Pass *********
 AuthMechs LOGIN
 SSLType IMAPS
 
