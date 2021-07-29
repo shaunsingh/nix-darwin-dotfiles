@@ -38,6 +38,7 @@ brew install isync
 brew install msmtp
 mkdir ~/.mbsync
 mu init --maildir=~/.mbsync --my-address=shaunsingh0207@gmail.com
+mu index
 mbsync --all
 
 echo "setting up org"
