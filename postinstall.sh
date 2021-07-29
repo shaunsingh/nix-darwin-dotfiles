@@ -22,8 +22,8 @@ brew install --cask font-fira-code-nerd-font
 
 echo "Installing Dependencies"
 brew install ranger htop ripgrep
-#brew install --HEAD xorpse/formulae/yabai
-#brew install skhd
+brew install yabai
+brew install skhd
 brew install neofetch
 
 echo "Install doom emacs"
@@ -76,14 +76,14 @@ defaults write com.googlecode.iterm2.plist PrefsCustomFolder -string "~/.config/
 defaults write com.googlecode.iterm2.plist LoadPrefsFromCustomFolder -bool true
 
 echo "Cleanup"
-#killall Finder
-#killall Dock
-#osascript -l JavaScript -e "Application('System Events').appearancePreferences.darkMode = true"
-#defaults write NSGlobalDomain _HIHideMenuBar -bool true
-#defaults write com.apple.dock autohide -bool true
-#brew services start yabai
-#brew services start skhd
-#brew services start emacs-plus@28
+osascript -l JavaScript -e "Application('System Events').appearancePreferences.darkMode = true"
+defaults write NSGlobalDomain _HIHideMenuBar -bool true
+defaults write com.apple.dock autohide -bool true
+brew services start yabai
+brew services start skhd
+brew services start emacs-plus@28
+killall Finder
+killall Dock
 brew cleanup -s
 echo "Done!"
 
