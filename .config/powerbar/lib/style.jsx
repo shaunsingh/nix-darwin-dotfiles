@@ -1,6 +1,6 @@
 export const bar = {
   //background: 'rgba(46, 51, 64, 0.5)',
-  background: 'rgba(59, 66, 82, 0.5)',
+  background: 'rgba(59, 66, 82, 0.7)',
   zIndex: '-1',
   width: '100%',
   height: '20px',
