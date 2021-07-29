@@ -93,6 +93,7 @@ Email will have a few issues, since its hardcoded to my account and my machines 
 
 ```zsh
 mu init --maildir=~/.mbsync --my-address=email@example.org
+mu index
 mbsync --all
 ```
 
