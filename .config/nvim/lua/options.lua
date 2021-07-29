@@ -26,7 +26,6 @@ opt.scrolloff = 3
 opt.lazyredraw = true
 opt.linebreak = true
 opt.wrap = true
-opt.textwidth = 80
 opt.wildmenu = true
 opt.wildmode = 'longest:list:full'
 
