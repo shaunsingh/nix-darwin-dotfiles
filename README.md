@@ -105,6 +105,8 @@ You may get errors due to missing fonts on linux. In which case either switch th
 #### Mu4e and Gmail
 Email will have a few issues, since its hardcoded to my account and my machines path. Do the following steps to get email up and running for you
 
+**Note:** ~/.mbsyncrc isn't included anymore since I find it didn't make much sense too. You can find more info about making your own here: https://github.com/hlissner/doom-emacs/blob/develop/modules/email/mu4e/README.org
+
 1. modify `~/.mbsyncrc` to include your email and password
 2. replace instances of my name and email in `~/.doom.d/config.org`
 3. replace the path to `msmtp` in `~/.doom.d/config.org` if you have an intel mac
