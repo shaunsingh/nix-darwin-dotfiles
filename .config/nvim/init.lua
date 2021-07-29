@@ -1,3 +1,4 @@
+--Load main config
 local doom_modules = {
     "options",
     "mappings",
