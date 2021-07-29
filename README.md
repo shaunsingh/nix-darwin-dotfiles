@@ -8,7 +8,7 @@ Configurations for the following are included
 4. emacs
 5. IdeaVim (Intellij)
 
-## Installation 
+## Installation
 
 **Warning:** If you want to give these dotfiles a try, you should first fork this repository, review the code, and remove things you don’t want or need. Don’t blindly use my settings unless you know what that entails.
 
@@ -29,18 +29,19 @@ If you run into issues with xcode, install the Xcode CLT for macOS (this is need
 sudo xcode-select --install
 ```
 
-Note: Brew will install the native-compilation version of emacs-plus, but it may be buggy on certain machines and configurations. You can install emacs-mac if you want emacs27 instead. Brew will also install the developer branch of neovim (`nvim 0.6`), you can use neovim 0.5 (stable) but I can't garuntee if it works. 
+Note: Brew will install the native-compilation version of emacs-plus, but it may be buggy on certain machines and configurations. You can install emacs-mac if you want emacs27 instead. Brew will also install the developer branch of neovim (`nvim 0.6`), you can use neovim 0.5 (stable) but I can't garuntee if it works.
 
-For linux users, either install `emacs` (emacs 27) or [recommended] `emacs-pgtk-native-comp` (emacs 28) via your package manager of choice. 
+For linux users, either install `emacs` (emacs 27) or [recommended] `emacs-pgtk-native-comp` (emacs 28) via your package manager of choice.
 
 ### Fonts
-Emacs uses 2 fonts not installed by default. SF Mono and SF Pro. Although homebrew should handle the installation process, you can reinstall them if nessecary
+Emacs uses 3 fonts not installed by default. Menlo, Liga SF Mono (nerd font) and SF Pro. Although homebrew should handle the installation process, you can reinstall them if nessecary
 
-On linux, you will have to install 4 fonts 
-1. SF Mono
+You will have to manually install the otf files from ~/fonts
+
+On linux, you will have to install 4 fonts
+1. Fira SFMono Nerd Font (from this repo)
 2. SF Pro
 3. Menlo
-4. FiraCode Nerd Font
 
 ### Fish
 
@@ -71,7 +72,7 @@ doom upgrade
 
 If you modify your shell configuration, run `doom env` to regenerate env vars
 
-You may get errors due to missing fonts on linux. In which case either switch the fonts to what you need, or use DejaVu fonts: 
+You may get errors due to missing fonts on linux. In which case either switch the fonts to what you need, or use DejaVu fonts:
 ```lisp
 ;;fonts
 (setq doom-font (font-spec :family "DejaVu Sans Mono" :size 14 :weight 'light)
@@ -86,10 +87,10 @@ You may get errors due to missing fonts on linux. In which case either switch th
 #### Mu4e and Gmail
 Email will have a few issues, since its hardcoded to my account and my machines path. Do the following steps to get email up and running for you
 
-1. modify `~/.mbsyncrc` to include your email and password 
+1. modify `~/.mbsyncrc` to include your email and password
 2. replace instances of my name and email in `~/.doom.d/config.org`
 3. replace the path to `msmtp` in `~/.doom.d/config.org` if you have an intel mac
-4. Rerun the following commands, replace the example with your email: 
+4. Rerun the following commands, replace the example with your email:
 
 ```zsh
 mu init --maildir=~/.mbsync --my-address=email@example.org
@@ -97,13 +98,13 @@ mu index
 mbsync --all
 ```
 
-Indexed mail will go under `~/.mbsync/`, you can either manually mbsync or use emacs to update mail 
+Indexed mail will go under `~/.mbsync/`, you can either manually mbsync or use emacs to update mail
 
-### Org Mode 
+### Org Mode
 
 **Note:** If you run my install script, it clones my notes repo, you can either delete it, ignore it, or borrow my notes if you would like.
 
-My org mode config includes two additional plugins, org-agenda and org-roam. Both these plugins need a set directory. 
+My org mode config includes two additional plugins, org-agenda and org-roam. Both these plugins need a set directory.
 
 All org files can go under the created `~/org` dir. Roam files go under `~/org/roam`
 
@@ -127,8 +128,8 @@ I also recommend installing [Neovide](https://github.com/Kethku/neovide) or [gon
 
 ### Intelij
 
-Install the following plugins: 
-1. `IdeaVim` for vim emulation 
+Install the following plugins:
+1. `IdeaVim` for vim emulation
 2. `Nord` for the theme
 3. `Material UI` optional but highly recommended
 
