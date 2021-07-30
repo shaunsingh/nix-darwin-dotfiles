@@ -710,8 +710,7 @@ Made for `org-tab-first-hook'."
   (let ((auto-mode-alist nil))
     (apply orig-fn args)))
 
-(use-package org
-  :defer t)
+(use-package org)
 
 (after! org-plot
   (defun org-plot/generate-theme (_type)
