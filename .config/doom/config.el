@@ -45,6 +45,37 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
     (let ((mixed-pitch-face 'variable-pitch-serif))
       (mixed-pitch-mode (or arg 'toggle)))))
 
+(defvar required-fonts '("SF Pro" "Liga SFMono Nerd Font" "Menlo"))
+
+(defvar available-fonts
+  (delete-dups (or (font-family-list)
+                   (split-string (shell-command-to-string "fc-list : family")
+                                 "[,\n]"))))
+
+(defvar missing-fonts
+  (delq nil (mapcar
+             (lambda (font)
+               (unless (delq nil (mapcar (lambda (f)
+                                           (string-match-p (format "^%s$" font) f))
+                                         available-fonts))
+                 font))
+             required-fonts)))
+
+(if missing-fonts
+    (pp-to-string
+     `(unless noninteractive
+        (add-hook! 'doom-init-ui-hook
+          (run-at-time nil nil
+                       (lambda ()
+                         (message "%s missing the following fonts: %s"
+                                  (propertize "Warning!" 'face '(bold warning))
+                                  (mapconcat (lambda (font)
+                                               (propertize font 'face 'font-lock-variable-name-face))
+                                             ',missing-fonts
+                                             ", "))
+                         (sleep-for 0.5))))))
+  ";; No missing fonts detected")
+
 (setq doom-theme 'doom-nord)
 (setq doom-nord-padded-modeline t)
 ;;(setq doom-theme 'doom-flatwhite)
@@ -54,20 +85,27 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
       evil-want-fine-undo t                        ;By default while in insert all changes are one big blob. Be more granular
       scroll-margin 2                              ;having a little margin is nice
       auto-save-default t                          ;I dont like to lose work
-      fringe-mode 0                                ;I don't like fringes
       display-line-numbers-type nil                ;I dislike line numbers
       truncate-string-ellipsis "…"                 ;default ellipses suck
-      browse-url-browser-function 'xwidget-webkit-browse-url
+      browse-url-browser-function 'xwidget-webkit-browse-url ;;use xwidgets as my browser
       frame-resize-pixelwise t)                    ;needed for twms
 
 (setq-default delete-by-moving-to-trash t) ;delete to system trash instead
 (add-to-list 'default-frame-alist '(inhibit-double-buffering . t)) ;;stops flickering
 (fringe-mode 0) ;;disable fringe
+(global-subword-mode 1) ;;navigate through Camel Case words
 
 ;I don't use emacs-mac anymore
-(setq mac-mouse-wheel-smooth-scroll t) ;;emacs-mac smooth scroll
-(setq mouse-wheel-scroll-amount '(3 ((shift) . 1) ((control) . nil)))
-:(setq mouse-wheel-progressive-speed nil)
+;;(setq mac-mouse-wheel-smooth-scroll t) ;;emacs-mac smooth scroll
+;;(setq mouse-wheel-scroll-amount '(3 ((shift) . 1) ((control) . nil)))
+;;(setq mouse-wheel-progressive-speed nil)
+
+(setq evil-vsplit-window-right t
+      evil-split-window-below t)
+
+(defadvice! prompt-for-buffer (&rest _)
+  :after '(evil-window-split evil-window-vsplit)
+  (consult-buffer))
 
 (setq +ligatures-in-modes '(org-mode))
 (setq +ligatures-extras-in-modes '(org-mode))      ;ligatures in org mode
@@ -87,8 +125,10 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
   :config
   (evil-better-visual-line-on))
 
-;; Implicit /g flag on evil ex substitution, because I less often want the default behavior.
-(setq evil-ex-substitute-global t)
+(after! evil
+  (setq evil-ex-substitute-global t     ; I like my s/../.. to by global by default
+        evil-move-cursor-back nil       ; Don't move the block cursor when toggling insert mode
+        evil-kill-on-visual-paste nil)) ; Don't put overwritten text in the kill ring
 
 (custom-set-faces!
   `(vertical-border :background ,(doom-color 'bg) :foreground ,(doom-color 'bg)))
@@ -119,9 +159,48 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 (setq-default right-margin-width 2)
 (setq-default line-spacing 0.35)
 
+(after! doom-modeline
+  (doom-modeline-def-segment buffer-name
+    "Display the current buffer's name, without any other information."
+    (concat
+     (doom-modeline-spc)
+     (doom-modeline--buffer-name)))
+
+  (doom-modeline-def-segment pdf-icon
+    "PDF icon from all-the-icons."
+    (concat
+     (doom-modeline-spc)
+     (doom-modeline-icon 'octicon "file-pdf" nil nil
+                         :face (if (doom-modeline--active)
+                                   'all-the-icons-red
+                                 'mode-line-inactive)
+                         :v-adjust 0.02)))
+
+  (defun doom-modeline-update-pdf-pages ()
+    "Update PDF pages."
+    (setq doom-modeline--pdf-pages
+          (let ((current-page-str (number-to-string (eval `(pdf-view-current-page))))
+                (total-page-str (number-to-string (pdf-cache-number-of-pages))))
+            (concat
+             (propertize
+              (concat (make-string (- (length total-page-str) (length current-page-str)) ? )
+                      " P" current-page-str)
+              'face 'mode-line)
+             (propertize (concat "/" total-page-str) 'face 'doom-modeline-buffer-minor-mode)))))
+
+  (doom-modeline-def-segment pdf-pages
+    "Display PDF pages."
+    (if (doom-modeline--active) doom-modeline--pdf-pages
+      (propertize doom-modeline--pdf-pages 'face 'mode-line-inactive)))
+
+  (doom-modeline-def-modeline 'pdf
+    '(bar window-number pdf-pages pdf-icon buffer-name)
+    '(misc-info matches major-mode process vcs)))
+
 ;;modeline (icons, config, battery)
 (display-time-mode 1)                              ;Enable time in the mode-line
-(display-battery-mode 1)                           ;Enable battery in modeline
+(unless (string-match-p "^Power N/A" (battery))   ; On laptops...
+  (display-battery-mode 1))                             ;display the battery
 (setq doom-modeline-major-mode-icon t)             ;Show major mode name
 (setq doom-modeline-enable-word-count t)           ;Show word count
 (setq doom-modeline-modal-icon t)                  ;Show vim mode icon
@@ -168,6 +247,23 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 (setq treemacs-width 25)
 ;;set treemacs to use the theme
 (setq doom-themes-treemacs-theme "doom-colors")
+
+(defvar emojify-disabled-emojis
+  '(;; Org
+    "◼" "☑" "☸" "⚙" "⏩" "⏪" "⬆" "⬇" "❓"
+    ;; Terminal powerline
+    "✔"
+    ;; Box drawing
+    "▶" "◀")
+  "Characters that should never be affected by `emojify-mode'.")
+
+(defadvice! emojify-delete-from-data ()
+  "Ensure `emojify-disabled-emojis' don't appear in `emojify-emojis'."
+  :after #'emojify-set-emoji-data
+  (dolist (emoji emojify-disabled-emojis)
+    (remhash emoji emojify-emojis)))
+
+(add-hook! '(mu4e-compose-mode org-msg-edit-mode) (emoticon-to-emoji 1))
 
 (after! company
   (setq company-idle-delay nil ;;disable by default, its slow
@@ -270,6 +366,90 @@ Made for `org-tab-first-hook'."
 
 (setq org-roam-directory "~/org/roam/")
 
+(defvar phrase-api-url
+  (nth (random 3)
+       '(("https://corporatebs-generator.sameerkumar.website/" :phrase)
+         ("https://useless-facts.sameerkumar.website/api" :data)
+         ("https://dev-excuses-api.herokuapp.com/" :text))))
+
+(defmacro phrase-generate-callback (token &optional format-fn ignore-read-only callback buffer-name)
+  `(lambda (status)
+     (unless (plist-get status :error)
+       (goto-char url-http-end-of-headers)
+       (let ((phrase (plist-get (json-parse-buffer :object-type 'plist) (cadr phrase-api-url)))
+             (inhibit-read-only ,(when (eval ignore-read-only) t)))
+         (setq phrase-last (cons phrase (float-time)))
+         (with-current-buffer ,(or (eval buffer-name) (buffer-name (current-buffer)))
+           (save-excursion
+             (goto-char (point-min))
+             (when (search-forward ,token nil t)
+               (with-silent-modifications
+                 (replace-match "")
+                 (insert ,(if format-fn format-fn 'phrase)))))
+           ,callback)))))
+
+(defvar phrase-last nil)
+(defvar phrase-timeout 5)
+
+(defmacro phrase-insert-async (&optional format-fn token ignore-read-only callback buffer-name)
+  `(let ((inhibit-message t))
+     (if (and phrase-last
+              (> phrase-timeout (- (float-time) (cdr phrase-last))))
+         (let ((phrase (car phrase-last)))
+           ,(if format-fn format-fn 'phrase))
+       (url-retrieve (car phrase-api-url)
+                     (phrase-generate-callback ,(or token "\ufeff") ,format-fn ,ignore-read-only ,callback ,buffer-name))
+       ;; For reference, \ufeff = Zero-width no-break space / BOM
+       ,(or token "\ufeff"))))
+
+(defun doom-dashboard-phrase ()
+  (phrase-insert-async
+   (progn
+     (setq-local phrase-position (point))
+     (mapconcat
+      (lambda (line)
+        (+doom-dashboard--center
+         +doom-dashboard--width
+         (with-temp-buffer
+           (insert-text-button
+            line
+            'action
+            (lambda (_)
+              (setq phrase-last nil)
+              (+doom-dashboard-reload t))
+            'face 'doom-dashboard-menu-title
+            'mouse-face 'doom-dashboard-menu-title
+            'help-echo "Random phrase"
+            'follow-link t)
+           (buffer-string))))
+      (split-string
+       (with-temp-buffer
+         (insert phrase)
+         (setq fill-column (min 70 (/ (* 2 (window-width)) 3)))
+         (fill-region (point-min) (point-max))
+         (buffer-string))
+       "\n")
+      "\n"))
+   nil t
+   (progn
+     (goto-char phrase-position)
+     (forward-whitespace 1))
+   +doom-dashboard-name))
+
+(defadvice! doom-dashboard-widget-loaded-with-phrase ()
+  :override #'doom-dashboard-widget-loaded
+  (setq line-spacing 0.2)
+  (insert
+   "\n\n"
+   (propertize
+    (+doom-dashboard--center
+     +doom-dashboard--width
+     (doom-display-benchmark-h 'return))
+    'face 'doom-dashboard-loaded)
+   "\n"
+   (doom-dashboard-phrase)
+   "\n"))
+
 ;;use image previews
 (setq org-startup-with-inline-images t)            ;inline images in org mode
 
@@ -315,6 +495,9 @@ Made for `org-tab-first-hook'."
           (bibtex-search-entry (car results))
           (org-ref-open-bibtex-pdf))))))
 
+(use-package! org-pretty-table
+  :commands (org-pretty-table-mode global-org-pretty-table-mode))
+
 ;;org directory
 (use-package! ox-gfm
   :after org)
@@ -353,6 +536,13 @@ Made for `org-tab-first-hook'."
 
 (add-hook 'org-mode-hook 'turn-on-flyspell)
 
+(use-package! org-ol-tree
+  :commands org-ol-tree)
+(map! :map org-mode-map
+      :after org
+      :localleader
+      :desc "Outline" "O" #'org-ol-tree)
+
 (add-hook! (gfm-mode markdown-mode) #'visual-line-mode #'turn-off-auto-fill)
 
 (custom-set-faces!
@@ -362,6 +552,10 @@ Made for `org-tab-first-hook'."
   '(markdown-header-face-4 :height 1.00 :weight bold       :inherit markdown-header-face)
   '(markdown-header-face-5 :height 0.90 :weight bold       :inherit markdown-header-face)
   '(markdown-header-face-6 :height 0.75 :weight extra-bold :inherit markdown-header-face))
+
+;;(use-package grip-mode
+  ;;:ensure t)
+  ;;':hook ((markdown-mode org-mode) . grip-mode))
 
 (defvar +zen-serif-p t
   "Whether to use a serifed font with `mixed-pitch-mode'.")
@@ -442,6 +636,19 @@ Made for `org-tab-first-hook'."
 (defvar org-view-external-file-extensions '("html")
   "File formats that should be opened externally.")
 
+(defun org-syntax-convert-keyword-case-to-lower ()
+  "Convert all #+KEYWORDS to #+keywords."
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (let ((count 0)
+          (case-fold-search nil))
+      (while (re-search-forward "^[ \t]*#\\+[A-Z_]+" nil t)
+        (unless (s-matches-p "RESULTS" (match-string 0))
+          (replace-match (downcase (match-string 0)) t)
+          (setq count (1+ count))))
+      (message "Replaced %d occurances" count))))
+
 (setq TeX-save-query nil
       TeX-show-compilation t
       TeX-command-extra-options "-shell-escape")
@@ -497,6 +704,17 @@ Made for `org-tab-first-hook'."
 \\setlength{\\topmargin}{1.5cm}
 \\addtolength{\\topmargin}{-2.54cm}
 ")
+
+(use-package! engrave-faces-latex
+  :after ox-latex)
+
+(setq org-latex-pdf-process '("latexmk -f -pdf -%latex -shell-escape -interaction=nonstopmode -output-directory=%o %f"))
+
+(defadvice! no-auto-mode-alist (orig-fn &rest args)
+  "Wrap ORIG-FN in a let-binding that sets `auto-mode-alist' to nil."
+  :around #'org-export-to-file
+  (let ((auto-mode-alist nil))
+    (apply orig-fn args)))
 
 (after! org-plot
   (defun org-plot/generate-theme (_type)
@@ -995,7 +1213,28 @@ is selected, only the bare key is returned."
       :after org-msg
       :n "G" #'org-msg-goto-body)
 
-(setq-default major-mode 'org-mode)
+(use-package! keycast
+  :commands keycast-mode
+  :config
+  (define-minor-mode keycast-mode
+    "Show current command and its key binding in the mode line."
+    :global t
+    (if keycast-mode
+        (progn
+          (add-hook 'pre-command-hook 'keycast--update t)
+          (add-to-list 'global-mode-string '("" mode-line-keycast " ")))
+      (remove-hook 'pre-command-hook 'keycast--update)
+      (setq global-mode-string (remove '("" mode-line-keycast " ") global-mode-string))))
+  (custom-set-faces!
+    '(keycast-command :inherit doom-modeline-debug
+                      :height 0.9)
+    '(keycast-key :inherit custom-modified
+                  :height 1.1
+                  :weight bold)))
+
+(add-hook 'doom-modeline-mode-hook #'keycast-mode)
+
+;; No missing fonts detected
 
 (defvar fancy-splash-image-template
   (expand-file-name "misc/splash-images/emacs-e-template.svg" doom-private-dir)

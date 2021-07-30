@@ -5,7 +5,6 @@
 ;; on the command line, then restart Emacs for the changes to take effect -- or
 ;; use 'M-x doom/reload'.
 
-
 ;; To install SOME-PACKAGE from MELPA, ELPA or emacsmirror:
 ;(package! some-package)
 
@@ -49,12 +48,10 @@
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;(unpin! t)
 
-;;toggle between latex and preview
+;;org
 (package! org-fragtog)
-;;references for research documents
 (package! org-ref)
 (package! org-appear)
-;;super-agenda
 (package! org-super-agenda)
 (package! doct
   :recipe (:host github :repo "progfolio/doct"))
@@ -62,21 +59,30 @@
   :recipe (:host github
            :repo "tecosaur/org-pandoc-import"
            :files ("*.el" "filters" "preprocessors")))
-;;add some padding in org mode
+(package! org-pretty-table
+  :recipe (:host github :repo "Fuco1/org-pretty-table"))
+(package! org-pretty-tags)
 (package! org-padding :recipe (:host github :repo "TonCherAmi/org-padding" ))
-;;latex snippets
+(package! org-ol-tree :recipe (:host github :repo "Townk/org-ol-tree"))
+(package! focus)
+(unpin! org)
+
+;;latex
 (package! aas :recipe (:host github :repo "ymarco/auto-activating-snippets"))
 (package! laas :recipe (:host github :repo "tecosaur/LaTeX-auto-activating-snippets"))
-;;use latex in the emacs calaculator
 (package! calctex :recipe (:host github :repo "johnbcoughlin/calctex" :files ("*.el" "calctex/*.el" "calctex-contrib/*.el" "org-calctex/*.el" "vendor")))
-;;focus mode in writeroom mode
-(package! focus)
-;;always get the latest doom themes, disable solaire
+(package! engrave-faces :recipe (:host github :repo "tecosaur/engrave-faces"))
+
+;;looks
 (package! solaire-mode :disable t)
 (unpin! doom-themes)
-;;scroll by visual lines, not lines
-(package! evil-better-visual-line)
+
 ;;markdown
 (package! ox-gfm)
-;;ptable
+(package! grip-mode)
+
+;;other
 (package! eperiodic :recipe (:local-repo "lisp/eperiodic.el"))
+(package! keycast)
+(package! selectric-mode)
+(package! evil-better-visual-line)

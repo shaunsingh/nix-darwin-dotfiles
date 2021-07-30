@@ -87,6 +87,45 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
       (mixed-pitch-mode (or arg 'toggle)))))
 #+end_src
 
+Just in case the fonts aren't there, lets add a fallback
+#+name: detect-missing-fonts
+#+begin_src elisp
+(defvar required-fonts '("SF Pro" "Liga SFMono Nerd Font" "Menlo"))
+
+(defvar available-fonts
+  (delete-dups (or (font-family-list)
+                   (split-string (shell-command-to-string "fc-list : family")
+                                 "[,\n]"))))
+
+(defvar missing-fonts
+  (delq nil (mapcar
+             (lambda (font)
+               (unless (delq nil (mapcar (lambda (f)
+                                           (string-match-p (format "^%s$" font) f))
+                                         available-fonts))
+                 font))
+             required-fonts)))
+
+(if missing-fonts
+    (pp-to-string
+     `(unless noninteractive
+        (add-hook! 'doom-init-ui-hook
+          (run-at-time nil nil
+                       (lambda ()
+                         (message "%s missing the following fonts: %s"
+                                  (propertize "Warning!" 'face '(bold warning))
+                                  (mapconcat (lambda (font)
+                                               (propertize font 'face 'font-lock-variable-name-face))
+                                             ',missing-fonts
+                                             ", "))
+                         (sleep-for 0.5))))))
+  ";; No missing fonts detected")
+#+end_src
+
+#+begin_src emacs-lisp :noweb no-export
+<<detect-missing-fonts()>>
+#+end_src
+
 ** Themes
 I switch between themes quite frequently. These are a few I recommend:
 1. Dark:
@@ -114,31 +153,40 @@ The defaults for emacs aren't so good nowadays. Lets fix that up a bit
       evil-want-fine-undo t                        ;By default while in insert all changes are one big blob. Be more granular
       scroll-margin 2                              ;having a little margin is nice
       auto-save-default t                          ;I dont like to lose work
-      fringe-mode 0                                ;I don't like fringes
       display-line-numbers-type nil                ;I dislike line numbers
       truncate-string-ellipsis "…"                 ;default ellipses suck
-      browse-url-browser-function 'xwidget-webkit-browse-url
+      browse-url-browser-function 'xwidget-webkit-browse-url ;;use xwidgets as my browser
       frame-resize-pixelwise t)                    ;needed for twms
 
 (setq-default delete-by-moving-to-trash t) ;delete to system trash instead
 (add-to-list 'default-frame-alist '(inhibit-double-buffering . t)) ;;stops flickering
 (fringe-mode 0) ;;disable fringe
+(global-subword-mode 1) ;;navigate through Camel Case words
 
 ;I don't use emacs-mac anymore
-(setq mac-mouse-wheel-smooth-scroll t) ;;emacs-mac smooth scroll
-(setq mouse-wheel-scroll-amount '(3 ((shift) . 1) ((control) . nil)))
-:(setq mouse-wheel-progressive-speed nil)
+;;(setq mac-mouse-wheel-smooth-scroll t) ;;emacs-mac smooth scroll
+;;(setq mouse-wheel-scroll-amount '(3 ((shift) . 1) ((control) . nil)))
+;;(setq mouse-wheel-progressive-speed nil)
+
+#+end_src
+
+Ask for splits
+#+begin_src elisp
+(setq evil-vsplit-window-right t
+      evil-split-window-below t)
+#+end_src
+
+...and open a buffer for it
+#+begin_src elisp
+(defadvice! prompt-for-buffer (&rest _)
+  :after '(evil-window-split evil-window-vsplit)
+  (consult-buffer))
 #+end_src
 
 I like fancy ligatures in org mode, so lets enable that as well
 #+begin_src elisp
 (setq +ligatures-in-modes '(org-mode))
 (setq +ligatures-extras-in-modes '(org-mode))      ;ligatures in org mode
-#+end_src
-
-Fundemental mode doesn't make much sense either, default should be the superior org mode
-#+begin_src emacs-lisp
-(setq-default major-mode 'org-mode)
 #+end_src
 
 I think the defualt thick toolbar looks quite nice on macOS. Lets keep that enabled against dooms will
@@ -170,8 +218,10 @@ While we're at it, lets make emacs scroll by visual lines instead of actual ones
 
 When im doing regexes, its usually with /g anyways, lets make that the default
 #+begin_src elisp
-;; Implicit /g flag on evil ex substitution, because I less often want the default behavior.
-(setq evil-ex-substitute-global t)
+(after! evil
+  (setq evil-ex-substitute-global t     ; I like my s/../.. to by global by default
+        evil-move-cursor-back nil       ; Don't move the block cursor when toggling insert mode
+        evil-kill-on-visual-paste nil)) ; Don't put overwritten text in the kill ring
 #+end_src
 
 Doom looks much cleaner with the dividers removed. Not sure why it isn't the default honestly
@@ -219,11 +269,53 @@ I like a bit of padding on the left hand side, and lets make the line spacing co
 #+end_src
 
 ** Visual configuration
+Tecosaurs PDF improvements:
+#+begin_src elisp
+(after! doom-modeline
+  (doom-modeline-def-segment buffer-name
+    "Display the current buffer's name, without any other information."
+    (concat
+     (doom-modeline-spc)
+     (doom-modeline--buffer-name)))
+
+  (doom-modeline-def-segment pdf-icon
+    "PDF icon from all-the-icons."
+    (concat
+     (doom-modeline-spc)
+     (doom-modeline-icon 'octicon "file-pdf" nil nil
+                         :face (if (doom-modeline--active)
+                                   'all-the-icons-red
+                                 'mode-line-inactive)
+                         :v-adjust 0.02)))
+
+  (defun doom-modeline-update-pdf-pages ()
+    "Update PDF pages."
+    (setq doom-modeline--pdf-pages
+          (let ((current-page-str (number-to-string (eval `(pdf-view-current-page))))
+                (total-page-str (number-to-string (pdf-cache-number-of-pages))))
+            (concat
+             (propertize
+              (concat (make-string (- (length total-page-str) (length current-page-str)) ? )
+                      " P" current-page-str)
+              'face 'mode-line)
+             (propertize (concat "/" total-page-str) 'face 'doom-modeline-buffer-minor-mode)))))
+
+  (doom-modeline-def-segment pdf-pages
+    "Display PDF pages."
+    (if (doom-modeline--active) doom-modeline--pdf-pages
+      (propertize doom-modeline--pdf-pages 'face 'mode-line-inactive)))
+
+  (doom-modeline-def-modeline 'pdf
+    '(bar window-number pdf-pages pdf-icon buffer-name)
+    '(misc-info matches major-mode process vcs)))
+#+end_src
+
 Doom modeline already looks good, but it can be better. Lets add some icons, the battery status, and make sure we don't lose track of time
 #+begin_src elisp
 ;;modeline (icons, config, battery)
 (display-time-mode 1)                              ;Enable time in the mode-line
-(display-battery-mode 1)                           ;Enable battery in modeline
+(unless (string-match-p "^Power N/A" (battery))   ; On laptops...
+  (display-battery-mode 1))                             ;display the battery
 (setq doom-modeline-major-mode-icon t)             ;Show major mode name
 (setq doom-modeline-enable-word-count t)           ;Show word count
 (setq doom-modeline-modal-icon t)                  ;Show vim mode icon
@@ -285,6 +377,26 @@ Lets theme treemacs while we're at it
 (setq treemacs-width 25)
 ;;set treemacs to use the theme
 (setq doom-themes-treemacs-theme "doom-colors")
+#+end_src
+
+Disable some annoying emojis
+#+begin_src elisp
+(defvar emojify-disabled-emojis
+  '(;; Org
+    "◼" "☑" "☸" "⚙" "⏩" "⏪" "⬆" "⬇" "❓"
+    ;; Terminal powerline
+    "✔"
+    ;; Box drawing
+    "▶" "◀")
+  "Characters that should never be affected by `emojify-mode'.")
+
+(defadvice! emojify-delete-from-data ()
+  "Ensure `emojify-disabled-emojis' don't appear in `emojify-emojis'."
+  :after #'emojify-set-emoji-data
+  (dolist (emoji emojify-disabled-emojis)
+    (remhash emoji emojify-emojis)))
+
+(add-hook! '(mu4e-compose-mode org-msg-edit-mode) (emoticon-to-emoji 1))
 #+end_src
 
 ** Vertico, Lsp, and Company
@@ -505,9 +617,94 @@ Now we just make it theme-appropriate, and resize with the frame.
 (add-hook 'doom-load-theme-hook #'set-appropriate-splash)
 #+end_src
 
-Lastly, the doom dashboard "useful commands" are no longer useful to me.
-So, we'll disable them and then for a particularly /clean/ look disable
-the modeline, then also hide the cursor.
+Lets add a little phrase in there as well
+#+begin_src elisp
+(defvar phrase-api-url
+  (nth (random 3)
+       '(("https://corporatebs-generator.sameerkumar.website/" :phrase)
+         ("https://useless-facts.sameerkumar.website/api" :data)
+         ("https://dev-excuses-api.herokuapp.com/" :text))))
+
+(defmacro phrase-generate-callback (token &optional format-fn ignore-read-only callback buffer-name)
+  `(lambda (status)
+     (unless (plist-get status :error)
+       (goto-char url-http-end-of-headers)
+       (let ((phrase (plist-get (json-parse-buffer :object-type 'plist) (cadr phrase-api-url)))
+             (inhibit-read-only ,(when (eval ignore-read-only) t)))
+         (setq phrase-last (cons phrase (float-time)))
+         (with-current-buffer ,(or (eval buffer-name) (buffer-name (current-buffer)))
+           (save-excursion
+             (goto-char (point-min))
+             (when (search-forward ,token nil t)
+               (with-silent-modifications
+                 (replace-match "")
+                 (insert ,(if format-fn format-fn 'phrase)))))
+           ,callback)))))
+
+(defvar phrase-last nil)
+(defvar phrase-timeout 5)
+
+(defmacro phrase-insert-async (&optional format-fn token ignore-read-only callback buffer-name)
+  `(let ((inhibit-message t))
+     (if (and phrase-last
+              (> phrase-timeout (- (float-time) (cdr phrase-last))))
+         (let ((phrase (car phrase-last)))
+           ,(if format-fn format-fn 'phrase))
+       (url-retrieve (car phrase-api-url)
+                     (phrase-generate-callback ,(or token "\ufeff") ,format-fn ,ignore-read-only ,callback ,buffer-name))
+       ;; For reference, \ufeff = Zero-width no-break space / BOM
+       ,(or token "\ufeff"))))
+
+(defun doom-dashboard-phrase ()
+  (phrase-insert-async
+   (progn
+     (setq-local phrase-position (point))
+     (mapconcat
+      (lambda (line)
+        (+doom-dashboard--center
+         +doom-dashboard--width
+         (with-temp-buffer
+           (insert-text-button
+            line
+            'action
+            (lambda (_)
+              (setq phrase-last nil)
+              (+doom-dashboard-reload t))
+            'face 'doom-dashboard-menu-title
+            'mouse-face 'doom-dashboard-menu-title
+            'help-echo "Random phrase"
+            'follow-link t)
+           (buffer-string))))
+      (split-string
+       (with-temp-buffer
+         (insert phrase)
+         (setq fill-column (min 70 (/ (* 2 (window-width)) 3)))
+         (fill-region (point-min) (point-max))
+         (buffer-string))
+       "\n")
+      "\n"))
+   nil t
+   (progn
+     (goto-char phrase-position)
+     (forward-whitespace 1))
+   +doom-dashboard-name))
+
+(defadvice! doom-dashboard-widget-loaded-with-phrase ()
+  :override #'doom-dashboard-widget-loaded
+  (setq line-spacing 0.2)
+  (insert
+   "\n\n"
+   (propertize
+    (+doom-dashboard--center
+     +doom-dashboard--width
+     (doom-display-benchmark-h 'return))
+    'face 'doom-dashboard-loaded)
+   "\n"
+   (doom-dashboard-phrase)
+   "\n"))
+#+end_src
+
+Lastly, the doom dashboard "useful commands" are no longer useful to me. So, we'll disable them and then for a particularly /clean/ look disable the modeline, then also hide the cursor.
 #+begin_src emacs-lisp
 (remove-hook '+doom-dashboard-functions #'doom-dashboard-widget-shortmenu)
 (add-hook! '+doom-dashboard-mode-hook (hide-mode-line-mode 1) (hl-line-mode -1))
@@ -567,6 +764,12 @@ Org-ref is an awesome package, so lets get that set up as well
           (org-ref-open-bibtex-pdf))))))
 #+end_src
 
+Lets add org pretty table as well
+#+begin_src elisp
+(use-package! org-pretty-table
+  :commands (org-pretty-table-mode global-org-pretty-table-mode))
+#+end_src
+
 I prefer /.org instead of just /org as my directory. Lets change some other defaults too
 #+begin_src elisp
 ;;org directory
@@ -611,6 +814,16 @@ Lets add some spellcheck
 (add-hook 'org-mode-hook 'turn-on-flyspell)
 #+end_src
 
+org-ol-tree is nice for viewing the structure of an org file
+#+begin_src elisp
+(use-package! org-ol-tree
+  :commands org-ol-tree)
+(map! :map org-mode-map
+      :after org
+      :localleader
+      :desc "Outline" "O" #'org-ol-tree)
+#+end_src
+
 *** Markdown
 Even though markdown is crap, I still need to use it. Lets make it bearable
 #+begin_src elisp
@@ -623,6 +836,15 @@ Even though markdown is crap, I still need to use it. Lets make it bearable
   '(markdown-header-face-4 :height 1.00 :weight bold       :inherit markdown-header-face)
   '(markdown-header-face-5 :height 0.90 :weight bold       :inherit markdown-header-face)
   '(markdown-header-face-6 :height 0.75 :weight extra-bold :inherit markdown-header-face))
+#+end_src
+
+**** Grip-mode
+I also usually write markdown for github, so its nice to preview it. For this we
+can use grip-mode
+#+begin_src elisp
+;;(use-package grip-mode
+  ;;:ensure t)
+  ;;':hook ((markdown-mode org-mode) . grip-mode))
 #+end_src
 
 ** Writeroom
@@ -799,7 +1021,7 @@ Apparently this causes issues with some people, but I haven't noticed anything
 problematic beyond the expected slight delay in some fontification, so until I
 do I'll use the above.
 
-** Fontifying inline src blocks
+**** Fontifying inline src blocks
 Org does lovely things with =#+begin_src= blocks, like using font-lock for
 language's major-mode behind the scenes and pulling out the lovely colourful
 results. By contrast, inline =src_= blocks are somewhat neglected.
@@ -993,6 +1215,22 @@ Must be run as part of `org-font-lock-set-keywords-hook'."
 (plist-put +ligatures-extra-symbols :name "⁍")
 #+end_src
 
+Lets also add a function that makes it easy to convert from upper to lowercase
+#+begin_src elisp
+(defun org-syntax-convert-keyword-case-to-lower ()
+  "Convert all #+KEYWORDS to #+keywords."
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (let ((count 0)
+          (case-fold-search nil))
+      (while (re-search-forward "^[ \t]*#\\+[A-Z_]+" nil t)
+        (unless (s-matches-p "RESULTS" (match-string 0))
+          (replace-match (downcase (match-string 0)) t)
+          (setq count (1+ count))))
+      (message "Replaced %d occurances" count))))
+#+end_src
+
 ** Latex
 
 I like latex. Looks awesome and I get to be lazy, but it can be better.
@@ -1075,6 +1313,27 @@ Here's just my private LaTeX config.
 \\setlength{\\topmargin}{1.5cm}
 \\addtolength{\\topmargin}{-2.54cm}
 ")
+#+end_src
+
+*** Exports
+Better syntax highlighting with latex exports
+#+begin_src elisp
+(use-package! engrave-faces-latex
+  :after ox-latex)
+#+end_src
+
+We can use latexmk, as opposed to pdflatex.
+#+begin_src elisp
+(setq org-latex-pdf-process '("latexmk -f -pdf -%latex -shell-escape -interaction=nonstopmode -output-directory=%o %f"))
+#+end_src
+
+And disable auctex, because it gets annoying
+#+begin_src elisp
+(defadvice! no-auto-mode-alist (orig-fn &rest args)
+  "Wrap ORIG-FN in a let-binding that sets `auto-mode-alist' to nil."
+  :around #'org-export-to-file
+  (let ((auto-mode-alist nil))
+    (apply orig-fn args)))
 #+end_src
 
 ** CalcTeX
@@ -1667,4 +1926,32 @@ I also would like to send emails
 (map! :map org-msg-edit-mode-map
       :after org-msg
       :n "G" #'org-msg-goto-body)
+#+end_src
+
+** Keycast
+Its nice for demonstrations
+#+begin_src elisp
+(use-package! keycast
+  :commands keycast-mode
+  :config
+  (define-minor-mode keycast-mode
+    "Show current command and its key binding in the mode line."
+    :global t
+    (if keycast-mode
+        (progn
+          (add-hook 'pre-command-hook 'keycast--update t)
+          (add-to-list 'global-mode-string '("" mode-line-keycast " ")))
+      (remove-hook 'pre-command-hook 'keycast--update)
+      (setq global-mode-string (remove '("" mode-line-keycast " ") global-mode-string))))
+  (custom-set-faces!
+    '(keycast-command :inherit doom-modeline-debug
+                      :height 0.9)
+    '(keycast-key :inherit custom-modified
+                  :height 1.1
+                  :weight bold)))
+#+end_src
+
+For now might as well keep it on all the time
+#+begin_src elisp
+(add-hook 'doom-modeline-mode-hook #'keycast-mode)
 #+end_src
