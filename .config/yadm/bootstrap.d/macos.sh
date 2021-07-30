@@ -10,12 +10,6 @@ if [ "$SYSTEM_TYPE" = "Darwin" ]; then
     # settings we’re about to change
     osascript -e 'tell application "System Preferences" to quit'
 
-    # Ask for the administrator password upfront
-    sudo -v
-
-    # Keep-alive: update existing `sudo` time stamp until `.macos` has finished
-    while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
-
     #===============
     # General UI/UX
     #===============
@@ -29,9 +23,6 @@ if [ "$SYSTEM_TYPE" = "Darwin" ]; then
     # Disable the sound effects on boot
     sudo nvram SystemAudioVolume=" "
 
-    # Increase window resize speed for Cocoa applications
-    defaults write NSGlobalDomain NSWindowResizeTime -float 0.001
-
     # Save to disk (not to iCloud) by default
     defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
 
@@ -40,18 +31,6 @@ if [ "$SYSTEM_TYPE" = "Darwin" ]; then
 
     # Remove duplicates in the “Open With” menu (also see `lscleanup` alias)
     /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user
-
-    # Disable Resume system-wide
-    defaults write com.apple.systempreferences NSQuitAlwaysKeepsWindows -bool false
-
-    # Disable automatic termination of inactive apps
-    defaults write NSGlobalDomain NSDisableAutomaticTermination -bool true
-
-    # Disable the crash reporter
-    defaults write com.apple.CrashReporter DialogType -string "none"
-
-    # Set Help Viewer windows to non-floating mode
-    defaults write com.apple.helpviewer DevMode -bool true
 
     #=============================================================
     # Trackpad, mouse, keyboard, Bluetooth accessories, and input
@@ -174,18 +153,11 @@ if [ "$SYSTEM_TYPE" = "Darwin" ]; then
     # Mail
     #======
 
-    # Disable send and reply animations in Mail.app
-    defaults write com.apple.mail DisableReplyAnimations -bool true
-    defaults write com.apple.mail DisableSendAnimations -bool true
-
     # Copy email addresses as `foo@example.com` instead of `Foo Bar <foo@example.com>` in Mail.app
     defaults write com.apple.mail AddressesIncludeNameOnPasteboard -bool false
 
     # Disable inline attachments (just show the icons)
     defaults write com.apple.mail DisableInlineAttachmentViewing -bool true
-
-    # Disable automatic spell checking
-    defaults write com.apple.mail SpellCheckingBehavior -string "NoSpellCheckingEnabled"
 
     #===========
     # Spotlight
