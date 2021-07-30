@@ -1251,7 +1251,7 @@ First of all, lets use pdf-tools to preview pdfs by defaults
 
 I want to preview all my latex by default. I also want to adjust the look of those previews
 #+begin_src elisp
-(require 'org-src)
+(use-package org-src)
 (setq org-highlight-latex-and-related '(native script entities))
 (add-to-list 'org-src-block-faces '("latex" (:inherit default :extend t)))
 
@@ -1316,12 +1316,6 @@ Here's just my private LaTeX config.
 #+end_src
 
 *** Exports
-Better syntax highlighting with latex exports
-#+begin_src elisp
-(use-package! engrave-faces-latex
-  :after ox-latex)
-#+end_src
-
 We can use latexmk, as opposed to pdflatex.
 #+begin_src elisp
 (setq org-latex-pdf-process '("latexmk -f -pdf -%latex -shell-escape -interaction=nonstopmode -output-directory=%o %f"))
@@ -1929,7 +1923,7 @@ I also would like to send emails
 #+end_src
 
 ** Keycast
-Its nice for demonstrations
+Its nice for +demonstrations+ sike just use it all the time
 #+begin_src elisp
 (use-package! keycast
   :commands keycast-mode

@@ -71,7 +71,6 @@
 (package! aas :recipe (:host github :repo "ymarco/auto-activating-snippets"))
 (package! laas :recipe (:host github :repo "tecosaur/LaTeX-auto-activating-snippets"))
 (package! calctex :recipe (:host github :repo "johnbcoughlin/calctex" :files ("*.el" "calctex/*.el" "calctex-contrib/*.el" "org-calctex/*.el" "vendor")))
-(package! engrave-faces :recipe (:host github :repo "tecosaur/engrave-faces"))
 
 ;;looks
 (package! solaire-mode :disable t)

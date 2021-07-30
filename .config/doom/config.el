@@ -657,7 +657,7 @@ Made for `org-tab-first-hook'."
 
 (setq +latex-viewers '(pdf-tools evince zathura okular skim sumatrapdf))
 
-(require 'org-src)
+(use-package org-src)
 (setq org-highlight-latex-and-related '(native script entities))
 (add-to-list 'org-src-block-faces '("latex" (:inherit default :extend t)))
 
@@ -704,9 +704,6 @@ Made for `org-tab-first-hook'."
 \\setlength{\\topmargin}{1.5cm}
 \\addtolength{\\topmargin}{-2.54cm}
 ")
-
-(use-package! engrave-faces-latex
-  :after ox-latex)
 
 (setq org-latex-pdf-process '("latexmk -f -pdf -%latex -shell-escape -interaction=nonstopmode -output-directory=%o %f"))
 
