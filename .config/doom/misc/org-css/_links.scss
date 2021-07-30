@@ -1,0 +1,169 @@
+// Link and buttons
+
+a {
+  color: inherit;
+}
+
+// #breadcrumbs a,
+figcaption a,
+p a,
+.page-tags a,
+table a,
+// #crosslinks a:not(.highlight),
+li a,
+dl a {
+  @include link-underline($back-white, $text-dark);
+  &:hover {
+    opacity: 0.9;
+    filter: drop-shadow(1px 1px 1px $back-white);
+    @include text-background($back-white, $text-dark);
+    @include text-selection($back-white);
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg id='squiggle-link' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:ev='http://www.w3.org/2001/xml-events' viewBox='0 0 20 4'%3E%3Cstyle type='text/css'%3E.squiggle{animation:shift .3s linear infinite;}@keyframes shift {from {transform:translateX(0);}to {transform:translateX(-20px);}}%3C/style%3E%3Cpath fill='none' stroke='%23000000' stroke-width='2' class='squiggle' d='M0,3.5 c 5,0,5,-3,10,-3 s 5,3,10,3 c 5,0,5,-3,10,-3 s 5,3,10,3'/%3E%3C/svg%3E") !important;
+    background-position: 0% 100%;
+    background-size: 0.8em auto;
+    text-decoration: none;
+  }
+
+  &[href^="#"] {
+    @include text-background($back-white, $text-gray);
+    @include text-selection($back-white);
+    &:hover {
+      opacity: 0.9;
+      filter: drop-shadow(1px 1px 1px $back-white);
+      @include text-background($back-white, $text-medium);
+      @include text-selection($back-white);
+    }
+  }
+}
+
+#theme-switch:checked ~ #page {
+  #breadcrumbs a,
+  figcaption a,
+  p a,
+  .page-tags a,
+  table a,
+  #crosslinks a:not(.highlight),
+  li a,
+  dl a {
+    &:hover {
+      background-image: url("data:image/svg+xml;charset=utf8,%3Csvg id='squiggle-link' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:ev='http://www.w3.org/2001/xml-events' viewBox='0 0 20 4'%3E%3Cstyle type='text/css'%3E.squiggle{animation:shift .3s linear infinite;}@keyframes shift {from {transform:translateX(0);}to {transform:translateX(-20px);}}%3C/style%3E%3Cpath fill='none' stroke='%23ffffff' stroke-width='2' class='squiggle' d='M0,3.5 c 5,0,5,-3,10,-3 s 5,3,10,3 c 5,0,5,-3,10,-3 s 5,3,10,3'/%3E%3C/svg%3E");
+    }
+  }
+}
+
+*:target::before {
+  content: "🠖";
+  position: absolute;
+  left: -7rem;
+  @media (max-width:1000px) {
+    content: "🠔";
+    left: unset;
+    right: 0;
+  }
+  top: calc(0.5em - 2rem);
+  line-height: 1;
+  color: #e65353aa;
+  font-size: 3rem;
+  font-style: normal;
+}
+
+#content .page-intro p a,
+#footnotes a {
+  @include link-underline($back-white, $text-gray);
+
+  &:hover {
+    @include link-underline($back-light, $text-gray);
+  }
+}
+
+// .pile-link::before {
+//   background-color: $back-white;
+//   content: "‹\00a0";
+// }
+
+// .pile-link::after {
+//   background-color: $back-white;
+//   content: "\00a0›";
+// }
+
+// #crosslinks {
+//   margin-top: 20px;
+//   a:not(.highlight) {
+//     @include tag;
+//   }
+// }
+
+.btn {
+  @include button(1px, 14px, 7px);
+  cursor: pointer;
+}
+
+.btn.disabled {
+  color: $text-light;
+  &:hover {
+    cursor: default;
+  }
+}
+
+.btn.small {
+  @include button(1px, 12px, 3px);
+  padding-right: 9px;
+  padding-left: 9px;
+}
+
+.btn.highlight {
+  text-shadow: none;
+  text-decoration: none;
+  color: $text-dark;
+  background-color: yellow;
+}
+
+.btn.primary {
+  text-shadow: none;
+  text-decoration: none;
+  color: $back-white;
+  background-color: $accent;
+
+  &:hover {
+    background-color: $back-light;
+    background-image: none;
+    color: $text-dark;
+  }
+}
+
+.image-link, .image-link:hover {
+  @include link-reset();
+}
+
+div.link-preview {
+  border: 1px solid $back-medium;
+  border-radius: 0.5em;
+  overflow: hidden;
+  position: relative;
+  max-height: 5em;
+  padding-left: 0.5em;
+  a {
+    color: initial;
+    text-decoration: none;
+  }
+  img {
+    border-right: 1px solid $back-medium;
+    float: left;
+    height: 5em;
+    margin-left: -0.5em;
+    margin-right: 0.5em;
+  }
+  p {
+    margin: 0;
+    font-size: 10pt;
+    b {
+      font-size: 11pt;
+    }
+  }
+  small {
+    float: right;
+    font-family: sans;
+    color: $text-light;
+    margin: 0.45em 0.6em;
+  }
+}

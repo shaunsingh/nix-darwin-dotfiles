@@ -1,0 +1,122 @@
+// Org export specific styling
+
+#org-div-home-and-up {
+  display: none !important;
+}
+
+// Override heading settings
+.outline-2 h2 {
+  font-size: 30px;
+}
+
+.outline-3 h3 {
+  font-size: 24px;
+  font-style: normal;
+}
+
+.outline-2 .section-number-2 {
+  font-size: 30px;
+}
+
+.outline-3 .section-number-3 {
+  font-size: 24px;
+}
+
+.timestamp,
+.timestamp-kwd {
+  @include light-meta();
+  background-color: $back-white;
+  border-radius: 1px;
+}
+
+.todo,
+.done {
+  @include tag();
+  background-color: transparent;
+  border: none;
+  font-weight: bold;
+}
+.outline-2,
+.outline-3,
+.outline-4 {
+  contain: layout;
+  .todo,
+  .done {
+    font-size: 18px;
+  }
+}
+
+.todo {
+  color: #ee3333;
+}
+
+.done {
+  color: $text-light;
+}
+
+.tag > span {
+  @include tag();
+  border-radius: 100px;
+}
+
+.priority {
+  color: $text-light;
+  font-family: $code-font;
+}
+
+.footref {
+  text-shadow: none;
+}
+.footpara {
+  display: inline;
+}
+.footdef {
+  margin-bottom: 1em;
+}
+
+th.org-right {
+  text-align: center;
+}
+th.org-left {
+  text-align: center;
+}
+th.org-center {
+  text-align: center;
+}
+td.org-right {
+  text-align: right;
+}
+td.org-left {
+  text-align: left;
+}
+td.org-center {
+  text-align: center;
+}
+
+div.org-center {
+  text-align: center;
+}
+
+// custom org acronym element
+
+span.acr {
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.1em;
+}
+
+.music-track {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  img {
+    height: 6rem;
+    margin-right: 2rem;
+  }
+  a {
+    text-decoration: none;
+  }
+  span {
+    min-width: 35%;
+  }
+}
