@@ -71,7 +71,7 @@
        ;;parinfer          ; turn lisp into python, sort of
        ;;rotate-text       ; cycle region at point between text candidates
        snippets          ; my elves. They type so I don't have to
-       ;;word-wrap         ; soft wrapping with language-aware indent
+       word-wrap         ; soft wrapping with language-aware indent
 
        :emacs
        (dired +icons)             ; making dired pretty [functional]
@@ -95,7 +95,7 @@
        ;;ansible
        ;;debugger          ; FIXME stepping through code, to help you add bugs
        ;;direnv
-       docker
+       ;;docker
        ;;editorconfig      ; let someone else argue about tabs vs spaces
        ;;ein               ; tame Jupyter notebooks with emacs
        (eval +overlay)     ; run code, run (also, repls)
@@ -155,17 +155,17 @@
        ;;nim               ; python + lisp at the speed of c
        ;;nix               ; I hereby declare "nix geht mehr!"
        ;;ocaml             ; an objective camel
-(org                         ; organize your plain life in plain text
- +pretty                     ; yessss my pretties! (nice unicode symbols)
- +dragndrop                  ; drag & drop files/images into org buffers
- ;;+hugo                     ; use Emacs for hugo blogging
- +noter                      ; enhanced PDF notetaking
- +jupyter                    ; ipython/jupyter support for babel
- +pandoc                     ; export-with-pandoc support
- +gnuplot                    ; who doesn't like pretty pictures
- ;;+pomodoro                 ; be fruitful with the tomato technique
- +present                    ; using org-mode for presentations
- +roam2)                      ; wander around notes
+       (org                         ; organize your plain life in plain text
+        +pretty                     ; yessss my pretties! (nice unicode symbols)
+        +dragndrop                  ; drag & drop files/images into org buffers
+        ;;+hugo                     ; use Emacs for hugo blogging
+        +noter                      ; enhanced PDF notetaking
+        +jupyter                    ; ipython/jupyter support for babel
+        +pandoc                     ; export-with-pandoc support
+        +gnuplot                    ; who doesn't like pretty pictures
+        ;;+pomodoro                 ; be fruitful with the tomato technique
+        +present                    ; using org-mode for presentations
+        +roam2)                      ; wander around notes
        ;;php               ; perl's insecure younger brother
        ;;plantuml          ; diagrams for confusing people more
        ;;purescript        ; javascript, but functional
