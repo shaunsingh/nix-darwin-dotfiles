@@ -133,16 +133,16 @@ I switch between themes quite frequently. These are a few I recommend:
    a. Nord
    b. Doom-vibrant
    c. Solarized Dark
-   d. Moonlight
+   d. Xcode
 2. Light:
    a. Flatwhite
    b. Solarized Light
    c. Doom-One-Light
 
-Right now I switch between doom-nord and doom-flatwhite
+Right now I switch between doom-vibrant and doom-flatwhite
 #+begin_src elisp
-;;(setq doom-theme 'doom-nord)
-;;(setq doom-nord-padded-modeline t)
+;;(setq doom-theme 'doom-vibrant)
+;;(setq doom-vibrant-padded-modeline t)
 (setq doom-theme 'doom-flatwhite)
 (setq doom-fw-padded-modeline t)
 #+end_src
@@ -643,11 +643,9 @@ tweaks. Namely:
                  +zen--original-org-indent-mode-p org-indent-mode)
                 (org-indent-mode -1))))
 
-  ;;(add-hook! 'writeroom-mode-hook (focus-mode (if writeroom-mode +1 -1)))
+  (add-hook! 'writeroom-mode-hook (minimap-mode (if writeroom-mode +1 -1)))
   (add-hook 'writeroom-mode-enable-hook #'doom-disable-line-numbers-h)
   (add-hook 'writeroom-mode-disable-hook #'doom-enable-line-numbers-h)
-  (add-hook 'writeroom-mode-enable-hook #'minimap-mode)
-  (add-hook 'writeroom-mode-disable-hook #'minimap-kill)
   (add-hook 'writeroom-mode-disable-hook
             (defun +zen-nonprose-org-h ()
               "Reverse the effect of `+zen-prose-org'."

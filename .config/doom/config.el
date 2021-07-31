@@ -73,8 +73,8 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
                          (sleep-for 0.5))))))
   ";; No missing fonts detected")
 
-;;(setq doom-theme 'doom-nord)
-;;(setq doom-nord-padded-modeline t)
+;;(setq doom-theme 'doom-vibrant)
+;;(setq doom-vibrant-padded-modeline t)
 (setq doom-theme 'doom-flatwhite)
 (setq doom-fw-padded-modeline t)
 
@@ -379,11 +379,9 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
                  +zen--original-org-indent-mode-p org-indent-mode)
                 (org-indent-mode -1))))
 
-  ;;(add-hook! 'writeroom-mode-hook (focus-mode (if writeroom-mode +1 -1)))
+  (add-hook! 'writeroom-mode-hook (minimap-mode (if writeroom-mode +1 -1)))
   (add-hook 'writeroom-mode-enable-hook #'doom-disable-line-numbers-h)
   (add-hook 'writeroom-mode-disable-hook #'doom-enable-line-numbers-h)
-  (add-hook 'writeroom-mode-enable-hook #'minimap-mode)
-  (add-hook 'writeroom-mode-disable-hook #'minimap-kill)
   (add-hook 'writeroom-mode-disable-hook
             (defun +zen-nonprose-org-h ()
               "Reverse the effect of `+zen-prose-org'."
