@@ -73,10 +73,10 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
                          (sleep-for 0.5))))))
   ";; No missing fonts detected")
 
-;;(setq doom-theme 'doom-vibrant)
-;;(setq doom-vibrant-padded-modeline t)
-(setq doom-theme 'doom-flatwhite)
-(setq doom-fw-padded-modeline t)
+(setq doom-theme 'doom-nord)
+(setq doom-nord-padded-modeline t)
+;;(setq doom-theme 'doom-flatwhite)
+;;(setq doom-fw-padded-modeline t)
 
 (setq undo-limit 80000000                          ;I mess up too much
       evil-want-fine-undo t                        ;By default while in insert all changes are one big blob. Be more granular
@@ -1197,6 +1197,13 @@ MathJax = {
 )
 
 (setq org-roam-directory "~/org/roam/")
+
+(use-package! websocket
+    :after org-roam)
+
+(use-package! org-roam-ui
+    :after org-roam ;; or :after org
+    :hook (org-roam . org-roam-ui-mode))
 
 (setq org-agenda-files (list "~/org/work.org"
                              "~/org/school.org"))

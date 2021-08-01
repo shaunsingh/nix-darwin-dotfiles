@@ -65,6 +65,8 @@
 (package! org-padding :recipe (:host github :repo "TonCherAmi/org-padding" ))
 (package! org-ol-tree :recipe (:host github :repo "Townk/org-ol-tree"))
 (package! focus)
+(package! websocket)
+(package! org-roam-ui :recipe (:host github :repo "org-roam/org-roam-ui" :files ("*.el" "out")))
 (unpin! org)
 
 ;;latex

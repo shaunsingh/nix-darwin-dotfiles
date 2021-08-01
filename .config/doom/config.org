@@ -128,23 +128,12 @@ Just in case the fonts aren't there, lets add a fallback
 #+end_src
 
 ** Themes
-I switch between themes quite frequently. These are a few I recommend:
-1. Dark:
-   a. Nord
-   b. Doom-vibrant
-   c. Solarized Dark
-   d. Xcode
-2. Light:
-   a. Flatwhite
-   b. Solarized Light
-   c. Doom-One-Light
-
-Right now I switch between doom-vibrant and doom-flatwhite
+Right now I switch between doom-nord and doom-flatwhite
 #+begin_src elisp
-;;(setq doom-theme 'doom-vibrant)
-;;(setq doom-vibrant-padded-modeline t)
-(setq doom-theme 'doom-flatwhite)
-(setq doom-fw-padded-modeline t)
+(setq doom-theme 'doom-nord)
+(setq doom-nord-padded-modeline t)
+;;(setq doom-theme 'doom-flatwhite)
+;;(setq doom-fw-padded-modeline t)
 #+end_src
 
 ** Better Defaults
@@ -1863,6 +1852,16 @@ I would like to get into the habit of using org-roam for my notes, mainly becaus
 (setq org-roam-directory "~/org/roam/")
 #+end_src
 
+Lets set up the org-roam-ui as well
+#+begin_src elisp
+(use-package! websocket
+    :after org-roam)
+
+(use-package! org-roam-ui
+    :after org-roam ;; or :after org
+    :hook (org-roam . org-roam-ui-mode))
+#+end_src
+
 ** Org-Agenda
 Set the directory
 #+begin_src elisp
@@ -2537,4 +2536,3 @@ I also would like to send emails
       :after org-msg
       :n "G" #'org-msg-goto-body)
 #+end_src
-
