@@ -75,8 +75,6 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 
 (setq doom-theme 'doom-nord)
 (setq doom-nord-padded-modeline t)
-;;(setq doom-theme 'doom-flatwhite)
-;;(setq doom-fw-padded-modeline t)
 
 (setq undo-limit 80000000                          ;I mess up too much
       evil-want-fine-undo t                        ;By default while in insert all changes are one big blob. Be more granular
@@ -1202,8 +1200,77 @@ MathJax = {
     :after org-roam)
 
 (use-package! org-roam-ui
-    :after org-roam ;; or :after org
     :hook (org-roam . org-roam-ui-mode))
+
+(defadvice! doom-modeline--buffer-file-name-roam-aware-a (orig-fun)
+  :around #'doom-modeline-buffer-file-name ; takes no args
+  (if (s-contains-p org-roam-directory (or buffer-file-name ""))
+      (replace-regexp-in-string
+       "\\(?:^\\|.*/\\)\\([0-9]\\{4\\}\\)\\([0-9]\\{2\\}\\)\\([0-9]\\{2\\}\\)[0-9]*-"
+       "🢔(\\1-\\2-\\3) "
+       (subst-char-in-string ?_ ?  buffer-file-name))
+    (funcall orig-fun)))
+
+(after! org-roam
+   (setq +org-roam-open-buffer-on-find-file nil))
+
+;;(set-popup-rule! "^\\*xwidget webkit:  \\*" :ignore t)
+
+(defcustom roam-preview-use-webkit t
+  "Use embedded webkit to preview.
+This requires GNU/Emacs version >= 26 and built with the `--with-xwidgets`
+option."
+  :type 'boolean
+  :group 'roam)
+
+(declare-function xwidget-buffer 'xwidget)
+(declare-function xwidget-webkit-browse-url 'xwidget)
+(declare-function xwidget-webkit-current-session 'xwidget)
+
+(defun roam-browser (url)
+  "Use browser specified by user to load URL.
+Use default browser if nil."
+  (if roam-url-browser
+      (let ((browse-url-generic-program roam-url-browser)
+            (browse-url-generic-args roam-url-args))
+        (ignore browse-url-generic-program)
+        (ignore browse-url-generic-args)
+        (browse-url-generic url))
+    (browse-url url)))
+
+(defun roam-open-url (url)
+  "Ask the browser to load URL.
+Use default browser unless `xwidget' is available."
+  (if (and roam-preview-use-webkit
+           (featurep 'xwidget-internal))
+      (progn
+        (xwidget-webkit-browse-url url)
+        (let ((buf (xwidget-buffer (xwidget-webkit-current-session))))
+          (when (buffer-live-p buf)
+            (and (eq buf (current-buffer)) (quit-window))
+            (let (display-buffer-alist)(pop-to-buffer buf)))))
+    (roam-browser url)))
+
+;;;###autoload
+(define-minor-mode orui-open-in-browser
+  "open org-roam-ui in the browser"
+ :lighter "roam"
+ (roam-open-url "http://127.0.0.1:35901"))
+
+(setq org-roam-ui-sync-theme nil)
+(setq org-roam-ui-custom-theme
+      `((bg . "#2E3440")
+        (bg-alt . "#3B4252")
+        (fg . "#D8DEE9")
+        (fg-alt . "#E5E9F0")
+        (red . "#BF616A")
+        (orange . "#D08770")
+        (yellow ."#EBCB8B")
+        (green . "#A3BE8C")
+        (cyan . "#88C0D0")
+        (blue . "#81A1C1")
+        (violet . "#B48EAD")
+        (magenta . "#8FBCBB")))
 
 (setq org-agenda-files (list "~/org/work.org"
                              "~/org/school.org"))
