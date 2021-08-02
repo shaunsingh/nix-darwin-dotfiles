@@ -1214,34 +1214,28 @@ MathJax = {
 (after! org-roam
    (setq +org-roam-open-buffer-on-find-file nil))
 
-;;(set-popup-rule! "^\\*xwidget webkit:  \\*" :ignore t)
-
-(defcustom roam-preview-use-webkit t
+(defcustom org-roam-ui-use-webkit t
   "Use embedded webkit to preview.
 This requires GNU/Emacs version >= 26 and built with the `--with-xwidgets`
 option."
   :type 'boolean
   :group 'roam)
 
-(declare-function xwidget-buffer 'xwidget)
-(declare-function xwidget-webkit-browse-url 'xwidget)
-(declare-function xwidget-webkit-current-session 'xwidget)
-
-(defun roam-browser (url)
+(defun org-roam-ui-browser (url)
   "Use browser specified by user to load URL.
 Use default browser if nil."
-  (if roam-url-browser
-      (let ((browse-url-generic-program roam-url-browser)
+  (if org-roam-ui-url-browser
+      (let ((browse-url-generic-program org-roam-ui-url-browser)
             (browse-url-generic-args roam-url-args))
         (ignore browse-url-generic-program)
         (ignore browse-url-generic-args)
         (browse-url-generic url))
     (browse-url url)))
 
-(defun roam-open-url (url)
+(defun org-roam-ui-open-url (url)
   "Ask the browser to load URL.
 Use default browser unless `xwidget' is available."
-  (if (and roam-preview-use-webkit
+  (if (and org-roam-ui-use-webkit
            (featurep 'xwidget-internal))
       (progn
         (xwidget-webkit-browse-url url)
@@ -1249,28 +1243,28 @@ Use default browser unless `xwidget' is available."
           (when (buffer-live-p buf)
             (and (eq buf (current-buffer)) (quit-window))
             (let (display-buffer-alist)(pop-to-buffer buf)))))
-    (roam-browser url)))
+    (org-roam-ui-browser url)))
 
 ;;;###autoload
-(define-minor-mode orui-open-in-browser
+(define-minor-mode org-roam-ui-open-in-browser
   "open org-roam-ui in the browser"
  :lighter "roam"
- (roam-open-url "http://127.0.0.1:35901"))
+ (org-roam-ui-open-url "http://127.0.0.1:35901"))
 
-(setq org-roam-ui-sync-theme nil)
-(setq org-roam-ui-custom-theme
-      `((bg . "#2E3440")
-        (bg-alt . "#3B4252")
-        (fg . "#D8DEE9")
-        (fg-alt . "#E5E9F0")
-        (red . "#BF616A")
-        (orange . "#D08770")
-        (yellow ."#EBCB8B")
-        (green . "#A3BE8C")
-        (cyan . "#88C0D0")
-        (blue . "#81A1C1")
-        (violet . "#B48EAD")
-        (magenta . "#8FBCBB")))
+;;(setq org-roam-ui-sync-theme nil)
+;; (setq org-roam-ui-custom-theme
+;;       `((bg . "#2E3440")
+;;         (bg-alt . "#3B4252")
+;;         (fg . "#D8DEE9")
+;;         (fg-alt . "#E5E9F0")
+;;         (red . "#BF616A")
+;;         (orange . "#D08770")
+;;         (yellow ."#EBCB8B")
+;;         (green . "#A3BE8C")
+;;         (cyan . "#88C0D0")
+;;         (blue . "#81A1C1")
+;;         (violet . "#B48EAD")
+;;         (magenta . "#8FBCBB")))
 
 (setq org-agenda-files (list "~/org/work.org"
                              "~/org/school.org"))
@@ -1774,14 +1768,10 @@ set palette defined ( 0 '%s',\
     (mu4e-drafts-folder     . "/Drafts")
     (mu4e-trash-folder      . "/Trash")
     (mu4e-refile-folder     . "/All Mail")
-    (smtpmail-smtp-user     . "shaunsingh0207@gmail.com")
-    (mu4e-compose-signature . "---\nShaurya Singh"))
-  t)
+    (smtpmail-smtp-user     . "shaunsingh0207@gmail.com")))
 
 ;; don't need to run cleanup after indexing for gmail
 (setq mu4e-index-cleanup nil
-      ;; because gmail uses labels as folders we can use lazy check since
-      ;; messages don't really "move"
       mu4e-index-lazy-check t)
 
 (after! mu4e
@@ -1817,13 +1807,6 @@ set palette defined ( 0 '%s',\
         message-sendmail-f-is-evil t
         message-sendmail-extra-arguments '("--read-envelope-from"); , "--read-recipients")
         message-send-mail-function #'message-send-mail-with-sendmail))
-
-(setq +org-msg-accent-color "#1a5fb4"
-      org-msg-greeting-fmt "\nHi %s,\n\n"
-      org-msg-signature "\n\n#+begin_signature\nAll the best,\\\\\n*Shaurya*\n#+end_signature")
-(map! :map org-msg-edit-mode-map
-      :after org-msg
-      :n "G" #'org-msg-goto-body)
 
 ;; No missing fonts detected
 

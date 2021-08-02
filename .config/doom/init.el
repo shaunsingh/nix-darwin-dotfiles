@@ -48,8 +48,8 @@
        ;;neotree           ; a project drawer, like NERDTree for vim
        ophints           ; highlight the region an operation acts on
        (popup +all +defaults)   ; tame sudden yet inevitable temporary windows
-       (tabs
-        +centaur-tabs)
+       ;;(tabs
+        ;;+centaur-tabs)
        treemacs          ; a project drawer, like neotree but cooler
        ;;tree-sitter       ; highlighting, improved
        ;;unicode           ; extended unicode support for various languages
