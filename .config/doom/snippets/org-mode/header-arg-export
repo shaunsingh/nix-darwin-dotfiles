@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: Header arg - export
+# key: e
+# condition: (+yas/org-src-header-p)
+# --
+`(let ((out (+yas/org-prompt-header-arg :exports "Exports: " '("code" "results" "both" "none")))) (if out (concat ":exports " out " ") ""))`

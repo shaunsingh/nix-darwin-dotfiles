@@ -76,112 +76,6 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 (setq doom-theme 'doom-vibrant)
 (setq doom-vibrant-padded-modeline t)
 
-(after! company
-  (setq company-idle-delay 0.5
-        company-minimum-prefix-length 2))
-(set-company-backend!
-  '(text-mode
-    markdown-mode
-    gfm-mode)
-  '(:seperate
-    pen-company-filetype
-    company-yasnippet
-    company-ispell
-    company-files))
-
-;;nested snippets
-(setq yas-triggers-in-field t)
-
-(use-package! aas
-  :commands aas-mode)
-
-(use-package! laas
-  :hook (LaTeX-mode . laas-mode)
-  :config
-  (defun laas-tex-fold-maybe ()
-    (unless (equal "/" aas-transient-snippet-key)
-      (+latex-fold-last-macro-a)))
-  (add-hook 'org-mode #'laas-mode)
-  (add-hook 'aas-post-snippet-expand-hook #'laas-tex-fold-maybe))
-
-(defadvice! fixed-org-yas-expand-maybe-h ()
-  "Expand a yasnippet snippet, if trigger exists at point or region is active.
-Made for `org-tab-first-hook'."
-  :override #'+org-yas-expand-maybe-h
-  (when (and (featurep! :editor snippets)
-             (require 'yasnippet nil t)
-             (bound-and-true-p yas-minor-mode))
-    (and (let ((major-mode (cond ((org-in-src-block-p t)
-                                  (org-src-get-lang-mode (org-eldoc-get-src-lang)))
-                                 ((org-inside-LaTeX-fragment-p)
-                                  'latex-mode)
-                                 (major-mode)))
-               (org-src-tab-acts-natively nil) ; causes breakages
-               ;; Smart indentation doesn't work with yasnippet, and painfully slow
-               ;; in the few cases where it does.
-               (yas-indent-line 'fixed))
-           (cond ((and (or (not (bound-and-true-p evil-local-mode))
-                           (evil-insert-state-p)
-                           (evil-emacs-state-p))
-                       (or (and (bound-and-true-p yas--tables)
-                                (gethash major-mode yas--tables))
-                           (progn (yas-reload-all) t))
-                       (yas--templates-for-key-at-point))
-                  (yas-expand)
-                  t)
-                 ((use-region-p)
-                  (yas-insert-snippet)
-                  t)))
-         ;; HACK Yasnippet breaks org-superstar-mode because yasnippets is
-         ;;      overzealous about cleaning up overlays.
-         (when (bound-and-true-p org-superstar-mode)
-           (org-superstar-restart)))))
-
-(use-package! lsp-ui
-  :hook (lsp-mode . lsp-ui-mode)
-  :config
-  (setq lsp-ui-sideline-enable nil; not anymore useful than flycheck
-        lsp-ui-doc-enable nil
-        lsp-enable-symbol-highlighting nil))
-
-;;java home for java-lsp
-(setenv "JAVA_HOME"  "/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home")
-(setq lsp-java-java-path "/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home/bin/java")
-
-;;latex
-(setq lsp-tex-server 'digestif)
-
-(cl-defmacro lsp-org-babel-enable (lang)
-  "Support LANG in org source code block."
-  (setq centaur-lsp 'lsp-mode)
-  (cl-check-type lang stringp)
-  (let* ((edit-pre (intern (format "org-babel-edit-prep:%s" lang)))
-         (intern-pre (intern (format "lsp--%s" (symbol-name edit-pre)))))
-    `(progn
-       (defun ,intern-pre (info)
-         (let ((file-name (->> info caddr (alist-get :file))))
-           (unless file-name
-             (setq file-name (make-temp-file "babel-lsp-")))
-           (setq buffer-file-name file-name)
-           (lsp-deferred)))
-       (put ',intern-pre 'function-documentation
-            (format "Enable lsp-mode in the buffer of org source block (%s)."
-                    (upcase ,lang)))
-       (if (fboundp ',edit-pre)
-           (advice-add ',edit-pre :after ',intern-pre)
-         (progn
-           (defun ,edit-pre (info)
-             (,intern-pre info))
-           (put ',edit-pre 'function-documentation
-                (format "Prepare local buffer environment for org source block (%s)."
-                        (upcase ,lang))))))))
-(defvar org-babel-lang-list
-  '("go" "python" "ipython" "bash" "sh" ))
-(dolist (lang org-babel-lang-list)
-  (eval `(lsp-org-babel-enable ,lang)))
-
-(set-file-template! "\\.org$" :trigger "__" :mode 'org-mode)
-
 (setq undo-limit 80000000                          ;I mess up too much
       evil-want-fine-undo t                        ;By default while in insert all changes are one big blob. Be more granular
       scroll-margin 2                              ;having a little margin is nice
@@ -560,6 +454,110 @@ Made for `org-tab-first-hook'."
                   :height 1.0
                   :weight bold)))
 
+(after! company
+  (setq company-idle-delay 0.5
+        company-minimum-prefix-length 2))
+(set-company-backend!
+  '(text-mode
+    markdown-mode
+    gfm-mode)
+  '(:seperate
+    pen-company-filetype
+    company-yasnippet
+    company-ispell
+    company-files))
+
+;;nested snippets
+(setq yas-triggers-in-field t)
+
+(use-package! aas
+  :commands aas-mode)
+
+(use-package! laas
+  :hook (LaTeX-mode . laas-mode)
+  :config
+  (defun laas-tex-fold-maybe ()
+    (unless (equal "/" aas-transient-snippet-key)
+      (+latex-fold-last-macro-a)))
+  (add-hook 'org-mode #'laas-mode)
+  (add-hook 'aas-post-snippet-expand-hook #'laas-tex-fold-maybe))
+
+(defadvice! fixed-org-yas-expand-maybe-h ()
+  "Expand a yasnippet snippet, if trigger exists at point or region is active.
+Made for `org-tab-first-hook'."
+  :override #'+org-yas-expand-maybe-h
+  (when (and (featurep! :editor snippets)
+             (require 'yasnippet nil t)
+             (bound-and-true-p yas-minor-mode))
+    (and (let ((major-mode (cond ((org-in-src-block-p t)
+                                  (org-src-get-lang-mode (org-eldoc-get-src-lang)))
+                                 ((org-inside-LaTeX-fragment-p)
+                                  'latex-mode)
+                                 (major-mode)))
+               (org-src-tab-acts-natively nil) ; causes breakages
+               ;; Smart indentation doesn't work with yasnippet, and painfully slow
+               ;; in the few cases where it does.
+               (yas-indent-line 'fixed))
+           (cond ((and (or (not (bound-and-true-p evil-local-mode))
+                           (evil-insert-state-p)
+                           (evil-emacs-state-p))
+                       (or (and (bound-and-true-p yas--tables)
+                                (gethash major-mode yas--tables))
+                           (progn (yas-reload-all) t))
+                       (yas--templates-for-key-at-point))
+                  (yas-expand)
+                  t)
+                 ((use-region-p)
+                  (yas-insert-snippet)
+                  t)))
+         ;; HACK Yasnippet breaks org-superstar-mode because yasnippets is
+         ;;      overzealous about cleaning up overlays.
+         (when (bound-and-true-p org-superstar-mode)
+           (org-superstar-restart)))))
+
+(use-package! lsp-ui
+  :hook (lsp-mode . lsp-ui-mode)
+  :config
+  (setq lsp-ui-sideline-enable nil; not anymore useful than flycheck
+        lsp-ui-doc-enable nil
+        lsp-enable-symbol-highlighting nil))
+
+;;java home for java-lsp
+(setenv "JAVA_HOME"  "/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home")
+(setq lsp-java-java-path "/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home/bin/java")
+
+;;latex
+(setq lsp-tex-server 'digestif)
+
+(cl-defmacro lsp-org-babel-enable (lang)
+  "Support LANG in org source code block."
+  (setq centaur-lsp 'lsp-mode)
+  (cl-check-type lang stringp)
+  (let* ((edit-pre (intern (format "org-babel-edit-prep:%s" lang)))
+         (intern-pre (intern (format "lsp--%s" (symbol-name edit-pre)))))
+    `(progn
+       (defun ,intern-pre (info)
+         (let ((file-name (->> info caddr (alist-get :file))))
+           (unless file-name
+             (setq file-name (make-temp-file "babel-lsp-")))
+           (setq buffer-file-name file-name)
+           (lsp-deferred)))
+       (put ',intern-pre 'function-documentation
+            (format "Enable lsp-mode in the buffer of org source block (%s)."
+                    (upcase ,lang)))
+       (if (fboundp ',edit-pre)
+           (advice-add ',edit-pre :after ',intern-pre)
+         (progn
+           (defun ,edit-pre (info)
+             (,intern-pre info))
+           (put ',edit-pre 'function-documentation
+                (format "Prepare local buffer environment for org source block (%s)."
+                        (upcase ,lang))))))))
+(defvar org-babel-lang-list
+  '("go" "python" "ipython" "bash" "sh" ))
+(dolist (lang org-babel-lang-list)
+  (eval `(lsp-org-babel-enable ,lang)))
+
 (defun toggle-transparency ()
   (interactive)
   (let ((alpha (frame-parameter nil 'alpha)))
@@ -570,7 +568,7 @@ Made for `org-tab-first-hook'."
                     ;; Also handle undocumented (<active> <inactive>) form.
                     ((numberp (cadr alpha)) (cadr alpha)))
               100)
-         '(100 . 85) '(100 . 100)))))
+         '(100 . 50) '(100 . 100)))))
 (global-set-key (kbd "C-c t") 'toggle-transparency)
 
 ;;use image previews

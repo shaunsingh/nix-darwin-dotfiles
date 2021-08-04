@@ -130,8 +130,134 @@ Just in case the fonts aren't there, lets add a fallback
 ** Themes
 Right now I'm using doom-vibrant
 #+begin_src elisp
-(setq doom-theme 'doom-nord)
-(setq doom-nord-padded-modeline t)
+(setq doom-theme 'doom-vibrant)
+(setq doom-vibrant-padded-modeline t)
+#+end_src
+
+** Lsp, and Company
+The default lsp config is nice, but has a few invasive features we can disable. Lets set up the java LSP as well
+#+begin_src elisp
+(after! company
+  (setq company-idle-delay 0.5
+        company-minimum-prefix-length 2))
+(set-company-backend!
+  '(text-mode
+    markdown-mode
+    gfm-mode)
+  '(:seperate
+    pen-company-filetype
+    company-yasnippet
+    company-ispell
+    company-files))
+
+;;nested snippets
+(setq yas-triggers-in-field t)
+#+end_src
+
+Lets add some snippets for latex
+#+begin_src elisp
+(use-package! aas
+  :commands aas-mode)
+
+(use-package! laas
+  :hook (LaTeX-mode . laas-mode)
+  :config
+  (defun laas-tex-fold-maybe ()
+    (unless (equal "/" aas-transient-snippet-key)
+      (+latex-fold-last-macro-a)))
+  (add-hook 'org-mode #'laas-mode)
+  (add-hook 'aas-post-snippet-expand-hook #'laas-tex-fold-maybe))
+
+#+end_src
+
+And with a little help from henrik, lets use those snippets in org mode
+#+begin_src elisp
+(defadvice! fixed-org-yas-expand-maybe-h ()
+  "Expand a yasnippet snippet, if trigger exists at point or region is active.
+Made for `org-tab-first-hook'."
+  :override #'+org-yas-expand-maybe-h
+  (when (and (featurep! :editor snippets)
+             (require 'yasnippet nil t)
+             (bound-and-true-p yas-minor-mode))
+    (and (let ((major-mode (cond ((org-in-src-block-p t)
+                                  (org-src-get-lang-mode (org-eldoc-get-src-lang)))
+                                 ((org-inside-LaTeX-fragment-p)
+                                  'latex-mode)
+                                 (major-mode)))
+               (org-src-tab-acts-natively nil) ; causes breakages
+               ;; Smart indentation doesn't work with yasnippet, and painfully slow
+               ;; in the few cases where it does.
+               (yas-indent-line 'fixed))
+           (cond ((and (or (not (bound-and-true-p evil-local-mode))
+                           (evil-insert-state-p)
+                           (evil-emacs-state-p))
+                       (or (and (bound-and-true-p yas--tables)
+                                (gethash major-mode yas--tables))
+                           (progn (yas-reload-all) t))
+                       (yas--templates-for-key-at-point))
+                  (yas-expand)
+                  t)
+                 ((use-region-p)
+                  (yas-insert-snippet)
+                  t)))
+         ;; HACK Yasnippet breaks org-superstar-mode because yasnippets is
+         ;;      overzealous about cleaning up overlays.
+         (when (bound-and-true-p org-superstar-mode)
+           (org-superstar-restart)))))
+#+end_src
+
+I think the LSP is a bit intrusive (especially with inline suggestions), so lets make it behave a bit more
+#+begin_src elisp
+(use-package! lsp-ui
+  :hook (lsp-mode . lsp-ui-mode)
+  :config
+  (setq lsp-ui-sideline-enable nil; not anymore useful than flycheck
+        lsp-ui-doc-enable nil
+        lsp-enable-symbol-highlighting nil))
+
+;;java home for java-lsp
+(setenv "JAVA_HOME"  "/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home")
+(setq lsp-java-java-path "/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home/bin/java")
+
+;;latex
+(setq lsp-tex-server 'digestif)
+#+end_src
+
+Lets also setup lsp for org-mode
+#+begin_src elisp
+(cl-defmacro lsp-org-babel-enable (lang)
+  "Support LANG in org source code block."
+  (setq centaur-lsp 'lsp-mode)
+  (cl-check-type lang stringp)
+  (let* ((edit-pre (intern (format "org-babel-edit-prep:%s" lang)))
+         (intern-pre (intern (format "lsp--%s" (symbol-name edit-pre)))))
+    `(progn
+       (defun ,intern-pre (info)
+         (let ((file-name (->> info caddr (alist-get :file))))
+           (unless file-name
+             (setq file-name (make-temp-file "babel-lsp-")))
+           (setq buffer-file-name file-name)
+           (lsp-deferred)))
+       (put ',intern-pre 'function-documentation
+            (format "Enable lsp-mode in the buffer of org source block (%s)."
+                    (upcase ,lang)))
+       (if (fboundp ',edit-pre)
+           (advice-add ',edit-pre :after ',intern-pre)
+         (progn
+           (defun ,edit-pre (info)
+             (,intern-pre info))
+           (put ',edit-pre 'function-documentation
+                (format "Prepare local buffer environment for org source block (%s)."
+                        (upcase ,lang))))))))
+(defvar org-babel-lang-list
+  '("go" "python" "ipython" "bash" "sh" ))
+(dolist (lang org-babel-lang-list)
+  (eval `(lsp-org-babel-enable ,lang)))
+#+end_src
+
+And lastly lets add some helpful snippets for org-mode, and add a better templete
+#+begin_src elisp
+(set-file-template! "\\.org$" :trigger "__" :mode 'org-mode)
 #+end_src
 
 ** Better Defaults
@@ -303,8 +429,7 @@ Doom modeline already looks good, but it can be better. Lets add some icons, the
 #+begin_src elisp
 ;;modeline (icons, config, battery)
 (display-time-mode 1)                              ;Enable time in the mode-line
-(unless (string-match-p "^Power N/A" (battery))   ; On laptops...
-  (display-battery-mode 1))                             ;display the battery
+(display-battery-mode 1)                             ;display the battery
 (setq doom-modeline-major-mode-icon t)             ;Show major mode name
 (setq doom-modeline-enable-word-count t)           ;Show word count
 (setq doom-modeline-modal-icon t)                  ;Show vim mode icon
@@ -969,7 +1094,7 @@ Lets also add a function that makes it easy to convert from upper to lowercase
 #+end_src
 
 ** Keycast
-Its nice for +demonstrations+ sike just use it all the time
+Its nice for demonstrations
 #+begin_src elisp
 (use-package! keycast
   :commands keycast-mode
@@ -991,123 +1116,22 @@ Its nice for +demonstrations+ sike just use it all the time
                   :weight bold)))
 #+end_src
 
-For now might as well keep it on all the time
+** Transparency
+I'm not too big of a fan of transparency, but some people like it. You can use
+this little function to toggle it now
 #+begin_src elisp
-(add-hook 'doom-modeline-mode-hook #'keycast-mode)
-#+end_src
-** Vertico, Lsp, and Company
-The default lsp config is nice, but has a few invasive features we can disable. Lets set up the java LSP as well
-#+begin_src elisp
-(after! company
-  (setq company-idle-delay nil ;;disable by default, its slow
-        company-minimum-prefix-length 1))
-(set-company-backend!
-  '(text-mode
-    markdown-mode
-    gfm-mode)
-  '(:seperate
-    company-yasnippet
-    company-ispell
-    company-files))
-#+end_src
-
-Lets add some snippets for latex
-#+begin_src elisp
-(use-package! aas
-  :commands aas-mode)
-
-(use-package! laas
-  :hook (LaTeX-mode . laas-mode)
-  :config
-  (defun laas-tex-fold-maybe ()
-    (unless (equal "/" aas-transient-snippet-key)
-      (+latex-fold-last-macro-a)))
-  (add-hook 'aas-post-snippet-expand-hook #'laas-tex-fold-maybe))
-#+end_src
-
-And with a little help from henrik, lets use those snippets in org mode
-#+begin_src elisp
-(defadvice! fixed-org-yas-expand-maybe-h ()
-  "Expand a yasnippet snippet, if trigger exists at point or region is active.
-Made for `org-tab-first-hook'."
-  :override #'+org-yas-expand-maybe-h
-  (when (and (featurep! :editor snippets)
-             (require 'yasnippet nil t)
-             (bound-and-true-p yas-minor-mode))
-    (and (let ((major-mode (cond ((org-in-src-block-p t)
-                                  (org-src-get-lang-mode (org-eldoc-get-src-lang)))
-                                 ((org-inside-LaTeX-fragment-p)
-                                  'latex-mode)
-                                 (major-mode)))
-               (org-src-tab-acts-natively nil) ; causes breakages
-               ;; Smart indentation doesn't work with yasnippet, and painfully slow
-               ;; in the few cases where it does.
-               (yas-indent-line 'fixed))
-           (cond ((and (or (not (bound-and-true-p evil-local-mode))
-                           (evil-insert-state-p)
-                           (evil-emacs-state-p))
-                       (or (and (bound-and-true-p yas--tables)
-                                (gethash major-mode yas--tables))
-                           (progn (yas-reload-all) t))
-                       (yas--templates-for-key-at-point))
-                  (yas-expand)
-                  t)
-                 ((use-region-p)
-                  (yas-insert-snippet)
-                  t)))
-         ;; HACK Yasnippet breaks org-superstar-mode because yasnippets is
-         ;;      overzealous about cleaning up overlays.
-         (when (bound-and-true-p org-superstar-mode)
-           (org-superstar-restart)))))
-#+end_src
-
-I think the LSP is a bit intrusive (especially with inline suggestions), so lets make it behave a bit more
-#+begin_src elisp
-(use-package! lsp-ui
-  :hook (lsp-mode . lsp-ui-mode)
-  :config
-  (setq lsp-ui-sideline-enable nil; not anymore useful than flycheck
-        lsp-ui-doc-enable nil
-        lsp-enable-symbol-highlighting nil))
-
-;;java home for java-lsp
-(setenv "JAVA_HOME"  "/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home")
-(setq lsp-java-java-path "/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home/bin/java")
-
-;;latex
-(setq lsp-tex-server 'digestif)
-#+end_src
-
-Lets also setup lsp for org-mode
-#+begin_src elisp
-(cl-defmacro lsp-org-babel-enable (lang)
-  "Support LANG in org source code block."
-  (setq centaur-lsp 'lsp-mode)
-  (cl-check-type lang stringp)
-  (let* ((edit-pre (intern (format "org-babel-edit-prep:%s" lang)))
-         (intern-pre (intern (format "lsp--%s" (symbol-name edit-pre)))))
-    `(progn
-       (defun ,intern-pre (info)
-         (let ((file-name (->> info caddr (alist-get :file))))
-           (unless file-name
-             (setq file-name (make-temp-file "babel-lsp-")))
-           (setq buffer-file-name file-name)
-           (lsp-deferred)))
-       (put ',intern-pre 'function-documentation
-            (format "Enable lsp-mode in the buffer of org source block (%s)."
-                    (upcase ,lang)))
-       (if (fboundp ',edit-pre)
-           (advice-add ',edit-pre :after ',intern-pre)
-         (progn
-           (defun ,edit-pre (info)
-             (,intern-pre info))
-           (put ',edit-pre 'function-documentation
-                (format "Prepare local buffer environment for org source block (%s)."
-                        (upcase ,lang))))))))
-(defvar org-babel-lang-list
-  '("go" "python" "ipython" "bash" "sh" ))
-(dolist (lang org-babel-lang-list)
-  (eval `(lsp-org-babel-enable ,lang)))
+ (defun toggle-transparency ()
+   (interactive)
+   (let ((alpha (frame-parameter nil 'alpha)))
+     (set-frame-parameter
+      nil 'alpha
+      (if (eql (cond ((numberp alpha) alpha)
+                     ((numberp (cdr alpha)) (cdr alpha))
+                     ;; Also handle undocumented (<active> <inactive>) form.
+                     ((numberp (cadr alpha)) (cadr alpha)))
+               100)
+          '(100 . 85) '(100 . 100)))))
+ (global-set-key (kbd "C-c t") 'toggle-transparency)
 #+end_src
 
 * Org
@@ -1860,7 +1884,7 @@ Lets set up the org-roam-ui as well
     :after org-roam)
 
 (use-package! org-roam-ui
-    :hook (org-roam . org-roam-ui-mode))
+    :after org-roam)
 #+end_src
 
 The doom-modeline is a bit messy with roam, lets adjust that
@@ -1946,8 +1970,8 @@ Use default browser unless `xwidget' is available."
 ** Org-Agenda
 Set the directory
 #+begin_src elisp
-(setq org-agenda-files (list "~/org/work.org"
-                             "~/org/school.org"))
+(setq org-agenda-files (list "~/org/school.org"
+                             "~/org/todo.org"))
 #+end_src
 
 Org-super-agenda!
@@ -2026,7 +2050,6 @@ Org-super-agenda!
 #+end_src
 
 ** Org-Capture
-
 Lets make the capture window a bit prettier, and add More templetes
 #+begin_src elisp
 (use-package! doct
@@ -2397,9 +2420,6 @@ set palette defined ( 0 '%s',\
 #+end_src
 
 * Latex
-
-I like latex. Looks awesome and I get to be lazy, but it can be better.
-
 Use XeLateX
 #+begin_src elisp
 (setq TeX-save-query nil
