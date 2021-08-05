@@ -1155,39 +1155,6 @@ I like a little padding on my org blocks, just a millimeter or two on the top an
   (ignore-errors (apply orig-fn args)))
 #+end_src
 
-Org-ref is an awesome package, so lets get that set up as well
-#+begin_src elisp
-;;make references much easier
-(use-package! org-ref
-  :after org
-  :config
-  (defadvice! org-ref-open-bibtex-pdf-a ()
-    :override #'org-ref-open-bibtex-pdf
-    (save-excursion
-      (bibtex-beginning-of-entry)
-      (let* ((bibtex-expand-strings t)
-             (entry (bibtex-parse-entry t))
-             (key (reftex-get-bib-field "=key=" entry))
-             (pdf (or
-                   (car (-filter (lambda (f) (string-match-p "\\.pdf$" f))
-                                 (split-string (reftex-get-bib-field "file" entry) ";")))
-                   (funcall org-ref-get-pdf-filename-function key))))
-        (if (file-exists-p pdf)
-            (org-open-file pdf)
-          (ding)))))
-  (defadvice! org-ref-open-pdf-at-point-a ()
-    "Open the pdf for bibtex key under point if it exists."
-    :override #'org-ref-open-pdf-at-point
-    (interactive)
-    (let* ((results (org-ref-get-bibtex-key-and-file))
-           (key (car results))
-           (pdf-file (funcall org-ref-get-pdf-filename-function key)))
-      (with-current-buffer (find-file-noselect (cdr results))
-        (save-excursion
-          (bibtex-search-entry (car results))
-          (org-ref-open-bibtex-pdf))))))
-#+end_src
-
 Lets add org pretty table as well
 #+begin_src elisp
 (use-package! org-pretty-table
@@ -1246,29 +1213,6 @@ org-ol-tree is nice for viewing the structure of an org file
       :after org
       :localleader
       :desc "Outline" "O" #'org-ol-tree)
-#+end_src
-
-*** Markdown
-Even though markdown is crap, I still need to use it. Lets make it bearable
-#+begin_src elisp
-(add-hook! (gfm-mode markdown-mode) #'visual-line-mode #'turn-off-auto-fill)
-
-(custom-set-faces!
-  '(markdown-header-face-1 :height 1.25 :weight extra-bold :inherit markdown-header-face)
-  '(markdown-header-face-2 :height 1.15 :weight bold       :inherit markdown-header-face)
-  '(markdown-header-face-3 :height 1.08 :weight bold       :inherit markdown-header-face)
-  '(markdown-header-face-4 :height 1.00 :weight bold       :inherit markdown-header-face)
-  '(markdown-header-face-5 :height 0.90 :weight bold       :inherit markdown-header-face)
-  '(markdown-header-face-6 :height 0.75 :weight extra-bold :inherit markdown-header-face))
-#+end_src
-
-**** Grip-mode
-I also usually write markdown for github, so its nice to preview it. For this we
-can use grip-mode
-#+begin_src elisp
-;;(use-package grip-mode
-  ;;:ensure t)
-  ;;':hook ((markdown-mode org-mode) . grip-mode))
 #+end_src
 
 *** HTML
@@ -2806,7 +2750,6 @@ current Emacs theme, I was enraptured. The result is the pseudo-class ~chameleon
                     (face-attribute 'outline-8 :foreground)
                     ;;
                     (face-attribute 'link :foreground)
-                    (or (face-attribute 'org-ref-cite-face :foreground) (doom-color 'yellow))
                     (face-attribute 'org-list-dt :foreground)
                     (face-attribute 'org-code :foreground)
                     (face-attribute 'org-verbatim :foreground)

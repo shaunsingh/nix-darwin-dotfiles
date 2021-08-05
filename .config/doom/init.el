@@ -102,12 +102,12 @@
        ;;gist              ; interacting with github gists
        (lookup +dictionary +docsets)              ; navigate your code and its documentation
        lsp               ; M-x vscode
-       (magit +forge)             ; a git porcelain for Emacs
-       make              ; run make tasks from Emacs
+       magit             ; a git porcelain for Emacs
+       ;;make              ; run make tasks from Emacs
        ;;pass              ; password manager for nerds
        pdf               ; pdf enhancements
        ;;prodigy           ; FIXME managing external services & code builders
-       rgb               ; creating color strings
+       ;;rgb               ; creating color strings
        ;;taskrunner        ; taskrunner for all your projects
        ;;terraform         ; infrastructure as code
        ;;tmux              ; an API for interacting with tmux
@@ -115,7 +115,7 @@
 
        :os
        (:if IS-MAC macos)  ; improve compatibility with macOS
-       tty               ; improve the terminal Emacs experience
+       ;;tty               ; improve the terminal Emacs experience
 
        :lang
        ;;agda              ; types of types of types of types...
@@ -143,7 +143,7 @@
        ;;hy                ; readability of scheme w/ speed of python
        ;;idris             ; a language you can depend on
        ;;json              ; At least it ain't XML
-       (java +lsp) ; the poster child for carpal tunnel syndrome
+       ;;(java +lsp) ; the poster child for carpal tunnel syndrome
        ;;javascript        ; all(hope(abandon(ye(who(enter(here))))))
        ;;julia             ; a better, faster MATLAB
        (kotlin +lsp)            ; a better, slicker Java(Script)
@@ -153,11 +153,11 @@
        lua               ; one-based indices? one-based indices
        markdown          ; writing docs for people to ignore
        ;;nim               ; python + lisp at the speed of c
-       ;;nix               ; I hereby declare "nix geht mehr!"
+       nix               ; I hereby declare "nix geht mehr!"
        ;;ocaml             ; an objective camel
        (org                         ; organize your plain life in plain text
         +pretty                     ; yessss my pretties! (nice unicode symbols)
-        +dragndrop                  ; drag & drop files/images into org buffers
+        ;;+dragndrop                  ; drag & drop files/images into org buffers
         ;;+hugo                     ; use Emacs for hugo blogging
         +noter                      ; enhanced PDF notetaking
         +jupyter                    ; ipython/jupyter support for babel
@@ -174,7 +174,7 @@
        ;;racket            ; a DSL for DSLs
        ;;raku              ; the artist formerly known as perl6
        ;;rest              ; Emacs as a REST client
-       ;;rst               ; ReST in peace
+       rst               ; ReST in peace
        ;;(ruby +rails)     ; 1.step {|i| p "Ruby is #{i.even? ? 'love' : 'life'}"}
        (rust +lsp)              ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
        ;;scala             ; java, but good
@@ -189,7 +189,7 @@
        ;;zig               ; C, but simpler
 
        :email
-       (:if (executable-find "mu") (mu4e +org +gmail)) ; email, using gmail with org. Using Tecosaurs PR
+       (:if (executable-find "mu") (mu4e +org +gmail)) ; email, but better
        ;;notmuch
        ;;(wanderlust +gmail)
 
