@@ -482,7 +482,7 @@ Made for `org-tab-first-hook'."
                  +zen--original-org-indent-mode-p org-indent-mode)
                 (org-indent-mode -1))))
 
-  (add-hook! 'writeroom-mode-hook (minimap-mode (if writeroom-mode +1 -1)))
+  ;;(add-hook! 'writeroom-mode-hook (minimap-mode (if writeroom-mode +1 -1)))
   (add-hook 'writeroom-mode-enable-hook #'doom-disable-line-numbers-h)
   (add-hook 'writeroom-mode-disable-hook #'doom-enable-line-numbers-h)
   (add-hook 'writeroom-mode-disable-hook
@@ -679,14 +679,6 @@ Made for `org-tab-first-hook'."
 ;;(use-package grip-mode
   ;;:ensure t)
   ;;':hook ((markdown-mode org-mode) . grip-mode))
-
-(setq org-latex-pdf-process '("latexmk -f -pdf -%latex -shell-escape -interaction=nonstopmode -output-directory=%o %f"))
-
-(defadvice! no-auto-mode-alist (orig-fn &rest args)
-  "Wrap ORIG-FN in a let-binding that sets `auto-mode-alist' to nil."
-  :around #'org-export-to-file
-  (let ((auto-mode-alist nil))
-    (apply orig-fn args)))
 
 (after! org
   (define-minor-mode org-fancy-html-export-mode
@@ -1283,8 +1275,8 @@ Use default browser unless `xwidget' is available."
 ;;         (violet . "#B48EAD")
 ;;         (magenta . "#8FBCBB")))
 
-(setq org-agenda-files (list "~/org/work.org"
-                             "~/org/school.org"))
+(setq org-agenda-files (list "~/org/school.org"
+                             "~/org/todo.org"))
 
 (use-package! org-super-agenda
   :commands (org-super-agenda-mode))
@@ -2208,6 +2200,91 @@ Must be run as part of `org-font-lock-set-keywords-hook'."
 (advice-add 'org-html-fixed-width     :around #'org-html-block-collapsable)
 (advice-add 'org-html-property-drawer :around #'org-html-block-collapsable)
 
+(map! :map org-mode-map
+      :leader
+      :desc "View exported file" "v" #'org-view-output-file)
+
+(defun org-view-output-file (&optional org-file-path)
+  "Visit buffer open on the first output file (if any) found, using `org-view-output-file-extensions'"
+  (interactive)
+  (let* ((org-file-path (or org-file-path (buffer-file-name) ""))
+         (dir (file-name-directory org-file-path))
+         (basename (file-name-base org-file-path))
+         (output-file nil))
+    (dolist (ext org-view-output-file-extensions)
+      (unless output-file
+        (when (file-exists-p
+               (concat dir basename "." ext))
+          (setq output-file (concat dir basename "." ext)))))
+    (if output-file
+        (if (member (file-name-extension output-file) org-view-external-file-extensions)
+            (browse-url-xdg-open output-file)
+          (pop-to-buffer (or (find-buffer-visiting output-file)
+                             (find-file-noselect output-file))))
+      (message "No exported file found"))))
+
+(defvar org-view-output-file-extensions '( "pdf" "md" "rst" "txt" "tex")
+  "Search for output files with these extensions, in order, viewing the first that matches")
+
+(defcustom org-html-use-webkit t
+  "Use embedded webkit to preview.
+This requires GNU/Emacs version >= 26 and built with the `--with-xwidgets`
+option."
+  :type 'boolean)
+
+(defun org-html-browser (url)
+  "Use browser specified by user to load URL.
+Use default browser if nil."
+  (if org-html-url-browser
+      (let ((browse-url-generic-program org-html-url-browser)
+            (browse-url-generic-args roam-url-args))
+        (ignore browse-url-generic-program)
+        (ignore browse-url-generic-args)
+        (browse-url-generic url))
+    (browse-url url)))
+
+(defun org-html-open-url (url)
+  "Ask the browser to load URL.
+Use default browser unless `xwidget' is available."
+  (if (and org-html-use-webkit
+           (featurep 'xwidget-internal))
+      (progn
+        (xwidget-webkit-browse-url url)
+        (let ((buf (xwidget-buffer (xwidget-webkit-current-session))))
+          (when (buffer-live-p buf)
+            (and (eq buf (current-buffer)) (quit-window))
+            (let (display-buffer-alist)(pop-to-buffer buf)))))
+    (org-html-browser url)))
+
+(map! :map org-mode-map
+      :leader
+      :desc "View exported file" "V" #'org-view-output-file-html)
+
+(defun org-view-output-file-html (&optional org-file-path)
+  "Visit buffer open on the first output file (if any) found, using `org-view-output-file-extensions'"
+  (interactive)
+  (let* ((org-file-path (or org-file-path (buffer-file-name) ""))
+         (dir (file-name-directory org-file-path))
+         (basename (file-name-base org-file-path))
+         (output-file nil))
+    (dolist (ext org-view-output-file-extensions-html)
+      (unless output-file
+        (when (file-exists-p
+               (concat dir basename "." ext))
+          (setq output-file (concat dir basename "." ext)))))
+    (if output-file
+        (if (member (file-name-extension output-file) org-view-external-file-extensions)
+            (defun org-html-preview-url ()
+                "Return grip preview url."
+                 (format "file://%s" output-file))
+            (org-html-open-url org-html-preview-url))
+      (message "No exported file found"))))
+
+(defvar org-view-output-file-extensions-html '( "html")
+  "Search for output files with these extensions, in order, viewing the first that matches")
+(defvar org-view-external-file-extensions '("html")
+  "File formats that should be opened externally.")
+
 (use-package! calctex
   :commands calctex-mode
   :init
@@ -2256,3 +2333,170 @@ Must be run as part of `org-font-lock-set-keywords-hook'."
       :after latex
       :leader
       :desc "Embedded calc (toggle)" "e" #'calc-embedded)
+
+;; org-latex-compilers = ("pdflatex" "xelatex" "lualatex"), which are the possible values for %latex
+(setq org-latex-pdf-process '("latexmk -f -pdf -%latex -shell-escape -interaction=nonstopmode -output-directory=%o %f"))
+
+(after! ox
+  (defvar ox-chameleon-base-class "scr-article"
+    "The base class that chameleon builds on")
+
+  (defvar ox-chameleon--p nil
+    "Used to indicate whether the current export is trying to blend in. Set just before being accessed.")
+
+  ;; (setf (alist-get :filter-latex-class
+  ;;                  (org-export-backend-filters
+  ;;                   (org-export-get-backend 'latex)))
+  ;;       'ox-chameleon-latex-class-detector-filter)
+
+  ;; (defun ox-chameleon-latex-class-detector-filter (info backend)
+  ;;   ""
+  ;;   (setq ox-chameleon--p (when (equal (plist-get info :latex-class)
+  ;;                                      "chameleon")
+  ;;                           (plist-put info :latex-class ox-chameleon-base-class)
+  ;;                           t)))
+
+  ;; TODO make this less hacky. One ideas was as follows
+  ;; (map-put (org-export-backend-filters (org-export-get-backend 'latex))
+  ;;           :filter-latex-class 'ox-chameleon-latex-class-detector-filter))
+  ;; Never seemed to execute though
+  (defadvice! ox-chameleon-org-latex-detect (orig-fun info)
+    :around #'org-export-install-filters
+    (setq ox-chameleon--p (when (equal (plist-get info :latex-class)
+                                       "chameleon")
+                            (plist-put info :latex-class ox-chameleon-base-class)
+                            t))
+    (funcall orig-fun info))
+
+  (defadvice! ox-chameleon-org-latex-export (orig-fn info &optional template snippet?)
+    :around #'org-latex-make-preamble
+    (if ox-chameleon--p
+        (let ((engrave-faces-preset-styles (engrave-faces-generate-preset)))
+          (concat (funcall orig-fn info template snippet?)
+                  (ox-chameleon-generate-colourings)))
+      (funcall orig-fn info template snippet?)))
+
+  (defun ox-chameleon-generate-colourings ()
+    (apply #'format
+           "%% make document follow Emacs theme
+\\definecolor{bg}{HTML}{%s}
+\\definecolor{fg}{HTML}{%s}
+
+\\definecolor{red}{HTML}{%s}
+\\definecolor{orange}{HTML}{%s}
+\\definecolor{green}{HTML}{%s}
+\\definecolor{teal}{HTML}{%s}
+\\definecolor{yellow}{HTML}{%s}
+\\definecolor{blue}{HTML}{%s}
+\\definecolor{dark-blue}{HTML}{%s}
+\\definecolor{magenta}{HTML}{%s}
+\\definecolor{violet}{HTML}{%s}
+\\definecolor{cyan}{HTML}{%s}
+\\definecolor{dark-cyan}{HTML}{%s}
+
+\\definecolor{documentTitle}{HTML}{%s}
+\\definecolor{documentInfo}{HTML}{%s}
+\\definecolor{level1}{HTML}{%s}
+\\definecolor{level2}{HTML}{%s}
+\\definecolor{level3}{HTML}{%s}
+\\definecolor{level4}{HTML}{%s}
+\\definecolor{level5}{HTML}{%s}
+\\definecolor{level6}{HTML}{%s}
+\\definecolor{level7}{HTML}{%s}
+\\definecolor{level8}{HTML}{%s}
+
+\\definecolor{link}{HTML}{%s}
+\\definecolor{cite}{HTML}{%s}
+\\definecolor{itemlabel}{HTML}{%s}
+\\definecolor{code}{HTML}{%s}
+\\definecolor{verbatim}{HTML}{%s}
+
+\\definecolor{codebackground}{HTML}{%s}
+\\colorlet{EFD}{fg}
+\\definecolor{codeborder}{HTML}{%s}
+
+\\pagecolor{bg}
+\\color{fg}
+
+\\addtokomafont{title}{\\color{documentTitle}}
+\\addtokomafont{author}{\\color{documentInfo}}
+\\addtokomafont{date}{\\color{documentInfo}}
+\\addtokomafont{section}{\\color{level1}}
+\\newkomafont{sectionprefix}{\\color{level1}}
+\\addtokomafont{subsection}{\\color{level2}}
+\\newkomafont{subsectionprefix}{\\color{level2}}
+\\addtokomafont{subsubsection}{\\color{level3}}
+\\newkomafont{subsubsectionprefix}{\\color{level3}}
+\\addtokomafont{paragraph}{\\color{level4}}
+\\newkomafont{paragraphprefix}{\\color{level4}}
+\\addtokomafont{subparagraph}{\\color{level5}}
+\\newkomafont{subparagraphprefix}{\\color{level5}}
+
+\\renewcommand{\\labelitemi}{\\textcolor{itemlabel}{\\textbullet}}
+\\renewcommand{\\labelitemii}{\\textcolor{itemlabel}{\\normalfont\\bfseries \\textendash}}
+\\renewcommand{\\labelitemiii}{\\textcolor{itemlabel}{\\textasteriskcentered}}
+\\renewcommand{\\labelitemiv}{\\textcolor{itemlabel}{\\textperiodcentered}}
+
+\\renewcommand{\\labelenumi}{\\textcolor{itemlabel}{\\theenumi.}}
+\\renewcommand{\\labelenumii}{\\textcolor{itemlabel}{(\\theenumii)}}
+\\renewcommand{\\labelenumiii}{\\textcolor{itemlabel}{\\theenumiii.}}
+\\renewcommand{\\labelenumiv}{\\textcolor{itemlabel}{\\theenumiv.}}
+
+\\DeclareTextFontCommand{\\texttt}{\\color{code}\\ttfamily}
+\\makeatletter
+\\def\\verbatim@font{\\color{verbatim}\\normalfont\\ttfamily}
+\\makeatother
+%% end customisations
+"
+           (mapcar (doom-rpartial #'substring 1)
+                   (list
+                    (face-attribute 'solaire-default-face :background)
+                    (face-attribute 'default :foreground)
+                    ;;
+                    (doom-color 'red)
+                    (doom-color 'orange)
+                    (doom-color 'green)
+                    (doom-color 'teal)
+                    (doom-color 'yellow)
+                    (doom-color 'blue)
+                    (doom-color 'dark-blue)
+                    (doom-color 'magenta)
+                    (doom-color 'violet)
+                    (doom-color 'cyan)
+                    (doom-color 'dark-cyan)
+                    ;;
+                    (face-attribute 'org-document-title :foreground)
+                    (face-attribute 'org-document-info :foreground)
+                    (face-attribute 'outline-1 :foreground)
+                    (face-attribute 'outline-2 :foreground)
+                    (face-attribute 'outline-3 :foreground)
+                    (face-attribute 'outline-4 :foreground)
+                    (face-attribute 'outline-5 :foreground)
+                    (face-attribute 'outline-6 :foreground)
+                    (face-attribute 'outline-7 :foreground)
+                    (face-attribute 'outline-8 :foreground)
+                    ;;
+                    (face-attribute 'link :foreground)
+                    (or (face-attribute 'org-ref-cite-face :foreground) (doom-color 'yellow))
+                    (face-attribute 'org-list-dt :foreground)
+                    (face-attribute 'org-code :foreground)
+                    (face-attribute 'org-verbatim :foreground)
+                    ;;
+                    (face-attribute 'default :background)
+                    (doom-blend (face-attribute 'default :background)
+                                (face-attribute 'default :foreground)
+                                0.95))))))
+
+(setq org-latex-text-markup-alist
+      '((bold . "\\textbf{%s}")
+        (code . protectedtexttt)
+        (italic . "\\emph{%s}")
+        (strike-through . "\\sout{%s}")
+        (underline . "\\uline{%s}")
+        (verbatim . verb)))
+
+(defadvice! no-auto-mode-alist (orig-fn &rest args)
+  "Wrap ORIG-FN in a let-binding that sets `auto-mode-alist' to nil."
+  :around #'org-export-to-file
+  (let ((auto-mode-alist nil))
+    (apply orig-fn args)))
