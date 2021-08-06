@@ -382,6 +382,13 @@ I like a bit of padding on the left hand side, and lets make the line spacing co
 (setq-default line-spacing 0.35)
 #+end_src
 
+** Periodic Table
+Comes in more usefull then you would think
+#+begin_src elisp
+;;(use-package! eperiodic
+  ;;:commands eperiodic)
+#+end_src
+
 * Visual configuration
 ** Modeline
 Tecosaurs PDF improvements:
@@ -2830,14 +2837,4 @@ I'm trying out emails in emacs, should be nice. Related, check .mbsyncrc to setu
                   (+mu4e-colorize-str
                    (replace-regexp-in-string "\\`.*/" "" (mu4e-message-field msg :maildir))
                    '+mu4e-header--folder-colors)))))))
-#+end_src
-
-I also would like to send emails
-#+begin_src elisp
-(after! mu4e
-  (setq sendmail-program "/opt/homebrew/bin/msmtp"
-        send-mail-function #'smtpmail-send-it
-        message-sendmail-f-is-evil t
-        message-sendmail-extra-arguments '("--read-envelope-from"); , "--read-recipients")
-        message-send-mail-function #'message-send-mail-with-sendmail))
 #+end_src

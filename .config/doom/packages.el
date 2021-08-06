@@ -1,6 +1,6 @@
 ;; -*- no-byte-compile: t; -*-
 ;;; $DOOMDIR/packages.el
-
+;;;
 ;;org
 (package! org-fragtog)
 (package! org-appear)
@@ -34,6 +34,7 @@
 (package! ox-gfm)
 
 ;;other
+(package! eperiodic :recipe (:local-repo "lisp/eperiodic.el"))
 (package! keycast)
 (package! selectric-mode)
 (package! evil-better-visual-line)

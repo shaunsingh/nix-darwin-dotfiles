@@ -260,6 +260,9 @@ Made for `org-tab-first-hook'."
 (setq-default right-margin-width 2)
 (setq-default line-spacing 0.35)
 
+;;(use-package! eperiodic
+  ;;:commands eperiodic)
+
 (after! doom-modeline
   (doom-modeline-def-segment buffer-name
     "Display the current buffer's name, without any other information."
@@ -1765,13 +1768,6 @@ set palette defined ( 0 '%s',\
                   (+mu4e-colorize-str
                    (replace-regexp-in-string "\\`.*/" "" (mu4e-message-field msg :maildir))
                    '+mu4e-header--folder-colors)))))))
-
-(after! mu4e
-  (setq sendmail-program "/opt/homebrew/bin/msmtp"
-        send-mail-function #'smtpmail-send-it
-        message-sendmail-f-is-evil t
-        message-sendmail-extra-arguments '("--read-envelope-from"); , "--read-recipients")
-        message-send-mail-function #'message-send-mail-with-sendmail))
 
 ;; No missing fonts detected
 
