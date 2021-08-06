@@ -25,12 +25,6 @@ Make this file run (slightly) faster with lexical binding
 ;;; config.el -*- lexical-binding: t; -*-
 #+end_src
 
-Sometimes I run into issue where there are two compiled versions for one file. To fix this we can tell emacs to only load the newer version of the files. I haven't ran into this issue in a while, but I'll leave it for now.
-#+begin_src elisp
-;;If there are two files for a plugin, load the newer one
-(setq load-prefer-newer t)
-#+end_src
-
 I also don't want to compile my org config every time I make a change. Lets fix that
 #+begin_src elisp
 (remove-hook 'org-mode-hook #'+literate-enable-recompile-h)
@@ -57,7 +51,7 @@ I like the apple fonts for programming, so I'll go with Liga SFMono Nerd Font. I
       doom-big-font (font-spec :family "Liga SFMono Nerd Font" :size 20)
       doom-variable-pitch-font (font-spec :family "SF Pro" :size 16)
       doom-unicode-font (font-spec :family "Liga SFMono Nerd Font")
-      doom-serif-font (font-spec :family "Menlo" :weight 'Regular))
+      doom-serif-font (font-spec :family "Liga SFMono Nerd Font" :weight 'Regular))
 #+end_src
 
 For mixed pitch, I would go with something comfier. I like helvetica, so lets go with that
@@ -94,7 +88,7 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 Just in case the fonts aren't there, lets add a fallback
 #+name: detect-missing-fonts
 #+begin_src elisp
-(defvar required-fonts '("SF Pro" "Liga SFMono Nerd Font" "Menlo"))
+(defvar required-fonts '("SF Pro" "Liga SFMono Nerd Font" ))
 (defvar available-fonts
   (delete-dups (or (font-family-list)
                    (split-string (shell-command-to-string "fc-list : family")
@@ -276,12 +270,6 @@ The defaults for emacs aren't so good nowadays. Lets fix that up a bit
 (add-to-list 'default-frame-alist '(inhibit-double-buffering . t)) ;;stops flickering
 (fringe-mode 0) ;;disable fringe
 (global-subword-mode 1) ;;navigate through Camel Case words
-
-;I don't use emacs-mac anymore
-;;(setq mac-mouse-wheel-smooth-scroll t) ;;emacs-mac smooth scroll
-;;(setq mouse-wheel-scroll-amount '(3 ((shift) . 1) ((control) . nil)))
-;;(setq mouse-wheel-progressive-speed nil)
-
 #+end_src
 
 Ask for splits
@@ -295,17 +283,6 @@ Ask for splits
 (defadvice! prompt-for-buffer (&rest _)
   :after '(evil-window-split evil-window-vsplit)
   (consult-buffer))
-#+end_src
-
-I like fancy ligatures in org mode, so lets enable that as well
-#+begin_src elisp
-(setq +ligatures-in-modes '(org-mode))
-(setq +ligatures-extras-in-modes '(org-mode))      ;ligatures in org mode
-#+end_src
-
-I think the defualt thick toolbar looks quite nice on macOS. Lets keep that enabled against dooms will
-#+begin_src elisp
-(tool-bar-mode 1)
 #+end_src
 
 The default bindings of doom are pretty good. I'm not so good with motions though, so lets make life easier with avy
@@ -481,7 +458,7 @@ I also like to have icons with my tabs.
         centaur-tabs-set-icons t
         centaur-tabs-gray-out-icons 'buffer)
   (add-hook 'window-configuration-change-hook 'centaur-tabs-hide-on-window-change)
-  (centaur-tabs-change-fonts "Menlo" 140)
+  (centaur-tabs-change-fonts "Liga SFMono Nerd Font" 140)
   (centaur-tabs-headline-match))
 #+end_src
 

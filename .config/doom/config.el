@@ -1,8 +1,5 @@
 ;;; config.el -*- lexical-binding: t; -*-
 
-;;If there are two files for a plugin, load the newer one
-(setq load-prefer-newer t)
-
 (remove-hook 'org-mode-hook #'+literate-enable-recompile-h)
 
 (setq user-full-name "Shaurya Singh"
@@ -15,7 +12,7 @@
       doom-big-font (font-spec :family "Liga SFMono Nerd Font" :size 20)
       doom-variable-pitch-font (font-spec :family "SF Pro" :size 16)
       doom-unicode-font (font-spec :family "Liga SFMono Nerd Font")
-      doom-serif-font (font-spec :family "Menlo" :weight 'Regular))
+      doom-serif-font (font-spec :family "Liga SFMono Nerd Font" :weight 'Regular))
 
 ;;mixed pitch modes
 (defvar mixed-pitch-modes '(org-mode LaTeX-mode markdown-mode gfm-mode Info-mode)
@@ -45,7 +42,7 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
     (let ((mixed-pitch-face 'variable-pitch-serif))
       (mixed-pitch-mode (or arg 'toggle)))))
 
-(defvar required-fonts '("SF Pro" "Liga SFMono Nerd Font" "Menlo"))
+(defvar required-fonts '("SF Pro" "Liga SFMono Nerd Font" ))
 (defvar available-fonts
   (delete-dups (or (font-family-list)
                    (split-string (shell-command-to-string "fc-list : family")
@@ -196,22 +193,12 @@ Made for `org-tab-first-hook'."
 (fringe-mode 0) ;;disable fringe
 (global-subword-mode 1) ;;navigate through Camel Case words
 
-;I don't use emacs-mac anymore
-;;(setq mac-mouse-wheel-smooth-scroll t) ;;emacs-mac smooth scroll
-;;(setq mouse-wheel-scroll-amount '(3 ((shift) . 1) ((control) . nil)))
-;;(setq mouse-wheel-progressive-speed nil)
-
 (setq evil-vsplit-window-right t
       evil-split-window-below t)
 
 (defadvice! prompt-for-buffer (&rest _)
   :after '(evil-window-split evil-window-vsplit)
   (consult-buffer))
-
-(setq +ligatures-in-modes '(org-mode))
-(setq +ligatures-extras-in-modes '(org-mode))      ;ligatures in org mode
-
-(tool-bar-mode 1)
 
 (map! :leader
       :desc "hop to word" "w w" #'avy-goto-word-0)
@@ -338,7 +325,7 @@ Made for `org-tab-first-hook'."
         centaur-tabs-set-icons t
         centaur-tabs-gray-out-icons 'buffer)
   (add-hook 'window-configuration-change-hook 'centaur-tabs-hide-on-window-change)
-  (centaur-tabs-change-fonts "Menlo" 140)
+  (centaur-tabs-change-fonts "Liga SFMono Nerd Font" 140)
   (centaur-tabs-headline-match))
 
 (custom-set-faces!
