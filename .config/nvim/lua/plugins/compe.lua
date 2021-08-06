@@ -17,7 +17,7 @@ compe.setup {
     max_menu_width = 100,
     documentation = true,
     source = {
-        buffer = {kind = "﬘", true},
+        --buffer = {kind = "﬘", true},
         luasnip = {kind = "﬌", true},
         path = true,
         calc = true,

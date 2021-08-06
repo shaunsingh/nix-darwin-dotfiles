@@ -190,11 +190,6 @@ return packer.startup(
             end
         }
 
-        use {
-            "dstein64/vim-startuptime",
-            cmd = "StartupTime"
-        }
-
         -- smooth scroll
         use {
             "karb94/neoscroll.nvim",
@@ -244,7 +239,6 @@ return packer.startup(
             ft = {'org'},
             config = function()
             require('orgmode').setup({
-                org_hide_emphasis_markers = true,
                 org_highlight_latex_and_related = 'entities',
             })
             end

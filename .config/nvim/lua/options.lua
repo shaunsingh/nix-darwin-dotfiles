@@ -8,8 +8,9 @@ opt.shadafile = "NONE"
 opt.termguicolors = true
 
 --fish slows things down
---opt.shell = "/bin/bash"
+opt.shell = "/bin/bash"
 
+opt.undofile = true
 opt.ruler = false
 opt.hidden = true
 opt.ignorecase = true
