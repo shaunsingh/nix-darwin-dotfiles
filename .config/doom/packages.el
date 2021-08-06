@@ -16,7 +16,6 @@
 (package! org-pretty-tags)
 (package! org-padding :recipe (:host github :repo "TonCherAmi/org-padding" ))
 (package! org-ol-tree :recipe (:host github :repo "Townk/org-ol-tree"))
-(package! focus)
 (package! websocket)
 (package! org-roam-ui :recipe (:host github :repo "org-roam/org-roam-ui" :files ("*.el" "out")))
 (unpin! org)
@@ -26,15 +25,14 @@
 (package! laas :recipe (:host github :repo "tecosaur/LaTeX-auto-activating-snippets"))
 (package! calctex :recipe (:host github :repo "johnbcoughlin/calctex" :files ("*.el" "calctex/*.el" "calctex-contrib/*.el" "org-calctex/*.el" "vendor")))
 
+;;markdown and html
+(package! ox-gfm)
+
 ;;looks
 (package! solaire-mode :disable t)
 (unpin! doom-themes)
 
-;;markdown
-(package! ox-gfm)
-
 ;;other
-(package! eperiodic :recipe (:local-repo "lisp/eperiodic.el"))
 (package! keycast)
 (package! selectric-mode)
 (package! evil-better-visual-line)

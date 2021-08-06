@@ -755,15 +755,6 @@ tweaks. Namely:
                 (when +zen--original-org-indent-mode-p (org-indent-mode 1))))))
 #+end_src
 
-I'm a big fan of limelight for neovim, Lets get in on some of that action with focus. Its not exactly the same (and messes with pretty a bit)
-#+begin_src elisp
-;;limelight-like focus mode
-(use-package! focus
-  :commands focus-mode
-  :config
-  (add-to-list 'focus-mode-to-thing '(org-mode . paragraph)))
-#+end_src
-
 I have to export files pretty often, lets setup some keybindings to make it easier
 #+begin_src elisp
 ;;spc+v = view exported file
@@ -1127,8 +1118,8 @@ I like a little padding on my org blocks, just a millimeter or two on the top an
 (setq org-startup-with-inline-images t)            ;inline images in org mode
 
 ;;add padding in org
-(use-package! org-padding
-  :after org)
+(use-package! org-padding)
+
 (add-hook 'org-mode-hook #'org-padding-mode)
 (setq org-padding-block-begin-line-padding '(1.15 . 0.15))
 (setq org-padding-block-end-line-padding '(1.15 . 0.15))
@@ -1145,15 +1136,14 @@ Lets add org pretty table as well
   :commands (org-pretty-table-mode global-org-pretty-table-mode))
 #+end_src
 
-I prefer /.org instead of just /org as my directory. Lets change some other defaults too
-#+begin_src elisp
-;;org directory
-(use-package! ox-gfm
-  :after org)
-
+Sadly I can't always work in org, but I can import stuff into it!
+#+begin_src emacs-lisp
 (use-package! org-pandoc-import
   :after org)
+#+end_src
 
+I prefer /org as my directory. Lets change some other defaults too
+#+begin_src elisp
 (setq org-directory "~/org"                      ; let's put files here
       org-use-property-inheritance t              ; it's convenient to have properties inherited
       org-log-done 'time                          ; having the time a item is done sounds convenient
@@ -1200,6 +1190,11 @@ org-ol-tree is nice for viewing the structure of an org file
 #+end_src
 
 *** HTML
+#+begin_src elisp
+(use-package! ox-gfm
+  :after org)
+#+end_src
+
 :PROPERTIES:
 :header-args:emacs-lisp: :noweb-ref ox-html-conf
 :END:

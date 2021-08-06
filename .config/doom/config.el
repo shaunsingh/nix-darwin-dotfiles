@@ -483,12 +483,6 @@ Made for `org-tab-first-hook'."
                   (org-superstar-restart))
                 (when +zen--original-org-indent-mode-p (org-indent-mode 1))))))
 
-;;limelight-like focus mode
-(use-package! focus
-  :commands focus-mode
-  :config
-  (add-to-list 'focus-mode-to-thing '(org-mode . paragraph)))
-
 ;;spc+v = view exported file
 (map! :map org-mode-map
       :localleader
@@ -567,8 +561,8 @@ Made for `org-tab-first-hook'."
 (setq org-startup-with-inline-images t)            ;inline images in org mode
 
 ;;add padding in org
-(use-package! org-padding
-  :after org)
+(use-package! org-padding)
+
 (add-hook 'org-mode-hook #'org-padding-mode)
 (setq org-padding-block-begin-line-padding '(1.15 . 0.15))
 (setq org-padding-block-end-line-padding '(1.15 . 0.15))
@@ -580,13 +574,6 @@ Made for `org-tab-first-hook'."
 
 (use-package! org-pretty-table
   :commands (org-pretty-table-mode global-org-pretty-table-mode))
-
-;;org directory
-(use-package! ox-gfm
-  :after org)
-
-(use-package! org-pandoc-import
-  :after org)
 
 (setq org-directory "~/org"                      ; let's put files here
       org-use-property-inheritance t              ; it's convenient to have properties inherited
@@ -625,6 +612,9 @@ Made for `org-tab-first-hook'."
       :after org
       :localleader
       :desc "Outline" "O" #'org-ol-tree)
+
+(use-package! ox-gfm
+  :after org)
 
 (after! org
   (define-minor-mode org-fancy-html-export-mode
@@ -2068,40 +2058,11 @@ Must be run as part of `org-font-lock-set-keywords-hook'."
   :priority_e    "[#E]")
 (plist-put +ligatures-extra-symbols :name "⁍")
 
+(use-package! org-pandoc-import
+  :after org)
+
 (after! ox-html
-  (defun org-html-block-collapsable (orig-fn block contents info)
-    "Wrap the usual block in a <details>"
-    (if (or (not org-fancy-html-export-mode) (bound-and-true-p org-msg-export-in-progress))
-        (funcall orig-fn block contents info)
-      (let ((ref (org-export-get-reference block info))
-            (type (pcase (car block)
-                    ('property-drawer "Properties")))
-            (collapsed-default (pcase (car block)
-                                 ('property-drawer t)
-                                 (_ nil)))
-            (collapsed-value (org-export-read-attribute :attr_html block :collapsed))
-            (collapsed-p (or (member (org-export-read-attribute :attr_html block :collapsed)
-                                     '("y" "yes" "t" t "true"))
-                             (member (plist-get info :collapsed) '("all")))))
-        (format
-         "<details id='%s' class='code'%s>
-  <summary%s>%s</summary>
-  <div class='gutter'>\
-  <a href='#%s'>#</a>
-  <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button>\
-  </div>
-  %s\n
-  </details>"
-         ref
-         (if (or collapsed-p collapsed-default) "" " open")
-         (if type " class='named'" "")
-         (if type (format "<span class='type'>%s</span>" type) "")
-         ref
-         (funcall orig-fn block contents info)))))
   
-  (advice-add 'org-html-example-block   :around #'org-html-block-collapsable)
-  (advice-add 'org-html-fixed-width     :around #'org-html-block-collapsable)
-  (advice-add 'org-html-property-drawer :around #'org-html-block-collapsable)
 )
 
 (defun org-html-block-collapsable (orig-fn block contents info)
