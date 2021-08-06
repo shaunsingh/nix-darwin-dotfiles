@@ -20,8 +20,7 @@
        ;;layout            ; auie,ctsrnm is the superior home row
 
        :completion
-       (company
-        +childframe) ; the ultimate code completion backend
+       (company +childframe) ; the ultimate code completion backend
        ;;helm              ; the *other* search engine for love and life
        ;;ido               ; the other *other* search engine...
        ;;(ivy                         ; a search engine for love and life
@@ -66,7 +65,7 @@
        format           ; automated prettiness
        ;;god               ; run Emacs commands without modifier keys
        ;;lispy             ; vim for lisp, for people who don't like vim
-       ;;multiple-cursors  ; editing in many places at once
+       multiple-cursors  ; editing in many places at once
        ;;objed             ; text object editing for the innocent
        ;;parinfer          ; turn lisp into python, sort of
        ;;rotate-text       ; cycle region at point between text candidates
@@ -76,7 +75,7 @@
        :emacs
        (dired +icons)             ; making dired pretty [functional]
        (electric +icons)          ; smarter, keyword-based electric-indent
-       ibuffer         ; interactive buffer management
+       ;;ibuffer         ; interactive buffer management
        undo              ; persistent, smarter undo for your inevitable mistakes
        vc                ; version-control and Emacs, sitting in a tree
 
@@ -160,11 +159,11 @@
         ;;+dragndrop                  ; drag & drop files/images into org buffers
         ;;+hugo                     ; use Emacs for hugo blogging
         +noter                      ; enhanced PDF notetaking
-        +jupyter                    ; ipython/jupyter support for babel
+        ;;+jupyter                    ; ipython/jupyter support for babel
         +pandoc                     ; export-with-pandoc support
         +gnuplot                    ; who doesn't like pretty pictures
         ;;+pomodoro                 ; be fruitful with the tomato technique
-        +present                    ; using org-mode for presentations
+        ;;+present                    ; using org-mode for presentations
         +roam2)                      ; wander around notes
        ;;php               ; perl's insecure younger brother
        ;;plantuml          ; diagrams for confusing people more
