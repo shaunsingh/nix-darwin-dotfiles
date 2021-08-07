@@ -72,4 +72,4 @@ end
 
 --neovide
 g.neovide_fullscreen = true
-vim.o.guifont = "Liga SFMono Nerd Font:h14"
+opt.guifont = "Liga SFMono Nerd Font:h14"
