@@ -24,6 +24,7 @@ alias cleanup "find . -type f -name '*.DS_Store' -ls -delete"
 set -x EDITOR "vim"
 set -x PATH .emacs.d/bin $PATH
 set -x PATH /Library/TeX/texbin/ $PATH
+set -x PATH .config/scripts $PATH
 set PATH $HOME/.cargo/bin $PATH
 
 starship init fish | source

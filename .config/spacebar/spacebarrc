@@ -14,12 +14,12 @@ spacebar -m config text_font            "Liga SFMono Nerd Font:Medium:13.0"
 spacebar -m config icon_font            "Liga SFMono Nerd Font:Light:13.0"
 spacebar -m config background_color     0xff2a2e38
 spacebar -m config foreground_color     0xffbbc2cf
-spacebar -m config space_icon_color     0xff458588
-spacebar -m config power_icon_color     0xffcd950c
-spacebar -m config battery_icon_color   0xffd75f5f
-spacebar -m config dnd_icon_color       0xffa8a8a8
-spacebar -m config clock_icon_color     0xffa8a8a8
-spacebar -m config power_icon_strip      
+spacebar -m config space_icon_color     0xff5cEfFF
+spacebar -m config power_icon_color     0xfffcce7b
+spacebar -m config battery_icon_color   0xff51afef
+spacebar -m config dnd_icon_color       0xffc57bdb
+spacebar -m config clock_icon_color     0xffff665c
+spacebar -m config power_icon_strip      
 spacebar -m config space_icon_strip     I II III IV V VI VII VIII IX X
 spacebar -m config space_icon           
 spacebar -m config clock_icon           
