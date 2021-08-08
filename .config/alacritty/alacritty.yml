@@ -9,49 +9,28 @@ window:
     x: 15
     y: 15
 
-   decorations: none
+   decorations: buttonless
 
 scrolling:
-  # Maximum number of lines in the scrollback buffer.
-  # Specifying '0' will disable scrolling.
   history: 5000
 
 font:
-  # Normal font face - Also used to draw glyphs on tmux & VIM
-  # NOTE: You may use any font you'd like but make sure the normal fonts
-  # support ligatures/glyphs. That's used by tmux & VIM to provide a better
-  # UI for powerline & tmux bottom bar.
   normal:
-    # Font name
     family: Liga SFMono Nerd Font
-    # Font face
     style: Regular
-
-    # Font name
-    # family: scientifica
-    # Font face
-    # style: Medium
 
   # Bold font face
   bold:
     family: Liga SFMono Nerd Font
     style: Bold
-    # family: scientifica
-    # style: Bold
 
   # Italic font face
   italic:
     family: Liga SFMono Nerd Font
     style: Italic
-    # family: scientifica
-    # style: Italic
 
   # Font size
   size: 14.0
-  # size: 19.0
-
-  # Better font rendering for mac
-  use_thin_strokes: true
 
 # Colors (Nord)
 colors:
@@ -81,11 +60,3 @@ colors:
      magenta: '#B48EAD'
      cyan:    '#8FBCBB'
      white:   '#ECEFF4'
-
-# cursor:
-  # style:
-  # shape: underline
-
-# Window opacity as a floating point number from `0.0` to `1.0`.
-# The value `0.0` is completely transparent and `1.0` is opaque.
-# background_opacity: 1.9
