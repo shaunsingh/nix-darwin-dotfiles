@@ -18,7 +18,7 @@ return packer.startup(
 
         use {
             "akinsho/nvim-bufferline.lua",
-            after = "nord.nvim",
+            after = "doom-vibrant.nvim",
             config = function()
                 require "plugins.bufferline"
             end
@@ -27,7 +27,7 @@ return packer.startup(
 
         use {
             "glepnir/galaxyline.nvim",
-            after = "nord.nvim",
+            after = "doom-vibrant.nvim",
             config = function()
                 require "plugins.statusline"
             end
@@ -35,7 +35,7 @@ return packer.startup(
 
         -- color related stuff
         use {
-            'shaunsingh/nord.nvim',
+            'shaunsingh/doom-vibrant.nvim',
             after = "packer.nvim",
             config = function()
                 require "theme"
@@ -115,7 +115,7 @@ return packer.startup(
 
         use {
             "kyazdani42/nvim-web-devicons",
-            after = "nord.nvim",
+            after = "doom-vibrant.nvim",
         }
 
         use {

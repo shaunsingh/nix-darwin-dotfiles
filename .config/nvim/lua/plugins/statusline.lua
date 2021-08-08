@@ -8,6 +8,7 @@ local gls = gl.section
 
 gl.short_line_list = {" "}
 
+--[[
 local colors = {
   bg = "NONE",
   white = "#ECEFF4",
@@ -22,6 +23,23 @@ local colors = {
   gray = "#616E88",
   blue = "#5E81AC",
   red = "#BF616A"
+}
+]]--
+
+local colors = {
+  bg = "NONE",
+  white = "#bbc2cf",
+  fg = "#bbc2cf",
+  yellow = "#FCCE7B",
+  cyan = "#7bc275",
+  darkblue = "#51afef",
+  green = "#7bc275",
+  orange = "#e69055",
+  purple = "#C57BDB",
+  magenta = "#C57BDB",
+  gray = "#9ca0a4",
+  blue = "#5cEfFF",
+  red = "#ff665c"
 }
 
 gls.left[1] = {

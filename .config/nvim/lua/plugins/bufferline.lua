@@ -3,6 +3,7 @@ if not present then
     return
 end
 
+--[[
 local bg = "#2e3440"
 local bg2 = "#3b4252"
 local bg3 = "#282c34"
@@ -10,6 +11,16 @@ local fg = "#CACed6"
 local accent = "#81a1c1"
 local accent2 = "#BF616A" -- Not saved
 local accent3 = "#EBCB8B" -- Not saved
+]]--
+
+local bg = "#242730"
+local bg2 = "#484854"
+local bg3 = "#2a2e38"
+local fg = "#bbc2cf"
+local accent = "#51afef"
+local accent2 = "#ff665c" -- Not saved
+local accent3 = "#7bc275" -- Not saved
+
 
 bufferline.setup {
     options = {

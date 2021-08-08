@@ -1,9 +1,8 @@
 local g = vim.g
 
---nord
-g.nord_style = "nord"
-g.nord_borders = false
-g.nord_contrast = false
-g.nord_cursorline_transparent = true
-g.nord_disable_background = false -- doesn't work with neovide
-require('nord').set()
+--doom
+g.doom_borders = false
+g.doom_contrast = false
+g.doom_cursorline_transparent = true
+g.doom_disable_background = false -- doesn't work with neovide
+require('doom').set()
