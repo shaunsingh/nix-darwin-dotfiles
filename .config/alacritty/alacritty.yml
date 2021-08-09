@@ -9,7 +9,7 @@ window:
     x: 15
     y: 15
 
-   decorations: buttonless
+   decorations: None
 
 scrolling:
   history: 5000
@@ -30,7 +30,7 @@ font:
     style: Italic
 
   # Font size
-  size: 14.0
+  size: 11.0
 
 # Colors (Nord)
 colors:
