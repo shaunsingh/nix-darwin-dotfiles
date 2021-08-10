@@ -9,6 +9,7 @@ set $up k
 set $right l
 # Your preferred terminal emulator
 set $term alacritty
+set $menu dmenu_path | dmenu -b | xargs swaymsg exec --
 
 ### Output configuration
 #
@@ -42,7 +43,7 @@ input "2:14:SynPS/2_Synaptics_TouchPad" {
     bindsym $mod+q kill
 
     # Start your launcher
-    bindsym $mod+d exec wofi --show=drun
+    bindsym $mod+d exec $menu
 
     # Drag floating windows by holding down $mod and left mouse button.
     # Resize them with right mouse button + $mod.
@@ -180,6 +181,6 @@ gaps outer 0
 gaps top 0
 gaps bottom 0
 
-xwayland enable 
+xwayland enable
 
 include /etc/sway/config.d/*

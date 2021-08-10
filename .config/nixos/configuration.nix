@@ -76,7 +76,7 @@
    enable = true;
    extraPackages = with pkgs; [
      waybar
-     wofi
+     dmenu
      swaylock
      swayidle
      xwayland
