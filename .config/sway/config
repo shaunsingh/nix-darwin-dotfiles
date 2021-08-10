@@ -14,7 +14,7 @@ set $menu dmenu_path | dmenu -b | xargs swaymsg exec --
 ### Output configuration
 #
 # Default wallpaper
-output * bg ~/wallpapers/doom_vibrant.png fill
+output * bg ~/wallpapers/doom.png fill
 
 ### Idle configuration
 #
@@ -100,7 +100,6 @@ input "2:14:SynPS/2_Synaptics_TouchPad" {
     bindsym $mod+Shift+2 move container to workspace number 2
     bindsym $mod+Shift+3 move container to workspace number 3
     bindsym $mod+Shift+4 move container to workspace number 4
-    bindsym $mod+Shift+5 move container to workspace number 5
     bindsym $mod+Shift+6 move container to workspace number 6
     bindsym $mod+Shift+7 move container to workspace number 7
     bindsym $mod+Shift+8 move container to workspace number 8
@@ -145,6 +144,10 @@ input "2:14:SynPS/2_Synaptics_TouchPad" {
     # Show the next scratchpad window or hide the focused scratchpad window.
     # If there are multiple scratchpad windows, this command cycles through them.
     bindsym $mod+minus scratchpad show
+
+    # take a screenshot and put it in clipboard
+    bindsym $mod+Shift+5 exec grim -g "$(slurp)" -t png - | wl-copy -t image/png
+
 #
 # Resizing containers:
 #
@@ -174,7 +177,7 @@ bar {
     swaybar_command waybar
 }
 
-default_border pixel 2
+default_border none
 
 gaps inner 18
 gaps outer 0

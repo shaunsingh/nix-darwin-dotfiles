@@ -55,6 +55,7 @@
     neofetch 
     yadm 
     aspell
+    (aspellWithDicts (dicts: with dicts; [ en en-computers en-science ]))
     ripgrep 
     firefox
     neovim-nightly
@@ -123,6 +124,7 @@
   services.xserver.displayManager.defaultSession = "sway";
   services.xserver.displayManager.sddm.enable = true;
   services.xserver.libinput.enable = true; 
+  services.tlp.enable = true;
 
   programs.fish.enable = true;
 
