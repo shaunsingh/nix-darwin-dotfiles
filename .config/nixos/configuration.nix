@@ -61,6 +61,7 @@
     emacsPgtkGcc
     exa 
     bat
+   (pkgs.texlive.combine { inherit (pkgs.texlive) scheme-small dvipng dvisvgm l3packages xcolor soul adjustbox collectbox amsmath siunitx cancel mathalpha capt-of chemfig wrapfig mhchem latexmk; })
   ];
 
   nixpkgs.overlays = [

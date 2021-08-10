@@ -31,9 +31,8 @@ window#waybar.solo {
 #workspaces button {
     padding: 0 5px;
     color: #51afef;
-    /* background-color: transparent;
+    background-color: transparent;
     border-bottom: 3px solid transparent;
-    */
 }
 
 /* https://github.com/Alexays/Waybar/wiki/FAQ#the-workspace-buttons-have-a-strange-hover-effect */
