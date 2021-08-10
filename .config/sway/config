@@ -11,26 +11,20 @@ set $right l
 set $term alacritty
 set $menu dmenu_path | dmenu -b | xargs swaymsg exec --
 
-### Output configuration
-#
 # Default wallpaper
-output * bg ~/wallpapers/doom.png fill
-
-### Idle configuration
-#
-# Example configuration:
-
-exec swayidle -w \
-         timeout 300 'swaylock -f -c 000000' \
-         timeout 600 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' \
-         before-sleep 'swaylock -f -c 000000'
+output * bg ~/wallpapers/electric-pkm-nord.png fill
 
 ### Input configuration
-input "2:14:SynPS/2_Synaptics_TouchPad" {
-      dwt enabled
-      tap enabled
-      natural_scroll enabled
+input "1267:32:Elan_Touchpad" {
+	tap enabled
+	drag enabled
+	natural_scroll enabled
 }
+
+set $lock 'grim /tmp/screen.png; corrupter /tmp/screen.png /tmp/screen.png; swaylock -fi /tmp/screen.png --effect-vignette 0.5:0.5 --clock --indicator-radius 100 --indicator-thickness 7  --ring-color ebdbb2 --key-hl-color 282828 --line-color 00000000 --inside-color 00000088 --separator-color 00000000 --fade-in 0.2'
+
+exec swayidle timeout 510 'brightnessctl -s && brightnessctl set 5%' resume 'brightnessctl -r' timeout 510 'notify-send "Locking screen in 30 seconds..."' timeout 540 'grim /tmp/screen.png; corrupter /tmp/screen.png /tmp/screen.png; swaylock -fi /tmp/screen.png --effect-vignette 0.5:0.5 --clock --indicator-radius 100 --indicator-thickness 7  --ring-color ebdbb2 --key-hl-color 282828 --line-color 00000000 --inside-color 00000088 --separator-color 00000000 --grace 2 --fade-in 0.2' timeout 600 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' timeout 900 'systemctl suspend'
+exec swayidle before-sleep $lock
 
 ### Key bindings
 #
@@ -45,11 +39,7 @@ input "2:14:SynPS/2_Synaptics_TouchPad" {
     # Start your launcher
     bindsym $mod+d exec $menu
 
-    # Drag floating windows by holding down $mod and left mouse button.
-    # Resize them with right mouse button + $mod.
-    # Despite the name, also works for non-floating windows.
-    # Change normal to inverse to use left mouse button for resizing and right
-    # mouse button for dragging.
+   # mouse button for dragging.
     floating_modifier $mod normal
 
     # Reload the configuration file
