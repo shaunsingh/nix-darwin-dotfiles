@@ -1,7 +1,6 @@
 [user]
 	email = shaunsingh0207@gmail.com
 	name = shaunsingh
-	password = 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
 [core]
 	autocrlf = input
 [filter "lfs"]
