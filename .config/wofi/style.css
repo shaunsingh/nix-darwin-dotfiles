@@ -1,0 +1,43 @@
+window {
+margin: 5px;
+border: 2px solid #2a2e38;
+background-color: #2a2e38;
+font-family: Fira SFMono Nerd Font;
+font-size: 14px;
+}
+
+#input {
+margin: 5px;
+border: 2px solid #242730;
+background-color: #242730;
+}
+
+#inner-box {
+margin: 5px;
+border: 2px solid #242730;
+background-color: #242730;
+}
+
+#outer-box {
+margin: 5px;
+border: 2px solid #242730;
+background-color: #242730;
+}
+
+#scroll {
+margin: 5px;
+border: 2px solid #242730;
+background-color: #242730;
+}
+
+#text {
+margin: 5px;
+border: 2px #242730;
+color: #51afef;
+}  
+#entry:selected {
+background-color: #2a2e38;
+}
+#text:selected {
+color: #c57bdb;
+}

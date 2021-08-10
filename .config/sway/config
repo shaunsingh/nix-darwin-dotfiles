@@ -39,7 +39,7 @@ input "2:14:SynPS/2_Synaptics_TouchPad" {
     bindsym $mod+Return exec $term
 
     # Kill focused window
-    bindsym $mod+Shift+q kill
+    bindsym $mod+q kill
 
     # Start your launcher
     bindsym $mod+d exec wofi --show=drun
@@ -175,11 +175,10 @@ bar {
 
 default_border pixel 2
 
-smart_gaps on
-gaps inner 10
-gaps outer -10
-gaps top 1
-gaps bottom 1
+gaps inner 18
+gaps outer 0
+gaps top 0
+gaps bottom 0
 
 xwayland enable 
 

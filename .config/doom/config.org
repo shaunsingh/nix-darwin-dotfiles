@@ -2433,13 +2433,13 @@ First of all, lets use pdf-tools to preview pdfs by defaults
 (setq +latex-viewers '(pdf-tools evince zathura okular skim sumatrapdf))
 #+end_src
 
-I want to preview all my latex by default. I also want to adjust the look of those previews
+I also want to adjust the look of those previews
 #+begin_src elisp
 (after! org
   (setq org-highlight-latex-and-related '(native script entities))
   (add-to-list 'org-src-block-faces '("latex" (:inherit default :extend t))))
 
-(after! org (setq org-startup-with-latex-preview t)
+(after! org
   (plist-put org-format-latex-options :background "Transparent"))
 #+end_src
 

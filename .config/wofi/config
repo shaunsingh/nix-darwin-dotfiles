@@ -1,0 +1,10 @@
+mode=drun
+height=440
+width=760
+colors=colors
+filter_rate=1
+dmenu-parse_action=true
+allow_images=true
+line_wrap=word_char
+insensitive=true
+term=kitty
