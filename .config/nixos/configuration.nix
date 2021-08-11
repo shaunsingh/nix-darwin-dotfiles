@@ -34,6 +34,7 @@
   sound.enable = true;
   hardware.pulseaudio.enable = true;
 
+  # Enable printing via cups
   services.printing.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
@@ -43,12 +44,10 @@
   };
 
   # List packages installed in system profile. To search, run:
-  # $ nix search wget
   environment.systemPackages = with pkgs; [
     wget
     git
     gcc
-    fish
     starship
     alacritty
     tmux
@@ -61,6 +60,7 @@
     emacsPgtkGcc
     exa 
     bat
+    fd
    (pkgs.texlive.combine { inherit (pkgs.texlive) scheme-small dvipng dvisvgm l3packages xcolor soul adjustbox collectbox amsmath siunitx cancel mathalpha capt-of chemfig wrapfig mhchem latexmk; })
   ];
 
@@ -126,7 +126,6 @@
   services.tlp.enable = true;
 
   programs.fish.enable = true;
-
   users.extraUsers.shauryasingh = {
     shell = pkgs.fish;
   };
