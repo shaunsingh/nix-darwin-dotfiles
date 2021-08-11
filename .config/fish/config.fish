@@ -5,7 +5,7 @@ end
 
 set fish_greeting
 
-alias neovide "/Users/shauryasingh/IdeaProjects/neovim/neovide/target/release/neovide --multiGrid --frameless"
+alias neovide "~/IdeaProjects/neovim/neovide/target/release/neovide --multiGrid --frameless"
 
 alias .. "cd .."
 alias ... "cd ../.."
@@ -22,9 +22,9 @@ alias update 'brew update; brew upgrade; brew cleanup'
 alias cleanup "find . -type f -name '*.DS_Store' -ls -delete"
 
 set -x EDITOR "vim"
-set -x PATH .emacs.d/bin $PATH
+set -x PATH ~/.emacs.d/bin $PATH
 set -x PATH /Library/TeX/texbin/ $PATH
-set -x PATH .config/scripts $PATH
+set -x PATH ~/.config/scripts $PATH
 set PATH $HOME/.cargo/bin $PATH
 
 starship init fish | source

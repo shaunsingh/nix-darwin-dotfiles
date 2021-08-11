@@ -81,7 +81,6 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
     markdown-mode
     gfm-mode)
   '(:seperate
-    pen-company-filetype
     company-yasnippet
     company-ispell
     company-files))
@@ -1656,7 +1655,7 @@ set palette defined ( 0 '%s',\
   (setq org-highlight-latex-and-related '(native script entities))
   (add-to-list 'org-src-block-faces '("latex" (:inherit default :extend t))))
 
-(after! org (setq org-startup-with-latex-preview t)
+(after! org
   (plist-put org-format-latex-options :background "Transparent"))
 
 (after! org
