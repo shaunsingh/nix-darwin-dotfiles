@@ -45,23 +45,27 @@
 
   # List packages installed in system profile. To search, run:
   environment.systemPackages = with pkgs; [
+    yadm 
+
     wget
     git
     gcc
+    ripgrep 
+    exa 
+    bat
+    fd
+
     starship
     alacritty
     tmux
     neofetch 
-    yadm 
-    (aspellWithDicts (dicts: with dicts; [ en en-computers en-science ]))
-    ripgrep 
+
     firefox
     neovim-nightly
     emacsPgtkGcc
-    exa 
-    bat
-    fd
-   (pkgs.texlive.combine { inherit (pkgs.texlive) scheme-small dvipng dvisvgm l3packages xcolor soul adjustbox collectbox amsmath siunitx cancel mathalpha capt-of chemfig wrapfig mhchem latexmk; })
+
+    (aspellWithDicts (dicts: with dicts; [ en en-computers en-science ]))
+    (pkgs.texlive.combine { inherit (pkgs.texlive) scheme-small dvipng dvisvgm l3packages xcolor soul adjustbox collectbox amsmath siunitx cancel mathalpha capt-of chemfig wrapfig mhchem latexmk; })
   ];
 
   nixpkgs.overlays = [
@@ -104,10 +108,15 @@
   };
  
   services.tlp.enable = true;
-  programs.fish.enable = true;
-  users.extraUsers.shauryasingh = {
-    shell = pkgs.fish;
+  programs.fish = {
+    enable = true;
+    loginShellInit = ''
+      if test (id --user $USER) -ge 1000 && test (tty) = "/dev/tty1"
+        exec sway
+      end
+    '';
   };
+  users.defaultUserShell = pkgs.fish;
 
   system.stateVersion = "21.05"; # Did you read the comment?
 }
