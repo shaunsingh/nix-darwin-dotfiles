@@ -17,6 +17,8 @@ This setup was created first and foremost for macOS. Although most dotfiles shou
 
 ## Install
 
+### MacOS
+
 Install homebrew
 ```sh
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -35,11 +37,33 @@ yadm clone https://github.com/shaunsingh/vimrc-dotfiles.git --no-bootstrap
 yadm bootstrap
 yadm remote add origin https://github.com/shaunsingh/vimrc-dotfiles.git
 ```
+
 **Note:** You may have to chmod the files
 ```sh
 cd ~/.config/yadm
 chmod +x *.sh
 chmod +x bootstrap.d/*.sh
+```
+
+### Linux
+
+**Note** This is more of a note for myself for when I install on linux machines. I am quite new to nixos, and I recommend you check over my config before installing it. The config also uses wayland+sway, so it may be incompatible with certain gpus
+
+Install NixOS (or the nix package manager)
+(In place of `configuration.nix`, use the file located in `~/.config/nixos/configuration.nix`)
+
+Modify `configuration.nix` to include your username
+
+Set a user password
+`passwd (username)`
+
+Install/update nixos
+`sudo nixos-rebuild switch`
+
+Clone the dotiles
+```zsh
+yadm clone https://github.com/shaunsingh/vimrc-dotfiles.git --no-bootstrap
+yadm remote add origin https://github.com/shaunsingh/vimrc-dotfiles.git
 ```
 
 ## Notes and additional configuration
