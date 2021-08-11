@@ -139,7 +139,6 @@ The default lsp config is nice, but has a few invasive features we can disable. 
     markdown-mode
     gfm-mode)
   '(:seperate
-    pen-company-filetype
     company-yasnippet
     company-ispell
     company-files))
