@@ -12,7 +12,7 @@ set $term alacritty
 set $menu dmenu_path | dmenu -b | xargs swaymsg exec --
 
 # Default wallpaper
-output * bg ~/wallpapers/electric-pkm-nord.png fill
+output * bg ~/wallpapers/doom_vibrant.png fill
 
 ### Input configuration
 input "1267:32:Elan_Touchpad" {
