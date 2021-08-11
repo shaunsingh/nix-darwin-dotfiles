@@ -80,9 +80,7 @@
      dmenu
      swaylock
      swayidle
-     xwayland
      mako 
-     kanshi
      grim
      slurp
      wl-clipboard
@@ -104,27 +102,8 @@
     wants = ["graphical-session-pre.target" ];
     after = [ "graphical-session-pre.target" ];
   };
-
-  systemd.user.services.kanshi = {
-    description = "Kanshi output autoconfig";
-    wantedBy = [ "graphical-session.target" ];
-    partOf = [ "graphical-session.target" ];
-    environment = { XDG_CONFIG_HOME="/home/shauryasingh/.config"; };
-    serviceConfig = {
-      ExecStart = ''
-      ${pkgs.kanshi}/bin/kanshi
-      '';
-      RestartSec = 5;
-      Restart = "always";
-    };
-  };
  
-  services.xserver.enable = true;
-  services.xserver.displayManager.defaultSession = "sway";
-  services.xserver.displayManager.sddm.enable = true;
-  services.xserver.libinput.enable = true; 
   services.tlp.enable = true;
-
   programs.fish.enable = true;
   users.extraUsers.shauryasingh = {
     shell = pkgs.fish;

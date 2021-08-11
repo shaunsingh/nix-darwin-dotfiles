@@ -15,6 +15,7 @@ alias ll 'exa -lF --color-scale --no-user --no-time --no-permissions --group-dir
 alias ls 'exa -F --group-directories-first -a'
 alias tree 'tree -C'
 alias cat 'bat --paging=never -p'
+alias nixos-rebuild-config 'sudo nixos-rebuild switch --cores 2 --upgrade -I nixos-config=~/.config/nixos/configuration.nix'
 
 alias git-rebase 'git rebase -i HEAD~2'
 
