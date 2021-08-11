@@ -88,7 +88,6 @@ exec swayidle before-sleep $lock
     # Move focused container to workspace
     bindsym $mod+Shift+1 move container to workspace number 1
     bindsym $mod+Shift+2 move container to workspace number 2
-    bindsym $mod+Shift+3 move container to workspace number 3
     bindsym $mod+Shift+4 move container to workspace number 4
     bindsym $mod+Shift+6 move container to workspace number 6
     bindsym $mod+Shift+7 move container to workspace number 7
@@ -137,6 +136,9 @@ exec swayidle before-sleep $lock
 
     # take a screenshot and put it in clipboard
     bindsym $mod+Shift+5 exec grim -g "$(slurp)" -t png - | wl-copy -t image/png
+
+    # same but save it
+    bindsym $mod+Shift+3 exec grim -t jpeg ~/screenshots/$(date +%Y-%m-%d_%H-%m-%s).jpg
 
 #
 # Resizing containers:

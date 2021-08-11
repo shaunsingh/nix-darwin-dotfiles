@@ -54,7 +54,6 @@
     tmux
     neofetch 
     yadm 
-    aspell
     (aspellWithDicts (dicts: with dicts; [ en en-computers en-science ]))
     ripgrep 
     firefox
