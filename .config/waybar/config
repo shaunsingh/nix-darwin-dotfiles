@@ -35,7 +35,7 @@
         "format-charging": "{capacity}% ",
         "format-plugged": "{capacity}% ",
         "format-alt": "{time} {icon}",
-        "format-good": "", // An empty format will hide the module
+        "format-good": "{capacity}%",
         "format-full": "100% ",
         "format-icons": ["", "", "", "", ""]
     },
