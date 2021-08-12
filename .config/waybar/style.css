@@ -52,7 +52,6 @@ window#waybar.hidden {
 #cpu,
 #memory,
 #temperature,
-#backlight,
 #network,
 #pulseaudio,
 #custom-media,
@@ -102,11 +101,6 @@ label:focus {
 }
 
 #memory {
-    background-color: #2a2e38;
-    color: #bbc2cf;
-}
-
-#backlight {
     background-color: #2a2e38;
     color: #bbc2cf;
 }
