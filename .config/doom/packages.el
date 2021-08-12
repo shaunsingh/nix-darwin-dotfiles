@@ -36,3 +36,4 @@
 (package! keycast)
 (package! selectric-mode)
 (package! evil-better-visual-line)
+(package! screenshot :recipe (:host github :repo "tecosaur/screenshot"))

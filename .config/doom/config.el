@@ -249,6 +249,9 @@ Made for `org-tab-first-hook'."
 ;;(use-package! eperiodic
   ;;:commands eperiodic)
 
+(use-package! selectric-mode
+  :commands selectric-mode)
+
 (after! doom-modeline
   (doom-modeline-def-segment buffer-name
     "Display the current buffer's name, without any other information."
@@ -555,6 +558,10 @@ Made for `org-tab-first-hook'."
               100)
          '(100 . 85) '(100 . 100)))))
 (global-set-key (kbd "C-c t") 'toggle-transparency)
+
+(use-package! screenshot
+  :defer t
+  :config (setq screenshot-upload-fn "upload $s 2>/dev/null"))
 
 ;;use image previews
 (setq org-startup-with-inline-images t)            ;inline images in org mode
@@ -1746,6 +1753,11 @@ set palette defined ( 0 '%s',\
 
 ;; No missing fonts detected
 
+(sp-local-pair
+ '(org-mode)
+ "<<" ">>"
+ :actions '(insert))
+
 (defvar fancy-splash-image-template
   (expand-file-name "misc/splash-images/emacs-e-template.svg" doom-private-dir)
   "Default template svg used for the splash image, with substitutions from ")
@@ -2234,163 +2246,6 @@ Use default browser unless `xwidget' is available."
 
 ;; org-latex-compilers = ("pdflatex" "xelatex" "lualatex"), which are the possible values for %latex
 (setq org-latex-pdf-process '("latexmk -f -pdf -%latex -shell-escape -interaction=nonstopmode -output-directory=%o %f"))
-
-(after! ox
-  (defvar ox-chameleon-base-class "scr-article"
-    "The base class that chameleon builds on")
-
-  (defvar ox-chameleon--p nil
-    "Used to indicate whether the current export is trying to blend in. Set just before being accessed.")
-
-  ;; (setf (alist-get :filter-latex-class
-  ;;                  (org-export-backend-filters
-  ;;                   (org-export-get-backend 'latex)))
-  ;;       'ox-chameleon-latex-class-detector-filter)
-
-  ;; (defun ox-chameleon-latex-class-detector-filter (info backend)
-  ;;   ""
-  ;;   (setq ox-chameleon--p (when (equal (plist-get info :latex-class)
-  ;;                                      "chameleon")
-  ;;                           (plist-put info :latex-class ox-chameleon-base-class)
-  ;;                           t)))
-
-  ;; TODO make this less hacky. One ideas was as follows
-  ;; (map-put (org-export-backend-filters (org-export-get-backend 'latex))
-  ;;           :filter-latex-class 'ox-chameleon-latex-class-detector-filter))
-  ;; Never seemed to execute though
-  (defadvice! ox-chameleon-org-latex-detect (orig-fun info)
-    :around #'org-export-install-filters
-    (setq ox-chameleon--p (when (equal (plist-get info :latex-class)
-                                       "chameleon")
-                            (plist-put info :latex-class ox-chameleon-base-class)
-                            t))
-    (funcall orig-fun info))
-
-  (defadvice! ox-chameleon-org-latex-export (orig-fn info &optional template snippet?)
-    :around #'org-latex-make-preamble
-    (if ox-chameleon--p
-        (let ((engrave-faces-preset-styles (engrave-faces-generate-preset)))
-          (concat (funcall orig-fn info template snippet?)
-                  (ox-chameleon-generate-colourings)))
-      (funcall orig-fn info template snippet?)))
-
-  (defun ox-chameleon-generate-colourings ()
-    (apply #'format
-           "%% make document follow Emacs theme
-\\definecolor{bg}{HTML}{%s}
-\\definecolor{fg}{HTML}{%s}
-
-\\definecolor{red}{HTML}{%s}
-\\definecolor{orange}{HTML}{%s}
-\\definecolor{green}{HTML}{%s}
-\\definecolor{teal}{HTML}{%s}
-\\definecolor{yellow}{HTML}{%s}
-\\definecolor{blue}{HTML}{%s}
-\\definecolor{dark-blue}{HTML}{%s}
-\\definecolor{magenta}{HTML}{%s}
-\\definecolor{violet}{HTML}{%s}
-\\definecolor{cyan}{HTML}{%s}
-\\definecolor{dark-cyan}{HTML}{%s}
-
-\\definecolor{documentTitle}{HTML}{%s}
-\\definecolor{documentInfo}{HTML}{%s}
-\\definecolor{level1}{HTML}{%s}
-\\definecolor{level2}{HTML}{%s}
-\\definecolor{level3}{HTML}{%s}
-\\definecolor{level4}{HTML}{%s}
-\\definecolor{level5}{HTML}{%s}
-\\definecolor{level6}{HTML}{%s}
-\\definecolor{level7}{HTML}{%s}
-\\definecolor{level8}{HTML}{%s}
-
-\\definecolor{link}{HTML}{%s}
-\\definecolor{cite}{HTML}{%s}
-\\definecolor{itemlabel}{HTML}{%s}
-\\definecolor{code}{HTML}{%s}
-\\definecolor{verbatim}{HTML}{%s}
-
-\\definecolor{codebackground}{HTML}{%s}
-\\colorlet{EFD}{fg}
-\\definecolor{codeborder}{HTML}{%s}
-
-\\pagecolor{bg}
-\\color{fg}
-
-\\addtokomafont{title}{\\color{documentTitle}}
-\\addtokomafont{author}{\\color{documentInfo}}
-\\addtokomafont{date}{\\color{documentInfo}}
-\\addtokomafont{section}{\\color{level1}}
-\\newkomafont{sectionprefix}{\\color{level1}}
-\\addtokomafont{subsection}{\\color{level2}}
-\\newkomafont{subsectionprefix}{\\color{level2}}
-\\addtokomafont{subsubsection}{\\color{level3}}
-\\newkomafont{subsubsectionprefix}{\\color{level3}}
-\\addtokomafont{paragraph}{\\color{level4}}
-\\newkomafont{paragraphprefix}{\\color{level4}}
-\\addtokomafont{subparagraph}{\\color{level5}}
-\\newkomafont{subparagraphprefix}{\\color{level5}}
-
-\\renewcommand{\\labelitemi}{\\textcolor{itemlabel}{\\textbullet}}
-\\renewcommand{\\labelitemii}{\\textcolor{itemlabel}{\\normalfont\\bfseries \\textendash}}
-\\renewcommand{\\labelitemiii}{\\textcolor{itemlabel}{\\textasteriskcentered}}
-\\renewcommand{\\labelitemiv}{\\textcolor{itemlabel}{\\textperiodcentered}}
-
-\\renewcommand{\\labelenumi}{\\textcolor{itemlabel}{\\theenumi.}}
-\\renewcommand{\\labelenumii}{\\textcolor{itemlabel}{(\\theenumii)}}
-\\renewcommand{\\labelenumiii}{\\textcolor{itemlabel}{\\theenumiii.}}
-\\renewcommand{\\labelenumiv}{\\textcolor{itemlabel}{\\theenumiv.}}
-
-\\DeclareTextFontCommand{\\texttt}{\\color{code}\\ttfamily}
-\\makeatletter
-\\def\\verbatim@font{\\color{verbatim}\\normalfont\\ttfamily}
-\\makeatother
-%% end customisations
-"
-           (mapcar (doom-rpartial #'substring 1)
-                   (list
-                    (face-attribute 'solaire-default-face :background)
-                    (face-attribute 'default :foreground)
-                    ;;
-                    (doom-color 'red)
-                    (doom-color 'orange)
-                    (doom-color 'green)
-                    (doom-color 'teal)
-                    (doom-color 'yellow)
-                    (doom-color 'blue)
-                    (doom-color 'dark-blue)
-                    (doom-color 'magenta)
-                    (doom-color 'violet)
-                    (doom-color 'cyan)
-                    (doom-color 'dark-cyan)
-                    ;;
-                    (face-attribute 'org-document-title :foreground)
-                    (face-attribute 'org-document-info :foreground)
-                    (face-attribute 'outline-1 :foreground)
-                    (face-attribute 'outline-2 :foreground)
-                    (face-attribute 'outline-3 :foreground)
-                    (face-attribute 'outline-4 :foreground)
-                    (face-attribute 'outline-5 :foreground)
-                    (face-attribute 'outline-6 :foreground)
-                    (face-attribute 'outline-7 :foreground)
-                    (face-attribute 'outline-8 :foreground)
-                    ;;
-                    (face-attribute 'link :foreground)
-                    (face-attribute 'org-list-dt :foreground)
-                    (face-attribute 'org-code :foreground)
-                    (face-attribute 'org-verbatim :foreground)
-                    ;;
-                    (face-attribute 'default :background)
-                    (doom-blend (face-attribute 'default :background)
-                                (face-attribute 'default :foreground)
-                                0.95))))))
-
-(setq org-latex-text-markup-alist
-      '((bold . "\\textbf{%s}")
-        (code . protectedtexttt)
-        (italic . "\\emph{%s}")
-        (strike-through . "\\sout{%s}")
-        (underline . "\\uline{%s}")
-        (verbatim . verb)))
 
 (defadvice! no-auto-mode-alist (orig-fn &rest args)
   "Wrap ORIG-FN in a let-binding that sets `auto-mode-alist' to nil."
