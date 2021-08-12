@@ -1,0 +1,10 @@
+# GIMP action-history
+
+(history-item "file-open" 0)
+(history-item "filters-colorize" 0)
+(history-item "tools-bucket-fill" 0)
+(history-item "file-save-as" 0)
+(history-item "file-export-as" 0)
+(history-item "file-quit" 1)
+
+# end of action-history

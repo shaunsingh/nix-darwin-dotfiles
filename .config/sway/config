@@ -14,7 +14,7 @@ set $menu bemenu-run -b | xargs swaymsg exec --
 set $menu bemenu-run -b --ignorecase --prompt="Exec:" --fn "Liga SFMono Nerd Font 10" --nb='#242730' --tb="#51afef" --fb="#2a2e38" --hb="#C57BDB" --nf="#bbc2cf" --ff="#FCCE7B" --tf="#242730" --hf="#242730"
 
 # Default wallpaper
-output * bg ~/wallpapers/doom_vibrant.png fill
+output * bg ~/wallpapers/doom_vibrant_alt.png fill
 
 ### Input configuration
 input type:touchpad {
