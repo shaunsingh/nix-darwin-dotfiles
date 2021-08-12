@@ -1,0 +1,17 @@
+## Base16 doom-vibrant
+set $base00 #242730
+set $base01 #2a2e38
+set $base02 #484854
+set $base03 #62686E
+set $base04 #bbc2cf
+set $base05 #bbc2cf
+set $base06 #bbc2cf
+set $base07 #4db5bd
+set $base08 #5cEfFF
+set $base09 #51afef
+set $base0A #C57BDB
+set $base0B #ff665c
+set $base0C #e69055
+set $base0D #FCCE7B
+set $base0E #7bc275
+set $base0F #C57BDB
