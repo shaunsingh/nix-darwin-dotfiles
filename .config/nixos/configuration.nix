@@ -108,8 +108,14 @@
      mako 
      grim
      slurp
+
+     # clipboard and recording 
      wl-clipboard
      wf-recorder
+
+     # Control 
+     brightnessctl
+     playerctl
 
    ];
    extraSessionCommands = ''

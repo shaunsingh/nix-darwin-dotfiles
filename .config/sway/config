@@ -181,6 +181,10 @@ bindsym XF86AudioPlay exec playerctl play-pause
 bindsym XF86AudioNext exec playerctl next
 bindsym XF86AudioPrev exec playerctl previous
 
+# Brightness controls
+bindsym XF86MonBrightnessUp exec brightnessctl -q set +5% # increase screen brightness
+bindsym XF86MonBrightnessDown exec brightnessctl -q set 5%- # decrease screen brightnes
+
 # Removes the title bar of each window, set spacing
 default_border none
 default_floating_border none
