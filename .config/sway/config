@@ -171,11 +171,14 @@ bar {
     swaybar_command waybar
 }
 
-# A 10-pixel border around every window.
-gaps inner 10
-
 # Removes the title bar of each window.
-default_border pixel 3
+default_border none
+
+# remove border
+gaps inner 18
+gaps outer 0
+gaps top 0
+gaps bottom 0
 
 # Use colorscheme
 include colorscheme
