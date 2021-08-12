@@ -1,22 +1,21 @@
-# base16-qutebrowser (https://github.com/theova/base16-qutebrowser)
-# Base16 qutebrowser template by theova
+config.load_autoconfig(False)
 
-base00 = "#181818"
-base01 = "#282828"
-base02 = "#383838"
-base03 = "#585858"
-base04 = "#b8b8b8"
-base05 = "#d8d8d8"
-base06 = "#e8e8e8"
-base07 = "#f8f8f8"
-base08 = "#ab4642"
-base09 = "#dc9656"
-base0A = "#f7ca88"
-base0B = "#a1b56c"
-base0C = "#86c1b9"
-base0D = "#7cafc2"
-base0E = "#ba8baf"
-base0F = "#a16946"
+base00 = "#242730"
+base01 = "#2a2e38"
+base02 = "#484854"
+base03 = "#62686E"
+base04 = "#bbc2cf"
+base05 = "#5D656B"
+base06 = "#bbc2cf"
+base07 = "#4db5bd"
+base08 = "#5cEfFF"
+base09 = "#51afef"
+base0A = "#C57BDB"
+base0B = "#ff665c"
+base0C = "#e69055"
+base0D = "#FCCE7B"
+base0E = "#7bc275"
+base0F = "#C57BDB"
 
 # set qutebrowser colors
 
