@@ -15,9 +15,8 @@ set $menu dmenu_path | dmenu -b | xargs swaymsg exec --
 output * bg ~/wallpapers/doom_vibrant.png fill
 
 ### Input configuration
-input "1267:32:Elan_Touchpad" {
+input type:touchpad {
 	tap enabled
-	drag enabled
 	natural_scroll enabled
 }
 
@@ -169,12 +168,11 @@ bar {
     swaybar_command waybar
 }
 
-default_border none
+# A 10-pixel border around every window.
+gaps inner 10
 
-gaps inner 18
-gaps outer 0
-gaps top 0
-gaps bottom 0
+# Removes the title bar of each window.
+default_border pixel 3
 
 include colorscheme
 
@@ -185,6 +183,6 @@ client.urgent           $base08 $base08 $base00 $base08 $base08
 client.placeholder      $base00 $base00 $base05 $base00 $base00
 client.background       $base07
 
-# xwayland enable
+xwayland enable
 
 include /etc/sway/config.d/*

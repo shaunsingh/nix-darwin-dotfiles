@@ -12,6 +12,6 @@ set $base09 #51afef
 set $base0A #C57BDB
 set $base0B #ff665c
 set $base0C #e69055
-set $base0D #FCCE7B
+set $base0D #C57BDB
 set $base0E #7bc275
-set $base0F #C57BDB
+set $base0F #FCCE7B
