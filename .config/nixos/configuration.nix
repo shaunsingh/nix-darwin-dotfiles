@@ -116,7 +116,6 @@
      # Control 
      brightnessctl
      playerctl
-
    ];
    extraSessionCommands = ''
      export SDL_VIDEODRIVER=wayland
