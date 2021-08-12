@@ -69,7 +69,9 @@
     neofetch 
 
     # browser
-    firefox
+    # firefox
+    # nyxt
+    qutebrowser
 
     # editors
     neovim-nightly
