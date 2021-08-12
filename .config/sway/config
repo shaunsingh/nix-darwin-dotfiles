@@ -9,7 +9,9 @@ set $up k
 set $right l
 # Your preferred terminal emulator
 set $term alacritty
-set $menu dmenu_path | dmenu -b | xargs swaymsg exec --
+# Your preffered launcher
+set $menu bemenu-run -b | xargs swaymsg exec --
+set $menu bemenu-run -b --ignorecase --prompt="Exec:" --fn "Liga SFMono Nerd Font 10" --nb='#242730' --tb="#51afef" --fb="#2a2e38" --hb="#C57BDB" --nf="#bbc2cf" --ff="#FCCE7B" --tf="#242730" --hf="#242730"
 
 # Default wallpaper
 output * bg ~/wallpapers/doom_vibrant.png fill
@@ -20,10 +22,9 @@ input type:touchpad {
 	natural_scroll enabled
 }
 
-set $lock 'grim /tmp/screen.png; corrupter /tmp/screen.png /tmp/screen.png; swaylock -fi /tmp/screen.png --effect-vignette 0.5:0.5 --clock --indicator-radius 100 --indicator-thickness 7  --ring-color ebdbb2 --key-hl-color 282828 --line-color 00000000 --inside-color 00000088 --separator-color 00000000 --fade-in 0.2'
-
-exec swayidle timeout 510 'brightnessctl -s && brightnessctl set 5%' resume 'brightnessctl -r' timeout 510 'notify-send "Locking screen in 30 seconds..."' timeout 540 'grim /tmp/screen.png; corrupter /tmp/screen.png /tmp/screen.png; swaylock -fi /tmp/screen.png --effect-vignette 0.5:0.5 --clock --indicator-radius 100 --indicator-thickness 7  --ring-color ebdbb2 --key-hl-color 282828 --line-color 00000000 --inside-color 00000088 --separator-color 00000000 --grace 2 --fade-in 0.2' timeout 600 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' timeout 900 'systemctl suspend'
-exec swayidle before-sleep $lock
+##monitor configuration
+output HDMI1 pos 0 0 res 1920x1080
+output eDP1 pos 1920 0 res 1200x800
 
 ### Key bindings
 #
@@ -87,7 +88,9 @@ exec swayidle before-sleep $lock
     # Move focused container to workspace
     bindsym $mod+Shift+1 move container to workspace number 1
     bindsym $mod+Shift+2 move container to workspace number 2
+    bindsym $mod+Shift+3 move container to workspace number 3
     bindsym $mod+Shift+4 move container to workspace number 4
+    bindsym $mod+Shift+5 move container to workspace number 5
     bindsym $mod+Shift+6 move container to workspace number 6
     bindsym $mod+Shift+7 move container to workspace number 7
     bindsym $mod+Shift+8 move container to workspace number 8
@@ -134,10 +137,10 @@ exec swayidle before-sleep $lock
     bindsym $mod+minus scratchpad show
 
     # take a screenshot and put it in clipboard
-    bindsym $mod+Shift+5 exec grim -g "$(slurp)" -t png - | wl-copy -t image/png
+    bindsym $mod+Shift+p exec grim -g "$(slurp)" -t png - | wl-copy -t image/png
 
     # same but save it
-    bindsym $mod+Shift+3 exec grim -t png ~/screenshots/$(date +%Y-%m-%d_%H-%m-%s).png
+    bindsym $mod+Shift+o exec grim -t png ~/screenshots/$(date +%Y-%m-%d_%H-%m-%s).png
 
 #
 # Resizing containers:
@@ -174,8 +177,8 @@ gaps inner 10
 # Removes the title bar of each window.
 default_border pixel 3
 
+# Use colorscheme
 include colorscheme
-
 client.focused          $base05 $base0D $base00 $base0D $base0D
 client.focused_inactive $base01 $base01 $base05 $base03 $base01
 client.unfocused        $base01 $base00 $base05 $base01 $base01

@@ -97,15 +97,20 @@
   programs.sway = {
    enable = true;
    extraPackages = with pkgs; [
+     # bar
      waybar
-     dmenu
-     swaylock
-     swayidle
+
+     # launcher
+     # dmenu
+     bemenu
+
+     # utils
      mako 
      grim
      slurp
      wl-clipboard
      wf-recorder
+
    ];
    extraSessionCommands = ''
      export SDL_VIDEODRIVER=wayland
