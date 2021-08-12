@@ -171,8 +171,20 @@ bar {
     swaybar_command waybar
 }
 
+# Pulse Audio controls
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume 0 +5% #increase sound volume
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume 0 -5% #decrease sound volume
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute 0 toggle # mute sound
+
+# Media player controls
+bindsym XF86AudioPlay exec playerctl play-pause
+bindsym XF86AudioNext exec playerctl next
+bindsym XF86AudioPrev exec playerctl previous
+
 # Removes the title bar of each window, set spacing
 default_border none
+default_floating_border none
+
 gaps horizontal 18
 gaps vertical 18
 
@@ -186,5 +198,6 @@ client.placeholder      $base00 $base00 $base05 $base00 $base00
 client.background       $base07
 
 xwayland enable
+exec mako
 
 include /etc/sway/config.d/*
