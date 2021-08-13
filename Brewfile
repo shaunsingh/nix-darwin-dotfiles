@@ -7,6 +7,7 @@ tap "d12frosted/emacs-plus"
 tap "koekeishiya/formulae"
 
 brew "bat"
+brew "fd"
 brew "exa"
 brew "htop"
 brew "imagemagick"
@@ -30,7 +31,4 @@ brew "starship"
 brew "tmux"
 brew "d12frosted/emacs-plus/emacs-plus@28", args: ["with-elrumo2-icon", "with-native-comp", "with-xwidgets"]
 
-cask "basictex"
 cask "font-sf-pro"
-cask "kitty"
-cask "wkhtmltopdf"
