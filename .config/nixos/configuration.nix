@@ -79,7 +79,8 @@
 
     # emacs config deps (latex, aspell)
     (aspellWithDicts (dicts: with dicts; [ en en-computers en-science ]))
-    (pkgs.texlive.combine { inherit (pkgs.texlive) scheme-small dvipng dvisvgm l3packages xcolor soul adjustbox collectbox amsmath siunitx cancel mathalpha capt-of chemfig wrapfig mhchem latexmk; })
+    tectonic
+    #(pkgs.texlive.combine { inherit (pkgs.texlive) scheme-small dvipng dvisvgm l3packages xcolor soul adjustbox collectbox amsmath siunitx cancel mathalpha capt-of chemfig wrapfig mhchem latexmk; })
 
   ];
 
