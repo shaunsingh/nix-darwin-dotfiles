@@ -2742,7 +2742,7 @@ This is done according to `org-latex-feature-implementations'"
 **** Tectonic
 Tectonic is the hot new thing, which also means I can get rid of my tex installation.
 #+begin_src emacs-lisp
-(setq-default org-latex-pdf-process '("tectonic --outdir=%o %f"))
+(setq-default org-latex-pdf-process '("tectonic -X compile --outdir=%o -Z shell-escape %f"))
 #+end_src
 
 With that, we can disable auctex
