@@ -1,7 +1,8 @@
 ;; -*- no-byte-compile: t; -*-
 ;;; $DOOMDIR/packages.el
-;;;
+
 ;;org
+(unpin! org)
 (package! org-fragtog)
 (package! org-appear)
 (package! org-super-agenda)
@@ -18,12 +19,13 @@
 (package! org-ol-tree :recipe (:host github :repo "Townk/org-ol-tree"))
 (package! websocket)
 (package! org-roam-ui :recipe (:host github :repo "org-roam/org-roam-ui" :files ("*.el" "out")))
-(unpin! org)
 
 ;;latex
 (package! aas :recipe (:host github :repo "ymarco/auto-activating-snippets"))
 (package! laas :recipe (:host github :repo "tecosaur/LaTeX-auto-activating-snippets"))
 (package! calctex :recipe (:host github :repo "johnbcoughlin/calctex" :files ("*.el" "calctex/*.el" "calctex-contrib/*.el" "org-calctex/*.el" "vendor")))
+(package! engrave-recipes
+  :recipe (:host github :repo "tecosaur/engrave-faces"))
 
 ;;markdown and html
 (package! ox-gfm)

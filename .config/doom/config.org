@@ -43,6 +43,25 @@ I use the fish shell. If you use zsh/bash, be sure to change this
 (setq explicit-shell-file-name (executable-find "fish"))
 #+end_src
 
+** Clipboard
+Using pgtk/wayland, theres a bug where it can't use the clipboard, to fix this we can use the following snippet
+#+begin_src elisp
+(when (getenv "WAYLAND_DISPLAY")
+  (setq wl-copy-p nil
+
+        interprogram-cut-function
+        (lambda (text)
+          (setq-local process-connection-type 'pipe)
+          (setq wl-copy-p (start-process "wl-copy" nil "wl-copy" "--foreground" "--trim-newline"))
+          (process-send-string wl-copy-p text)
+          (process-send-eof wl-copy-p))
+
+        interprogram-paste-function
+        (lambda ()
+          (unless (and wl-copy-p (process-live-p wl-copy-p))
+            (shell-command-to-string "wl-paste -n | tr -d '\r'")))))
+#+end_src
+
 ** Fonts
 I like the apple fonts for programming, so I'll go with Liga SFMono Nerd Font. I prefer a rounder font for plain text, so I'll go with Menlo for that. I have a retina display as well, so lets keep the fonts light.
 #+begin_src elisp
@@ -841,9 +860,6 @@ We can then have quote blocks stand out a bit more by making them /italic/.
 (setq org-fontify-quote-and-verse-blocks t)
 #+end_src
 
-While ~org-hide-emphasis-markers~ is very nice, it can sometimes make edits which
-occur at the border a bit more fiddley. We can improve this situation without
-sacrificing visual amenities with the =org-appear= package.
 #+begin_src emacs-lisp
 (use-package! org-appear
   :hook (org-mode . org-appear-mode)
@@ -1980,13 +1996,16 @@ Org-super-agenda!
 #+end_src
 
 ** Org-Capture
-Lets make the capture window a bit prettier, and add More templetes
-#+begin_src elisp
+Use doct
+#+begin_src emacs-lisp
 (use-package! doct
   :commands (doct))
+#+end_src
 
-(after! org-capture
-  (defun org-capture-select-template-prettier (&optional keys)
+*** Prettify
+Improve the look of the capture dialog (idea borrowed from [[https://github.com/tecosaur][tecosaur]])
+#+begin_src emacs-lisp
+(defun org-capture-select-template-prettier (&optional keys)
   "Select a capture template, in a prettier way than default
 Lisp programs can force the template by setting KEYS to a string."
   (let ((org-capture-templates
@@ -2077,12 +2096,11 @@ is selected, only the bare key is returned."
                 (goto-char (point-min))
                 (unless (pos-visible-in-window-p (point-max))
                   (org-fit-window-to-buffer))
-                (let ((pressed (org--mks-read-key allowed-keys
-                                                  prompt
-                                                  (not (pos-visible-in-window-p (1- (point-max)))))))
+                (let ((pressed (org--mks-read-key allowed-keys prompt nil)))
                   (setq current (concat current pressed))
                   (cond
                    ((equal pressed "\C-g") (user-error "Abort"))
+                   ((equal pressed "ESC") (user-error "Abort"))
                    ;; Selection is a prefix: open a new menu.
                    ((member pressed des-keys))
                    ;; Selection matches an association: return it.
@@ -2094,175 +2112,12 @@ is selected, only the bare key is returned."
                    (t (error "No entry available")))))))
         (when buffer (kill-buffer buffer))))))
 (advice-add 'org-mks :override #'org-mks-pretty)
-
-  (defun +doct-icon-declaration-to-icon (declaration)
-    "Convert :icon declaration to icon"
-    (let ((name (pop declaration))
-          (set  (intern (concat "all-the-icons-" (plist-get declaration :set))))
-          (face (intern (concat "all-the-icons-" (plist-get declaration :color))))
-          (v-adjust (or (plist-get declaration :v-adjust) 0.01)))
-      (apply set `(,name :face ,face :v-adjust ,v-adjust))))
-
-  (defun +doct-iconify-capture-templates (groups)
-    "Add declaration's :icon to each template group in GROUPS."
-    (let ((templates (doct-flatten-lists-in groups)))
-      (setq doct-templates (mapcar (lambda (template)
-                                     (when-let* ((props (nthcdr (if (= (length template) 4) 2 5) template))
-                                                 (spec (plist-get (plist-get props :doct) :icon)))
-                                       (setf (nth 1 template) (concat (+doct-icon-declaration-to-icon spec)
-                                                                      "\t"
-                                                                      (nth 1 template))))
-                                     template)
-                                   templates))))
-
-  (setq doct-after-conversion-functions '(+doct-iconify-capture-templates))
-  (defvar +org-capture-recipies  "~/org/recipies/recipies.org")
-
-  (defun set-org-capture-templates ()
-    (setq org-capture-templates
-          (doct `(("Personal todo" :keys "t"
-                   :icon ("checklist" :set "octicon" :color "green")
-                   :file +org-capture-todo-file
-                   :prepend t
-                   :headline "Inbox"
-                   :type entry
-                   :template ("* TODO %?"
-                              "%i %a")
-                   )
-                  ("Personal note" :keys "n"
-                   :icon ("sticky-note-o" :set "faicon" :color "green")
-                   :file +org-capture-todo-file
-                   :prepend t
-                   :headline "Inbox"
-                   :type entry
-                   :template ("* %?"
-                              "%i %a"))
-                  ("Email" :keys "e"
-                   :icon ("envelope" :set "faicon" :color "blue")
-                   :file +org-capture-todo-file
-                   :prepend t
-                   :headline "Inbox"
-                   :type entry
-                   :template ("* TODO %^{type|reply to|contact} %\\3 %? :email:"
-                              "Send an email %^{urgancy|soon|ASAP|anon|at some point|eventually} to %^{recipiant}"
-                              "about %^{topic}"
-                              "%U %i %a"))
-                  ("Interesting" :keys "i"
-                   :icon ("eye" :set "faicon" :color "lcyan")
-                   :file +org-capture-todo-file
-                   :prepend t
-                   :headline "Interesting"
-                   :type entry
-                   :template ("* [ ] %{desc}%? :%{i-type}:"
-                              "%i %a")
-                   :children (("Webpage" :keys "w"
-                               :icon ("globe" :set "faicon" :color "green")
-                               :desc "%(org-cliplink-capture) "
-                               :i-type "read:web"
-                               )
-                              ("Article" :keys "a"
-                               :icon ("file-text" :set "octicon" :color "yellow")
-                               :desc ""
-                               :i-type "read:reaserch"
-                               )
-                              ("\tRecipie" :keys "r"
-                               :icon ("spoon" :set "faicon" :color "dorange")
-                               :file +org-capture-recipies
-                               :headline "Unsorted"
-                               :template "%(org-chef-get-recipe-from-url)"
-                               )
-                              ("Information" :keys "i"
-                               :icon ("info-circle" :set "faicon" :color "blue")
-                               :desc ""
-                               :i-type "read:info"
-                               )
-                              ("Idea" :keys "I"
-                               :icon ("bubble_chart" :set "material" :color "silver")
-                               :desc ""
-                               :i-type "idea"
-                               )))
-                  ("Tasks" :keys "k"
-                   :icon ("inbox" :set "octicon" :color "yellow")
-                   :file +org-capture-todo-file
-                   :prepend t
-                   :headline "Tasks"
-                   :type entry
-                   :template ("* TODO %? %^G%{extra}"
-                              "%i %a")
-                   :children (("General Task" :keys "k"
-                               :icon ("inbox" :set "octicon" :color "yellow")
-                               :extra ""
-                               )
-                              ("Task with deadline" :keys "d"
-                               :icon ("timer" :set "material" :color "orange" :v-adjust -0.1)
-                               :extra "\nDEADLINE: %^{Deadline:}t"
-                               )
-                              ("Scheduled Task" :keys "s"
-                               :icon ("calendar" :set "octicon" :color "orange")
-                               :extra "\nSCHEDULED: %^{Start time:}t"
-                               )
-                              ))
-                  ("Project" :keys "p"
-                   :icon ("repo" :set "octicon" :color "silver")
-                   :prepend t
-                   :type entry
-                   :headline "Inbox"
-                   :template ("* %{time-or-todo} %?"
-                              "%i"
-                              "%a")
-                   :file ""
-                   :custom (:time-or-todo "")
-                   :children (("Project-local todo" :keys "t"
-                               :icon ("checklist" :set "octicon" :color "green")
-                               :time-or-todo "TODO"
-                               :file +org-capture-project-todo-file)
-                              ("Project-local note" :keys "n"
-                               :icon ("sticky-note" :set "faicon" :color "yellow")
-                               :time-or-todo "%U"
-                               :file +org-capture-project-notes-file)
-                              ("Project-local changelog" :keys "c"
-                               :icon ("list" :set "faicon" :color "blue")
-                               :time-or-todo "%U"
-                               :heading "Unreleased"
-                               :file +org-capture-project-changelog-file))
-                   )
-                  ("\tCentralised project templates"
-                   :keys "o"
-                   :type entry
-                   :prepend t
-                   :template ("* %{time-or-todo} %?"
-                              "%i"
-                              "%a")
-                   :children (("Project todo"
-                               :keys "t"
-                               :prepend nil
-                               :time-or-todo "TODO"
-                               :heading "Tasks"
-                               :file +org-capture-central-project-todo-file)
-                              ("Project note"
-                               :keys "n"
-                               :time-or-todo "%U"
-                               :heading "Notes"
-                               :file +org-capture-central-project-notes-file)
-                              ("Project changelog"
-                               :keys "c"
-                               :time-or-todo "%U"
-                               :heading "Unreleased"
-                               :file +org-capture-central-project-changelog-file))
-                   )))))
-
-  (set-org-capture-templates)
-  (unless (display-graphic-p)
-    (add-hook 'server-after-make-frame-hook
-              (defun org-capture-reinitialise-hook ()
-                (when (display-graphic-p)
-                  (set-org-capture-templates)
-                  (remove-hook 'server-after-make-frame-hook
-                               #'org-capture-reinitialise-hook))))))
 #+end_src
 
-lets adjust the org-capture-bin too
-#+begin_src elisp
+The [[file:~/.emacs.doom/bin/org-capture][org-capture bin]] is rather nice, but I'd be nicer with a smaller frame, and
+no modeline.
+
+#+begin_src emacs-lisp
 (setf (alist-get 'height +org-capture-frame-parameters) 15)
 ;; (alist-get 'name +org-capture-frame-parameters) "❖ Capture") ;; ATM hardcoded in other places, so changing breaks stuff
 (setq +org-capture-fn
@@ -2270,6 +2125,78 @@ lets adjust the org-capture-bin too
         (interactive)
         (set-window-parameter nil 'mode-line-format 'none)
         (org-capture)))
+#+end_src
+
+Sprinkle in some =doct= utility functions
+#+begin_src emacs-lisp
+(defun +doct-icon-declaration-to-icon (declaration)
+  "Convert :icon declaration to icon"
+  (let ((name (pop declaration))
+        (set  (intern (concat "all-the-icons-" (plist-get declaration :set))))
+        (face (intern (concat "all-the-icons-" (plist-get declaration :color))))
+        (v-adjust (or (plist-get declaration :v-adjust) 0.01)))
+    (apply set `(,name :face ,face :v-adjust ,v-adjust))))
+
+(defun +doct-iconify-capture-templates (groups)
+  "Add declaration's :icon to each template group in GROUPS."
+  (let ((templates (doct-flatten-lists-in groups)))
+    (setq doct-templates (mapcar (lambda (template)
+                                   (when-let* ((props (nthcdr (if (= (length template) 4) 2 5) template))
+                                               (spec (plist-get (plist-get props :doct) :icon)))
+                                     (setf (nth 1 template) (concat (+doct-icon-declaration-to-icon spec)
+                                                                    "\t"
+                                                                    (nth 1 template))))
+                                   template)
+                                 templates))))
+
+(setq doct-after-conversion-functions '(+doct-iconify-capture-templates))
+#+end_src
+
+*** Templates
+
+And we can now add some templates! This isn't even remotely set in stone, I wouldn't even describe them as set in /jelly/ really.
+#+begin_src emacs-lisp
+(setq org-capture-templates
+      (doct `(("Home" :keys "h"
+               :icon ("home" :set "octicon" :color "cyan")
+               :file "Home.org"
+               :prepend t
+               :headline "Inbox"
+               :template ("* TODO %?"
+                          "%i %a"))
+              ("Work" :keys "w"
+               :icon ("business" :set "material" :color "yellow")
+               :file "Work.org"
+               :prepend t
+               :headline "Inbox"
+               :template ("* TODO %?"
+                          "SCHEDULED: %^{Schedule:}t"
+                          "DEADLINE: %^{Deadline:}t"
+                          "%i %a"))
+              ("Note" :keys "n"
+               :icon ("sticky-note" :set "faicon" :color "yellow")
+               :file "Notes.org"
+               :template ("* *?"
+                          "%i %a"))
+              ("Project" :keys "p"
+               :icon ("repo" :set "octicon" :color "silver")
+               :prepend t
+               :type entry
+               :headline "Inbox"
+               :template ("* %{keyword} %?"
+                          "%i"
+                          "%a")
+               :file ""
+               :custom (:keyword "")
+               :children (("Task" :keys "t"
+                           :icon ("checklist" :set "octicon" :color "green")
+                           :keyword "TODO"
+                           :file +org-capture-project-todo-file)
+                          ("Note" :keys "n"
+                           :icon ("sticky-note" :set "faicon" :color "yellow")
+                           :keyword "%U"
+                           :file +org-capture-project-notes-file)))
+              )))
 #+end_src
 
 ** ORG Plot
@@ -2597,24 +2524,7 @@ DocView gives me a headache, but pdf-tools can be improved, lets configure it a 
   (setq-default pdf-view-display-size 'fit-page))
 #+end_src
 ** Export
-**** Compiling
-By default Org uses ~pdflatex~ \times 3 + ~bibtex~. This simply won't do in our
-modern world. ~latexmk~ + ~biber~ (which is used automatically with ~latexmk~) is a
-simply superior combination.
-
-#+begin_src emacs-lisp
-;; org-latex-compilers = ("pdflatex" "xelatex" "lualatex"), which are the possible values for %latex
-(setq org-latex-pdf-process '("latexmk -f -pdf -%latex -shell-escape -interaction=nonstopmode -output-directory=%o %f"))
-#+end_src
-**** No AucTeX please
-For some reason, the way that ~org-export-to-file~ works, I find that =latex-mode=
-is called on the produced buffer prior to saving. This has two undesirable
-side-effects:
-+ I get unwanted warnings from AuxTeX
-+ A spurious =.auctex-auto= folder is produced.
-
-There are a few ways I could try to avoid this, but the most obvious to me is
-locally binding ~auto-mode-alist~ to ~nil~.
+Disable auctex
 #+begin_src emacs-lisp
 (defadvice! no-auto-mode-alist (orig-fn &rest args)
   "Wrap ORIG-FN in a let-binding that sets `auto-mode-alist' to nil."
@@ -2622,8 +2532,618 @@ locally binding ~auto-mode-alist~ to ~nil~.
   (let ((auto-mode-alist nil))
     (apply orig-fn args)))
 #+end_src
+
+**** Conditional features
+
+#+begin_src emacs-lisp
+(defvar org-latex-italic-quotes t
+  "Make \"quote\" environments italic.")
+(defvar org-latex-par-sep t
+  "Vertically seperate paragraphs, and remove indentation.")
+
+(defvar org-latex-conditional-features
+  '(("\\[\\[\\(?:file\\|https?\\):\\(?:[^]]\\|\\\\\\]\\)+?\\.\\(?:eps\\|pdf\\|png\\|jpeg\\|jpg\\|jbig2\\)\\]\\]" . image)
+    ("\\[\\[\\(?:file\\|https?\\):\\(?:[^]]+?\\|\\\\\\]\\)\\.svg\\]\\]" . svg)
+    ("^[ \t]*|" . table)
+    ("cref:\\|\\cref{\\|\\[\\[[^\\]]+\\]\\]" . cleveref)
+    ("[;\\\\]?\\b[A-Z][A-Z]+s?[^A-Za-z]" . acronym)
+    ("\\+[^ ].*[^ ]\\+\\|_[^ ].*[^ ]_\\|\\\\uu?line\\|\\\\uwave\\|\\\\sout\\|\\\\xout\\|\\\\dashuline\\|\\dotuline\\|\\markoverwith" . underline)
+    (":float wrap" . float-wrap)
+    (":float sideways" . rotate)
+    ("^[ \t]*#\\+caption:\\|\\\\caption" . caption)
+    ("\\[\\[xkcd:" . (image caption))
+    ((and org-latex-italic-quotes "^[ \t]*#\\+begin_quote\\|\\\\begin{quote}") . italic-quotes)
+    (org-latex-par-sep . par-sep)
+    ("^[ \t]*\\(?:[-+*]\\|[0-9]+[.)]\\|[A-Za-z]+[.)]\\) \\[[ -X]\\]" . checkbox)
+    ("^[ \t]*#\\+begin_warning\\|\\\\begin{warning}" . box-warning)
+    ("^[ \t]*#\\+begin_info\\|\\\\begin{info}"       . box-info)
+    ("^[ \t]*#\\+begin_success\\|\\\\begin{success}" . box-success)
+    ("^[ \t]*#\\+begin_error\\|\\\\begin{error}"     . box-error))
+  "Org feature tests and associated LaTeX feature flags.
+
+Alist where the car is a test for the presense of the feature,
+and the cdr is either a single feature symbol or list of feature symbols.
+
+When a string, it is used as a regex search in the buffer.
+The feature is registered as present when there is a match.
+
+The car can also be a
+- symbol, the value of which is fetched
+- function, which is called with info as an argument
+- list, which is `eval'uated
+
+If the symbol, function, or list produces a string: that is used as a regex
+search in the buffer. Otherwise any non-nil return value will indicate the
+existance of the feature.")
+#+end_src
+
+#+begin_src emacs-lisp
+(defvar org-latex-caption-preamble "
+\\usepackage{subcaption}
+\\usepackage[hypcap=true]{caption}
+\\setkomafont{caption}{\\sffamily\\small}
+\\setkomafont{captionlabel}{\\upshape\\bfseries}
+\\captionsetup{justification=raggedright,singlelinecheck=true}
+\\usepackage{capt-of} % required by Org
+"
+  "Preamble that improves captions.")
+
+(defvar org-latex-checkbox-preamble "
+\\newcommand{\\checkboxUnchecked}{$\\square$}
+\\newcommand{\\checkboxTransitive}{\\rlap{\\raisebox{-0.1ex}{\\hspace{0.35ex}\\Large\\textbf -}}$\\square$}
+\\newcommand{\\checkboxChecked}{\\rlap{\\raisebox{0.2ex}{\\hspace{0.35ex}\\scriptsize \\ding{52}}}$\\square$}
+"
+  "Preamble that improves checkboxes.")
+
+(defvar org-latex-box-preamble "
+% args = #1 Name, #2 Colour, #3 Ding, #4 Label
+\\newcommand{\\defsimplebox}[4]{%
+  \\definecolor{#1}{HTML}{#2}
+  \\newenvironment{#1}[1][]
+  {%
+    \\par\\vspace{-0.7\\baselineskip}%
+    \\textcolor{#1}{#3} \\textcolor{#1}{\\textbf{\\def\\temp{##1}\\ifx\\temp\\empty#4\\else##1\\fi}}%
+    \\vspace{-0.8\\baselineskip}
+    \\begin{addmargin}[1em]{1em}
+  }{%
+    \\end{addmargin}
+    \\vspace{-0.5\\baselineskip}
+  }%
+}
+"
+  "Preamble that provides a macro for custom boxes.")
+#+end_src
+
+#+begin_src emacs-lisp
+(defvar org-latex-feature-implementations
+  '((image         :snippet "\\usepackage{graphicx}" :order 2)
+    (svg           :snippet "\\usepackage{svg}" :order 2)
+    (table         :snippet "\\usepackage{longtable}\n\\usepackage{booktabs}" :order 2)
+    (cleveref      :snippet "\\usepackage[capitalize]{cleveref}" :order 1)
+    (underline     :snippet "\\usepackage[normalem]{ulem}" :order 0.5)
+    (float-wrap    :snippet "\\usepackage{wrapfig}" :order 2)
+    (rotate        :snippet "\\usepackage{rotating}" :order 2)
+    (caption       :snippet org-latex-caption-preamble :order 2.1)
+    (acronym       :snippet "\\newcommand{\\acr}[1]{\\protect\\textls*[110]{\\scshape #1}}\n\\newcommand{\\acrs}{\\protect\\scalebox{.91}[.84]{\\hspace{0.15ex}s}}" :order 0.4)
+    (italic-quotes :snippet "\\renewcommand{\\quote}{\\list{}{\\rightmargin\\leftmargin}\\item\\relax\\em}\n" :order 0.5)
+    (par-sep       :snippet "\\setlength{\\parskip}{\\baselineskip}\n\\setlength{\\parindent}{0pt}\n" :order 0.5)
+    (.pifont       :snippet "\\usepackage{pifont}")
+    (checkbox      :requires .pifont :order 3
+                   :snippet (concat (unless (memq 'maths features)
+                                      "\\usepackage{amssymb} % provides \\square")
+                                    org-latex-checkbox-preamble))
+    (.fancy-box    :requires .pifont    :snippet org-latex-box-preamble :order 3.9)
+    (box-warning   :requires .fancy-box :snippet "\\defsimplebox{warning}{e66100}{\\ding{68}}{Warning}" :order 4)
+    (box-info      :requires .fancy-box :snippet "\\defsimplebox{info}{3584e4}{\\ding{68}}{Information}" :order 4)
+    (box-success   :requires .fancy-box :snippet "\\defsimplebox{success}{26a269}{\\ding{68}}{\\vspace{-\\baselineskip}}" :order 4)
+    (box-error     :requires .fancy-box :snippet "\\defsimplebox{error}{c01c28}{\\ding{68}}{Important}" :order 4))
+  "LaTeX features and details required to implement them.
+
+List where the car is the feature symbol, and the rest forms a plist with the
+following keys:
+- :snippet, which may be either
+  - a string which should be included in the preamble
+  - a symbol, the value of which is included in the preamble
+  - a function, which is evaluated with the list of feature flags as its
+    single argument. The result of which is included in the preamble
+  - a list, which is passed to `eval', with a list of feature flags available
+    as \"features\"
+
+- :requires, a feature or list of features that must be available
+- :when, a feature or list of features that when all available should cause this
+    to be automatically enabled.
+- :prevents, a feature or list of features that should be masked
+- :order, for when ordering is important. Lower values appear first.
+    The default is 0.
+
+Features that start with ! will be eagerly loaded, i.e. without being detected.")
+#+end_src
+
+#+begin_src emacs-lisp
+(defun org-latex-detect-features (&optional buffer info)
+  "List features from `org-latex-conditional-features' detected in BUFFER."
+  (let ((case-fold-search nil))
+    (with-current-buffer (or buffer (current-buffer))
+      (delete-dups
+       (mapcan (lambda (construct-feature)
+                 (when (let ((out (pcase (car construct-feature)
+                                    ((pred stringp) (car construct-feature))
+                                    ((pred functionp) (funcall (car construct-feature) info))
+                                    ((pred listp) (eval (car construct-feature)))
+                                    ((pred symbolp) (symbol-value (car construct-feature)))
+                                    (_ (user-error "org-latex-conditional-features key %s unable to be used" (car construct-feature))))))
+                         (if (stringp out)
+                             (save-excursion
+                               (goto-char (point-min))
+                               (re-search-forward out nil t))
+                           out))
+                   (if (listp (cdr construct-feature)) (cdr construct-feature) (list (cdr construct-feature)))))
+               org-latex-conditional-features)))))
+#+end_src
+
+#+begin_src emacs-lisp
+(defun org-latex-expand-features (features)
+  "For each feature in FEATURES process :requires, :when, and :prevents keywords and sort according to :order."
+  (dolist (feature features)
+    (unless (assoc feature org-latex-feature-implementations)
+      (error "Feature %s not provided in org-latex-feature-implementations" feature)))
+  (setq current features)
+  (while current
+    (when-let ((requirements (plist-get (cdr (assq (car current) org-latex-feature-implementations)) :requires)))
+      (setcdr current (if (listp requirements)
+                          (append requirements (cdr current))
+                        (cons requirements (cdr current)))))
+    (setq current (cdr current)))
+  (dolist (potential-feature
+           (append features (delq nil (mapcar (lambda (feat)
+                                                (when (plist-get (cdr feat) :eager)
+                                                  (car feat)))
+                                              org-latex-feature-implementations))))
+    (when-let ((prerequisites (plist-get (cdr (assoc potential-feature org-latex-feature-implementations)) :when)))
+      (setf features (if (if (listp prerequisites)
+                             (cl-every (lambda (preq) (memq preq features)) prerequisites)
+                           (memq prerequisites features))
+                         (append (list potential-feature) features)
+                       (delq potential-feature features)))))
+  (dolist (feature features)
+    (when-let ((prevents (plist-get (cdr (assoc feature org-latex-feature-implementations)) :prevents)))
+      (setf features (cl-set-difference features (if (listp prevents) prevents (list prevents))))))
+  (sort (delete-dups features)
+        (lambda (feat1 feat2)
+          (if (< (or (plist-get (cdr (assoc feat1 org-latex-feature-implementations)) :order) 1)
+                 (or (plist-get (cdr (assoc feat2 org-latex-feature-implementations)) :order) 1))
+              t nil))))
+#+end_src
+
+#+begin_src emacs-lisp
+(defun org-latex-generate-features-preamble (features)
+  "Generate the LaTeX preamble content required to provide FEATURES.
+This is done according to `org-latex-feature-implementations'"
+  (let ((expanded-features (org-latex-expand-features features)))
+    (concat
+     (format "\n%% features: %s\n" expanded-features)
+     (mapconcat (lambda (feature)
+                  (when-let ((snippet (plist-get (cdr (assoc feature org-latex-feature-implementations)) :snippet)))
+                    (concat
+                     (pcase snippet
+                       ((pred stringp) snippet)
+                       ((pred functionp) (funcall snippet features))
+                       ((pred listp) (eval `(let ((features ',features)) (,@snippet))))
+                       ((pred symbolp) (symbol-value snippet))
+                       (_ (user-error "org-latex-feature-implementations :snippet value %s unable to be used" snippet)))
+                     "\n")))
+                expanded-features
+                "")
+     "% end features\n")))
+#+end_src
+
+#+begin_src emacs-lisp
+(defvar info--tmp nil)
+
+(defadvice! org-latex-save-info (info &optional t_ s_)
+  :before #'org-latex-make-preamble
+  (setq info--tmp info))
+
+(defadvice! org-splice-latex-header-and-generated-preamble-a (orig-fn tpl def-pkg pkg snippets-p &optional extra)
+  "Dynamically insert preamble content based on `org-latex-conditional-preambles'."
+  :around #'org-splice-latex-header
+  (let ((header (funcall orig-fn tpl def-pkg pkg snippets-p extra)))
+    (if snippets-p header
+      (concat header
+              (org-latex-generate-features-preamble (org-latex-detect-features nil info--tmp))
+              "\n"))))
+#+end_src
+
+**** Tectonic
+Tectonic is the hot new thing, which also means I can get rid of my tex installation.
+#+begin_src emacs-lisp
+(setq-default org-latex-pdf-process '("tectonic --outdir=%o %f"))
+#+end_src
+
+**** Classes
+Now for some class setup (likely to change over time)
+#+begin_src emacs-lisp
+(after! ox-latex
+  (add-to-list 'org-latex-classes
+               '("cb-doc" "\\documentclass{scrartcl}"
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
+#+end_src
+
+And some saner default for them
+#+begin_src emacs-lisp
+(after! ox-latex
+  (setq org-latex-default-class "cb-doc"
+        org-latex-tables-booktabs t
+        org-latex-hyperref-template "\\colorlet{greenyblue}{blue!70!green}
+\\colorlet{blueygreen}{blue!40!green}
+\\providecolor{link}{named}{greenyblue}
+\\providecolor{cite}{named}{blueygreen}
+\\hypersetup{
+  pdfauthor={%a},
+  pdftitle={%t},
+  pdfkeywords={%k},
+  pdfsubject={%d},
+  pdfcreator={%c},
+  pdflang={%L},
+  breaklinks=true,
+  colorlinks=true,
+  linkcolor=,
+  urlcolor=link,
+  citecolor=cite\n}
+\\urlstyle{same}
+"
+        org-latex-reference-command "\\cref{%s}"))
+#+end_src
+
+**** Packages
+Add some packages (also very likely to change)
+#+begin_src emacs-lisp
+(setq org-latex-default-packages-alist
+      `(("AUTO" "inputenc" t
+         ("pdflatex"))
+        ("T1" "fontenc" t
+         ("pdflatex"))
+        ("" "fontspec" t)
+        ("" "graphicx" t)
+        ("" "grffile" t)
+        ("" "longtable" nil)
+        ("" "wrapfig" nil)
+        ("" "rotating" nil)
+        ("normalem" "ulem" t)
+        ("" "amsmath" t)
+        ("" "textcomp" t)
+        ("" "amssymb" t)
+        ("" "dvipng" t)
+        ("" "chemfig" t)
+        ("" "mhchem" t)
+        ("" "capt-of" nil)
+        ("dvipsnames" "xcolor" nil)
+        ("colorlinks=true, linkcolor=Blue, citecolor=BrickRed, urlcolor=PineGreen" "hyperref" nil)
+    ("" "indentfirst" nil)
+    "\\setmainfont[Ligatures=TeX]{IBM Plex Sans}"
+    "\\setmonofont[Ligatures=TeX]{Iosevka Nerd Font Mono}"))
+#+end_src
+
+**** Pretty code blocks
+#+begin_src emacs-lisp
+(use-package! engrave-faces-latex
+  :after ox-latex
+  :config
+  (setq org-latex-listings 'engraved))
+#+end_src
+
+#+begin_src emacs-lisp
+(defadvice! org-latex-src-block-engraved (orig-fn src-block contents info)
+  "Like `org-latex-src-block', but supporting an engraved backend"
+  :around #'org-latex-src-block
+  (if (eq 'engraved (plist-get info :latex-listings))
+      (org-latex-scr-block--engraved src-block contents info)
+    (funcall orig-fn src-block contents info)))
+
+(defadvice! org-latex-inline-src-block-engraved (orig-fn inline-src-block contents info)
+  "Like `org-latex-inline-src-block', but supporting an engraved backend"
+  :around #'org-latex-inline-src-block
+  (if (eq 'engraved (plist-get info :latex-listings))
+      (org-latex-inline-scr-block--engraved inline-src-block contents info)
+    (funcall orig-fn src-block contents info)))
+
+(defvar-local org-export-has-code-p nil)
+
+(defadvice! org-export-expect-no-code (&rest _)
+  :before #'org-export-as
+  (setq org-export-has-code-p nil))
+
+(defadvice! org-export-register-code (&rest _)
+  :after #'org-latex-src-block-engraved
+  :after #'org-latex-inline-src-block-engraved
+  (setq org-export-has-code-p t))
+
+(setq org-latex-engraved-code-preamble "
+\\usepackage{fvextra}
+\\fvset{
+  commandchars=\\\\\\{\\},
+  highlightcolor=white!95!black!80!blue,
+  breaklines=true,
+  breaksymbol=\\color{white!60!black}\\tiny\\ensuremath{\\hookrightarrow}}
+\\renewcommand\\theFancyVerbLine{\\footnotesize\\color{black!40!white}\\arabic{FancyVerbLine}}
+
+\\definecolor{codebackground}{HTML}{f7f7f7}
+\\definecolor{codeborder}{HTML}{f0f0f0}
+
+% TODO have code boxes keep line vertical alignment
+\\usepackage[breakable,xparse]{tcolorbox}
+\\DeclareTColorBox[]{Code}{o}%
+{colback=codebackground, colframe=codeborder,
+  fontupper=\\footnotesize,
+  colupper=EFD,
+  IfNoValueTF={#1}%
+  {boxsep=2pt, arc=2.5pt, outer arc=2.5pt,
+    boxrule=0.5pt, left=2pt}%
+  {boxsep=2.5pt, arc=0pt, outer arc=0pt,
+    boxrule=0pt, leftrule=1.5pt, left=0.5pt},
+  right=2pt, top=1pt, bottom=0.5pt,
+  breakable}
+")
+
+(add-to-list 'org-latex-conditional-features '((and org-export-has-code-p "^[ \t]*#\\+begin_src\\|^[ \t]*#\\+BEGIN_SRC\\|src_[A-Za-z]") . engraved-code) t)
+(add-to-list 'org-latex-conditional-features '("^[ \t]*#\\+begin_example\\|^[ \t]*#\\+BEGIN_EXAMPLE" . engraved-code-setup) t)
+(add-to-list 'org-latex-feature-implementations '(engraved-code :requires engraved-code-setup :snippet (engrave-faces-latex-gen-preamble) :order 99) t)
+(add-to-list 'org-latex-feature-implementations '(engraved-code-setup :snippet org-latex-engraved-code-preamble :order 98) t)
+
+(defun org-latex-scr-block--engraved (src-block contents info)
+  (let* ((lang (org-element-property :language src-block))
+         (attributes (org-export-read-attribute :attr_latex src-block))
+         (float (plist-get attributes :float))
+         (num-start (org-export-get-loc src-block info))
+         (retain-labels (org-element-property :retain-labels src-block))
+         (caption (org-element-property :caption src-block))
+         (caption-above-p (org-latex--caption-above-p src-block info))
+         (caption-str (org-latex--caption/label-string src-block info))
+         (placement (or (org-unbracket-string "[" "]" (plist-get attributes :placement))
+                        (plist-get info :latex-default-figure-position)))
+         (float-env
+          (cond
+           ((string= "multicolumn" float)
+            (format "\\begin{listing*}[%s]\n%s%%s\n%s\\end{listing*}"
+                    placement
+                    (if caption-above-p caption-str "")
+                    (if caption-above-p "" caption-str)))
+           (caption
+            (format "\\begin{listing}[%s]\n%s%%s\n%s\\end{listing}"
+                    placement
+                    (if caption-above-p caption-str "")
+                    (if caption-above-p "" caption-str)))
+           ((string= "t" float)
+            (concat (format "\\begin{listing}[%s]\n"
+                            placement)
+                    "%s\n\\end{listing}"))
+           (t "%s")))
+         (options (plist-get info :latex-minted-options))
+         (content-buffer
+          (with-temp-buffer
+            (insert
+             (let* ((code-info (org-export-unravel-code src-block))
+                    (max-width
+                     (apply 'max
+                            (mapcar 'length
+                                    (org-split-string (car code-info)
+                                                      "\n")))))
+               (org-export-format-code
+                (car code-info)
+                (lambda (loc _num ref)
+                  (concat
+                   loc
+                   (when ref
+                     ;; Ensure references are flushed to the right,
+                     ;; separated with 6 spaces from the widest line
+                     ;; of code.
+                     (concat (make-string (+ (- max-width (length loc)) 6)
+                                          ?\s)
+                             (format "(%s)" ref)))))
+                nil (and retain-labels (cdr code-info)))))
+            (funcall (org-src-get-lang-mode lang))
+            (engrave-faces-latex-buffer)))
+         (content
+          (with-current-buffer content-buffer
+            (buffer-string)))
+         (body
+          (format
+           "\\begin{Code}\n\\begin{Verbatim}[%s]\n%s\\end{Verbatim}\n\\end{Code}"
+           ;; Options.
+           (concat
+            (org-latex--make-option-string
+             (if (or (not num-start) (assoc "linenos" options))
+                 options
+               (append
+                `(("linenos")
+                  ("firstnumber" ,(number-to-string (1+ num-start))))
+                options)))
+            (let ((local-options (plist-get attributes :options)))
+              (and local-options (concat "," local-options))))
+           content)))
+    (kill-buffer content-buffer)
+    ;; Return value.
+    (format float-env body)))
+
+(defun org-latex-inline-scr-block--engraved (inline-src-block _contents info)
+  (let ((options (org-latex--make-option-string
+                  (plist-get info :latex-minted-options)))
+        code-buffer code)
+    (setq code-buffer
+          (with-temp-buffer
+            (insert (org-element-property :value inline-src-block))
+            (funcall (org-src-get-lang-mode
+                      (org-element-property :language inline-src-block)))
+            (engrave-faces-latex-buffer)))
+    (setq code (with-current-buffer code-buffer
+                 (buffer-string)))
+    (kill-buffer code-buffer)
+    (format "\\Verb%s{%s}"
+            (if (string= options "") ""
+              (format "[%s]" options))
+            code)))
+
+(defadvice! org-latex-example-block-engraved (orig-fn example-block contents info)
+  "Like `org-latex-example-block', but supporting an engraved backend"
+  :around #'org-latex-example-block
+  (let ((output-block (funcall orig-fn example-block contents info)))
+    (if (eq 'engraved (plist-get info :latex-listings))
+        (format "\\begin{Code}[alt]\n%s\n\\end{Code}" output-block)
+      output-block)))
+#+end_src
+
+**** Chameleon
+Attempt to improve default PDF export by using the current theme
+#+begin_src elisp
+(after! ox
+  (defvar ox-chameleon-base-class "cb-doc"
+    "The base class that chameleon builds on")
+
+  (defvar ox-chameleon--p nil
+    "Used to indicate whether the current export is trying to blend in. Set just before being accessed.")
+
+  (defadvice! ox-chameleon-org-latex-detect (orig-fun info)
+    :around #'org-export-install-filters
+    (setq ox-chameleon--p (when (equal (plist-get info :latex-class)
+                                       "chameleon")
+                            (plist-put info :latex-class ox-chameleon-base-class)
+                            (setq engrave-faces-preset-styles (engrave-faces-generate-preset))
+                            t))
+    (funcall orig-fun info))
+
+  (defadvice! ox-chameleon-org-latex-export (orig-fn info &optional template snippet?)
+    :around #'org-latex-make-preamble
+    (if ox-chameleon--p
+        (let ((engrave-faces-preset-styles (engrave-faces-generate-preset)))
+          (concat (funcall orig-fn info template snippet?)
+                  (ox-chameleon-generate-colourings)))
+      (funcall orig-fn info template snippet?)))
+
+  (defun ox-chameleon-generate-colourings ()
+    (apply #'format
+           "%% make document follow Emacs theme
+\\definecolor{bg}{HTML}{%s}
+\\definecolor{fg}{HTML}{%s}
+
+\\definecolor{red}{HTML}{%s}
+\\definecolor{orange}{HTML}{%s}
+\\definecolor{green}{HTML}{%s}
+\\definecolor{teal}{HTML}{%s}
+\\definecolor{yellow}{HTML}{%s}
+\\definecolor{blue}{HTML}{%s}
+\\definecolor{dark-blue}{HTML}{%s}
+\\definecolor{magenta}{HTML}{%s}
+\\definecolor{violet}{HTML}{%s}
+\\definecolor{cyan}{HTML}{%s}
+\\definecolor{dark-cyan}{HTML}{%s}
+
+\\definecolor{documentTitle}{HTML}{%s}
+\\definecolor{documentInfo}{HTML}{%s}
+\\definecolor{level1}{HTML}{%s}
+\\definecolor{level2}{HTML}{%s}
+\\definecolor{level3}{HTML}{%s}
+\\definecolor{level4}{HTML}{%s}
+\\definecolor{level5}{HTML}{%s}
+\\definecolor{level6}{HTML}{%s}
+\\definecolor{level7}{HTML}{%s}
+\\definecolor{level8}{HTML}{%s}
+
+\\definecolor{link}{HTML}{%s}
+\\definecolor{cite}{HTML}{%s}
+\\definecolor{itemlabel}{HTML}{%s}
+\\definecolor{code}{HTML}{%s}
+\\definecolor{verbatim}{HTML}{%s}
+
+\\definecolor{codebackground}{HTML}{%s}
+\\colorlet{EFD}{fg}
+\\definecolor{codeborder}{HTML}{%s}
+
+\\pagecolor{bg}
+\\color{fg}
+
+\\addtokomafont{title}{\\color{documentTitle}}
+\\addtokomafont{author}{\\color{documentInfo}}
+\\addtokomafont{date}{\\color{documentInfo}}
+\\addtokomafont{section}{\\color{level1}}
+\\newkomafont{sectionprefix}{\\color{level1}}
+\\addtokomafont{subsection}{\\color{level2}}
+\\newkomafont{subsectionprefix}{\\color{level2}}
+\\addtokomafont{subsubsection}{\\color{level3}}
+\\newkomafont{subsubsectionprefix}{\\color{level3}}
+\\addtokomafont{paragraph}{\\color{level4}}
+\\newkomafont{paragraphprefix}{\\color{level4}}
+\\addtokomafont{subparagraph}{\\color{level5}}
+\\newkomafont{subparagraphprefix}{\\color{level5}}
+
+\\renewcommand{\\labelitemi}{\\textcolor{itemlabel}{\\textbullet}}
+\\renewcommand{\\labelitemii}{\\textcolor{itemlabel}{\\normalfont\\bfseries \\textendash}}
+\\renewcommand{\\labelitemiii}{\\textcolor{itemlabel}{\\textasteriskcentered}}
+\\renewcommand{\\labelitemiv}{\\textcolor{itemlabel}{\\textperiodcentered}}
+
+\\renewcommand{\\labelenumi}{\\textcolor{itemlabel}{\\theenumi.}}
+\\renewcommand{\\labelenumii}{\\textcolor{itemlabel}{(\\theenumii)}}
+\\renewcommand{\\labelenumiii}{\\textcolor{itemlabel}{\\theenumiii.}}
+\\renewcommand{\\labelenumiv}{\\textcolor{itemlabel}{\\theenumiv.}}
+
+\\DeclareTextFontCommand{\\texttt}{\\color{code}\\ttfamily}
+\\makeatletter
+\\def\\verbatim@font{\\color{verbatim}\\normalfont\\ttfamily}
+\\makeatother
+%% end customisations
+"
+           (mapcar (doom-rpartial #'substring 1)
+                   (list
+                    (face-attribute 'solaire-default-face :background)
+                    (face-attribute 'default :foreground)
+                    ;;
+                    (doom-color 'red)
+                    (doom-color 'orange)
+                    (doom-color 'green)
+                    (doom-color 'teal)
+                    (doom-color 'yellow)
+                    (doom-color 'blue)
+                    (doom-color 'dark-blue)
+                    (doom-color 'magenta)
+                    (doom-color 'violet)
+                    (doom-color 'cyan)
+                    (doom-color 'dark-cyan)
+                    ;;
+                    (face-attribute 'org-document-title :foreground)
+                    (face-attribute 'org-document-info :foreground)
+                    (face-attribute 'outline-1 :foreground)
+                    (face-attribute 'outline-2 :foreground)
+                    (face-attribute 'outline-3 :foreground)
+                    (face-attribute 'outline-4 :foreground)
+                    (face-attribute 'outline-5 :foreground)
+                    (face-attribute 'outline-6 :foreground)
+                    (face-attribute 'outline-7 :foreground)
+                    (face-attribute 'outline-8 :foreground)
+                    ;;
+                    (face-attribute 'link :foreground)
+                    (doom-color 'yellow)
+                    (face-attribute 'org-list-dt :foreground)
+                    (face-attribute 'org-code :foreground)
+                    (face-attribute 'org-verbatim :foreground)
+                    ;;
+                    (face-attribute 'org-block :background)
+                    (doom-blend (face-attribute 'default :background)
+                                (face-attribute 'default :foreground)
+                                0.95))))))
+#+end_src
+
 * Mu4e
-I'm trying out emails in emacs, should be nice. Related, check .mbsyncrc to setup your emails first
+I'm trying out emails in emacs, should be nice. Related, check .mbsyncrc to
+setup your emails first
+
+10 minutes is a reasonable update time
+#+begin_src emacs-lisp
+(setq mu4e-update-interval 300)
+#+end_src
+
 #+begin_src elisp
 (set-email-account! "shaunsingh0207"
   '((mu4e-sent-folder       . "/Sent Mail")
@@ -2662,4 +3182,24 @@ I'm trying out emails in emacs, should be nice. Related, check .mbsyncrc to setu
                   (+mu4e-colorize-str
                    (replace-regexp-in-string "\\`.*/" "" (mu4e-message-field msg :maildir))
                    '+mu4e-header--folder-colors)))))))
+#+end_src
+
+We can also send messages using msmtp
+#+begin_src emacs-lisp
+(setq sendmail-program "/opt/homebrew/bin/msmtp"
+        send-mail-function #'smtpmail-send-it
+        message-sendmail-f-is-evil t
+        message-sendmail-extra-arguments '("--read-envelope-from")
+        message-send-mail-function #'message-send-mail-with-sendmail)
+#+end_src
+
+Notifications are quite nifty, especially if I'm as lazy as I am
+#+begin_src emacs-lisp
+(setq alert-default-style 'osx-notifier)
+#+end_src
+
+* Magit
+Show gravatars where possible
+#+begin_src elisp
+(setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
 #+end_src
