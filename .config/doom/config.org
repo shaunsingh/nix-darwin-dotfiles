@@ -3,6 +3,7 @@
 #+date: @@html:<!--@@{{{git-rev}}}@@html:-->@@@@latex:\\\Large\bfseries@@ {{{modification-time(%Y-%m-%d, t)}}} @@latex:\\\normalsize\mdseries@@{{{modification-time(%H:%M, t)}}} @@latex:\acr{\lowercase{@@{{{timezone}}}@@latex:}}\iffalse@@, {{{git-rev}}}@@latex:\fi@@
 #+macro: timezone (eval (substring (shell-command-to-string "date +%Z") 0 -1))
 #+macro: git-rev (eval (format "@@html:<a href=\"https://github.com/shaunsingh/vimrc-dotfiles/commit/%1$s\" style=\"text-decoration: none\"><code style=\"padding: 0; color: var(--text-light); font-size: inherit; opacity: 0.7\">%1$s</code></a>@@@@latex:\\href{https://github.com/shaunsingh/vimrc-dotfiles/commit/%1$s}{\\normalsize\\texttt{%1$s}}@@" (substring (shell-command-to-string "git rev-parse --short HEAD") 0 -1)))
+#+latex_class: cb-doc
 #+startup: fold
 
 * Intro
@@ -324,13 +325,6 @@ I also fine ; more intuitive than : for entering command mode
 #+begin_src elisp
 (after! evil
   (map! :nmv ";" #'evil-ex))
-#+end_src
-
-While we're at it, lets make emacs scroll by visual lines instead of actual ones, so its much easier to work with wraps
-#+begin_src elisp
-(use-package! evil-better-visual-line
-  :config
-  (evil-better-visual-line-on))
 #+end_src
 
 When im doing regexes, its usually with /g anyways, lets make that the default
@@ -2524,15 +2518,6 @@ DocView gives me a headache, but pdf-tools can be improved, lets configure it a 
   (setq-default pdf-view-display-size 'fit-page))
 #+end_src
 ** Export
-Disable auctex
-#+begin_src emacs-lisp
-(defadvice! no-auto-mode-alist (orig-fn &rest args)
-  "Wrap ORIG-FN in a let-binding that sets `auto-mode-alist' to nil."
-  :around #'org-export-to-file
-  (let ((auto-mode-alist nil))
-    (apply orig-fn args)))
-#+end_src
-
 **** Conditional features
 
 #+begin_src emacs-lisp
@@ -2758,6 +2743,15 @@ This is done according to `org-latex-feature-implementations'"
 Tectonic is the hot new thing, which also means I can get rid of my tex installation.
 #+begin_src emacs-lisp
 (setq-default org-latex-pdf-process '("tectonic --outdir=%o %f"))
+#+end_src
+
+With that, we can disable auctex
+#+begin_src emacs-lisp
+(defadvice! no-auto-mode-alist (orig-fn &rest args)
+  "Wrap ORIG-FN in a let-binding that sets `auto-mode-alist' to nil."
+  :around #'org-export-to-file
+  (let ((auto-mode-alist nil))
+    (apply orig-fn args)))
 #+end_src
 
 **** Classes

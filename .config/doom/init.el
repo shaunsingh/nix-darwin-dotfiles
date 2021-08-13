@@ -13,6 +13,12 @@
 ;;
 ;;      Alternatively, press 'gd' (or 'C-c c d') on a module to browse its
 ;;      directory (for easy access to its source code).
+;
+;; Loading before emacs
+(setq treemacs-git-mode 'deferred)
+
+;; Make line endings work
+(setq evil-respect-visual-line-mode t)
 
 (doom! :input
        ;;chinese
@@ -39,17 +45,17 @@
        hl-todo           ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
        ;;hydra
        ;;indent-guides     ; highlighted indent columns
-       (ligatures +fira +extra)         ; ligatures and symbols to make your code pretty again
+       (ligatures +extra)         ; ligatures and symbols to make your code pretty again
        minimap           ; show a map of the code on the side
        modeline           ; snazzy, Atom-inspired modeline, plus API
                           ; +light
        ;;nav-flash         ; blink cursor line after big motions
        ;;neotree           ; a project drawer, like NERDTree for vim
        ophints           ; highlight the region an operation acts on
-       (popup +all +defaults)   ; tame sudden yet inevitable temporary windows
+       (popup +defaults)   ; tame sudden yet inevitable temporary windows
        ;;(tabs
         ;;+centaur-tabs)
-       treemacs          ; a project drawer, like neotree but cooler
+       (treemacs +lsp)          ; a project drawer, like neotree but cooler
        ;;tree-sitter       ; highlighting, improved
        ;;unicode           ; extended unicode support for various languages
        vc-gutter         ; vcs diff in the fringe
@@ -65,7 +71,7 @@
        format           ; automated prettiness
        ;;god               ; run Emacs commands without modifier keys
        ;;lispy             ; vim for lisp, for people who don't like vim
-       multiple-cursors  ; editing in many places at once
+       ;;multiple-cursors  ; editing in many places at once
        ;;objed             ; text object editing for the innocent
        ;;parinfer          ; turn lisp into python, sort of
        ;;rotate-text       ; cycle region at point between text candidates
@@ -80,7 +86,7 @@
        vc                ; version-control and Emacs, sitting in a tree
 
        :term
-       ;;eshell              ; the elisp shell that works everywhere
+       eshell              ; the elisp shell that works everywhere
        ;;shell             ; simple shell REPL for Emacs
        ;;term              ; basic terminal emulator for Emacs
        ;;vterm             ; the best terminal emulation in Emacs
@@ -95,7 +101,7 @@
        ;;debugger          ; FIXME stepping through code, to help you add bugs
        ;;direnv
        ;;docker
-       ;;editorconfig      ; let someone else argue about tabs vs spaces
+       editorconfig      ; let someone else argue about tabs vs spaces
        ;;ein               ; tame Jupyter notebooks with emacs
        (eval +overlay)     ; run code, run (also, repls)
        ;;gist              ; interacting with github gists
@@ -142,11 +148,11 @@
        ;;hy                ; readability of scheme w/ speed of python
        ;;idris             ; a language you can depend on
        ;;json              ; At least it ain't XML
-       (java +lsp) ; the poster child for carpal tunnel syndrome
+       ;;(java +lsp) ; the poster child for carpal tunnel syndrome
        ;;javascript        ; all(hope(abandon(ye(who(enter(here))))))
        ;;julia             ; a better, faster MATLAB
-       (kotlin +lsp)            ; a better, slicker Java(Script)
-       (latex +latexmk +cdlatex +lsp +fold)             ; writing papers in Emacs has never been so fun
+       ;;(kotlin +lsp)            ; a better, slicker Java(Script)
+       (latex +cdlatex +lsp)             ; writing papers in Emacs has never been so fun
        ;;lean              ; for folks with too much to prove
        ;;ledger            ; be audit you can be
        ;;lua               ; one-based indices? one-based indices
@@ -158,10 +164,10 @@
         +pretty                     ; yessss my pretties! (nice unicode symbols)
         ;;+dragndrop                  ; drag & drop files/images into org buffers
         ;;+hugo                     ; use Emacs for hugo blogging
-        +noter                      ; enhanced PDF notetaking
+        ;;+noter                      ; enhanced PDF notetaking
         ;;+jupyter                    ; ipython/jupyter support for babel
         +pandoc                     ; export-with-pandoc support
-        +gnuplot                    ; who doesn't like pretty pictures
+        ;;+gnuplot                    ; who doesn't like pretty pictures
         ;;+pomodoro                 ; be fruitful with the tomato technique
         ;;+present                    ; using org-mode for presentations
         +roam2)                      ; wander around notes
@@ -175,10 +181,10 @@
        ;;rest              ; Emacs as a REST client
        ;;rst               ; ReST in peace
        ;;(ruby +rails)     ; 1.step {|i| p "Ruby is #{i.even? ? 'love' : 'life'}"}
-       (rust +lsp)              ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
+       ;;(rust +lsp)              ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
        ;;scala             ; java, but good
        ;;(scheme +guile)   ; a fully conniving family of lisps
-       sh                ; she sells {ba,z,fi}sh shells on the C xor
+       ;;sh                ; she sells {ba,z,fi}sh shells on the C xor
        ;;sml
        ;;solidity          ; do you need a blockchain? No.
        ;;swift             ; who asked for emoji variables?

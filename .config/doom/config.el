@@ -223,10 +223,6 @@ Made for `org-tab-first-hook'."
 (after! evil
   (map! :nmv ";" #'evil-ex))
 
-(use-package! evil-better-visual-line
-  :config
-  (evil-better-visual-line-on))
-
 (after! evil
   (setq evil-ex-substitute-global t     ; I like my s/../.. to by global by default
         evil-move-cursor-back nil       ; Don't move the block cursor when toggling insert mode
@@ -2293,12 +2289,6 @@ Use default browser unless `xwidget' is available."
       :leader
       :desc "Embedded calc (toggle)" "e" #'calc-embedded)
 
-(defadvice! no-auto-mode-alist (orig-fn &rest args)
-  "Wrap ORIG-FN in a let-binding that sets `auto-mode-alist' to nil."
-  :around #'org-export-to-file
-  (let ((auto-mode-alist nil))
-    (apply orig-fn args)))
-
 (defvar org-latex-italic-quotes t
   "Make \"quote\" environments italic.")
 (defvar org-latex-par-sep t
@@ -2505,6 +2495,12 @@ This is done according to `org-latex-feature-implementations'"
               "\n"))))
 
 (setq-default org-latex-pdf-process '("tectonic --outdir=%o %f"))
+
+(defadvice! no-auto-mode-alist (orig-fn &rest args)
+  "Wrap ORIG-FN in a let-binding that sets `auto-mode-alist' to nil."
+  :around #'org-export-to-file
+  (let ((auto-mode-alist nil))
+    (apply orig-fn args)))
 
 (after! ox-latex
   (add-to-list 'org-latex-classes

@@ -80,7 +80,7 @@
     # emacs config deps (latex, aspell)
     (aspellWithDicts (dicts: with dicts; [ en en-computers en-science ]))
     tectonic
-    #(pkgs.texlive.combine { inherit (pkgs.texlive) scheme-small dvipng dvisvgm l3packages xcolor soul adjustbox collectbox amsmath siunitx cancel mathalpha capt-of chemfig wrapfig mhchem latexmk; })
+    # (pkgs.texlive.combine { inherit (pkgs.texlive) scheme-small dvipng dvisvgm l3packages xcolor soul adjustbox collectbox amsmath siunitx cancel mathalpha capt-of chemfig wrapfig mhchem latexmk; })
 
   ];
 
