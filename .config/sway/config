@@ -10,8 +10,7 @@ set $right l
 # Your preferred terminal emulator
 set $term alacritty
 # Your preffered launcher
-set $menu bemenu-run -b | xargs swaymsg exec --
-set $menu bemenu-run -b --ignorecase --prompt="Exec:" --fn "Liga SFMono Nerd Font 10" --nb='#2a2e38' --tb="#51afef" --fb="#2a2e38" --hb="#242730" --nf="#bbc2cf" --ff="#C57BDB" --tf="#242730" --hf="#bbc2cf"
+set $menu bemenu-run -b --i --prompt="Exec:" --fn "Liga SFMono Nerd Font 10" --nb='#2a2e38' --tb="#51afef" --fb="#2a2e38" --hb="#242730" --nf="#bbc2cf" --ff="#C57BDB" --tf="#242730" --hf="#bbc2cf"
 
 # Default wallpaper
 output * bg ~/wallpapers/doom_vibrant_alt.png fill
