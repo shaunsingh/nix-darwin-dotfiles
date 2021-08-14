@@ -1536,7 +1536,7 @@ set palette defined ( 0 '%s',\
 "
            (mapcar (doom-rpartial #'substring 1)
                    (list
-                    (face-attribute 'solaire-default-face :background)
+                    (face-attribute 'default :background)
                     (face-attribute 'default :foreground)
                     ;;
                     (doom-color 'red)
@@ -2494,7 +2494,7 @@ This is done according to `org-latex-feature-implementations'"
               (org-latex-generate-features-preamble (org-latex-detect-features nil info--tmp))
               "\n"))))
 
-(setq-default org-latex-pdf-process '("tectonic -X compile --print --outdir=%o -Z shell-escape %f"))
+(setq org-latex-pdf-process '("tectonic -X compile --outdir=%o -Z shell-escape %f"))
 
 (defadvice! no-auto-mode-alist (orig-fn &rest args)
   "Wrap ORIG-FN in a let-binding that sets `auto-mode-alist' to nil."
@@ -2535,29 +2535,10 @@ This is done according to `org-latex-feature-implementations'"
         org-latex-reference-command "\\cref{%s}"))
 
 (setq org-latex-default-packages-alist
-      `(("AUTO" "inputenc" t
-         ("pdflatex"))
-        ("T1" "fontenc" t
-         ("pdflatex"))
-        ("" "fontspec" t)
-        ("" "graphicx" t)
-        ("" "grffile" t)
-        ("" "longtable" nil)
-        ("" "wrapfig" nil)
-        ("" "rotating" nil)
-        ("normalem" "ulem" t)
-        ("" "amsmath" t)
-        ("" "textcomp" t)
-        ("" "amssymb" t)
-        ("" "dvipng" t)
-        ("" "chemfig" t)
-        ("" "mhchem" t)
-        ("" "capt-of" nil)
-        ("dvipsnames" "xcolor" nil)
-        ("colorlinks=true, linkcolor=Blue, citecolor=BrickRed, urlcolor=PineGreen" "hyperref" nil)
-    ("" "indentfirst" nil)
-    "\\setmainfont[Ligatures=TeX]{IBM Plex Sans}"
-    "\\setmonofont[Ligatures=TeX]{Iosevka Nerd Font Mono}"))
+      '(("AUTO" "inputenc" t ("pdflatex"))
+        ("T1" "fontenc" t ("pdflatex"))
+        ("" "xcolor" nil) ; Generally useful
+        ("" "hyperref" nil)))
 
 (use-package! engrave-faces-latex
   :after ox-latex

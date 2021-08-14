@@ -2738,10 +2738,10 @@ This is done according to `org-latex-feature-implementations'"
               "\n"))))
 #+end_src
 
-**** LatexMk
-Use latexmk which is superioir imo
+**** Tectonic
+Use tectonic
 #+begin_src emacs-lisp
-(setq org-latex-pdf-process '("latexmk -f -pdf -%latex -shell-escape -interaction=nonstopmode -output-directory=%o %f"))
+(setq org-latex-pdf-process '("tectonic -X compile --outdir=%o -Z shell-escape %f"))
 #+end_src
 
 With that, we can disable auctex
@@ -2796,29 +2796,10 @@ And some saner default for them
 Add some packages (also very likely to change)
 #+begin_src emacs-lisp
 (setq org-latex-default-packages-alist
-      `(("AUTO" "inputenc" t
-         ("pdflatex"))
-        ("T1" "fontenc" t
-         ("pdflatex"))
-        ("" "fontspec" t)
-        ("" "graphicx" t)
-        ("" "grffile" t)
-        ("" "longtable" nil)
-        ("" "wrapfig" nil)
-        ("" "rotating" nil)
-        ("normalem" "ulem" t)
-        ("" "amsmath" t)
-        ("" "textcomp" t)
-        ("" "amssymb" t)
-        ("" "dvipng" t)
-        ("" "chemfig" t)
-        ("" "mhchem" t)
-        ("" "capt-of" nil)
-        ("dvipsnames" "xcolor" nil)
-        ("colorlinks=true, linkcolor=Blue, citecolor=BrickRed, urlcolor=PineGreen" "hyperref" nil)
-    ("" "indentfirst" nil)
-    "\\setmainfont[Ligatures=TeX]{SF Pro}"
-    "\\setmonofont[Ligatures=TeX]{Fira SFMono Nerd Font}"))
+      '(("AUTO" "inputenc" t ("pdflatex"))
+        ("T1" "fontenc" t ("pdflatex"))
+        ("" "xcolor" nil) ; Generally useful
+        ("" "hyperref" nil)))
 #+end_src
 
 **** Pretty code blocks
@@ -3090,7 +3071,7 @@ Attempt to improve default PDF export by using the current theme
 "
            (mapcar (doom-rpartial #'substring 1)
                    (list
-                    (face-attribute 'solaire-default-face :background)
+                    (face-attribute 'default :background)
                     (face-attribute 'default :foreground)
                     ;;
                     (doom-color 'red)
