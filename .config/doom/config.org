@@ -2984,6 +2984,13 @@ Add some packages (also very likely to change)
 
 **** Chameleon
 Attempt to improve default PDF export by using the current theme
+
+#+begin_src elisp
+(defface org-cite
+  '((t :foreground "#800080"))
+  "Face for org-cite.")
+#+end_src
+
 #+begin_src elisp
 (after! ox
   (defvar ox-chameleon-base-class "cb-doc"
@@ -3112,8 +3119,8 @@ Attempt to improve default PDF export by using the current theme
 "
            (mapcar (doom-rpartial #'substring 1)
                    (list
-                    (face-attribute 'solaire-default-face :background)
-                    (doom-blend (face-attribute 'solaire-default-face :background)
+                    (face-attribute 'default :background)
+                    (doom-blend (face-attribute 'default :background)
                                 (face-attribute 'default :foreground)
                                 0.95)))))
 

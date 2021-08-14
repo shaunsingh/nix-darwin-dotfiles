@@ -1435,6 +1435,10 @@ set palette defined ( 0 '%s',\
   (setq pdf-view-resize-factor 1.1)
   (setq-default pdf-view-display-size 'fit-page))
 
+(defface org-cite
+  '((t :foreground "#800080"))
+  "Face for org-cite.")
+
 (after! ox
   (defvar ox-chameleon-base-class "cb-doc"
     "The base class that chameleon builds on")
@@ -1562,8 +1566,8 @@ set palette defined ( 0 '%s',\
 "
            (mapcar (doom-rpartial #'substring 1)
                    (list
-                    (face-attribute 'solaire-default-face :background)
-                    (doom-blend (face-attribute 'solaire-default-face :background)
+                    (face-attribute 'default :background)
+                    (doom-blend (face-attribute 'default :background)
                                 (face-attribute 'default :foreground)
                                 0.95)))))
 
