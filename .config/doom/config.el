@@ -984,9 +984,6 @@ of contents as a string, or nil if it is empty."
                      ("conf" "Configuration File"))))
       mode))
 
-(autoload #'highlight-numbers--turn-on "highlight-numbers")
-(add-hook 'htmlize-before-hook #'highlight-numbers--turn-on)
-
  (defadvice! org-html-table-wrapped (orig-fn table contents info)
   "Wrap the usual <table> in a <div>"
   :around #'org-html-table
@@ -1536,8 +1533,7 @@ set palette defined ( 0 '%s',\
 \\makeatother
 %% end customisations
 "
-
-             (mapcar (doom-rpartial #'substring 1)
+           (mapcar (doom-rpartial #'substring 1)
                    (list
                     (face-attribute 'default :background)
                     (face-attribute 'default :foreground)
@@ -1566,13 +1562,13 @@ set palette defined ( 0 '%s',\
                     (face-attribute 'outline-8 :foreground)
                     ;;
                     (face-attribute 'link :foreground)
-                    (face-attribute 'org-cite :foreground)
+                    (doom-color 'yellow)
                     (face-attribute 'org-list-dt :foreground)
                     (face-attribute 'org-code :foreground)
                     (face-attribute 'org-verbatim :foreground)
                     ;;
-                    (face-attribute 'solaire-default-face :background)
-                    (doom-blend (face-attribute 'solaire-default-face :background)
+                    (face-attribute 'org-block :background)
+                    (doom-blend (face-attribute 'default :background)
                                 (face-attribute 'default :foreground)
                                 0.95))))))
 
@@ -2538,10 +2534,25 @@ This is done according to `org-latex-feature-implementations'"
         org-latex-reference-command "\\cref{%s}"))
 
 (setq org-latex-default-packages-alist
-      '(("AUTO" "inputenc" t ("pdflatex"))
-        ("T1" "fontenc" t ("pdflatex"))
-        ("" "xcolor" nil) ; Generally useful
-        ("" "hyperref" nil)))
+      `(("AUTO" "inputenc" t
+         ("pdflatex"))
+        ("T1" "fontenc" t
+         ("pdflatex"))
+        ("" "fontspec" t)
+        ("" "graphicx" t)
+        ("" "grffile" t)
+        ("" "longtable" nil)
+        ("" "wrapfig" nil)
+        ("" "rotating" nil)
+        ("normalem" "ulem" t)
+        ("" "amsmath" t)
+        ("" "textcomp" t)
+        ("" "amssymb" t)
+        ("" "capt-of" nil)
+        ("dvipsnames" "xcolor" nil)
+        ("colorlinks=true, linkcolor=Blue, citecolor=BrickRed, urlcolor=PineGreen" "hyperref" nil)
+    ("" "indentfirst" nil)
+    "\\setmonofont[Ligatures=TeX]{Liga SFMono Nerd Font}"))
 
 (use-package! engrave-faces-latex
   :after ox-latex
