@@ -144,8 +144,10 @@ Just in case the fonts aren't there, lets add a fallback
 ** Themes
 Right now I'm using doom-vibrant
 #+begin_src elisp
-(setq doom-theme 'doom-vibrant)
-(setq doom-vibrant-padded-modeline t)
+;;(setq doom-theme 'doom-vibrant)
+(setq doom-theme 'doom-flatwhite)
+;;(setq doom-vibrant-padded-modeline t)
+(setq doom-fw-padded-modeline t)
 #+end_src
 
 ** Lsp, and Company
@@ -3069,7 +3071,8 @@ Attempt to improve default PDF export by using the current theme
 \\makeatother
 %% end customisations
 "
-           (mapcar (doom-rpartial #'substring 1)
+
+             (mapcar (doom-rpartial #'substring 1)
                    (list
                     (face-attribute 'default :background)
                     (face-attribute 'default :foreground)
@@ -3098,13 +3101,13 @@ Attempt to improve default PDF export by using the current theme
                     (face-attribute 'outline-8 :foreground)
                     ;;
                     (face-attribute 'link :foreground)
-                    (doom-color 'yellow)
+                    (face-attribute 'org-cite :foreground)
                     (face-attribute 'org-list-dt :foreground)
                     (face-attribute 'org-code :foreground)
                     (face-attribute 'org-verbatim :foreground)
                     ;;
-                    (face-attribute 'org-block :background)
-                    (doom-blend (face-attribute 'default :background)
+                    (face-attribute 'solaire-default-face :background)
+                    (doom-blend (face-attribute 'solaire-default-face :background)
                                 (face-attribute 'default :foreground)
                                 0.95))))))
 #+end_src

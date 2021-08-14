@@ -85,8 +85,10 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
                          (sleep-for 0.5))))))
   ";; No missing fonts detected")
 
-(setq doom-theme 'doom-vibrant)
-(setq doom-vibrant-padded-modeline t)
+;;(setq doom-theme 'doom-vibrant)
+(setq doom-theme 'doom-flatwhite)
+;;(setq doom-vibrant-padded-modeline t)
+(setq doom-fw-padded-modeline t)
 
 (after! company
   (setq company-idle-delay 0.5
@@ -1534,7 +1536,8 @@ set palette defined ( 0 '%s',\
 \\makeatother
 %% end customisations
 "
-           (mapcar (doom-rpartial #'substring 1)
+
+             (mapcar (doom-rpartial #'substring 1)
                    (list
                     (face-attribute 'default :background)
                     (face-attribute 'default :foreground)
@@ -1563,13 +1566,13 @@ set palette defined ( 0 '%s',\
                     (face-attribute 'outline-8 :foreground)
                     ;;
                     (face-attribute 'link :foreground)
-                    (doom-color 'yellow)
+                    (face-attribute 'org-cite :foreground)
                     (face-attribute 'org-list-dt :foreground)
                     (face-attribute 'org-code :foreground)
                     (face-attribute 'org-verbatim :foreground)
                     ;;
-                    (face-attribute 'org-block :background)
-                    (doom-blend (face-attribute 'default :background)
+                    (face-attribute 'solaire-default-face :background)
+                    (doom-blend (face-attribute 'solaire-default-face :background)
                                 (face-attribute 'default :foreground)
                                 0.95))))))
 
