@@ -64,7 +64,7 @@
     starship
     alacritty
     tmux
-    neofetch 
+    # neofetch 
 
     # browser
     # firefox
