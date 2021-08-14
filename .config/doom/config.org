@@ -2519,7 +2519,6 @@ DocView gives me a headache, but pdf-tools can be improved, lets configure it a 
 #+end_src
 ** Export
 **** Conditional features
-
 #+begin_src emacs-lisp
 (defvar org-latex-italic-quotes t
   "Make \"quote\" environments italic.")
@@ -2742,7 +2741,7 @@ This is done according to `org-latex-feature-implementations'"
 **** Tectonic
 Tectonic is the hot new thing, which also means I can get rid of my tex installation.
 #+begin_src emacs-lisp
-(setq-default org-latex-pdf-process '("tectonic -X compile --outdir=%o -Z shell-escape %f"))
+(setq-default org-latex-pdf-process '("tectonic -X compile --print --outdir=%o -Z shell-escape %f"))
 #+end_src
 
 With that, we can disable auctex
@@ -2818,8 +2817,8 @@ Add some packages (also very likely to change)
         ("dvipsnames" "xcolor" nil)
         ("colorlinks=true, linkcolor=Blue, citecolor=BrickRed, urlcolor=PineGreen" "hyperref" nil)
     ("" "indentfirst" nil)
-    "\\setmainfont[Ligatures=TeX]{IBM Plex Sans}"
-    "\\setmonofont[Ligatures=TeX]{Iosevka Nerd Font Mono}"))
+    "\\setmainfont[Ligatures=TeX]{SF Pro}"
+    "\\setmonofont[Ligatures=TeX]{Fira SFMono Nerd Font}"))
 #+end_src
 
 **** Pretty code blocks
