@@ -32,7 +32,7 @@ font:
   # Font size
   size: 11.0
 
-# Colors (Nord)
+# Colors (Doom-Vibrant)
 colors:
    # Default colors
    primary:

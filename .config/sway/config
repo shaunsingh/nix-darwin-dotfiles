@@ -136,7 +136,7 @@ output eDP1 pos 1920 0 res 1200x800
     bindsym $mod+minus scratchpad show
 
     # take a screenshot and put it in clipboard
-    bindsym $mod+Shift+p exec grim -g "$(slurp)" -t png - | wl-copy -t image/png
+    bindsym $mod+Shift+p exec grim -g "$(slurp)" - | wl-copy
 
     # same but save it
     bindsym $mod+Shift+o exec grim -t png ~/screenshots/$(date +%Y-%m-%d_%H-%m-%s).png

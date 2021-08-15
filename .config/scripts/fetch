@@ -34,21 +34,3 @@ cat <<EOF
 │ $(b 6)     cyan     $r │$(f 6)      cyan     $r │      │ * pdf ...................... emacs │
 └────────────────┴────────────────┘      └───                              ───┘
 EOF
-# colors for ascii art
-g="$(f 2)"  # green for stems
-rd="$(f 1)" # red for @@@ petals
-b="$(f 4)"  # blue for (_) petals
-p="$(f 5)"  # pink for www/vvv petals
-y="$(f 3)"  # yellow for center of flowers
-
-echo $(e '1;2') # bold + newline
-echo   '                      '$b'_(_)_                          '$p'wWWWw   '$b'_'
-echo   '          '$rd'@@@@       '$b'(_)@(_)   '$p'vVVVv     '$b'_     '$rd'@@@@  '$p'(___) '$b'_(_)_    (_)'
-echo   '         '$rd'@@'$y'()'$rd'@@ '$p'wWWWw  '$b'(_)'$g'\    '$p'(___)   '$b'_(_)_  '$rd'@@'$y'()'$rd'@@   '$g'Y  '$b'(_)'$y'@'$b'(_) (_)'$y'@'$b'(_)'
-echo   '          '$rd'@@@@  '$p'(___)     '$g'`|/    Y    '$b'(_)'$y'@'$b'(_)  '$rd'@@@@   '$g'\|/   '$b'(_)'$g'\    '$b'(_)'
-echo $g'           /      Y       \|    \|/    /(_)    \|      |/      |  /   '$p'wWw'
-echo $g'        \ |     \ |/       | / \ | /  \|/       |/    \|      \|//   '$p'(___)'
-echo $g'        \\|//   \\|///  \\\|//\\\|/// \|///  \\\|//  \\|//  \\\|//   \\|//'
-
-a1="$(printf '\033[48;5;17;1m')$(f 7)"
-a2="$(printf '\033[48;5;18;1m')"
