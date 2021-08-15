@@ -144,8 +144,10 @@ Just in case the fonts aren't there, lets add a fallback
 ** Themes
 Right now I'm using doom-vibrant
 #+begin_src elisp
-(setq doom-theme 'doom-vibrant)
-(setq doom-vibrant-padded-modeline t)
+;;(setq doom-theme 'doom-vibrant)
+(setq doom-theme 'doom-flatwhite)
+;;(setq doom-vibrant-padded-modeline t)
+(setq doom-fw-padded-modeline t)
 #+end_src
 
 ** Lsp, and Company
@@ -2811,6 +2813,7 @@ Add some packages (also very likely to change)
         ("dvipsnames" "xcolor" nil)
         ("colorlinks=true, linkcolor=Blue, citecolor=BrickRed, urlcolor=PineGreen" "hyperref" nil)
     ("" "indentfirst" nil)
+    "\\setmainfont[Ligatures=TeX]{SF Pro}"
     "\\setmonofont[Ligatures=TeX]{Liga SFMono Nerd Font}"))
 #+end_src
 

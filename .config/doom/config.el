@@ -85,8 +85,10 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
                          (sleep-for 0.5))))))
   ";; No missing fonts detected")
 
-(setq doom-theme 'doom-vibrant)
-(setq doom-vibrant-padded-modeline t)
+;;(setq doom-theme 'doom-vibrant)
+(setq doom-theme 'doom-flatwhite)
+;;(setq doom-vibrant-padded-modeline t)
+(setq doom-fw-padded-modeline t)
 
 (after! company
   (setq company-idle-delay 0.5
@@ -2621,6 +2623,7 @@ This is done according to `org-latex-feature-implementations'"
         ("dvipsnames" "xcolor" nil)
         ("colorlinks=true, linkcolor=Blue, citecolor=BrickRed, urlcolor=PineGreen" "hyperref" nil)
     ("" "indentfirst" nil)
+    "\\setmainfont[Ligatures=TeX]{SF Pro}"
     "\\setmonofont[Ligatures=TeX]{Liga SFMono Nerd Font}"))
 
 (use-package! engrave-faces-latex

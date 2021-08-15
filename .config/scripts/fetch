@@ -1,22 +1,54 @@
 #!/bin/sh
 
-host="$(cat /proc/sys/kernel/hostname)"
-user=$(sh -c 'whoami')
-os=$(. /etc/os-release && echo $ID)
-read -r _ _ version _ < /proc/version
-kr=${version%%-*}
-sh=${SHELL##*/}
-wm="sway"
+e() {
+  printf "\033[$@m"
+}
+b() {
+  e "10$1;1"
+}
+f() {
+  e "3$1;1"
+}
+r="$(e 0)"
+u="$(e 4)"
 
-YELLOW='\033[1;33m'
-CYAN='\033[1;34m'
-NC='\033[0m'
 
-printf "
-  ${YELLOW}${user}${NC}@${YELLOW}${host}${NC}
-  ${CYAN}os${NC}  ->  ${os}
-  ${CYAN}kr${NC}  ->  ${kr}
-  ${CYAN}sh${NC}  ->  ${sh}
-  ${CYAN}wm${NC}  ->  ${wm}
+cat <<EOF
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ shaunsingh/vimrc-dotfiles                                                   │
+└─────────────────────────────────────────────────────────────────────────────┘
 
-" | tr '[:upper:]' '[:lower:]'
+┌────────────────┬────────────────┐      ┌───                              ───┐
+│  highlighters  │      pens      │      │ shaun@mac                    nixos │
+├────────────────┼────────────────┤
+│ $(b 1)     red      $r │$(f 1)      red       $r│        hardware $u                         $r
+├────────────────┼────────────────┤        * laptop .................. M1 MBP
+│ $(b 2)    green     $r │$(f 2)     green      $r│        * ram ...................... 16 gb
+├────────────────┼────────────────┤        * display .......... 2800x1440 13"
+│ $(b 3)    yellow    $r │$(f 3)     yellow     $r│
+├────────────────┼────────────────┤        software $u                         $r
+│ $(b 4)     blue     $r │$(f 4)      blue      $r│        * window manager ........... yabai
+├────────────────┼────────────────┤        * panel ................. spacebar
+│ $(b 5)     pink     $r │$(f 5)      pink     $r │        * editor ...............emacs/nvim
+├────────────────┼────────────────┤        * browser ............ qutebrowser
+│ $(b 6)     cyan     $r │$(f 6)      cyan     $r │      │ * pdf ...................... emacs │
+└────────────────┴────────────────┘      └───                              ───┘
+EOF
+# colors for ascii art
+g="$(f 2)"  # green for stems
+rd="$(f 1)" # red for @@@ petals
+b="$(f 4)"  # blue for (_) petals
+p="$(f 5)"  # pink for www/vvv petals
+y="$(f 3)"  # yellow for center of flowers
+
+echo $(e '1;2') # bold + newline
+echo   '                      '$b'_(_)_                          '$p'wWWWw   '$b'_'
+echo   '          '$rd'@@@@       '$b'(_)@(_)   '$p'vVVVv     '$b'_     '$rd'@@@@  '$p'(___) '$b'_(_)_    (_)'
+echo   '         '$rd'@@'$y'()'$rd'@@ '$p'wWWWw  '$b'(_)'$g'\    '$p'(___)   '$b'_(_)_  '$rd'@@'$y'()'$rd'@@   '$g'Y  '$b'(_)'$y'@'$b'(_) (_)'$y'@'$b'(_)'
+echo   '          '$rd'@@@@  '$p'(___)     '$g'`|/    Y    '$b'(_)'$y'@'$b'(_)  '$rd'@@@@   '$g'\|/   '$b'(_)'$g'\    '$b'(_)'
+echo $g'           /      Y       \|    \|/    /(_)    \|      |/      |  /   '$p'wWw'
+echo $g'        \ |     \ |/       | / \ | /  \|/       |/    \|      \|//   '$p'(___)'
+echo $g'    jgs \\|//   \\|///  \\\|//\\\|/// \|///  \\\|//  \\|//  \\\|//   \\|//'
+
+a1="$(printf '\033[48;5;17;1m')$(f 7)"
+a2="$(printf '\033[48;5;18;1m')"
