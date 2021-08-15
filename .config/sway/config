@@ -135,10 +135,10 @@ output eDP1 pos 1920 0 res 1200x800
     # If there are multiple scratchpad windows, this command cycles through them.
     bindsym $mod+minus scratchpad show
 
-    # take a screenshot and put it in clipboard
-    bindsym $mod+Shift+p exec grim -g "$(slurp)" - | wl-copy
+    # take a screenshot (selection)
+    bindsym $mod+Shift+p exec grim -g "$(slurp)" ~/screenshots/$(date +%Y-%m-%d_%H-%m-%s).png
 
-    # same but save it
+    # take a screenshot (entire)
     bindsym $mod+Shift+o exec grim -t png ~/screenshots/$(date +%Y-%m-%d_%H-%m-%s).png
 
 #
