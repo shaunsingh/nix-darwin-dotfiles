@@ -6,5 +6,5 @@
 
 config_version: 2
 settings:
-  content.notifications.enabled:
-    https://www.reddit.com: false
+  content.mouse_lock:
+    https://play.geforcenow.com: true

@@ -45,13 +45,13 @@
     extraGroups = [ "wheel" "networkManager" ]; # Enable ‘sudo’ for the user.
   };
 
-  # List packages installed in system profile. To search, run:
+  # Packages
   environment.systemPackages = with pkgs; [
 
-    # dotfiles management
+    # Dotfiles Management
     yadm 
 
-    # utils
+    # Utils
     wget
     git
     gcc
@@ -60,25 +60,31 @@
     bat
     fd
 
-    # terminal stuff
+    # Terminal stuff
+    ## neofetch 
     starship
     alacritty
     tmux
-    # neofetch 
 
-    # browser
-    # firefox
-    # nyxt
+    # Mail
+    ## offlineimap
+    mu
+    msmtp
+    isync
+
+    # Browsers
+    ## firefox
+    ## nyxt
     qutebrowser
 
-    # editors
+    # Editors
     neovim-nightly
     emacsPgtkGcc
 
-    # emacs config deps (latex, aspell)
+    # Emacs config deps (latex, aspell)
+    ## (pkgs.texlive.combine { inherit (pkgs.texlive) scheme-small dvipng dvisvgm l3packages xcolor soul adjustbox collectbox amsmath siunitx cancel mathalpha capt-of chemfig wrapfig mhchem latexmk; })
     (aspellWithDicts (dicts: with dicts; [ en en-computers en-science ]))
     tectonic
-    # (pkgs.texlive.combine { inherit (pkgs.texlive) scheme-small dvipng dvisvgm l3packages xcolor soul adjustbox collectbox amsmath siunitx cancel mathalpha capt-of chemfig wrapfig mhchem latexmk; })
 
   ];
 
