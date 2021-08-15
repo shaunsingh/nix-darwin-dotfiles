@@ -2,11 +2,10 @@
 IMAPAccount gmail
 # Address to connect to
 Host imap.googlemail.com
-User <email>
-Pass <password>
+User
+Pass
 AuthMechs PLAIN
 SSLType IMAPS
-CertificateFile ~/.mail/ca-bundle.crt
 
 # THEN WE SPECIFY THE LOCAL AND REMOTE STORAGE
 # - THE REMOTE STORAGE IS WHERE WE GET THE MAIL FROM (E.G., THE
@@ -19,8 +18,8 @@ Account gmail
 
 # LOCAL STORAGE (CREATE DIRECTORIES with mkdir -p Maildir/gmail)
 MaildirStore gmail-local
-Path ~/.mail/
-Inbox ~/.mail/INBOX
+Path ~/.mbsync/
+Inbox ~/.mbsync/INBOX
 
 # CONNECTIONS SPECIFY LINKS BETWEEN REMOTE AND LOCAL FOLDERS
 #
