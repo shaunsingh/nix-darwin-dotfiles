@@ -2623,7 +2623,8 @@ This is done according to `org-latex-feature-implementations'"
         ("dvipsnames" "xcolor" nil)
         ("colorlinks=true, linkcolor=Blue, citecolor=BrickRed, urlcolor=PineGreen" "hyperref" nil)
     ("" "indentfirst" nil)
-    "\\setmainfont[Ligatures=TeX]{SF Pro}"
+    ;;for fonts I tried sfpro+mono, mono is nice pro is ok
+    ;;"\\setmainfont[Ligatures=TeX]{SF Pro}"
     "\\setmonofont[Ligatures=TeX]{Liga SFMono Nerd Font}"))
 
 (use-package! engrave-faces-latex
