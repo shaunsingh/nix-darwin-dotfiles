@@ -2,8 +2,8 @@
 IMAPAccount gmail
 # Address to connect to
 Host imap.googlemail.com
-User
-Pass
+User shaunsingh0207@gmail.com
+Pass 2BigBoysrule
 AuthMechs PLAIN
 SSLType IMAPS
 
