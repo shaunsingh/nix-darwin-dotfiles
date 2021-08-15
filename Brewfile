@@ -27,7 +27,6 @@ brew "neovim", args: ["HEAD"]
 brew "pandoc"
 brew "ranger"
 brew "ripgrep"
-brew "starship"
 brew "tmux"
 brew "tectonic"
 brew "d12frosted/emacs-plus/emacs-plus@28", args: ["with-elrumo2-icon", "with-native-comp", "with-xwidgets"]

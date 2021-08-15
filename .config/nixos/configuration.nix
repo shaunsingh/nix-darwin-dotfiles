@@ -62,7 +62,7 @@
 
     # Terminal stuff
     ## neofetch 
-    starship
+    ## starship
     alacritty
     tmux
 
