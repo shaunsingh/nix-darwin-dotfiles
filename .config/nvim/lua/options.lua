@@ -8,8 +8,9 @@ opt.shadafile = "NONE"
 opt.termguicolors = true
 
 --fish slows things down
-opt.shell = "/bin/bash"
+opt.shell = "/bin/sh"
 
+opt.completeopt = {"menuone", "noselect"}
 opt.undofile = true
 opt.ruler = false
 opt.hidden = true

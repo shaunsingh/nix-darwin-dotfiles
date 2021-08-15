@@ -4,18 +4,7 @@ if not present then
 end
 
 ts_config.setup {
-        ensure_installed = {
-            "java",
-            "kotlin",
-            "comment",
-            "bash",
-            "lua",
-            "python",
-            "json",
-            "latex",
-            "rust",
-            "toml",
-        },
+        ensure_installed = "maintained",
         highlight = {
             enable = true,
             use_languagetree = true

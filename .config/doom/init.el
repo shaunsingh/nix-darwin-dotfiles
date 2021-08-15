@@ -37,6 +37,7 @@
        (vertico +icons)    ; the search engine of the future
 
        :ui
+
        ;;deft              ; notational velocity for Emacs
        doom              ; what makes DOOM look the way it does
        doom-dashboard    ; a nifty splash screen for Emacs
@@ -56,7 +57,7 @@
        ;;(tabs
         ;;+centaur-tabs)
        (treemacs +lsp)          ; a project drawer, like neotree but cooler
-       ;;tree-sitter       ; highlighting, improved
+       tree-sitter       ; highlighting, improved
        ;;unicode           ; extended unicode support for various languages
        vc-gutter         ; vcs diff in the fringe
        ;;vi-tilde-fringe   ; fringe tildes to mark beyond EOB
