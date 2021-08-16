@@ -56,7 +56,8 @@ Using pgtk/wayland, theres a bug where it can't use the clipboard, to fix this w
                                     (process-send-eof wl-copy-p))
         interprogram-paste-function (lambda ()
                                       (unless (and wl-copy-p (process-live-p wl-copy-p))
-                                        (shell-command-to-string "wl-paste -n | tr -d '\r'"))))#+end_src
+                                        (shell-command-to-string "wl-paste -n | tr -d '\r'")))))
+
 #+end_src
 
 ** Fonts
