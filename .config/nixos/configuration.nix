@@ -9,7 +9,7 @@
       ./cachix.nix
     ];
 
-  # allow me to install unfree packages 
+  # allow me to install unfree packages
   nixpkgs.config.allowUnfree = true;
 
   # use network manager
@@ -49,19 +49,19 @@
   environment.systemPackages = with pkgs; [
 
     # Dotfiles Management
-    yadm 
+    yadm
 
     # Utils
     wget
     git
     gcc
-    ripgrep 
-    exa 
+    ripgrep
+    exa
     bat
     fd
 
     # Terminal stuff
-    ## neofetch 
+    ## neofetch
     ## starship
     alacritty
     tmux
@@ -100,7 +100,7 @@
 
   # launch emacsclient on boot
   ## services.emacs.enable = true;
-  
+
   # use sway :chad:
   programs.sway = {
    enable = true;
@@ -113,15 +113,15 @@
      bemenu
 
      # utils
-     mako 
+     mako
      grim
      slurp
 
-     # clipboard and recording 
+     # clipboard and recording
      wl-clipboard
      wf-recorder
 
-     # Control 
+     # Control
      brightnessctl
      playerctl
    ];
@@ -161,4 +161,3 @@
 
   system.stateVersion = "21.05"; # Did you read the comment?
 }
-
