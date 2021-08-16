@@ -9,18 +9,14 @@
 
 (when (getenv "WAYLAND_DISPLAY")
   (setq wl-copy-p nil
-
-        interprogram-cut-function
-        (lambda (text)
-          (setq-local process-connection-type 'pipe)
-          (setq wl-copy-p (start-process "wl-copy" nil "wl-copy" "--foreground" "--trim-newline"))
-          (process-send-string wl-copy-p text)
-          (process-send-eof wl-copy-p))
-
-        interprogram-paste-function
-        (lambda ()
-          (unless (and wl-copy-p (process-live-p wl-copy-p))
-            (shell-command-to-string "wl-paste -n | tr -d '\r'")))))
+        interprogram-cut-function (lambda (text)
+                                    (setq-local process-connection-type 'pipe)
+                                    (setq wl-copy-p (start-process "wl-copy" nil "wl-copy" "-f" "-n"))
+                                    (process-send-string wl-copy-p text)
+                                    (process-send-eof wl-copy-p))
+        interprogram-paste-function (lambda ()
+                                      (unless (and wl-copy-p (process-live-p wl-copy-p))
+                                        (shell-command-to-string "wl-paste -n | tr -d '\r'"))))#+end_src
 
 ;;fonts
 (setq doom-font (font-spec :family "Liga SFMono Nerd Font" :size 14)
