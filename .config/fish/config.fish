@@ -75,7 +75,7 @@ alias git-rebase 'git rebase -i HEAD~2'
 alias update 'brew update; brew upgrade; brew cleanup'
 alias cleanup "find . -type f -name '*.DS_Store' -ls -delete"
 
-set -x EDITOR "vim"
+set -x EDITOR "nvim"
 set -x PATH ~/.emacs.d/bin $PATH
 set -x PATH /Library/TeX/texbin/ $PATH
 set -x PATH ~/.config/scripts $PATH
