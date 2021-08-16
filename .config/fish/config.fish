@@ -8,7 +8,7 @@ end
 set fish_greeting
 
 # colors
-set -U fish_color_autosuggestion      brightblack
+set -U fish_color_autosuggestion      brblack
 set -U fish_color_cancel              -r
 set -U fish_color_command             green
 set -U fish_color_comment             magenta
@@ -23,7 +23,7 @@ set -U fish_color_normal              normal
 set -U fish_color_operator            cyan
 set -U fish_color_param               blue
 set -U fish_color_quote               yellow
-set -U fish_color_redirection         bryellow
+set -U fish_color_redirection         yellow
 set -U fish_color_search_match        'yellow' '--background=brightblack'
 set -U fish_color_selection           'white' '--bold' '--background=brightblack'
 set -U fish_color_status              red
