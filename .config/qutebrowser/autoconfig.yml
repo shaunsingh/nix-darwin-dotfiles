@@ -8,5 +8,3 @@ config_version: 2
 settings:
   content.notifications.enabled:
     https://www.reddit.com: false
-  content.register_protocol_handler:
-    https://mail.google.com?extsrc=mailto&url=%25s: false

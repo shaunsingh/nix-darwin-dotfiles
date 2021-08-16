@@ -6,13 +6,10 @@ env:
 
 window:
    padding:
-    x: 15
-    y: 15
+    x: 30
+    y: 30
 
    decorations: None
-
-scrolling:
-  history: 5000
 
 font:
   normal:
@@ -30,7 +27,10 @@ font:
     style: Italic
 
   # Font size
-  size: 11.0
+  # size: 11.0
+
+mouse:
+  hide_when_typing: true
 
 # Colors (Doom-Vibrant)
 colors:

@@ -98,6 +98,9 @@
     }))
   ];
 
+  # launch emacsclient on boot
+  ## services.emacs.enable = true;
+  
   # use sway :chad:
   programs.sway = {
    enable = true;
