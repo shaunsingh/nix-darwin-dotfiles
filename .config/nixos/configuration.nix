@@ -122,8 +122,7 @@
 
      # gtk
      ## pop-icon-theme
-     nordic
-     gnome2.gtk
+     ## nordic
 
      # utils
      mako
