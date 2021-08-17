@@ -188,6 +188,13 @@ bindsym XF86MonBrightnessDown exec brightnessctl -q set 5%- # decrease screen br
 default_border none
 default_floating_border none
 
+# This is for use with sway-borders
+## default_border pixel 0
+## border_images.focused ~/.config/sway/borders/dropShadowDarkOffset.png
+## border_images.focused_inactive ~/.config/sway/borders/dropShadowDarkOffset.png
+## border_images.unfocused ~/.config/sway/borders/dropShadowDarkOffset.png
+## border_images.urgent ~/.config/sway/borders/dropShadowDarkOffset.png
+
 gaps horizontal 18
 gaps vertical 18
 
