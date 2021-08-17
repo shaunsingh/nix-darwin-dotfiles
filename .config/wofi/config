@@ -1,10 +1,13 @@
-style=/home/shauryasingh/.config/wofi/style.css
+stylesheet=style.css
 show=drun
-width=500
-height=500
+width=600
+height=50
 always_parse_args=true
 show_all=true
 print_command=true
 layer=overlay
 insensitive=true
-prompt=
+term=alacritty
+y=750
+x=320
+prompt=

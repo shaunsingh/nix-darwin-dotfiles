@@ -4,7 +4,7 @@ border: 5px solid #2a2e38;
 border-radius: 15px;
 background-color: #2a2e38;
 font-family: Liga SFMono Nerd Font;
-font-size: 12px;
+font-size: 14px;
 }
 
 #input {
@@ -13,10 +13,6 @@ border: 1px solid #242730;
 border-radius: 15px;
 color: #bbc2cf;
 background-color: #242730;
-}
-
-#input image {
-	color: #bbc2cf;
 }
 
 #inner-box {
@@ -37,7 +33,7 @@ border: none;
 }
 
 #text {
-margin: 5px;
+margin: 0px;
 border: none;
 color: #bbc2cf;
 }
@@ -45,7 +41,7 @@ color: #bbc2cf;
 #entry:selected {
 	background-color: #51afef;
 	font-weight: normal;
-	border-radius: 15px;
+	border-radius: 5px;
 }
 
 #text:selected {
