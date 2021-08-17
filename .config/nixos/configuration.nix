@@ -125,7 +125,6 @@
      ## nordic
 
      # utils
-     mako
      grim
      slurp
 
