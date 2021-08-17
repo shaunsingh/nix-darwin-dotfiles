@@ -118,7 +118,7 @@
      # launcher
      ## dmenu
      ## bemenu
-     wofi
+     ## wofi
 
      # gtk
      ## pop-icon-theme
