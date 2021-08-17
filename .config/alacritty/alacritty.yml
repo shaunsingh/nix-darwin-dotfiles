@@ -64,4 +64,4 @@ colors:
 cursor:
   # Cursor style
   style:
-    shape: underline
+    shape: beam
