@@ -60,3 +60,8 @@ colors:
      magenta: '#c57bdb'
      cyan:    '#51afef'
      white:   '#bbc2cf'
+
+cursor:
+  # Cursor style
+  style:
+    shape: underline
