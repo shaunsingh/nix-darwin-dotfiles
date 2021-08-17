@@ -3,6 +3,15 @@
 { config, pkgs, ... }:
 
 {
+
+  nix = {
+    autoOptimiseStore = true;
+    package = pkgs.nixFlakes;
+    extraOptions = ''
+      experimental-features = nix-command flakes
+    '';
+  };
+
   imports =
     [ # Include the results of the hardware scan, use cachix
       ./hardware-configuration.nix
@@ -13,6 +22,7 @@
   nixpkgs.config.allowUnfree = true;
 
   # use network manager
+  networking.useDHCP = false;
   networking.networkmanager.enable = true;
 
   # Use the systemd-boot EFI boot loader.
@@ -98,9 +108,6 @@
     }))
   ];
 
-  # launch emacsclient on boot
-  ## services.emacs.enable = true;
-
   # use sway :chad:
   programs.sway = {
    enable = true;
@@ -124,6 +131,7 @@
      # Control
      brightnessctl
      playerctl
+
    ];
    extraSessionCommands = ''
      export SDL_VIDEODRIVER=wayland
@@ -158,6 +166,5 @@
 
   # Set default shell to sway
   users.defaultUserShell = pkgs.fish;
-
   system.stateVersion = "21.05"; # Did you read the comment?
 }
