@@ -116,8 +116,14 @@
      waybar
 
      # launcher
-     # dmenu
-     bemenu
+     ## dmenu
+     ## bemenu
+     wofi
+
+     # gtk
+     ## pop-icon-theme
+     nordic
+     gnome2.gtk
 
      # utils
      mako

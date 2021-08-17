@@ -1,0 +1,55 @@
+window {
+margin: 0px;
+border: 5px solid #2a2e38;
+border-radius: 15px;
+background-color: #2a2e38;
+font-family: Liga SFMono Nerd Font;
+font-size: 12px;
+}
+
+#input {
+margin: 5px;
+border: 1px solid #242730;
+border-radius: 15px;
+color: #bbc2cf;
+background-color: #242730;
+}
+
+#input image {
+	color: #bbc2cf;
+}
+
+#inner-box {
+margin: 5px;
+border: none;
+background-color: #2a2e38;
+}
+
+#outer-box {
+margin: 5px;
+border: none;
+background-color: #2a2e38;
+}
+
+#scroll {
+margin: 0px;
+border: none;
+}
+
+#text {
+margin: 5px;
+border: none;
+color: #bbc2cf;
+}
+
+#entry:selected {
+	background-color: #51afef;
+	font-weight: normal;
+	border-radius: 15px;
+}
+
+#text:selected {
+	background-color: #51afef;
+	color: #2a2e38;
+	font-weight: normal;
+}
