@@ -29,8 +29,7 @@
              		"7": "VII",
              		"8": "VIII",
              		"9": "IX",
-             		"10": "X"
-         }
+             		"10": "X" }
      },
 	"clock": {
 		"format": "󰅐 {:%H:%M} ",
@@ -41,12 +40,11 @@
             		"warning": 30,
             		"critical": 15,
         	},
-        	"format": "{capacity}% {icon} ",
-        	"format-charging": "󰂄 {capacity}%",
-        	"format-plugged": "󰂄{capacity}%",
-        	"format-alt": "{time} {icon} ",
-        	"format-full": "󱈑 {capacity}%",
-                "format-icons": [" ", " "," "]
+        	"format": "{time}",
+        	"format-charging": "{time}",
+        	"format-plugged": "{time}",
+        	"format-alt": "{capacity}%",
+        	"format-full": "{capacity}%",
 	},
 	"network": {
         	"format-wifi": "  {essid}",
