@@ -1,0 +1,62 @@
+# Configuration for Alacritty, the GPU enhanced terminal emulator.
+
+# Setup term for programs to be able to use it
+env:
+  TERM: xterm-256color
+
+window:
+   padding:
+    x: 0
+    y: 5
+
+   decorations: None
+
+font:
+  normal:
+    family: Liga SFMono Nerd Font
+    style: Light
+
+  # Bold font face
+  bold:
+    family: Liga SFMono Nerd Font
+    style: Bold
+
+  # Italic font face
+  italic:
+    family: Liga SFMono Nerd Font
+    style: Italic
+
+  # Font size
+  # size: 11.0
+
+mouse:
+  hide_when_typing: true
+
+# Colors (Doom-Vibrant)
+colors:
+   # Default colors
+   primary:
+     background: '#2a2e38'
+     foreground: '#bbc2cf'
+
+   # Normal colors
+   normal:
+     black:   '#2a2e38'
+     red:     '#ff665c'
+     green:   '#7bc275'
+     yellow:  '#FCCE7B'
+     blue:    '#5cEfFF'
+     magenta: '#C57BDB'
+     cyan:    '#51afef'
+     white:   '#bbc2cf'
+
+   # Bright colors
+   bright:
+     black:   '#484854'
+     red:     '#ff665c'
+     green:   '#7bc275'
+     yellow:  '#fcce7b'
+     blue:    '#5cefff'
+     magenta: '#c57bdb'
+     cyan:    '#51afef'
+     white:   '#bbc2cf'

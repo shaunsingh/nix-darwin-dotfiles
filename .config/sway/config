@@ -12,8 +12,8 @@ set $term alacritty
 # Your preffered launcher
 # set $menu bemenu-run -b --ignorecase --prompt="Exec:" --fn "Liga SFMono Nerd Font 10" --nb='#2a2e38' --tb="#51afef" --fb="#2a2e38" --hb="#242730" --nf="#bbc2cf" --ff="#C57BDB" --tf="#242730" --hf="#bbc2cf"
 # set $menu wofi --show=run --hide-scroll | xargs swaymsg exec --
-set $menu exec alacritty --class launcher --command sh -c 'echo -n [36m"M-x: "[37m; read cmd; swaymsg -t command exec $cmd'
-for_window [app_id="^launcher$"] floating enable, border none, resize set width 100 ppt height 12 ppt, move position 0 px 0 px
+set $menu exec alacritty --config-file ~/.config/scripts/alacritty.yml --class launcher --command sh -c 'echo -n [36m"M-x: "[37m; read cmd; swaymsg -t command exec $cmd'
+for_window [app_id="^launcher$"] floating enable, border none, resize set width 55 ppt height 5 ppt, move position 290 px 730 px
 
 # Default wallpaper
 output * bg ~/wallpapers/doom_vibrant_alt.png fill
