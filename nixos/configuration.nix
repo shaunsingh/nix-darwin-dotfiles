@@ -18,7 +18,7 @@
 
   # Network settings.
   networking = {
-    hostName = "nixos"; # Hostname
+    hostName = "shaunsingh-laptop"; # Hostname
     useDHCP = false; # Deprecated, so set explicitly to false
     wireless.enable = false;
     networkmanager.enable = true; # Enable networkmanager
