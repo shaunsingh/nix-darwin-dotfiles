@@ -10,8 +10,8 @@
         system = "x86_64-linux";
         modules = [
           { _module.args = inputs; }
-          /home/shauryasingh/.config/nixos/configuration.nix
-          /home/shauryasingh/.config/nixos/hardware-configuration.nix
+          ./nixos/configuration.nix
+          ./nixos/hardware-configuration.nix
         ];
       };
     };
