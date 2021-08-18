@@ -30,10 +30,6 @@ input type:keyboard {
     xkb_options caps:super
 }
 
-##monitor configuration
-output HDMI1 pos 0 0 res 1920x1080
-output eDP1 pos 1920 0 res 1200x800
-
 ### Key bindings
 #
 # Basics:
