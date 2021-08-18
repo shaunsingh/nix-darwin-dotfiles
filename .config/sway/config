@@ -2,14 +2,19 @@
 
 # Logo key. Use Mod1 for Alt.
 set $mod Mod4
+
 # Home row direction keys, like vim
 set $left h
 set $down j
 set $up k
 set $right l
+
 # Your preferred terminal emulator
 set $term alacritty
+
 # Your preffered launcher
+# Note: I have bemenu, wofi, and alacritty setup. I find alacritty as a good balance
+
 # set $menu bemenu-run -b --ignorecase --prompt="Exec:" --fn "Liga SFMono Nerd Font 10" --nb='#2a2e38' --tb="#51afef" --fb="#2a2e38" --hb="#242730" --nf="#bbc2cf" --ff="#C57BDB" --tf="#242730" --hf="#bbc2cf"
 # set $menu wofi --show=run --hide-scroll | xargs swaymsg exec --
 set $menu exec alacritty --config-file ~/.config/scripts/alacritty.yml --class launcher --command sh -c 'echo -n [36m"M-x: "[37m; read cmd; swaymsg -t command exec $cmd'
@@ -31,9 +36,7 @@ input type:keyboard {
 }
 
 ### Key bindings
-#
 # Basics:
-#
     # Start a terminal
     bindsym $mod+Return exec $term
 
@@ -51,9 +54,8 @@ input type:keyboard {
 
     # Exit sway (logs you out of your Wayland session)
     bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -b 'Yes, exit sway' 'swaymsg exit'
-#
+
 # Moving around:
-#
     # Move your focus around
     bindsym $mod+$left focus left
     bindsym $mod+$down focus down
@@ -75,9 +77,8 @@ input type:keyboard {
     bindsym $mod+Shift+Down move down
     bindsym $mod+Shift+Up move up
     bindsym $mod+Shift+Right move right
-#
+
 # Workspaces:
-#
     # Switch to workspace
     bindsym $mod+1 workspace number 1
     bindsym $mod+2 workspace number 2
@@ -102,9 +103,8 @@ input type:keyboard {
     bindsym $mod+Shift+0 move container to workspace number 10
     # Note: workspaces can have any name you want, not just numbers.
     # We just use 1-10 as the default.
-#
+
 # Layout stuff:
-#
     # You can "split" the current object of your focus with
     # $mod+b or $mod+v, for horizontal and vertical splits
     # respectively.
@@ -127,9 +127,8 @@ input type:keyboard {
 
     # Move focus to the parent container
     bindsym $mod+a focus parent
-#
+
 # Scratchpad:
-#
     # Sway has a "scratchpad", which is a bag of holding for windows.
     # You can send windows there and get them back later.
 
@@ -146,9 +145,7 @@ input type:keyboard {
     # take a screenshot (entire)
     bindsym $mod+Shift+o exec grim -t png ~/screenshots/$(date +%Y-%m-%d_%H-%m-%s).png
 
-#
 # Resizing containers:
-#
 mode "resize" {
     # left will shrink the containers width
     # right will grow the containers width
@@ -191,7 +188,6 @@ bindsym XF86MonBrightnessUp exec brightnessctl -q set +5% # increase screen brig
 bindsym XF86MonBrightnessDown exec brightnessctl -q set 5%- # decrease screen brightnes
 
 # This is for use with sway-borders
-## default_border pixel 0
 ## border_images.focused ~/.config/sway/borders/dropShadowDarkOffset.png
 ## border_images.focused_inactive ~/.config/sway/borders/dropShadowDarkOffset.png
 ## border_images.unfocused ~/.config/sway/borders/dropShadowDarkOffset.png
@@ -201,8 +197,9 @@ bindsym XF86MonBrightnessDown exec brightnessctl -q set 5%- # decrease screen br
 default_border pixel 0
 default_floating_border normal
 
-# hide_edge_borders smart
-# smart_gaps on
+# don't like smart gaps
+hide_edge_borders smart
+smart_gaps on
 
 # gaps to match alacritty
 gaps inner 30
