@@ -35,6 +35,9 @@ input type:keyboard {
     xkb_options caps:super
 }
 
+### Display Config
+output LVDS-1 mode 1280x800@120Hz
+
 ### Key bindings
 # Basics:
     # Start a terminal
