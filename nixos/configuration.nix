@@ -97,9 +97,9 @@
 
     # Editors
     ## neovim-nightly
-    ## emacsPgtkGcc
+    emacsPgtkGcc
     neovim
-    emacsNg-src.defaultPackage.x86_64-linux
+    ## emacsNg-src.defaultPackage.x86_64-linux
 
     # Emacs config deps (latex, aspell)
     ## (pkgs.texlive.combine { inherit (pkgs.texlive) scheme-small dvipng dvisvgm l3packages xcolor soul adjustbox collectbox amsmath siunitx cancel mathalpha capt-of chemfig wrapfig mhchem latexmk; })
