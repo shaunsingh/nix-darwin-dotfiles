@@ -198,11 +198,11 @@ default_border pixel 0
 default_floating_border normal
 
 # don't like smart gaps
-hide_edge_borders smart
-smart_gaps on
+## hide_edge_borders smart
+## smart_gaps on
 
 # gaps to match alacritty
-gaps inner 30
+gaps inner 15
 
 # Use colorscheme
 include colorscheme

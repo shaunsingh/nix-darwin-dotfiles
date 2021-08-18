@@ -34,9 +34,6 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  # set the hostname
-  networking.hostName = "nixos"; # Define your hostname.
-
   # Set your time zone.
   # time.timeZone = "Europe/Amsterdam";
 
@@ -83,6 +80,9 @@
     exa
     bat
     fd
+
+    # forgive me stallman
+    firmwareLinuxNonfree
 
     # Terminal stuff
     ## neofetch
