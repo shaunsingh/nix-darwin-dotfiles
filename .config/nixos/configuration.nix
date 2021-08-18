@@ -12,12 +12,6 @@
     '';
   };
 
-  imports =
-    [ # Include the results of the hardware scan, use cachix
-      ./hardware-configuration.nix
-      ./cachix.nix
-    ];
-
   # allow me to install unfree packages and firmware
   nixpkgs.config.allowUnfree = true;
   hardware.enableRedistributableFirmware = true;
@@ -102,24 +96,16 @@
     qutebrowser
 
     # Editors
-    neovim-nightly
-    emacsPgtkGcc
+    ## neovim-nightly
+    ## emacsPgtkGcc
+    neovim
+    emacsNg
 
     # Emacs config deps (latex, aspell)
     ## (pkgs.texlive.combine { inherit (pkgs.texlive) scheme-small dvipng dvisvgm l3packages xcolor soul adjustbox collectbox amsmath siunitx cancel mathalpha capt-of chemfig wrapfig mhchem latexmk; })
     (aspellWithDicts (dicts: with dicts; [ en en-computers en-science ]))
     tectonic
 
-  ];
-
-  # overlay for emacsGcc and Neovim-Nightly
-  nixpkgs.overlays = [
-    (import (builtins.fetchTarball {
-      url = https://github.com/nix-community/emacs-overlay/archive/master.tar.gz;
-    }))
-    (import (builtins.fetchTarball {
-      url = https://github.com/nix-community/neovim-nightly-overlay/archive/master.tar.gz;
-    }))
   ];
 
   # use sway :chad:
