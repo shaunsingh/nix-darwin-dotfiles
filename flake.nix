@@ -18,6 +18,8 @@
               emacs-overlay.overlay
               (self: super: {
                 unstable = nixpkgs-unstable.legacyPackages.x86_64-linux;
+              })
+            ];
           })
         ];
       };
