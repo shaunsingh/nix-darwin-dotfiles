@@ -45,20 +45,15 @@ chmod +x *.sh
 chmod +x bootstrap.d/*.sh
 ```
 
-### Linux
+### nixOS
 
 **Note** This is more of a note for myself for when I install on linux machines. I am quite new to nixos, and I recommend you check over my config before installing it. The config also uses wayland+sway, so it may be incompatible with certain gpus
 
-Install NixOS (or the nix package manager)
-(In place of `configuration.nix`, use the file located in `~/.config/nixos/configuration.nix`)
-
-Modify `configuration.nix` to include your username
-
-Set a user password
-`passwd (username)`
-
-Install/update nixos
-`sudo nixos-rebuild switch`
+Install via flakes
+```zsh
+nix-shell -p nixUnstable git
+nixos-install --flake https://github.com/shaunsingh/vimrc-dotfiles#somehost
+```
 
 Clone the dotiles
 ```zsh
