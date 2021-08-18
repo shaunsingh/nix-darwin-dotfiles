@@ -17,6 +17,21 @@
     },
     "emacs-overlay": {
       "locked": {
+        "lastModified": 1629307718,
+        "narHash": "sha256-pmq/5J041I1S1z0ahszO1Od6S5DeCNpxQSGRDigj2L4=",
+        "owner": "nix-community",
+        "repo": "emacs-overlay",
+        "rev": "9498d1febd6b91bfe88d0bd632ff7f5288c4ade9",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "emacs-overlay",
+        "type": "github"
+      }
+    },
+    "emacs-overlay_2": {
+      "locked": {
         "lastModified": 1620586397,
         "narHash": "sha256-KKOSEMOnJBjAX8BJxCOV9j7Z8Z7AwJTonck0YjrTb6Y=",
         "owner": "nix-community",
@@ -33,7 +48,7 @@
     "emacsNg-src": {
       "inputs": {
         "devshell-flake": "devshell-flake",
-        "emacs-overlay": "emacs-overlay",
+        "emacs-overlay": "emacs-overlay_2",
         "emacsNg-src": "emacsNg-src_2",
         "flake-compat": "flake-compat",
         "flake-utils": "flake-utils",
@@ -220,6 +235,7 @@
     },
     "root": {
       "inputs": {
+        "emacs-overlay": "emacs-overlay",
         "emacsNg-src": "emacsNg-src",
         "nixpkgs": "nixpkgs_2",
         "nixpkgs-unstable": "nixpkgs-unstable"
