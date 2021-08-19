@@ -104,18 +104,23 @@
     # Emacs config deps (latex, aspell)
     ## (pkgs.texlive.combine { inherit (pkgs.texlive) scheme-small dvipng dvisvgm l3packages xcolor soul adjustbox collectbox amsmath siunitx cancel mathalpha capt-of chemfig wrapfig mhchem latexmk; })
     (aspellWithDicts (dicts: with dicts; [ en en-computers en-science ]))
-    tectonic
+    ## tectonic
 
   ];
 
-  
   let
-    unstable-pkgs = import <unstable> {};
-  in
+    unstable = import
+      (builtins.fetchTarball https://github.com/nixos/nixpkgs/tarball/<branch or commit>)
+      # reuse the current configuration
+      { config = config.nixpkgs.config; };
+    in
   {
-    environment.systemPackages = [ unstable-pkgs.neovim ]
+    environment.systemPackages = with pkgs; [
+      neovim
+      tectonic
+    ];
   }
-  
+
   # use sway :chad:
   programs.sway = {
    enable = true;
