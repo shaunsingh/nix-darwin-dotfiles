@@ -1804,13 +1804,13 @@ table {
   height: 8px; }
 
 ::-webkit-scrollbar-track {
-  background: var(--back-light); }
+  background: #242730; }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--accent); }
+  background: #2a2e38; }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--accent-dark); }
+  background: #484854; }
 
 @media (min-width: 1280px) {
   #table-of-contents {
