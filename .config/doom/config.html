@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- 2021-08-19 Thu 04:47 -->
+<!-- 2021-08-19 Thu 05:31 -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Doom Emacs Configuration</title>
@@ -70,7 +70,7 @@ window.addEventListener('DOMContentLoaded', () => {
 // @license-end
 </script>
 <style>
-﻿/*! normalize.css v8.0.1 | MIT License | github.com/necolas/normalize.css */html{line-height:1.15;-webkit-text-size-adjust:100%}body{margin:0}h1{font-size:2em;margin:0.67em 0}hr{box-sizing:content-box;height:0}pre{font-family:monospace, monospace;font-size:1em}b{font-weight:bolder}code,kbd,samp{font-family:monospace, monospace;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-0.25em}sup{top:-0.5em}button,input,optgroup,select,textarea{font-family:inherit;font-size:100%;line-height:1.15;margin:0}button,select{text-transform:none}button{-webkit-appearance:button}button::-moz-focus-inner{border-style:none;padding:0}button:-moz-focusring{outline:1px dotted ButtonText}details{display:block}summary{display:list-item}/*! end normalise.css */#page{--accent: #2a2e38;--accent-dark: #484854;--code-foreground: #bbc2cf;--code-background: #2a2e38;--code-func: #7bc275;--code-const: #C57BDB;--code-regex: #51afef;--back-white: #000;--back-light: #242730;--back-medium: #484854;--text-light: #c57BDB;--text-gray: #51afef;--text-medium: #c57BDB;--text-dark: #BBC2cf;--switch-icon: "🌝";--switch-shadow-color: #FCCE7b;--switch-text: "light mode?"}#page img.invertible,#page object[type="image/svg+xml"].invertible{filter:invert(90%) hue-rotate(180deg) sepia(1%)}#theme-switch:checked~#page{--accent: #002642;--accent-dark: #00151c;--code-foreground: #2c3e50;--code-background: #efefef;--code-func: #6c3163;--code-const: #4e3163;--code-regex: #655370;--back-white: #fff;--back-light: #f0eeed;--back-medium: #c8c8c8;--text-light: #7b7b7b;--text-gray: #444;--text-medium: #222;--text-dark: #000;--switch-icon: "🌚";--switch-shadow-color: #373d4e;--switch-text: "dark mode?"}#theme-switch{display:none}#switch-label{position:fixed;bottom:4rem;left:3rem}#switch-label::before{content:var(--switch-icon);font-size:20px;transition:text-shadow .2s}#switch-label::after{content:var(--switch-text);color:var(--switch-shadow-color);font-size:12px;visibility:hidden;margin-left:0.5em;z-index:1;position:fixed;bottom:calc(4rem - 25px);left:calc(3rem - 10px)}@media (max-width: 1000px){#switch-label{left:auto;bottom:auto;right:1vw;top:1vh}#switch-label::after{position:fixed;top:calc(1vh + 3px);right:calc(1vw + 30px);left:auto;bottom:auto}}#theme-switch:focus~#page #switch-label::before,#switch-label:hover::before{text-shadow:0 0 15px var(--switch-shadow-color)}#theme-switch:focus~#page #switch-label::after,#switch-label:hover::after{visibility:visible}@font-face{font-family:"Merriweather";src:url("https://tecosaur.com/resources/org/Merriweather-TextRegular.woff2") format("woff2");font-weight:normal;font-style:normal;font-display:fallback}@font-face{font-family:"Merriweather";src:url("https://tecosaur.com/resources/org/Merriweather-TextItalic.woff2") format("woff2");font-weight:normal;font-style:italic;font-display:fallback}@font-face{font-family:"Merriweather";src:url("https://tecosaur.com/resources/org/Merriweather-TextBold.woff2") format("woff2");font-weight:bold;font-style:normal;font-display:fallback}@font-face{font-family:"et-book";src:url("https://tecosaur.com/resources/org/etbookot-roman-webfont.woff2") format("woff2");font-weight:normal;font-style:normal;font-display:fallback}@font-face{font-family:"et-book";src:url("https://tecosaur.com/resources/org/etbookot-italic-webfont.woff2") format("woff2");font-weight:normal;font-style:italic;font-display:fallback}*::selection{background:var(--back-medium)}.pace .pace-progress{background-color:var(--accent) !important}html,body{height:100%}body{display:flex;flex-direction:column;font-size:16px;font-family:"Merriweather",serif}#page{color:var(--text-dark);background-color:var(--back-light);transition-property:color, background-color;transition-duration:100ms}#content,header,.page-header{margin:32px;flex:1 0 auto}#content{margin-top:4rem;min-height:calc(100vh - 4rem - 48px)}.clearfix::after{clear:both}.clearfix::before,.clearfix::after{content:" ";display:table}.page-header{margin-top:80px;margin-left:0 !important}.page-header h1{font-size:40px;margin-bottom:10px;margin-top:10px;text-transform:none}.page-header h1 .subtitle{font-size:24px;color:var(--text-light);margin:0}.page-meta{font-family:"Open Sans",sans;font-weight:normal;font-style:normal;font-size:12px;line-height:1.9;color:var(--text-light)}header .site-nav{font-family:"Open Sans",sans;font-weight:normal;font-style:normal;font-size:12px;line-height:1.9;color:var(--text-light);font-weight:bold;line-height:2.0;margin-top:22px}header .site-nav a{color:var(--text-light);text-decoration:none;margin-left:10px}header .site-nav a:hover{color:var(--text-gray)}header .site-nav a.active{border-bottom:solid;border-bottom-width:2px}header .site-nav a:first-child{margin-left:0}header>div{display:inherit}.site-title{font-size:16px}.site-title span{display:none !important}.site-title ul{display:block !important;list-style:none;padding:0;margin:0}.site-title ul img{border-radius:2px;max-width:32px}.site-header nav a{color:var(--text-light);font-family:"Open Sans",sans;font-size:12px;font-weight:bold;text-transform:uppercase}.site-header nav a:hover{border:0;color:var(--accent)}@media (max-width: 1000px){header *{display:inline}}@media (min-width: 1000px){#content,header,.page-header{max-width:720px;margin-left:164px}header .site-title{float:left}header .site-nav{float:right;margin-top:0}}@media (min-width: 2800px){#content,header,.page-header{margin-left:auto;margin-right:auto}}#content .page-intro{font-family:"Open Sans",sans;font-weight:normal;font-size:15px;line-height:1.6;color:var(--text-gray);margin-bottom:40px}#content p,#content li,#content dd{line-height:1.9}#footer{margin-top:70px;height:10px;background:var(--accent-dark)}.archive-item{margin:50px 0}.archive-item .archive-title{font-size:25px;margin:5px 0;background:none;text-shadow:none;text-decoration:none}.archive-item .archive-title:hover{background:none;text-shadow:none;text-decoration:none}#postamble{display:none}aside{background-color:var(--code-background);border-radius:5px;font-family:"Open Sans",sans;font-weight:normal;font-size:15px;line-height:1.6;color:var(--text-gray);margin:20px 0;padding:5px 20px 10px;line-height:1.6 !important}aside p{font-family:"Open Sans",sans;font-weight:normal;font-size:15px;line-height:1.6;color:var(--text-gray);line-height:1.6 !important}aside pre{font-size:12px;border:none;padding-left:0}@media (min-width: 1280px){aside{float:right;clear:right;background-color:var(--back-white);max-width:45% !important;margin-right:-52%}aside::before{content:''}}blockquote{border-width:0;border-left-style:solid;border-left-width:1px;border-left-color:var(--back-medium);margin:20px 0;padding:0;padding-left:15px}blockquote p{display:inline;font-size:13px}blockquote footer{font-family:"Open Sans",sans;font-weight:normal;font-style:normal;font-size:12px;line-height:1.9;color:var(--text-light);text-transform:none}div.info{background:rgba(81,175,239,0.15);border-left:4px solid rgba(81,175,239,0.45);margin:1.8rem 0 1.25rem 15px;padding:0.8em;line-height:1.4;text-align:center;position:relative;clear:both}div.info p{margin:0}div.info::before{content:"i";color:var(--back-white);background:rgba(81,175,239,0.8);align-items:flex-end;top:-1rem;font-weight:700;font-size:1.4rem;-webkit-clip-path:circle(50% at 50% 50%);clip-path:circle(50% at 50% 50%);width:30px;height:30px;display:inline-flex;justify-content:center;position:absolute;left:-1.2rem;line-height:1.3;text-align:center}div.success{background:rgba(123,194,117,0.15);border-left:4px solid rgba(123,194,117,0.45);margin:1.8rem 0 1.25rem 15px;padding:0.8em;line-height:1.4;text-align:center;position:relative;clear:both}div.success p{margin:0}div.success::before{content:"✔";color:var(--back-white);background:rgba(123,194,117,0.8);align-items:flex-end;top:-1rem;font-weight:700;font-size:1.4rem;-webkit-clip-path:polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);clip-path:polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);width:35px;height:35px;display:inline-flex;justify-content:center;position:absolute;left:-1.2rem;line-height:1.5;text-align:center}div.warning{background:rgba(230,144,85,0.15);border-left:4px solid rgba(230,144,85,0.45);margin:1.8rem 0 1.25rem 15px;padding:0.8em;line-height:1.4;text-align:center;position:relative;clear:both}div.warning p{margin:0}div.warning::before{content:"!";color:var(--back-white);background:rgba(230,144,85,0.8);align-items:flex-end;top:-1rem;font-weight:700;font-size:1.4rem;-webkit-clip-path:polygon(50% 0, 0 100%, 100% 100%);clip-path:polygon(50% 0, 0 100%, 100% 100%);width:35px;height:35px;display:inline-flex;justify-content:center;position:absolute;left:-1.2rem;line-height:1.1;text-align:center}div.error{background:rgba(255,102,92,0.15);border-left:4px solid rgba(255,102,92,0.45);margin:1.8rem 0 1.25rem 15px;padding:0.8em;line-height:1.4;text-align:center;position:relative;clear:both}div.error p{margin:0}div.error::before{content:"!";color:var(--back-white);background:rgba(255,102,92,0.8);align-items:flex-end;top:-1rem;font-weight:700;font-size:1.4rem;-webkit-clip-path:polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);clip-path:polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);width:35px;height:30px;display:inline-flex;justify-content:center;position:absolute;left:-1.2rem;line-height:1.1;text-align:center}.org-ref-bib-h1{margin-top:70px;padding-top:30px;border-width:0;border-top-style:solid;border-top-width:1px;border-color:var(--back-light);font-family:"Open Sans",sans;font-family:"Open Sans",sans;font-weight:normal;font-size:20px;line-height:1.6;color:var(--text-gray)}.org-ref-bib{font-family:"Open Sans",sans;font-weight:normal;font-size:15px;line-height:1.6;color:var(--text-gray)}.org-ref-bib li>a:nth-child(2){background:none;text-shadow:none;text-decoration:none}.org-ref-bib li>a:nth-child(2):hover{background:none;text-shadow:none;text-decoration:none}.org-ref-bib .bib-link{font-family:"Open Sans",sans;font-weight:normal;font-style:normal;font-size:12px;line-height:1.9;color:var(--text-light);background:none;text-shadow:none;text-decoration:none}pre.src,pre.example{border-width:0;border-left-style:solid;border-left-width:1px;border-left-color:var(--back-medium);margin:20px 0;padding:0;padding-left:15px;font-family:SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;font-size:14px;line-height:1.9;overflow-x:visible;box-shadow:none;white-space:pre-wrap;position:relative}pre.example{border-left-style:dotted;border-left-width:2px}pre.src::before{display:inline-block;position:absolute;background-color:transparent;top:unset;bottom:-16px;left:20px;padding:0px;border:none;font-size:80%;font-style:italic;color:var(--text-light)}pre.src:empty{display:none}code{font-family:SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;color:var(--code-foreground);font-size:15px;padding:0 5px}kbd{display:inline-block;padding:0.25em 0.35em;font:80% SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;line-height:normal;line-height:80%;color:var(--text-gray);vertical-align:middle;background-color:var(--back-light);border:1px solid #91959a88;border-radius:0.35em;box-shadow:inset 0 -1px 0 #91959a88}li code{font-size:14px}li p code{font-size:15px}details.code{position:relative}details.code summary{position:relative;left:-3px;padding-left:10px;padding-bottom:4px;margin-left:-10px;z-index:1;outline:none;font-family:"Open Sans",sans;font-weight:normal;font-style:normal;font-size:12px;line-height:1.9;color:var(--text-light)}details.code summary .name{font-size:14px;color:var(--text-medium);margin-right:0.7em}details.code summary .lang{font-family:SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;font-style:italic}details.code summary::marker{color:var(--back-medium)}details.code[open] summary{margin-bottom:-32px}details.code[open] summary .lang{display:none}details.code[open] summary.named{margin-bottom:-26px}details.code:not([open]) summary{margin-bottom:-5px}p+details.code{margin-top:-20px}li p+details.code{margin-top:-5px}.example,.src{color:var(--code-foreground)}.example .org-keyword,.src .org-keyword{color:#51afef}.example .org-variable-name,.src .org-variable-name{color:#c57BDB}.example .org-rainbow-delimiters-depth-1,.example .org-rainbow-delimiters-depth-2,.example .org-rainbow-delimiters-depth-3,.example .org-rainbow-delimiters-depth-4,.example .org-rainbow-delimiters-depth-5,.example .org-rainbow-delimiters-depth-6,.example .org-rainbow-delimiters-depth-7,.example .org-rainbow-delimiters-depth-8,.example .org-rainbow-delimiters-depth-9,.src .org-rainbow-delimiters-depth-1,.src .org-rainbow-delimiters-depth-2,.src .org-rainbow-delimiters-depth-3,.src .org-rainbow-delimiters-depth-4,.src .org-rainbow-delimiters-depth-5,.src .org-rainbow-delimiters-depth-6,.src .org-rainbow-delimiters-depth-7,.src .org-rainbow-delimiters-depth-8,.src .org-rainbow-delimiters-depth-9{color:#555}.example .org-string,.src .org-string{color:#7bc275}.example .org-comment,.example .org-comment-delimiter,.src .org-comment,.src .org-comment-delimiter{color:#555}.example .org-function-name,.src .org-function-name{color:var(--code-func)}.example .org-constant,.example .org-highlight-numbers-number,.src .org-constant,.src .org-highlight-numbers-number{color:var(--code-const)}.gutter{position:absolute;top:0;left:-2.5rem;width:2rem;padding-right:0.3rem;padding-top:5px;height:calc(100% - 10px);z-index:1;transition:opacity 200ms;opacity:0;font-size:15px}.gutter:hover{opacity:1}.gutter *{display:block;width:100%;text-align:right;padding:0;margin:0;color:var(--text-light)}.gutter *:hover{color:var(--text-gray)}.gutter *:active{font-weight:bold}.gutter a{text-decoration:none;font-size:110%}.gutter button{background:none;border:none}pre.src-asymptote::before{content:'Asymptote'}pre.src-authinfo::before{content:'Authinfo'}pre.src-awk::before{content:'Awk'}pre.src-C::before{content:'C'}pre.src-clojure::before{content:'Clojure'}pre.src-css::before{content:'CSS'}pre.src-D::before{content:'D'}pre.src-ditaa::before{content:'ditaa'}pre.src-dot::before{content:'Graphviz'}pre.src-calc::before{content:'Emacs Calc'}pre.src-emacs-lisp::before{content:'Emacs Lisp'}pre.src-fortran::before{content:'Fortran'}pre.src-gnuplot::before{content:'gnuplot'}pre.src-haskell::before{content:'Haskell'}pre.src-hledger::before{content:'hledger'}pre.src-java::before{content:'Java'}pre.src-js::before{content:'Javascript'}pre.src-latex::before{content:'LaTeX'}pre.src-ledger::before{content:'Ledger'}pre.src-lisp::before{content:'Lisp'}pre.src-lilypond::before{content:'Lilypond'}pre.src-lua::before{content:'Lua'}pre.src-matlab::before{content:'MATLAB'}pre.src-mscgen::before{content:'Mscgen'}pre.src-ocaml::before{content:'Objective Caml'}pre.src-octave::before{content:'Octave'}pre.src-org::before{content:'Org mode'}pre.src-oz::before{content:'OZ'}pre.src-plantuml::before{content:'Plantuml'}pre.src-processing::before{content:'Processing.js'}pre.src-python::before{content:'Python'}pre.src-R::before{content:'R'}pre.src-ruby::before{content:'Ruby'}pre.src-sass::before{content:'Sass'}pre.src-scheme::before{content:'Scheme'}pre.src-screen::before{content:'Gnu Screen'}pre.src-sed::before{content:'Sed'}pre.src-sh::before{content:'shell'}pre.src-sql::before{content:'SQL'}pre.src-sqlite::before{content:'SQLite'}pre.src-forth::before{content:'Forth'}pre.src-io::before{content:'IO'}pre.src-J::before{content:'J'}pre.src-makefile::before{content:'Makefile'}pre.src-maxima::before{content:'Maxima'}pre.src-perl::before{content:'Perl'}pre.src-picolisp::before{content:'Pico Lisp'}pre.src-scala::before{content:'Scala'}pre.src-shell::before{content:'Shell Script'}pre.src-systemd::before{content:'Systemd'}pre.src-ebnf2ps::before{content:'ebfn2ps'}pre.src-cpp::before{content:'C++'}pre.src-abc::before{content:'ABC'}pre.src-coq::before{content:'Coq'}pre.src-groovy::before{content:'Groovy'}pre.src-bash::before{content:'bash'}pre.src-csh::before{content:'csh'}pre.src-ash::before{content:'ash'}pre.src-dash::before{content:'dash'}pre.src-ksh::before{content:'ksh'}pre.src-mksh::before{content:'mksh'}pre.src-posh::before{content:'posh'}pre.src-ada::before{content:'Ada'}pre.src-asm::before{content:'Assembler'}pre.src-caml::before{content:'Caml'}pre.src-delphi::before{content:'Delphi'}pre.src-html::before{content:'HTML'}pre.src-idl::before{content:'IDL'}pre.src-mercury::before{content:'Mercury'}pre.src-metapost::before{content:'MetaPost'}pre.src-modula-2::before{content:'Modula-2'}pre.src-pascal::before{content:'Pascal'}pre.src-ps::before{content:'PostScript'}pre.src-prolog::before{content:'Prolog'}pre.src-simula::before{content:'Simula'}pre.src-tcl::before{content:'tcl'}pre.src-tex::before{content:'LaTeX'}pre.src-plain-tex::before{content:'TeX'}pre.src-verilog::before{content:'Verilog'}pre.src-vhdl::before{content:'VHDL'}pre.src-xml::before{content:'XML'}pre.src-nxml::before{content:'XML'}pre.src-conf::before{content:'Configuration File'}.dropcap{float:left;font-size:55px;font-style:normal;line-height:.1;margin-right:0.2em;margin-top:0.5em;padding:0}figure{text-align:center}figure figcaption{margin-top:10px;font-family:"Open Sans",sans;font-weight:normal;font-size:15px;line-height:1.6;color:var(--text-gray)}figure figcaption .figure-number{font-family:"Open Sans",sans;font-weight:normal;font-style:normal;font-size:12px;line-height:1.9;color:var(--text-light)}img.zoomTarget:hover{cursor:default !important}img,object[type="image/svg+xml"]{filter:invert(7%) sepia(4%);max-width:100%}.org-svg{width:90%}#footnotes{margin-top:70px;padding-top:30px;border-width:0;border-top-style:solid;border-top-width:1px;border-color:var(--back-light);font-family:"Open Sans",sans;font-weight:normal;font-size:15px;line-height:1.6;color:var(--text-gray)}#footnotes p,#footnotes li{font-family:"Open Sans",sans;font-weight:normal;font-size:15px;line-height:1.6;color:var(--text-gray)}#footnotes h2.footnotes{margin-top:0;margin-bottom:30px;font-family:"Open Sans",sans;font-size:18px;letter-spacing:5px;display:none}#footnotes .footnum{color:var(--text-dark)}h1,h2,h3,h4,h5,h6{font-family:"et-book",serif;font-weight:normal;margin-bottom:0;margin-top:60px}h1>a[aria-hidden='true'],h2>a[aria-hidden='true'],h3>a[aria-hidden='true'],h4>a[aria-hidden='true'],h5>a[aria-hidden='true'],h6>a[aria-hidden='true']{color:var(--back-medium);position:relative;top:0.06em;line-height:1;font-size:110%;padding-left:0.2em;text-decoration:none;visibility:hidden}h1>a[aria-hidden='true']:hover,h2>a[aria-hidden='true']:hover,h3>a[aria-hidden='true']:hover,h4>a[aria-hidden='true']:hover,h5>a[aria-hidden='true']:hover,h6>a[aria-hidden='true']:hover{color:var(--text-light)}h1:hover>a[aria-hidden='true'],h2:hover>a[aria-hidden='true'],h3:hover>a[aria-hidden='true'],h4:hover>a[aria-hidden='true'],h5:hover>a[aria-hidden='true'],h6:hover>a[aria-hidden='true']{visibility:visible}h1,h2,h3,h4,h5,h6{padding-left:30px;margin-left:-30px;position:relative}h1,.section-number-1{font-size:40px}h2,.section-number-2{font-size:30px}h3,.section-number-3{font-size:24px}h4,.section-number-4{font-size:20px;font-style:italic}h5{font-size:20px;font-variant:small-caps}.section-number-5{font-size:20px}h6{font-size:18px;font-style:italic}.section-number-6{font-size:18px}.section-number-1,.section-number-2,.section-number-3,.section-number-4,.section-number-5,.section-number-6{font-family:"Open Sans",sans;font-weight:normal;font-style:normal;font-size:12px;line-height:1.9;color:var(--text-light);font-size:inherit;color:var(--text-light);line-height:1}@media (min-width: 1000px){.section-number-1,.section-number-2,.section-number-3,.section-number-4,.section-number-5,.section-number-6{position:absolute;transform:translateX(-100%) translateX(-10px)}}.outline-text-2:empty+.outline-3>h3,.outline-text-2:-moz-only-whitespace+.outline-3>h3{margin-top:20px}.outline-text-3:empty+.outline-4>h4,.outline-text-3:-moz-only-whitespace+.outline-4>h4{margin-top:15px}.outline-text-4:empty+.outline-5>h5,.outline-text-4:-moz-only-whitespace+.outline-5>h5{margin-top:15px}.outline-text-5:empty+.outline-6>h6,.outline-text-5:-moz-only-whitespace+.outline-6>h6{margin-top:10px}hr{border:none;border-top-style:solid;border-top-width:1px;color:var(--back-medium);margin-bottom:30px;margin-top:40px}a{color:inherit}figcaption a,p a,.page-tags a,table a,li a,dl a{background-image:linear-gradient(var(--text-dark), var(--text-dark));background-size:1px 1px;background-repeat:repeat-x;background-position:0% 95%;border-radius:1px;text-decoration:none}figcaption a::selection,p a::selection,.page-tags a::selection,table a::selection,li a::selection,dl a::selection{background:var(--back-medium)}figcaption a *,figcaption a *:after,figcaption a:after,figcaption a *:before,figcaption a:before,p a *,p a *:after,p a:after,p a *:before,p a:before,.page-tags a *,.page-tags a *:after,.page-tags a:after,.page-tags a *:before,.page-tags a:before,table a *,table a *:after,table a:after,table a *:before,table a:before,li a *,li a *:after,li a:after,li a *:before,li a:before,dl a *,dl a *:after,dl a:after,dl a *:before,dl a:before{text-shadow:none}figcaption a:visited,p a:visited,.page-tags a:visited,table a:visited,li a:visited,dl a:visited{color:var(--text-dark)}figcaption a:hover,p a:hover,.page-tags a:hover,table a:hover,li a:hover,dl a:hover{opacity:0.9;filter:drop-shadow(1px 1px 1px var(--back-white));background-image:linear-gradient(var(--text-dark), var(--text-dark));background-size:1px 1px;background-repeat:repeat-x;background-position:0% 95%;background-image:url("data:image/svg+xml;charset=utf8,%3Csvg id='squiggle-link' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:ev='http://www.w3.org/2001/xml-events' viewBox='0 0 20 4'%3E%3Cstyle type='text/css'%3E.squiggle{animation:shift .3s linear infinite;}@keyframes shift {from {transform:translateX(0);}to {transform:translateX(-20px);}}%3C/style%3E%3Cpath fill='none' stroke='%23000000' stroke-width='2' class='squiggle' d='M0,3.5 c 5,0,5,-3,10,-3 s 5,3,10,3 c 5,0,5,-3,10,-3 s 5,3,10,3'/%3E%3C/svg%3E") !important;background-position:0% 100%;background-size:0.8em auto;text-decoration:none}figcaption a:hover::selection,p a:hover::selection,.page-tags a:hover::selection,table a:hover::selection,li a:hover::selection,dl a:hover::selection{background:var(--back-white)}figcaption a[href^="#"],p a[href^="#"],.page-tags a[href^="#"],table a[href^="#"],li a[href^="#"],dl a[href^="#"]{background-image:linear-gradient(var(--text-gray), var(--text-gray));background-size:1px 1px;background-repeat:repeat-x;background-position:0% 95%}figcaption a[href^="#"]::selection,p a[href^="#"]::selection,.page-tags a[href^="#"]::selection,table a[href^="#"]::selection,li a[href^="#"]::selection,dl a[href^="#"]::selection{background:var(--back-white)}figcaption a[href^="#"]:hover,p a[href^="#"]:hover,.page-tags a[href^="#"]:hover,table a[href^="#"]:hover,li a[href^="#"]:hover,dl a[href^="#"]:hover{opacity:0.9;filter:drop-shadow(1px 1px 1px var(--back-white));background-image:linear-gradient(var(--text-medium), var(--text-medium));background-size:1px 1px;background-repeat:repeat-x;background-position:0% 95%}figcaption a[href^="#"]:hover::selection,p a[href^="#"]:hover::selection,.page-tags a[href^="#"]:hover::selection,table a[href^="#"]:hover::selection,li a[href^="#"]:hover::selection,dl a[href^="#"]:hover::selection{background:var(--back-white)}#theme-switch:checked~#page #breadcrumbs a:hover,#theme-switch:checked~#page figcaption a:hover,#theme-switch:checked~#page p a:hover,#theme-switch:checked~#page .page-tags a:hover,#theme-switch:checked~#page table a:hover,#theme-switch:checked~#page #crosslinks a:not(.highlight):hover,#theme-switch:checked~#page li a:hover,#theme-switch:checked~#page dl a:hover{background-image:url("data:image/svg+xml;charset=utf8,%3Csvg id='squiggle-link' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:ev='http://www.w3.org/2001/xml-events' viewBox='0 0 20 4'%3E%3Cstyle type='text/css'%3E.squiggle{animation:shift .3s linear infinite;}@keyframes shift {from {transform:translateX(0);}to {transform:translateX(-20px);}}%3C/style%3E%3Cpath fill='none' stroke='%23ffffff' stroke-width='2' class='squiggle' d='M0,3.5 c 5,0,5,-3,10,-3 s 5,3,10,3 c 5,0,5,-3,10,-3 s 5,3,10,3'/%3E%3C/svg%3E")}*:target::before{content:"🠖";position:absolute;left:-7rem;top:calc(0.5em - 2rem);line-height:1;color:#e65353aa;font-size:3rem;font-style:normal}@media (max-width: 1000px){*:target::before{content:"🠔";left:unset;right:0}}#content .page-intro p a,#footnotes a{background-image:linear-gradient(var(--text-gray), var(--text-gray));background-size:1px 1px;background-repeat:repeat-x;background-position:0% 95%;border-radius:1px;text-decoration:none}#content .page-intro p a::selection,#footnotes a::selection{background:var(--back-medium)}#content .page-intro p a *,#content .page-intro p a *:after,#content .page-intro p a:after,#content .page-intro p a *:before,#content .page-intro p a:before,#footnotes a *,#footnotes a *:after,#footnotes a:after,#footnotes a *:before,#footnotes a:before{text-shadow:none}#content .page-intro p a:visited,#footnotes a:visited{color:var(--text-gray)}#content .page-intro p a:hover,#footnotes a:hover{background-image:linear-gradient(var(--text-gray), var(--text-gray));background-size:1px 1px;background-repeat:repeat-x;background-position:0% 95%;border-radius:1px;text-decoration:none}#content .page-intro p a:hover::selection,#footnotes a:hover::selection{background:var(--back-medium)}#content .page-intro p a:hover *,#content .page-intro p a:hover *:after,#content .page-intro p a:hover:after,#content .page-intro p a:hover *:before,#content .page-intro p a:hover:before,#footnotes a:hover *,#footnotes a:hover *:after,#footnotes a:hover:after,#footnotes a:hover *:before,#footnotes a:hover:before{text-shadow:none}#content .page-intro p a:hover:visited,#footnotes a:hover:visited{color:var(--text-gray)}.btn{padding:7px 14px;border-style:solid;border-width:1px;border-color:var(--back-light);border-radius:1px;font-family:"Open Sans",sans;font-variant:all-small-caps;font-size:14px;font-style:normal;letter-spacing:2px;background-image:none;cursor:pointer}.btn:hover{background-color:var(--back-light);background-image:none}.btn.disabled{color:var(--text-light)}.btn.disabled:hover{cursor:default}.btn.small{padding:3px 6px;border-style:solid;border-width:1px;border-color:var(--back-light);border-radius:1px;font-family:"Open Sans",sans;font-variant:all-small-caps;font-size:12px;font-style:normal;letter-spacing:2px;background-image:none;padding-right:9px;padding-left:9px}.btn.small:hover{background-color:var(--back-light);background-image:none}.btn.highlight{text-shadow:none;text-decoration:none;color:var(--text-dark);background-color:yellow}.btn.primary{text-shadow:none;text-decoration:none;color:var(--back-white);background-color:var(--accent)}.btn.primary:hover{background-color:var(--back-light);background-image:none;color:var(--text-dark)}.image-link,.image-link:hover{background:none;text-shadow:none;text-decoration:none}div.link-preview{border:1px solid var(--back-medium);border-radius:0.5em;overflow:hidden;position:relative;max-height:5em;padding-left:0.5em}div.link-preview a{color:initial;text-decoration:none}div.link-preview img{border-right:1px solid var(--back-medium);float:left;height:5em;margin-left:-0.5em;margin-right:0.5em}div.link-preview p{margin:0;font-size:10pt}div.link-preview p b{font-size:11pt}div.link-preview small{float:right;font-family:sans;color:var(--text-light);margin:0.45em 0.6em}ul,ol,dl{list-style:none;list-style-position:outside;padding:0}ul li::before,ul dt::before,ol li::before,ol dt::before,dl li::before,dl dt::before{display:inline-block;width:1em;font-family:"Open Sans",sans;font-weight:normal;font-size:15px;line-height:1.6;color:var(--text-gray)}ul li,ol li,dl li{margin:5px 0;font-size:14px}ul li p,ol li p,dl li p{font-size:15px}ul li::before{content:"•";margin-left:-1em}ol{counter-reset:li}ol li::before{content:counter(li);margin-left:-1.5em;margin-right:0.5em;text-align:right;direction:rtl}ol li{counter-increment:li}ul ul,ol ol{padding-left:20px}ul ul ul,ol ol ol{padding-left:30px}li p:first-child{display:inline-block;margin-bottom:0}dl dt::before{content:"•";margin-left:-1em}dl dt{font-weight:normal;margin-bottom:10px}dl dd{font-style:italic;margin-bottom:20px}li .checkbox{display:inline-block;width:0.9em;height:0.9em;border-radius:3px;margin:3px;top:4px;position:relative}li.on>.checkbox{background:#7bc275;box-shadow:0 0 2px #7bc275}li.trans>.checkbox{background:#e69055;box-shadow:0 0 2px #e69055}li.off>.checkbox{background:#ff665c;box-shadow:0 0 2px #ff665c;top:6px}li.on>.checkbox::after{content:'';height:0.45em;width:0.225em;-webkit-transform-origin:left top;transform-origin:left top;transform:scaleX(-1) rotate(135deg);border-right:2.8px solid #fff;border-top:2.8px solid #fff;opacity:0.9;left:0.10em;top:0.45em;position:absolute}li.trans>.checkbox::after{content:'';font-weight:bold;font-size:1.6em;position:absolute;top:0.2em;left:0.11em;width:0.35em;height:0.12em;background:#fff;opacity:0.9;border-radius:0.1em}li.off>.checkbox::after{content:'✖';color:#fff;opacity:0.9;position:relative;top:-0.50rem;left:0.17em;font-size:0.75em}#org-div-home-and-up{display:none !important}.outline-2 h2{font-size:30px}.outline-3 h3{font-size:24px;font-style:normal}.outline-2 .section-number-2{font-size:30px}.outline-3 .section-number-3{font-size:24px}.timestamp,.timestamp-kwd{font-family:"Open Sans",sans;font-weight:normal;font-style:normal;font-size:12px;line-height:1.9;color:var(--text-light);background-color:var(--back-white);border-radius:1px}.todo,.done{padding:.1em .2em;border-style:solid;border-width:1px;border-color:var(--back-light);border-radius:1px;font-family:"Open Sans",sans;font-variant:all-small-caps;font-size:max(0.4em, 10px);font-style:normal;letter-spacing:2px;background-image:none;line-height:1;white-space:nowrap;vertical-align:middle;padding:0.1em 0.5em;background-color:var(--back-white);background-color:transparent;border:none;font-weight:bold}.todo:hover,.done:hover{background-color:var(--back-light);background-image:none}.todo:not(.active),.done:not(.active){border-color:var(--back-white)}.todo.active,.done.active{text-shadow:none;text-decoration:none;color:var(--back-white);background-color:var(--code-foreground)}.todo.active:hover,.done.active:hover{background-color:var(--back-light);background-image:none;color:var(--text-dark)}.outline-2,.outline-3,.outline-4{contain:layout}.outline-2 .todo,.outline-2 .done,.outline-3 .todo,.outline-3 .done,.outline-4 .todo,.outline-4 .done{font-size:18px}.todo{color:#ee3333}.done{color:var(--text-light)}.tag>span{padding:.1em .2em;border-style:solid;border-width:1px;border-color:var(--back-light);border-radius:1px;font-family:"Open Sans",sans;font-variant:all-small-caps;font-size:max(0.4em, 10px);font-style:normal;letter-spacing:2px;background-image:none;line-height:1;white-space:nowrap;vertical-align:middle;padding:0.1em 0.5em;background-color:var(--back-white);border-radius:100px}.tag>span:hover{background-color:var(--back-light);background-image:none}.tag>span:not(.active){border-color:var(--back-white)}.tag>span.active{text-shadow:none;text-decoration:none;color:var(--back-white);background-color:var(--code-foreground)}.tag>span.active:hover{background-color:var(--back-light);background-image:none;color:var(--text-dark)}.priority{color:var(--text-light);font-family:SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace}.footref{text-shadow:none}.footpara{display:inline}.footdef{margin-bottom:1em}th.org-right{text-align:center}th.org-left{text-align:center}th.org-center{text-align:center}td.org-right{text-align:right}td.org-left{text-align:left}td.org-center{text-align:center}div.org-center{text-align:center}span.acr{font-variant-caps:all-small-caps;letter-spacing:0.1em}.music-track{display:flex;justify-content:center;align-items:center;flex-wrap:wrap}.music-track img{height:6rem;margin-right:2rem}.music-track a{text-decoration:none}.music-track span{min-width:35%}div.table{position:relative}div.table .gutter{left:calc(20px - 2.5rem);padding-top:18px}div.table .tabular{max-width:100%;overflow-x:auto}table{border-color:var(--text-light);border-left:transparent;border-right:transparent;border-style:solid;border-width:2px;border-collapse:collapse;font-size:15px;font-family:"Open Sans",sans;margin:20px;padding:20px}table thead{font-family:"Open Sans",sans;font-weight:normal;font-style:normal;font-size:12px;line-height:1.9;color:var(--text-light);font-size:15px}table thead tr th{padding:4px 10px;background-color:#9991}table thead tr:last-of-type th{border-bottom:solid 1px var(--text-light)}table tr,table th,table td{border:none}table tbody tr td{border-top:0;padding:0 10px}table tr{line-height:1.9}table caption{margin-bottom:10px;font-family:"Open Sans",sans;font-weight:normal;font-size:15px;line-height:1.6;color:var(--text-gray)}table caption .table-number{font-family:"Open Sans",sans;font-weight:normal;font-style:normal;font-size:12px;line-height:1.9;color:var(--text-light)}::-webkit-scrollbar{width:10px;height:8px}::-webkit-scrollbar-track{background:#9992}::-webkit-scrollbar-thumb{background:#ccc}::-webkit-scrollbar-thumb:hover{background:#888}@media (min-width: 1280px){#table-of-contents{position:fixed;width:18rem;right:1rem;top:0;padding:1em;line-height:1.5;margin-top:4rem}#table-of-contents h2{margin-top:0}#table-of-contents #text-table-of-contents{position:relative}#table-of-contents #text-table-of-contents::before,#table-of-contents #text-table-of-contents::after{position:absolute;content:'';width:calc(100% - 10px);height:0.7rem;left:0;z-index:1}#table-of-contents #text-table-of-contents::before{top:0;background:linear-gradient(180deg, var(--back-light) 0%, var(--back-light) 35%, rgba(0,0,0,0) 100%)}#table-of-contents #text-table-of-contents::after{bottom:0;background:linear-gradient(0deg, var(--back-light) 0%, var(--back-light) 35%, rgba(0,0,0,0) 100%)}#table-of-contents #text-table-of-contents>ul{list-style:none;padding:0;margin:0;max-height:calc(100vh - 5rem - 50px);overflow-y:auto;overflow-x:hidden;scrollbar-width:thin}#table-of-contents #text-table-of-contents>ul ul{padding-left:2em}#table-of-contents #text-table-of-contents>ul ul.active{display:inline-block}#table-of-contents #text-table-of-contents>ul li.active>ul{display:inline-block}#table-of-contents #text-table-of-contents>ul li.active>label a,#table-of-contents #text-table-of-contents>ul li.active>a{color:var(--text-dark)}#table-of-contents #text-table-of-contents>ul li.active>input:not(:checked)~label::after{transform:rotate(90deg);top:5px;opacity:0.35}#table-of-contents #text-table-of-contents>ul>li:last-child{margin-bottom:2rem}}@media (min-width: 1440px){#table-of-contents{width:20rem;right:2rem}}@media (min-width: 1640px){#table-of-contents{right:5rem}}@media (min-width: 2000px){#table-of-contents{width:25rem}}#table-of-contents #text-table-of-contents ul{width:100%}#table-of-contents #text-table-of-contents>ul ul{display:none}#table-of-contents #text-table-of-contents li input[type=checkbox]{display:none}#table-of-contents #text-table-of-contents li label{display:inline-block;width:100%;position:relative}#table-of-contents #text-table-of-contents li a{display:inline-block;color:var(--text-gray);text-decoration:none !important;text-shadow:none;background:none !important}#table-of-contents #text-table-of-contents li label::after{content:"\25b6";color:var(--text-gray);margin-left:0.5em;font-size:10px;display:inline-block;position:absolute;top:3.4px;left:-20px;opacity:0.8}#table-of-contents #text-table-of-contents li input:checked~ul{display:inline-block !important}#table-of-contents #text-table-of-contents li input:checked~label a{font-weight:bold}#table-of-contents #text-table-of-contents li input:checked~label::after{transform:rotate(90deg);top:5px}#table-of-contents #text-table-of-contents li::before{content:"" !important}.page-tags a{padding:.1em .2em;border-style:solid;border-width:1px;border-color:var(--back-light);border-radius:1px;font-family:"Open Sans",sans;font-variant:all-small-caps;font-size:max(0.4em, 10px);font-style:normal;letter-spacing:2px;background-image:none;line-height:1;white-space:nowrap;vertical-align:middle;padding:0.1em 0.5em;background-color:var(--back-white);margin-right:5px;line-height:3em}.page-tags a:hover{background-color:var(--back-light);background-image:none}.page-tags a:not(.active){border-color:var(--back-white)}.page-tags a.active{text-shadow:none;text-decoration:none;color:var(--back-white);background-color:var(--code-foreground)}.page-tags a.active:hover{background-color:var(--back-light);background-image:none;color:var(--text-dark)}@media print{h2{page-break-before:always}h1,h2,h3,h4,h5{page-break-after:avoid}#switch-label{display:none}#content,#page-header{margin-top:0}#table-of-contents #text-table-of-contents>ul ul{display:inline-block}#table-of-contents #text-table-of-contents>ul a::after{content:leader(".") target-counter(attr(href), page)}#table-of-contents #text-table-of-contents li label::after{display:none}img{filter:none}}@page{size:auto;margin-top:4mm;margin-bottom:4mm}
+﻿/*! normalize.css v8.0.1 | MIT License | github.com/necolas/normalize.css */html{line-height:1.15;-webkit-text-size-adjust:100%}body{margin:0}h1{font-size:2em;margin:0.67em 0}hr{box-sizing:content-box;height:0}pre{font-family:monospace, monospace;font-size:1em}b{font-weight:bolder}code,kbd,samp{font-family:monospace, monospace;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-0.25em}sup{top:-0.5em}button,input,optgroup,select,textarea{font-family:inherit;font-size:100%;line-height:1.15;margin:0}button,select{text-transform:none}button{-webkit-appearance:button}button::-moz-focus-inner{border-style:none;padding:0}button:-moz-focusring{outline:1px dotted ButtonText}details{display:block}summary{display:list-item}/*! end normalise.css */#page{--accent: #2a2e38;--accent-dark: #5D656B;--code-foreground: #bbc2cf;--code-background: #2a2e38;--code-func: #7bc275;--code-const: #C57BDB;--code-regex: #51afef;--back-white: #000;--back-light: #242730;--back-medium: #484854;--text-light: #c57BDB;--text-gray: #51afef;--text-medium: #c57BDB;--text-dark: #BBC2cf;--switch-icon: "🌝";--switch-shadow-color: #FCCE7b;--switch-text: "light mode?"}#page img.invertible,#page object[type="image/svg+xml"].invertible{filter:invert(90%) hue-rotate(180deg) sepia(1%)}#theme-switch:checked~#page{--accent: #002642;--accent-dark: #00151c;--code-foreground: #2c3e50;--code-background: #efefef;--code-func: #6c3163;--code-const: #4e3163;--code-regex: #655370;--back-white: #fff;--back-light: #f0eeed;--back-medium: #c8c8c8;--text-light: #7b7b7b;--text-gray: #444;--text-medium: #222;--text-dark: #000;--switch-icon: "🌚";--switch-shadow-color: #373d4e;--switch-text: "dark mode?"}#theme-switch{display:none}#switch-label{position:fixed;bottom:4rem;left:3rem}#switch-label::before{content:var(--switch-icon);font-size:20px;transition:text-shadow .2s}#switch-label::after{content:var(--switch-text);color:var(--switch-shadow-color);font-size:12px;visibility:hidden;margin-left:0.5em;z-index:1;position:fixed;bottom:calc(4rem - 25px);left:calc(3rem - 10px)}@media (max-width: 1000px){#switch-label{left:auto;bottom:auto;right:1vw;top:1vh}#switch-label::after{position:fixed;top:calc(1vh + 3px);right:calc(1vw + 30px);left:auto;bottom:auto}}#theme-switch:focus~#page #switch-label::before,#switch-label:hover::before{text-shadow:0 0 15px var(--switch-shadow-color)}#theme-switch:focus~#page #switch-label::after,#switch-label:hover::after{visibility:visible}@font-face{font-family:"Merriweather";src:url("https://tecosaur.com/resources/org/Merriweather-TextRegular.woff2") format("woff2");font-weight:normal;font-style:normal;font-display:fallback}@font-face{font-family:"Merriweather";src:url("https://tecosaur.com/resources/org/Merriweather-TextItalic.woff2") format("woff2");font-weight:normal;font-style:italic;font-display:fallback}@font-face{font-family:"Merriweather";src:url("https://tecosaur.com/resources/org/Merriweather-TextBold.woff2") format("woff2");font-weight:bold;font-style:normal;font-display:fallback}@font-face{font-family:"et-book";src:url("https://tecosaur.com/resources/org/etbookot-roman-webfont.woff2") format("woff2");font-weight:normal;font-style:normal;font-display:fallback}@font-face{font-family:"et-book";src:url("https://tecosaur.com/resources/org/etbookot-italic-webfont.woff2") format("woff2");font-weight:normal;font-style:italic;font-display:fallback}*::selection{background:var(--back-medium)}.pace .pace-progress{background-color:var(--accent) !important}html,body{height:100%}body{display:flex;flex-direction:column;font-size:16px;font-family:"Merriweather",serif}#page{color:var(--text-dark);background-color:var(--back-light);transition-property:color, background-color;transition-duration:100ms}#content,header,.page-header{margin:32px;flex:1 0 auto}#content{margin-top:4rem;min-height:calc(100vh - 4rem - 48px)}.clearfix::after{clear:both}.clearfix::before,.clearfix::after{content:" ";display:table}.page-header{margin-top:80px;margin-left:0 !important}.page-header h1{font-size:40px;margin-bottom:10px;margin-top:10px;text-transform:none}.page-header h1 .subtitle{font-size:24px;color:var(--text-light);margin:0}.page-meta{font-family:"Open Sans",sans;font-weight:normal;font-style:normal;font-size:12px;line-height:1.9;color:var(--text-light)}header .site-nav{font-family:"Open Sans",sans;font-weight:normal;font-style:normal;font-size:12px;line-height:1.9;color:var(--text-light);font-weight:bold;line-height:2.0;margin-top:22px}header .site-nav a{color:var(--text-light);text-decoration:none;margin-left:10px}header .site-nav a:hover{color:var(--text-gray)}header .site-nav a.active{border-bottom:solid;border-bottom-width:2px}header .site-nav a:first-child{margin-left:0}header>div{display:inherit}.site-title{font-size:16px}.site-title span{display:none !important}.site-title ul{display:block !important;list-style:none;padding:0;margin:0}.site-title ul img{border-radius:2px;max-width:32px}.site-header nav a{color:var(--text-light);font-family:"Open Sans",sans;font-size:12px;font-weight:bold;text-transform:uppercase}.site-header nav a:hover{border:0;color:var(--accent)}@media (max-width: 1000px){header *{display:inline}}@media (min-width: 1000px){#content,header,.page-header{max-width:720px;margin-left:164px}header .site-title{float:left}header .site-nav{float:right;margin-top:0}}@media (min-width: 2800px){#content,header,.page-header{margin-left:auto;margin-right:auto}}#content .page-intro{font-family:"Open Sans",sans;font-weight:normal;font-size:15px;line-height:1.6;color:var(--text-gray);margin-bottom:40px}#content p,#content li,#content dd{line-height:1.9}#footer{margin-top:70px;height:10px;background:var(--accent-dark)}.archive-item{margin:50px 0}.archive-item .archive-title{font-size:25px;margin:5px 0;background:none;text-shadow:none;text-decoration:none}.archive-item .archive-title:hover{background:none;text-shadow:none;text-decoration:none}#postamble{display:none}aside{background-color:var(--code-background);border-radius:5px;font-family:"Open Sans",sans;font-weight:normal;font-size:15px;line-height:1.6;color:var(--text-gray);margin:20px 0;padding:5px 20px 10px;line-height:1.6 !important}aside p{font-family:"Open Sans",sans;font-weight:normal;font-size:15px;line-height:1.6;color:var(--text-gray);line-height:1.6 !important}aside pre{font-size:12px;border:none;padding-left:0}@media (min-width: 1280px){aside{float:right;clear:right;background-color:var(--back-white);max-width:45% !important;margin-right:-52%}aside::before{content:''}}blockquote{border-width:0;border-left-style:solid;border-left-width:1px;border-left-color:var(--back-medium);margin:20px 0;padding:0;padding-left:15px}blockquote p{display:inline;font-size:13px}blockquote footer{font-family:"Open Sans",sans;font-weight:normal;font-style:normal;font-size:12px;line-height:1.9;color:var(--text-light);text-transform:none}div.info{background:rgba(81,175,239,0.15);border-left:4px solid rgba(81,175,239,0.45);margin:1.8rem 0 1.25rem 15px;padding:0.8em;line-height:1.4;text-align:center;position:relative;clear:both}div.info p{margin:0}div.info::before{content:"i";color:var(--back-white);background:rgba(81,175,239,0.8);align-items:flex-end;top:-1rem;font-weight:700;font-size:1.4rem;-webkit-clip-path:circle(50% at 50% 50%);clip-path:circle(50% at 50% 50%);width:30px;height:30px;display:inline-flex;justify-content:center;position:absolute;left:-1.2rem;line-height:1.3;text-align:center}div.success{background:rgba(123,194,117,0.15);border-left:4px solid rgba(123,194,117,0.45);margin:1.8rem 0 1.25rem 15px;padding:0.8em;line-height:1.4;text-align:center;position:relative;clear:both}div.success p{margin:0}div.success::before{content:"✔";color:var(--back-white);background:rgba(123,194,117,0.8);align-items:flex-end;top:-1rem;font-weight:700;font-size:1.4rem;-webkit-clip-path:polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);clip-path:polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);width:35px;height:35px;display:inline-flex;justify-content:center;position:absolute;left:-1.2rem;line-height:1.5;text-align:center}div.warning{background:rgba(230,144,85,0.15);border-left:4px solid rgba(230,144,85,0.45);margin:1.8rem 0 1.25rem 15px;padding:0.8em;line-height:1.4;text-align:center;position:relative;clear:both}div.warning p{margin:0}div.warning::before{content:"!";color:var(--back-white);background:rgba(230,144,85,0.8);align-items:flex-end;top:-1rem;font-weight:700;font-size:1.4rem;-webkit-clip-path:polygon(50% 0, 0 100%, 100% 100%);clip-path:polygon(50% 0, 0 100%, 100% 100%);width:35px;height:35px;display:inline-flex;justify-content:center;position:absolute;left:-1.2rem;line-height:1.1;text-align:center}div.error{background:rgba(255,102,92,0.15);border-left:4px solid rgba(255,102,92,0.45);margin:1.8rem 0 1.25rem 15px;padding:0.8em;line-height:1.4;text-align:center;position:relative;clear:both}div.error p{margin:0}div.error::before{content:"!";color:var(--back-white);background:rgba(255,102,92,0.8);align-items:flex-end;top:-1rem;font-weight:700;font-size:1.4rem;-webkit-clip-path:polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);clip-path:polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);width:35px;height:30px;display:inline-flex;justify-content:center;position:absolute;left:-1.2rem;line-height:1.1;text-align:center}.org-ref-bib-h1{margin-top:70px;padding-top:30px;border-width:0;border-top-style:solid;border-top-width:1px;border-color:var(--back-light);font-family:"Open Sans",sans;font-family:"Open Sans",sans;font-weight:normal;font-size:20px;line-height:1.6;color:var(--text-gray)}.org-ref-bib{font-family:"Open Sans",sans;font-weight:normal;font-size:15px;line-height:1.6;color:var(--text-gray)}.org-ref-bib li>a:nth-child(2){background:none;text-shadow:none;text-decoration:none}.org-ref-bib li>a:nth-child(2):hover{background:none;text-shadow:none;text-decoration:none}.org-ref-bib .bib-link{font-family:"Open Sans",sans;font-weight:normal;font-style:normal;font-size:12px;line-height:1.9;color:var(--text-light);background:none;text-shadow:none;text-decoration:none}pre.src,pre.example{border-width:0;border-left-style:solid;border-left-width:1px;border-left-color:var(--back-medium);margin:20px 0;padding:0;padding-left:15px;font-family:SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;font-size:14px;line-height:1.9;overflow-x:visible;box-shadow:none;white-space:pre-wrap;position:relative}pre.example{border-left-style:dotted;border-left-width:2px}pre.src::before{display:inline-block;position:absolute;background-color:transparent;top:unset;bottom:-16px;left:20px;padding:0px;border:none;font-size:80%;font-style:italic;color:var(--text-light)}pre.src:empty{display:none}code{font-family:SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;color:var(--code-foreground);font-size:15px;padding:0 5px}kbd{display:inline-block;padding:0.25em 0.35em;font:80% SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;line-height:normal;line-height:80%;color:var(--text-gray);vertical-align:middle;background-color:var(--back-light);border:1px solid #91959a88;border-radius:0.35em;box-shadow:inset 0 -1px 0 #91959a88}li code{font-size:14px}li p code{font-size:15px}details.code{position:relative}details.code summary{position:relative;left:-3px;padding-left:10px;padding-bottom:4px;margin-left:-10px;z-index:1;outline:none;font-family:"Open Sans",sans;font-weight:normal;font-style:normal;font-size:12px;line-height:1.9;color:var(--text-light)}details.code summary .name{font-size:14px;color:var(--text-medium);margin-right:0.7em}details.code summary .lang{font-family:SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;font-style:italic}details.code summary::marker{color:var(--back-medium)}details.code[open] summary{margin-bottom:-32px}details.code[open] summary .lang{display:none}details.code[open] summary.named{margin-bottom:-26px}details.code:not([open]) summary{margin-bottom:-5px}p+details.code{margin-top:-20px}li p+details.code{margin-top:-5px}.example,.src{color:var(--code-foreground)}.example .org-keyword,.src .org-keyword{color:#51afef}.example .org-variable-name,.src .org-variable-name{color:#c57BDB}.example .org-rainbow-delimiters-depth-1,.example .org-rainbow-delimiters-depth-2,.example .org-rainbow-delimiters-depth-3,.example .org-rainbow-delimiters-depth-4,.example .org-rainbow-delimiters-depth-5,.example .org-rainbow-delimiters-depth-6,.example .org-rainbow-delimiters-depth-7,.example .org-rainbow-delimiters-depth-8,.example .org-rainbow-delimiters-depth-9,.src .org-rainbow-delimiters-depth-1,.src .org-rainbow-delimiters-depth-2,.src .org-rainbow-delimiters-depth-3,.src .org-rainbow-delimiters-depth-4,.src .org-rainbow-delimiters-depth-5,.src .org-rainbow-delimiters-depth-6,.src .org-rainbow-delimiters-depth-7,.src .org-rainbow-delimiters-depth-8,.src .org-rainbow-delimiters-depth-9{color:#555}.example .org-string,.src .org-string{color:#7bc275}.example .org-comment,.example .org-comment-delimiter,.src .org-comment,.src .org-comment-delimiter{color:#555}.example .org-function-name,.src .org-function-name{color:var(--code-func)}.example .org-constant,.example .org-highlight-numbers-number,.src .org-constant,.src .org-highlight-numbers-number{color:var(--code-const)}.gutter{position:absolute;top:0;left:-2.5rem;width:2rem;padding-right:0.3rem;padding-top:5px;height:calc(100% - 10px);z-index:1;transition:opacity 200ms;opacity:0;font-size:15px}.gutter:hover{opacity:1}.gutter *{display:block;width:100%;text-align:right;padding:0;margin:0;color:var(--text-light)}.gutter *:hover{color:var(--text-gray)}.gutter *:active{font-weight:bold}.gutter a{text-decoration:none;font-size:110%}.gutter button{background:none;border:none}pre.src-asymptote::before{content:'Asymptote'}pre.src-authinfo::before{content:'Authinfo'}pre.src-awk::before{content:'Awk'}pre.src-C::before{content:'C'}pre.src-clojure::before{content:'Clojure'}pre.src-css::before{content:'CSS'}pre.src-D::before{content:'D'}pre.src-ditaa::before{content:'ditaa'}pre.src-dot::before{content:'Graphviz'}pre.src-calc::before{content:'Emacs Calc'}pre.src-emacs-lisp::before{content:'Emacs Lisp'}pre.src-fortran::before{content:'Fortran'}pre.src-gnuplot::before{content:'gnuplot'}pre.src-haskell::before{content:'Haskell'}pre.src-hledger::before{content:'hledger'}pre.src-java::before{content:'Java'}pre.src-js::before{content:'Javascript'}pre.src-latex::before{content:'LaTeX'}pre.src-ledger::before{content:'Ledger'}pre.src-lisp::before{content:'Lisp'}pre.src-lilypond::before{content:'Lilypond'}pre.src-lua::before{content:'Lua'}pre.src-matlab::before{content:'MATLAB'}pre.src-mscgen::before{content:'Mscgen'}pre.src-ocaml::before{content:'Objective Caml'}pre.src-octave::before{content:'Octave'}pre.src-org::before{content:'Org mode'}pre.src-oz::before{content:'OZ'}pre.src-plantuml::before{content:'Plantuml'}pre.src-processing::before{content:'Processing.js'}pre.src-python::before{content:'Python'}pre.src-R::before{content:'R'}pre.src-ruby::before{content:'Ruby'}pre.src-sass::before{content:'Sass'}pre.src-scheme::before{content:'Scheme'}pre.src-screen::before{content:'Gnu Screen'}pre.src-sed::before{content:'Sed'}pre.src-sh::before{content:'shell'}pre.src-sql::before{content:'SQL'}pre.src-sqlite::before{content:'SQLite'}pre.src-forth::before{content:'Forth'}pre.src-io::before{content:'IO'}pre.src-J::before{content:'J'}pre.src-makefile::before{content:'Makefile'}pre.src-maxima::before{content:'Maxima'}pre.src-perl::before{content:'Perl'}pre.src-picolisp::before{content:'Pico Lisp'}pre.src-scala::before{content:'Scala'}pre.src-shell::before{content:'Shell Script'}pre.src-systemd::before{content:'Systemd'}pre.src-ebnf2ps::before{content:'ebfn2ps'}pre.src-cpp::before{content:'C++'}pre.src-abc::before{content:'ABC'}pre.src-coq::before{content:'Coq'}pre.src-groovy::before{content:'Groovy'}pre.src-bash::before{content:'bash'}pre.src-csh::before{content:'csh'}pre.src-ash::before{content:'ash'}pre.src-dash::before{content:'dash'}pre.src-ksh::before{content:'ksh'}pre.src-mksh::before{content:'mksh'}pre.src-posh::before{content:'posh'}pre.src-ada::before{content:'Ada'}pre.src-asm::before{content:'Assembler'}pre.src-caml::before{content:'Caml'}pre.src-delphi::before{content:'Delphi'}pre.src-html::before{content:'HTML'}pre.src-idl::before{content:'IDL'}pre.src-mercury::before{content:'Mercury'}pre.src-metapost::before{content:'MetaPost'}pre.src-modula-2::before{content:'Modula-2'}pre.src-pascal::before{content:'Pascal'}pre.src-ps::before{content:'PostScript'}pre.src-prolog::before{content:'Prolog'}pre.src-simula::before{content:'Simula'}pre.src-tcl::before{content:'tcl'}pre.src-tex::before{content:'LaTeX'}pre.src-plain-tex::before{content:'TeX'}pre.src-verilog::before{content:'Verilog'}pre.src-vhdl::before{content:'VHDL'}pre.src-xml::before{content:'XML'}pre.src-nxml::before{content:'XML'}pre.src-conf::before{content:'Configuration File'}.dropcap{float:left;font-size:55px;font-style:normal;line-height:.1;margin-right:0.2em;margin-top:0.5em;padding:0}figure{text-align:center}figure figcaption{margin-top:10px;font-family:"Open Sans",sans;font-weight:normal;font-size:15px;line-height:1.6;color:var(--text-gray)}figure figcaption .figure-number{font-family:"Open Sans",sans;font-weight:normal;font-style:normal;font-size:12px;line-height:1.9;color:var(--text-light)}img.zoomTarget:hover{cursor:default !important}img,object[type="image/svg+xml"]{filter:invert(7%) sepia(4%);max-width:100%}.org-svg{width:90%}#footnotes{margin-top:70px;padding-top:30px;border-width:0;border-top-style:solid;border-top-width:1px;border-color:var(--back-light);font-family:"Open Sans",sans;font-weight:normal;font-size:15px;line-height:1.6;color:var(--text-gray)}#footnotes p,#footnotes li{font-family:"Open Sans",sans;font-weight:normal;font-size:15px;line-height:1.6;color:var(--text-gray)}#footnotes h2.footnotes{margin-top:0;margin-bottom:30px;font-family:"Open Sans",sans;font-size:18px;letter-spacing:5px;display:none}#footnotes .footnum{color:var(--text-dark)}h1,h2,h3,h4,h5,h6{font-family:"et-book",serif;font-weight:normal;margin-bottom:0;margin-top:60px}h1>a[aria-hidden='true'],h2>a[aria-hidden='true'],h3>a[aria-hidden='true'],h4>a[aria-hidden='true'],h5>a[aria-hidden='true'],h6>a[aria-hidden='true']{color:var(--back-medium);position:relative;top:0.06em;line-height:1;font-size:110%;padding-left:0.2em;text-decoration:none;visibility:hidden}h1>a[aria-hidden='true']:hover,h2>a[aria-hidden='true']:hover,h3>a[aria-hidden='true']:hover,h4>a[aria-hidden='true']:hover,h5>a[aria-hidden='true']:hover,h6>a[aria-hidden='true']:hover{color:var(--text-light)}h1:hover>a[aria-hidden='true'],h2:hover>a[aria-hidden='true'],h3:hover>a[aria-hidden='true'],h4:hover>a[aria-hidden='true'],h5:hover>a[aria-hidden='true'],h6:hover>a[aria-hidden='true']{visibility:visible}h1,h2,h3,h4,h5,h6{padding-left:30px;margin-left:-30px;position:relative}h1,.section-number-1{font-size:40px}h2,.section-number-2{font-size:30px}h3,.section-number-3{font-size:24px}h4,.section-number-4{font-size:20px;font-style:italic}h5{font-size:20px;font-variant:small-caps}.section-number-5{font-size:20px}h6{font-size:18px;font-style:italic}.section-number-6{font-size:18px}.section-number-1,.section-number-2,.section-number-3,.section-number-4,.section-number-5,.section-number-6{font-family:"Open Sans",sans;font-weight:normal;font-style:normal;font-size:12px;line-height:1.9;color:var(--text-light);font-size:inherit;color:var(--text-light);line-height:1}@media (min-width: 1000px){.section-number-1,.section-number-2,.section-number-3,.section-number-4,.section-number-5,.section-number-6{position:absolute;transform:translateX(-100%) translateX(-10px)}}.outline-text-2:empty+.outline-3>h3,.outline-text-2:-moz-only-whitespace+.outline-3>h3{margin-top:20px}.outline-text-3:empty+.outline-4>h4,.outline-text-3:-moz-only-whitespace+.outline-4>h4{margin-top:15px}.outline-text-4:empty+.outline-5>h5,.outline-text-4:-moz-only-whitespace+.outline-5>h5{margin-top:15px}.outline-text-5:empty+.outline-6>h6,.outline-text-5:-moz-only-whitespace+.outline-6>h6{margin-top:10px}hr{border:none;border-top-style:solid;border-top-width:1px;color:var(--back-medium);margin-bottom:30px;margin-top:40px}a{color:inherit}figcaption a,p a,.page-tags a,table a,li a,dl a{background-image:linear-gradient(var(--text-dark), var(--text-dark));background-size:1px 1px;background-repeat:repeat-x;background-position:0% 95%;border-radius:1px;text-decoration:none}figcaption a::selection,p a::selection,.page-tags a::selection,table a::selection,li a::selection,dl a::selection{background:var(--back-medium)}figcaption a *,figcaption a *:after,figcaption a:after,figcaption a *:before,figcaption a:before,p a *,p a *:after,p a:after,p a *:before,p a:before,.page-tags a *,.page-tags a *:after,.page-tags a:after,.page-tags a *:before,.page-tags a:before,table a *,table a *:after,table a:after,table a *:before,table a:before,li a *,li a *:after,li a:after,li a *:before,li a:before,dl a *,dl a *:after,dl a:after,dl a *:before,dl a:before{text-shadow:none}figcaption a:visited,p a:visited,.page-tags a:visited,table a:visited,li a:visited,dl a:visited{color:var(--text-dark)}figcaption a:hover,p a:hover,.page-tags a:hover,table a:hover,li a:hover,dl a:hover{opacity:0.9;filter:drop-shadow(1px 1px 1px var(--back-white));background-image:linear-gradient(var(--text-dark), var(--text-dark));background-size:1px 1px;background-repeat:repeat-x;background-position:0% 95%;background-image:url("data:image/svg+xml;charset=utf8,%3Csvg id='squiggle-link' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:ev='http://www.w3.org/2001/xml-events' viewBox='0 0 20 4'%3E%3Cstyle type='text/css'%3E.squiggle{animation:shift .3s linear infinite;}@keyframes shift {from {transform:translateX(0);}to {transform:translateX(-20px);}}%3C/style%3E%3Cpath fill='none' stroke='%23000000' stroke-width='2' class='squiggle' d='M0,3.5 c 5,0,5,-3,10,-3 s 5,3,10,3 c 5,0,5,-3,10,-3 s 5,3,10,3'/%3E%3C/svg%3E") !important;background-position:0% 100%;background-size:0.8em auto;text-decoration:none}figcaption a:hover::selection,p a:hover::selection,.page-tags a:hover::selection,table a:hover::selection,li a:hover::selection,dl a:hover::selection{background:var(--back-white)}figcaption a[href^="#"],p a[href^="#"],.page-tags a[href^="#"],table a[href^="#"],li a[href^="#"],dl a[href^="#"]{background-image:linear-gradient(var(--text-gray), var(--text-gray));background-size:1px 1px;background-repeat:repeat-x;background-position:0% 95%}figcaption a[href^="#"]::selection,p a[href^="#"]::selection,.page-tags a[href^="#"]::selection,table a[href^="#"]::selection,li a[href^="#"]::selection,dl a[href^="#"]::selection{background:var(--back-white)}figcaption a[href^="#"]:hover,p a[href^="#"]:hover,.page-tags a[href^="#"]:hover,table a[href^="#"]:hover,li a[href^="#"]:hover,dl a[href^="#"]:hover{opacity:0.9;filter:drop-shadow(1px 1px 1px var(--back-white));background-image:linear-gradient(var(--text-medium), var(--text-medium));background-size:1px 1px;background-repeat:repeat-x;background-position:0% 95%}figcaption a[href^="#"]:hover::selection,p a[href^="#"]:hover::selection,.page-tags a[href^="#"]:hover::selection,table a[href^="#"]:hover::selection,li a[href^="#"]:hover::selection,dl a[href^="#"]:hover::selection{background:var(--back-white)}#theme-switch:checked~#page #breadcrumbs a:hover,#theme-switch:checked~#page figcaption a:hover,#theme-switch:checked~#page p a:hover,#theme-switch:checked~#page .page-tags a:hover,#theme-switch:checked~#page table a:hover,#theme-switch:checked~#page #crosslinks a:not(.highlight):hover,#theme-switch:checked~#page li a:hover,#theme-switch:checked~#page dl a:hover{background-image:url("data:image/svg+xml;charset=utf8,%3Csvg id='squiggle-link' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' xmlns:ev='http://www.w3.org/2001/xml-events' viewBox='0 0 20 4'%3E%3Cstyle type='text/css'%3E.squiggle{animation:shift .3s linear infinite;}@keyframes shift {from {transform:translateX(0);}to {transform:translateX(-20px);}}%3C/style%3E%3Cpath fill='none' stroke='%23ffffff' stroke-width='2' class='squiggle' d='M0,3.5 c 5,0,5,-3,10,-3 s 5,3,10,3 c 5,0,5,-3,10,-3 s 5,3,10,3'/%3E%3C/svg%3E")}*:target::before{content:"🠖";position:absolute;left:-7rem;top:calc(0.5em - 2rem);line-height:1;color:#e65353aa;font-size:3rem;font-style:normal}@media (max-width: 1000px){*:target::before{content:"🠔";left:unset;right:0}}#content .page-intro p a,#footnotes a{background-image:linear-gradient(var(--text-gray), var(--text-gray));background-size:1px 1px;background-repeat:repeat-x;background-position:0% 95%;border-radius:1px;text-decoration:none}#content .page-intro p a::selection,#footnotes a::selection{background:var(--back-medium)}#content .page-intro p a *,#content .page-intro p a *:after,#content .page-intro p a:after,#content .page-intro p a *:before,#content .page-intro p a:before,#footnotes a *,#footnotes a *:after,#footnotes a:after,#footnotes a *:before,#footnotes a:before{text-shadow:none}#content .page-intro p a:visited,#footnotes a:visited{color:var(--text-gray)}#content .page-intro p a:hover,#footnotes a:hover{background-image:linear-gradient(var(--text-gray), var(--text-gray));background-size:1px 1px;background-repeat:repeat-x;background-position:0% 95%;border-radius:1px;text-decoration:none}#content .page-intro p a:hover::selection,#footnotes a:hover::selection{background:var(--back-medium)}#content .page-intro p a:hover *,#content .page-intro p a:hover *:after,#content .page-intro p a:hover:after,#content .page-intro p a:hover *:before,#content .page-intro p a:hover:before,#footnotes a:hover *,#footnotes a:hover *:after,#footnotes a:hover:after,#footnotes a:hover *:before,#footnotes a:hover:before{text-shadow:none}#content .page-intro p a:hover:visited,#footnotes a:hover:visited{color:var(--text-gray)}.btn{padding:7px 14px;border-style:solid;border-width:1px;border-color:var(--back-light);border-radius:1px;font-family:"Open Sans",sans;font-variant:all-small-caps;font-size:14px;font-style:normal;letter-spacing:2px;background-image:none;cursor:pointer}.btn:hover{background-color:var(--back-light);background-image:none}.btn.disabled{color:var(--text-light)}.btn.disabled:hover{cursor:default}.btn.small{padding:3px 6px;border-style:solid;border-width:1px;border-color:var(--back-light);border-radius:1px;font-family:"Open Sans",sans;font-variant:all-small-caps;font-size:12px;font-style:normal;letter-spacing:2px;background-image:none;padding-right:9px;padding-left:9px}.btn.small:hover{background-color:var(--back-light);background-image:none}.btn.highlight{text-shadow:none;text-decoration:none;color:var(--text-dark);background-color:yellow}.btn.primary{text-shadow:none;text-decoration:none;color:var(--back-white);background-color:var(--accent)}.btn.primary:hover{background-color:var(--back-light);background-image:none;color:var(--text-dark)}.image-link,.image-link:hover{background:none;text-shadow:none;text-decoration:none}div.link-preview{border:1px solid var(--back-medium);border-radius:0.5em;overflow:hidden;position:relative;max-height:5em;padding-left:0.5em}div.link-preview a{color:initial;text-decoration:none}div.link-preview img{border-right:1px solid var(--back-medium);float:left;height:5em;margin-left:-0.5em;margin-right:0.5em}div.link-preview p{margin:0;font-size:10pt}div.link-preview p b{font-size:11pt}div.link-preview small{float:right;font-family:sans;color:var(--text-light);margin:0.45em 0.6em}ul,ol,dl{list-style:none;list-style-position:outside;padding:0}ul li::before,ul dt::before,ol li::before,ol dt::before,dl li::before,dl dt::before{display:inline-block;width:1em;font-family:"Open Sans",sans;font-weight:normal;font-size:15px;line-height:1.6;color:var(--text-gray)}ul li,ol li,dl li{margin:5px 0;font-size:14px}ul li p,ol li p,dl li p{font-size:15px}ul li::before{content:"•";margin-left:-1em}ol{counter-reset:li}ol li::before{content:counter(li);margin-left:-1.5em;margin-right:0.5em;text-align:right;direction:rtl}ol li{counter-increment:li}ul ul,ol ol{padding-left:20px}ul ul ul,ol ol ol{padding-left:30px}li p:first-child{display:inline-block;margin-bottom:0}dl dt::before{content:"•";margin-left:-1em}dl dt{font-weight:normal;margin-bottom:10px}dl dd{font-style:italic;margin-bottom:20px}li .checkbox{display:inline-block;width:0.9em;height:0.9em;border-radius:3px;margin:3px;top:4px;position:relative}li.on>.checkbox{background:#7bc275;box-shadow:0 0 2px #7bc275}li.trans>.checkbox{background:#e69055;box-shadow:0 0 2px #e69055}li.off>.checkbox{background:#ff665c;box-shadow:0 0 2px #ff665c;top:6px}li.on>.checkbox::after{content:'';height:0.45em;width:0.225em;-webkit-transform-origin:left top;transform-origin:left top;transform:scaleX(-1) rotate(135deg);border-right:2.8px solid #fff;border-top:2.8px solid #fff;opacity:0.9;left:0.10em;top:0.45em;position:absolute}li.trans>.checkbox::after{content:'';font-weight:bold;font-size:1.6em;position:absolute;top:0.2em;left:0.11em;width:0.35em;height:0.12em;background:#fff;opacity:0.9;border-radius:0.1em}li.off>.checkbox::after{content:'✖';color:#fff;opacity:0.9;position:relative;top:-0.50rem;left:0.17em;font-size:0.75em}#org-div-home-and-up{display:none !important}.outline-2 h2{font-size:30px}.outline-3 h3{font-size:24px;font-style:normal}.outline-2 .section-number-2{font-size:30px}.outline-3 .section-number-3{font-size:24px}.timestamp,.timestamp-kwd{font-family:"Open Sans",sans;font-weight:normal;font-style:normal;font-size:12px;line-height:1.9;color:var(--text-light);background-color:var(--back-white);border-radius:1px}.todo,.done{padding:.1em .2em;border-style:solid;border-width:1px;border-color:var(--back-light);border-radius:1px;font-family:"Open Sans",sans;font-variant:all-small-caps;font-size:max(0.4em, 10px);font-style:normal;letter-spacing:2px;background-image:none;line-height:1;white-space:nowrap;vertical-align:middle;padding:0.1em 0.5em;background-color:var(--back-white);background-color:transparent;border:none;font-weight:bold}.todo:hover,.done:hover{background-color:var(--back-light);background-image:none}.todo:not(.active),.done:not(.active){border-color:var(--back-white)}.todo.active,.done.active{text-shadow:none;text-decoration:none;color:var(--back-white);background-color:var(--code-foreground)}.todo.active:hover,.done.active:hover{background-color:var(--back-light);background-image:none;color:var(--text-dark)}.outline-2,.outline-3,.outline-4{contain:layout}.outline-2 .todo,.outline-2 .done,.outline-3 .todo,.outline-3 .done,.outline-4 .todo,.outline-4 .done{font-size:18px}.todo{color:#ee3333}.done{color:var(--text-light)}.tag>span{padding:.1em .2em;border-style:solid;border-width:1px;border-color:var(--back-light);border-radius:1px;font-family:"Open Sans",sans;font-variant:all-small-caps;font-size:max(0.4em, 10px);font-style:normal;letter-spacing:2px;background-image:none;line-height:1;white-space:nowrap;vertical-align:middle;padding:0.1em 0.5em;background-color:var(--back-white);border-radius:100px}.tag>span:hover{background-color:var(--back-light);background-image:none}.tag>span:not(.active){border-color:var(--back-white)}.tag>span.active{text-shadow:none;text-decoration:none;color:var(--back-white);background-color:var(--code-foreground)}.tag>span.active:hover{background-color:var(--back-light);background-image:none;color:var(--text-dark)}.priority{color:var(--text-light);font-family:SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace}.footref{text-shadow:none}.footpara{display:inline}.footdef{margin-bottom:1em}th.org-right{text-align:center}th.org-left{text-align:center}th.org-center{text-align:center}td.org-right{text-align:right}td.org-left{text-align:left}td.org-center{text-align:center}div.org-center{text-align:center}span.acr{font-variant-caps:all-small-caps;letter-spacing:0.1em}.music-track{display:flex;justify-content:center;align-items:center;flex-wrap:wrap}.music-track img{height:6rem;margin-right:2rem}.music-track a{text-decoration:none}.music-track span{min-width:35%}div.table{position:relative}div.table .gutter{left:calc(20px - 2.5rem);padding-top:18px}div.table .tabular{max-width:100%;overflow-x:auto}table{border-color:var(--text-light);border-left:transparent;border-right:transparent;border-style:solid;border-width:2px;border-collapse:collapse;font-size:15px;font-family:"Open Sans",sans;margin:20px;padding:20px}table thead{font-family:"Open Sans",sans;font-weight:normal;font-style:normal;font-size:12px;line-height:1.9;color:var(--text-light);font-size:15px}table thead tr th{padding:4px 10px;background-color:#9991}table thead tr:last-of-type th{border-bottom:solid 1px var(--text-light)}table tr,table th,table td{border:none}table tbody tr td{border-top:0;padding:0 10px}table tr{line-height:1.9}table caption{margin-bottom:10px;font-family:"Open Sans",sans;font-weight:normal;font-size:15px;line-height:1.6;color:var(--text-gray)}table caption .table-number{font-family:"Open Sans",sans;font-weight:normal;font-style:normal;font-size:12px;line-height:1.9;color:var(--text-light)}::-webkit-scrollbar{width:10px;height:8px}::-webkit-scrollbar-track{background:#9992}::-webkit-scrollbar-thumb{background:#ccc}::-webkit-scrollbar-thumb:hover{background:#888}@media (min-width: 1280px){#table-of-contents{position:fixed;width:18rem;right:1rem;top:0;padding:1em;line-height:1.5;margin-top:4rem}#table-of-contents h2{margin-top:0}#table-of-contents #text-table-of-contents{position:relative}#table-of-contents #text-table-of-contents::before,#table-of-contents #text-table-of-contents::after{position:absolute;content:'';width:calc(100% - 10px);height:0.7rem;left:0;z-index:1}#table-of-contents #text-table-of-contents::before{top:0;background:linear-gradient(180deg, var(--back-light) 0%, var(--back-light) 35%, rgba(0,0,0,0) 100%)}#table-of-contents #text-table-of-contents::after{bottom:0;background:linear-gradient(0deg, var(--back-light) 0%, var(--back-light) 35%, rgba(0,0,0,0) 100%)}#table-of-contents #text-table-of-contents>ul{list-style:none;padding:0;margin:0;max-height:calc(100vh - 5rem - 50px);overflow-y:auto;overflow-x:hidden;scrollbar-width:thin}#table-of-contents #text-table-of-contents>ul ul{padding-left:2em}#table-of-contents #text-table-of-contents>ul ul.active{display:inline-block}#table-of-contents #text-table-of-contents>ul li.active>ul{display:inline-block}#table-of-contents #text-table-of-contents>ul li.active>label a,#table-of-contents #text-table-of-contents>ul li.active>a{color:var(--text-dark)}#table-of-contents #text-table-of-contents>ul li.active>input:not(:checked)~label::after{transform:rotate(90deg);top:5px;opacity:0.35}#table-of-contents #text-table-of-contents>ul>li:last-child{margin-bottom:2rem}}@media (min-width: 1440px){#table-of-contents{width:20rem;right:2rem}}@media (min-width: 1640px){#table-of-contents{right:5rem}}@media (min-width: 2000px){#table-of-contents{width:25rem}}#table-of-contents #text-table-of-contents ul{width:100%}#table-of-contents #text-table-of-contents>ul ul{display:none}#table-of-contents #text-table-of-contents li input[type=checkbox]{display:none}#table-of-contents #text-table-of-contents li label{display:inline-block;width:100%;position:relative}#table-of-contents #text-table-of-contents li a{display:inline-block;color:var(--text-gray);text-decoration:none !important;text-shadow:none;background:none !important}#table-of-contents #text-table-of-contents li label::after{content:"\25b6";color:var(--text-gray);margin-left:0.5em;font-size:10px;display:inline-block;position:absolute;top:3.4px;left:-20px;opacity:0.8}#table-of-contents #text-table-of-contents li input:checked~ul{display:inline-block !important}#table-of-contents #text-table-of-contents li input:checked~label a{font-weight:bold}#table-of-contents #text-table-of-contents li input:checked~label::after{transform:rotate(90deg);top:5px}#table-of-contents #text-table-of-contents li::before{content:"" !important}.page-tags a{padding:.1em .2em;border-style:solid;border-width:1px;border-color:var(--back-light);border-radius:1px;font-family:"Open Sans",sans;font-variant:all-small-caps;font-size:max(0.4em, 10px);font-style:normal;letter-spacing:2px;background-image:none;line-height:1;white-space:nowrap;vertical-align:middle;padding:0.1em 0.5em;background-color:var(--back-white);margin-right:5px;line-height:3em}.page-tags a:hover{background-color:var(--back-light);background-image:none}.page-tags a:not(.active){border-color:var(--back-white)}.page-tags a.active{text-shadow:none;text-decoration:none;color:var(--back-white);background-color:var(--code-foreground)}.page-tags a.active:hover{background-color:var(--back-light);background-image:none;color:var(--text-dark)}@media print{h2{page-break-before:always}h1,h2,h3,h4,h5{page-break-after:avoid}#switch-label{display:none}#content,#page-header{margin-top:0}#table-of-contents #text-table-of-contents>ul ul{display:inline-block}#table-of-contents #text-table-of-contents>ul a::after{content:leader(".") target-counter(attr(href), page)}#table-of-contents #text-table-of-contents li label::after{display:none}img{filter:none}}@page{size:auto;margin-top:4mm;margin-bottom:4mm}
 </style>
 <link rel='shortcut icon' type='image/png' href='https://www.gnu.org/software/emacs/favicon.png'>
 </head>
@@ -83,68 +83,68 @@ window.addEventListener('DOMContentLoaded', () => {
 <h2><a href="#" style="color:inherit; text-decoration: none;">Table of Contents</a></h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgb917e45">1. Intro</a></li>
-<li><input type='checkbox' id='toc--org9239a5b'/><label for='toc--org9239a5b'><a href="#org9239a5b">2. Basic Configuration</a></label>
+<li><a href="#orgb30c5a4">1. Intro</a></li>
+<li><input type='checkbox' id='toc--orgff600d2'/><label for='toc--orgff600d2'><a href="#orgff600d2">2. Basic Configuration</a></label>
 <ul>
-<li><a href="#orgba44df4">2.1. Personal information</a></li>
-<li><a href="#org54e5c55">2.2. Shell</a></li>
-<li><a href="#org545120c">2.3. Clipboard</a></li>
-<li><a href="#org5ecd81f">2.4. Fonts</a></li>
-<li><a href="#orgc0671b9">2.5. Themes</a></li>
-<li><a href="#org0bdc1b8">2.6. Lsp, and Company</a></li>
-<li><a href="#org116ccec">2.7. Better Defaults</a></li>
-<li><a href="#orgfc3b326">2.8. Periodic Table</a></li>
-<li><a href="#orge94a7e3">2.9. Selectric mode</a></li>
+<li><a href="#org7713997">2.1. Personal information</a></li>
+<li><a href="#org10b2955">2.2. Shell</a></li>
+<li><a href="#org7fcd527">2.3. Clipboard</a></li>
+<li><a href="#org4107d9b">2.4. Fonts</a></li>
+<li><a href="#org8c033f6">2.5. Themes</a></li>
+<li><a href="#org015c46e">2.6. Lsp, and Company</a></li>
+<li><a href="#org78b4245">2.7. Better Defaults</a></li>
+<li><a href="#org3f30fa7">2.8. Periodic Table</a></li>
+<li><a href="#org021bd5f">2.9. Selectric mode</a></li>
 </ul>
 </li>
-<li><input type='checkbox' id='toc--org982c30f'/><label for='toc--org982c30f'><a href="#org982c30f">3. Visual configuration</a></label>
+<li><input type='checkbox' id='toc--org58e8370'/><label for='toc--org58e8370'><a href="#org58e8370">3. Visual configuration</a></label>
 <ul>
-<li><a href="#orge2e3903">3.1. Modeline</a></li>
-<li><a href="#org5b02248">3.2. Centaur tabs</a></li>
-<li><a href="#orgf620d53">3.3. Treemacs</a></li>
-<li><a href="#org9811c66">3.4. Emojis</a></li>
-<li><a href="#orgfaf7f48">3.5. Splash screen</a></li>
-<li><a href="#org2713115">3.6. Writeroom</a></li>
-<li><a href="#orgc94c354">3.7. Font Display</a></li>
-<li><a href="#org4203e99">3.8. Symbols</a></li>
-<li><a href="#org41ba402">3.9. Keycast</a></li>
-<li><a href="#org9e9dc27">3.10. Transparency</a></li>
-<li><a href="#orgd9d6d6d">3.11. Screenshots</a></li>
+<li><a href="#orgb49dd40">3.1. Modeline</a></li>
+<li><a href="#org4581db3">3.2. Centaur tabs</a></li>
+<li><a href="#orgf13c3b6">3.3. Treemacs</a></li>
+<li><a href="#org067e591">3.4. Emojis</a></li>
+<li><a href="#org85b1d1a">3.5. Splash screen</a></li>
+<li><a href="#org568b75d">3.6. Writeroom</a></li>
+<li><a href="#orgd3670d6">3.7. Font Display</a></li>
+<li><a href="#org69ca059">3.8. Symbols</a></li>
+<li><a href="#orgf6b2ea8">3.9. Keycast</a></li>
+<li><a href="#org1453cf7">3.10. Transparency</a></li>
+<li><a href="#org07669b4">3.11. Screenshots</a></li>
 </ul>
 </li>
-<li><input type='checkbox' id='toc--org5ffea9d'/><label for='toc--org5ffea9d'><a href="#org5ffea9d">4. Org</a></label>
+<li><input type='checkbox' id='toc--org515ae4c'/><label for='toc--org515ae4c'><a href="#org515ae4c">4. Org</a></label>
 <ul>
-<li><input type='checkbox' id='toc--org67ba44e'/><label for='toc--org67ba44e'><a href="#org67ba44e">4.1. Org-Mode</a></label>
+<li><input type='checkbox' id='toc--org15d8182'/><label for='toc--org15d8182'><a href="#org15d8182">4.1. Org-Mode</a></label>
 <ul>
-<li><a href="#orgc2f3622">4.1.1. HTML</a></li>
+<li><a href="#org9a682a0">4.1.1. HTML</a></li>
 </ul>
 </li>
-<li><a href="#orgf0c6d5f">4.2. Org-Roam</a></li>
-<li><a href="#org396a4f5">4.3. Org-Agenda</a></li>
-<li><input type='checkbox' id='toc--org7ae669a'/><label for='toc--org7ae669a'><a href="#org7ae669a">4.4. Org-Capture</a></label>
+<li><a href="#orgd233f41">4.2. Org-Roam</a></li>
+<li><a href="#org78c2af6">4.3. Org-Agenda</a></li>
+<li><input type='checkbox' id='toc--orga3275a3'/><label for='toc--orga3275a3'><a href="#orga3275a3">4.4. Org-Capture</a></label>
 <ul>
-<li><a href="#orgf5a9964">4.4.1. Prettify</a></li>
-<li><a href="#orgfee29f6">4.4.2. Templates</a></li>
+<li><a href="#orgd822abd">4.4.1. Prettify</a></li>
+<li><a href="#org1ae83c8">4.4.2. Templates</a></li>
 </ul>
 </li>
-<li><a href="#org2a326ef">4.5. ORG Plot</a></li>
-<li><a href="#org3d6dc04">4.6. View Exported File</a></li>
+<li><a href="#orga712749">4.5. ORG Plot</a></li>
+<li><a href="#orgb2fcc3d">4.6. View Exported File</a></li>
 </ul>
 </li>
-<li><input type='checkbox' id='toc--org102102a'/><label for='toc--org102102a'><a href="#org102102a">5. Latex</a></label>
+<li><input type='checkbox' id='toc--org8710952'/><label for='toc--org8710952'><a href="#org8710952">5. Latex</a></label>
 <ul>
-<li><a href="#org91a8a67">5.1. Basic configuration</a></li>
-<li><input type='checkbox' id='toc--orgdd53730'/><label for='toc--orgdd53730'><a href="#orgdd53730">5.2. CalcTeX</a></label>
+<li><a href="#org775d136">5.1. Basic configuration</a></li>
+<li><input type='checkbox' id='toc--orgd22314f'/><label for='toc--orgd22314f'><a href="#orgd22314f">5.2. CalcTeX</a></label>
 <ul>
-<li><a href="#org751a86e">5.2.1. Embedded calc</a></li>
+<li><a href="#orgfbbf7fe">5.2.1. Embedded calc</a></li>
 </ul>
 </li>
-<li><a href="#org32d7e3b">5.3. PDF-Tools</a></li>
-<li><a href="#org027dc87">5.4. Export</a></li>
+<li><a href="#orgc16a3b4">5.3. PDF-Tools</a></li>
+<li><a href="#orgb27de7d">5.4. Export</a></li>
 </ul>
 </li>
-<li><a href="#org917a12f">6. Mu4e</a></li>
-<li><a href="#org4179120">7. Magit</a></li>
+<li><a href="#orgdcacedd">6. Mu4e</a></li>
+<li><a href="#org79640b8">7. Magit</a></li>
 </ul>
 </div>
 </nav>
@@ -165,8 +165,8 @@ computer to do. &#x2014; Donald Knuth
 </p>
 </blockquote>
 
-<div id="outline-container-orgb917e45" class="outline-2">
-<h2 id="orgb917e45"><span class="section-number-2">1.</span> Intro<a aria-hidden="true" href="#orgb917e45">#</a> </h2>
+<div id="outline-container-orgb30c5a4" class="outline-2">
+<h2 id="orgb30c5a4"><span class="section-number-2">1.</span> Intro<a aria-hidden="true" href="#orgb30c5a4">#</a> </h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Customizing an editor can be very rewarding &#x2026; until you have to leave it.
@@ -191,15 +191,15 @@ compelling reasons</a> to keep using it.
 </div>
 </div>
 
-<div id="outline-container-org9239a5b" class="outline-2">
-<h2 id="org9239a5b"><span class="section-number-2">2.</span> Basic Configuration<a aria-hidden="true" href="#org9239a5b">#</a> </h2>
+<div id="outline-container-orgff600d2" class="outline-2">
+<h2 id="orgff600d2"><span class="section-number-2">2.</span> Basic Configuration<a aria-hidden="true" href="#orgff600d2">#</a> </h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Make this file run (slightly) faster with lexical binding
 </p>
-<details id='orgfaa4203' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='orga8fc79f' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#orgfaa4203'>#</a>
+<a href='#orga8fc79f'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-comment-delimiter">;;; </span><span class="org-comment">config.el -*- lexical-binding: t; -*-</span>
@@ -210,9 +210,9 @@ Make this file run (slightly) faster with lexical binding
 <p>
 I also don&rsquo;t want to compile my org config every time I make a change. Lets fix that
 </p>
-<details id='org93e21cd' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='org128b9bd' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#org93e21cd'>#</a>
+<a href='#org128b9bd'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-constant">remove-hook</span> <span class="org-highlight-quoted-quote">'</span><span class="org-variable-name">org-mode-hook</span> <span class="org-highlight-quoted-quote">#'</span><span class="org-highlight-quoted-symbol">+literate-enable-recompile-h</span><span class="org-rainbow-delimiters-depth-1">)</span>
@@ -221,15 +221,15 @@ I also don&rsquo;t want to compile my org config every time I make a change. Let
 </details>
 </div>
 
-<div id="outline-container-orgba44df4" class="outline-3">
-<h3 id="orgba44df4"><span class="section-number-3">2.1.</span> Personal information<a aria-hidden="true" href="#orgba44df4">#</a> </h3>
+<div id="outline-container-org7713997" class="outline-3">
+<h3 id="org7713997"><span class="section-number-3">2.1.</span> Personal information<a aria-hidden="true" href="#org7713997">#</a> </h3>
 <div class="outline-text-3" id="text-2-1">
 <p>
 Of course we need to tell emacs who I am
 </p>
-<details id='orgea72f45' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='orged4993c' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#orgea72f45'>#</a>
+<a href='#orged4993c'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">setq</span> <span class="org-variable-name">user-full-name</span> <span class="org-string">"Shaurya Singh"</span>
@@ -240,15 +240,15 @@ Of course we need to tell emacs who I am
 </div>
 </div>
 
-<div id="outline-container-org54e5c55" class="outline-3">
-<h3 id="org54e5c55"><span class="section-number-3">2.2.</span> Shell<a aria-hidden="true" href="#org54e5c55">#</a> </h3>
+<div id="outline-container-org10b2955" class="outline-3">
+<h3 id="org10b2955"><span class="section-number-3">2.2.</span> Shell<a aria-hidden="true" href="#org10b2955">#</a> </h3>
 <div class="outline-text-3" id="text-2-2">
 <p>
 I use the fish shell. If you use zsh/bash, be sure to change this
 </p>
-<details id='orga39d5ba' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='org5603869' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#orga39d5ba'>#</a>
+<a href='#org5603869'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">setq</span> <span class="org-variable-name">explicit-shell-file-name</span> <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-constant">executable-find</span> <span class="org-string">"fish"</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
@@ -258,15 +258,15 @@ I use the fish shell. If you use zsh/bash, be sure to change this
 </div>
 </div>
 
-<div id="outline-container-org545120c" class="outline-3">
-<h3 id="org545120c"><span class="section-number-3">2.3.</span> Clipboard<a aria-hidden="true" href="#org545120c">#</a> </h3>
+<div id="outline-container-org7fcd527" class="outline-3">
+<h3 id="org7fcd527"><span class="section-number-3">2.3.</span> Clipboard<a aria-hidden="true" href="#org7fcd527">#</a> </h3>
 <div class="outline-text-3" id="text-2-3">
 <p>
 Using pgtk/wayland, theres a bug where it can&rsquo;t use the clipboard, to fix this we can use the following snippet
 </p>
-<details id='org5057910' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='orge721597' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#org5057910'>#</a>
+<a href='#orge721597'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">when</span> <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-constant">getenv</span> <span class="org-string">"WAYLAND_DISPLAY"</span><span class="org-rainbow-delimiters-depth-2">)</span>
@@ -286,15 +286,15 @@ Using pgtk/wayland, theres a bug where it can&rsquo;t use the clipboard, to fix 
 </div>
 </div>
 
-<div id="outline-container-org5ecd81f" class="outline-3">
-<h3 id="org5ecd81f"><span class="section-number-3">2.4.</span> Fonts<a aria-hidden="true" href="#org5ecd81f">#</a> </h3>
+<div id="outline-container-org4107d9b" class="outline-3">
+<h3 id="org4107d9b"><span class="section-number-3">2.4.</span> Fonts<a aria-hidden="true" href="#org4107d9b">#</a> </h3>
 <div class="outline-text-3" id="text-2-4">
 <p>
 I like the apple fonts for programming, so I&rsquo;ll go with Liga SFMono Nerd Font. I prefer a rounder font for plain text, so I&rsquo;ll go with Menlo for that. I have a retina display as well, so lets keep the fonts light.
 </p>
-<details id='orgf18d0a8' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='org54803fe' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#orgf18d0a8'>#</a>
+<a href='#org54803fe'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">fonts</span>
@@ -310,9 +310,9 @@ I like the apple fonts for programming, so I&rsquo;ll go with Liga SFMono Nerd F
 <p>
 For mixed pitch, I would go with something comfier. I like helvetica, so lets go with that
 </p>
-<details id='orgb374d0f' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='orgae8a7c5' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#orgb374d0f'>#</a>
+<a href='#orgae8a7c5'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">mixed pitch modes</span>
@@ -349,9 +349,9 @@ For mixed pitch, I would go with something comfier. I like helvetica, so lets go
 <p>
 Just in case the fonts aren&rsquo;t there, lets add a fallback
 </p>
-<details id='org23522e3' class='code' open><summary class='named'><span class="name">detect-missing-fonts</span><span class="lang">elisp</span></summary>
+<details id='org7464dd3' class='code' open><summary class='named'><span class="name">detect-missing-fonts</span><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#org23522e3'>#</a>
+<a href='#org7464dd3'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">defvar</span> <span class="org-variable-name">required-fonts</span> <span class="org-highlight-quoted-quote">'</span><span class="org-rainbow-delimiters-depth-2">(</span><span class="org-string">"SF Pro"</span> <span class="org-string">"Liga SFMono Nerd Font"</span> <span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
@@ -385,9 +385,9 @@ Just in case the fonts aren&rsquo;t there, lets add a fallback
 </div>
 </details>
 
-<details id='org701991b' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
+<details id='orga9f5932' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
 <div class='gutter'>
-<a href='#org701991b'>#</a>
+<a href='#orga9f5932'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp">&lt;&lt;detect-missing-fonts<span class="org-rainbow-delimiters-depth-1">()</span>&gt;&gt;
@@ -397,15 +397,15 @@ Just in case the fonts aren&rsquo;t there, lets add a fallback
 </div>
 </div>
 
-<div id="outline-container-orgc0671b9" class="outline-3">
-<h3 id="orgc0671b9"><span class="section-number-3">2.5.</span> Themes<a aria-hidden="true" href="#orgc0671b9">#</a> </h3>
+<div id="outline-container-org8c033f6" class="outline-3">
+<h3 id="org8c033f6"><span class="section-number-3">2.5.</span> Themes<a aria-hidden="true" href="#org8c033f6">#</a> </h3>
 <div class="outline-text-3" id="text-2-5">
 <p>
 Right now I&rsquo;m using doom-vibrant, but I use doom-flatwhite sometimes
 </p>
-<details id='org4006cf2' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='org6fcd29f' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#org4006cf2'>#</a>
+<a href='#org6fcd29f'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">setq</span> <span class="org-variable-name">doom-theme</span> <span class="org-highlight-quoted-quote">'</span><span class="org-highlight-quoted-symbol">doom-vibrant</span><span class="org-rainbow-delimiters-depth-1">)</span>
@@ -418,15 +418,15 @@ Right now I&rsquo;m using doom-vibrant, but I use doom-flatwhite sometimes
 </div>
 </div>
 
-<div id="outline-container-org0bdc1b8" class="outline-3">
-<h3 id="org0bdc1b8"><span class="section-number-3">2.6.</span> Lsp, and Company<a aria-hidden="true" href="#org0bdc1b8">#</a> </h3>
+<div id="outline-container-org015c46e" class="outline-3">
+<h3 id="org015c46e"><span class="section-number-3">2.6.</span> Lsp, and Company<a aria-hidden="true" href="#org015c46e">#</a> </h3>
 <div class="outline-text-3" id="text-2-6">
 <p>
 The default lsp config is nice, but has a few invasive features we can disable. Lets set up the java LSP as well
 </p>
-<details id='org62bcd65' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='orga5cfb24' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#org62bcd65'>#</a>
+<a href='#orga5cfb24'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">after!</span> company
@@ -450,9 +450,9 @@ The default lsp config is nice, but has a few invasive features we can disable. 
 <p>
 Lets add some snippets for latex
 </p>
-<details id='orga792936' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='org05a9cd7' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#orga792936'>#</a>
+<a href='#org05a9cd7'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">use-package!</span> aas
@@ -474,9 +474,9 @@ Lets add some snippets for latex
 <p>
 And with a little help from henrik, lets use those snippets in org mode
 </p>
-<details id='org506ba36' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='org365bac7' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#org506ba36'>#</a>
+<a href='#org365bac7'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">defadvice!</span> fixed-org-yas-expand-maybe-h <span class="org-rainbow-delimiters-depth-2">()</span>
@@ -518,9 +518,9 @@ And with a little help from henrik, lets use those snippets in org mode
 <p>
 I think the LSP is a bit intrusive (especially with inline suggestions), so lets make it behave a bit more
 </p>
-<details id='orgba01bad' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='org4982c7c' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#orgba01bad'>#</a>
+<a href='#org4982c7c'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">use-package!</span> lsp-ui
@@ -543,9 +543,9 @@ I think the LSP is a bit intrusive (especially with inline suggestions), so lets
 <p>
 Lets also setup lsp for org-mode
 </p>
-<details id='org18a42e9' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='orgc92c21b' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#org18a42e9'>#</a>
+<a href='#orgc92c21b'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">cl-defmacro</span> <span class="org-function-name">lsp-org-babel-enable</span> <span class="org-rainbow-delimiters-depth-2">(</span>lang<span class="org-rainbow-delimiters-depth-2">)</span>
@@ -583,9 +583,9 @@ Lets also setup lsp for org-mode
 <p>
 Lets add some smarter parenthesis
 </p>
-<details id='orga78dca2' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
+<details id='orgcd84935' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
 <div class='gutter'>
-<a href='#orga78dca2'>#</a>
+<a href='#orgcd84935'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-function-name">sp-local-pair</span>
@@ -599,9 +599,9 @@ Lets add some smarter parenthesis
 <p>
 And lastly lets add some helpful snippets for org-mode, and add a better templete
 </p>
-<details id='org958e764' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='orgaa0e9d6' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#org958e764'>#</a>
+<a href='#orgaa0e9d6'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-function-name">set-file-template!</span> <span class="org-string">"\\.org$"</span> <span class="org-builtin">:trigger</span> <span class="org-string">"__"</span> <span class="org-builtin">:mode</span> <span class="org-highlight-quoted-quote">'</span><span class="org-highlight-quoted-symbol">org-mode</span><span class="org-rainbow-delimiters-depth-1">)</span>
@@ -611,15 +611,15 @@ And lastly lets add some helpful snippets for org-mode, and add a better templet
 </div>
 </div>
 
-<div id="outline-container-org116ccec" class="outline-3">
-<h3 id="org116ccec"><span class="section-number-3">2.7.</span> Better Defaults<a aria-hidden="true" href="#org116ccec">#</a> </h3>
+<div id="outline-container-org78b4245" class="outline-3">
+<h3 id="org78b4245"><span class="section-number-3">2.7.</span> Better Defaults<a aria-hidden="true" href="#org78b4245">#</a> </h3>
 <div class="outline-text-3" id="text-2-7">
 <p>
 The defaults for emacs aren&rsquo;t so good nowadays. Lets fix that up a bit
 </p>
-<details id='org4d551d1' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='orga83250d' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#org4d551d1'>#</a>
+<a href='#orga83250d'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">setq</span> <span class="org-variable-name">undo-limit</span> <span class="org-highlight-numbers-number">80000000</span>                          <span class="org-comment-delimiter">;</span><span class="org-comment">I mess up too much</span>
@@ -642,9 +642,9 @@ The defaults for emacs aren&rsquo;t so good nowadays. Lets fix that up a bit
 <p>
 Ask for splits
 </p>
-<details id='org1629ac6' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='org2b5b7c3' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#org1629ac6'>#</a>
+<a href='#org2b5b7c3'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">setq</span> <span class="org-variable-name">evil-vsplit-window-right</span> t
@@ -656,9 +656,9 @@ Ask for splits
 <p>
 &#x2026;and open a buffer for it
 </p>
-<details id='org220f8c2' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='org0bde9b6' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#org220f8c2'>#</a>
+<a href='#org0bde9b6'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">defadvice!</span> prompt-for-buffer <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-type">&amp;rest</span> _<span class="org-rainbow-delimiters-depth-2">)</span>
@@ -671,9 +671,9 @@ Ask for splits
 <p>
 The default bindings of doom are pretty good. I&rsquo;m not so good with motions though, so lets make life easier with avy
 </p>
-<details id='org1364170' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='org5a7e60f' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#org1364170'>#</a>
+<a href='#org5a7e60f'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">map!</span> <span class="org-builtin">:leader</span>
@@ -688,9 +688,9 @@ The default bindings of doom are pretty good. I&rsquo;m not so good with motions
 <p>
 I also fine ; more intuitive than : for entering command mode
 </p>
-<details id='org2efc9d4' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='org99d6406' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#org2efc9d4'>#</a>
+<a href='#org99d6406'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">after!</span> evil
@@ -702,9 +702,9 @@ I also fine ; more intuitive than : for entering command mode
 <p>
 When im doing regexes, its usually with /g anyways, lets make that the default
 </p>
-<details id='orgb61d3b6' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='orge594f39' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#orgb61d3b6'>#</a>
+<a href='#orge594f39'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">after!</span> evil
@@ -718,9 +718,9 @@ When im doing regexes, its usually with /g anyways, lets make that the default
 <p>
 Doom looks much cleaner with the dividers removed. Not sure why it isn&rsquo;t the default honestly
 </p>
-<details id='org10e3fea' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='org5b4f2ac' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#org10e3fea'>#</a>
+<a href='#org5b4f2ac'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">custom-set-faces!</span>
@@ -738,9 +738,9 @@ Doom looks much cleaner with the dividers removed. Not sure why it isn&rsquo;t t
 <p>
 I don&rsquo;t like seeing the cursorline, especially while writing. Lets disable that
 </p>
-<details id='org49ca770' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='orge6258d1' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#org49ca770'>#</a>
+<a href='#orge6258d1'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">disable cursorline</span>
@@ -752,9 +752,9 @@ I don&rsquo;t like seeing the cursorline, especially while writing. Lets disable
 <p>
 Doom has a weird bug with emacs-plus where the cursor will just turn white on a light theme. Lets fix that.
 </p>
-<details id='orga509de3' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='orgadc1d22' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#orga509de3'>#</a>
+<a href='#orgadc1d22'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">defadvice!</span> fix-+evil-default-cursor-fn <span class="org-rainbow-delimiters-depth-2">()</span>
@@ -770,9 +770,9 @@ Doom has a weird bug with emacs-plus where the cursor will just turn white on a 
 <p>
 I like using the minimap, even if its slow. Looks cool in my opinion, lets make it a little cooler by removing the scroll highlighting
 </p>
-<details id='org1357cb4' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='org546972d' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#org1357cb4'>#</a>
+<a href='#org546972d'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">make minimap transparent</span>
@@ -786,9 +786,9 @@ I like using the minimap, even if its slow. Looks cool in my opinion, lets make 
 <p>
 I like a bit of padding on the left hand side, and lets make the line spacing comfier
 </p>
-<details id='orgddf244b' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='org697cc83' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#orgddf244b'>#</a>
+<a href='#org697cc83'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-constant">set-frame-parameter</span> nil <span class="org-highlight-quoted-quote">'</span><span class="org-highlight-quoted-symbol">internal-border-width</span> <span class="org-highlight-numbers-number">15</span><span class="org-rainbow-delimiters-depth-1">)</span>
@@ -801,15 +801,15 @@ I like a bit of padding on the left hand side, and lets make the line spacing co
 </div>
 </div>
 
-<div id="outline-container-orgfc3b326" class="outline-3">
-<h3 id="orgfc3b326"><span class="section-number-3">2.8.</span> Periodic Table<a aria-hidden="true" href="#orgfc3b326">#</a> </h3>
+<div id="outline-container-org3f30fa7" class="outline-3">
+<h3 id="org3f30fa7"><span class="section-number-3">2.8.</span> Periodic Table<a aria-hidden="true" href="#org3f30fa7">#</a> </h3>
 <div class="outline-text-3" id="text-2-8">
 <p>
 Comes in more usefull then you would think
 </p>
-<details id='orgca505a7' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='org2dfc6f2' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#orgca505a7'>#</a>
+<a href='#org2dfc6f2'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">(use-package! eperiodic</span>
@@ -820,15 +820,15 @@ Comes in more usefull then you would think
 </div>
 </div>
 
-<div id="outline-container-orge94a7e3" class="outline-3">
-<h3 id="orge94a7e3"><span class="section-number-3">2.9.</span> Selectric mode<a aria-hidden="true" href="#orge94a7e3">#</a> </h3>
+<div id="outline-container-org021bd5f" class="outline-3">
+<h3 id="org021bd5f"><span class="section-number-3">2.9.</span> Selectric mode<a aria-hidden="true" href="#org021bd5f">#</a> </h3>
 <div class="outline-text-3" id="text-2-9">
 <p>
 Typewriter go br
 </p>
-<details id='orgb2e0c03' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='orgc97eecf' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#orgb2e0c03'>#</a>
+<a href='#orgc97eecf'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">use-package!</span> <span class="org-variable-name">selectric-mode</span>
@@ -840,19 +840,19 @@ Typewriter go br
 </div>
 </div>
 
-<div id="outline-container-org982c30f" class="outline-2">
-<h2 id="org982c30f"><span class="section-number-2">3.</span> Visual configuration<a aria-hidden="true" href="#org982c30f">#</a> </h2>
+<div id="outline-container-org58e8370" class="outline-2">
+<h2 id="org58e8370"><span class="section-number-2">3.</span> Visual configuration<a aria-hidden="true" href="#org58e8370">#</a> </h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-orge2e3903" class="outline-3">
-<h3 id="orge2e3903"><span class="section-number-3">3.1.</span> Modeline<a aria-hidden="true" href="#orge2e3903">#</a> </h3>
+<div id="outline-container-orgb49dd40" class="outline-3">
+<h3 id="orgb49dd40"><span class="section-number-3">3.1.</span> Modeline<a aria-hidden="true" href="#orgb49dd40">#</a> </h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 Tecosaurs PDF improvements:
 </p>
-<details id='org214786c' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='org17cb7c0' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#org214786c'>#</a>
+<a href='#org17cb7c0'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">after!</span> doom-modeline
@@ -899,9 +899,9 @@ Tecosaurs PDF improvements:
 <p>
 Doom modeline already looks good, but it can be better. Lets add some icons, the battery status, and make sure we don&rsquo;t lose track of time
 </p>
-<details id='org81ef6f6' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='orga1a8cf8' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#org81ef6f6'>#</a>
+<a href='#orga1a8cf8'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">modeline (icons, config, battery)</span>
@@ -918,9 +918,9 @@ Doom modeline already looks good, but it can be better. Lets add some icons, the
 <p>
 The encoding is always UTF-8, so its a bit redundant. Lets take that out
 </p>
-<details id='org934189b' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='orga4ff374' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#org934189b'>#</a>
+<a href='#orga4ff374'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">defun</span> <span class="org-function-name">doom-modeline-conditional-buffer-encoding</span> <span class="org-rainbow-delimiters-depth-2">()</span>
@@ -937,15 +937,15 @@ The encoding is always UTF-8, so its a bit redundant. Lets take that out
 </div>
 </div>
 
-<div id="outline-container-org5b02248" class="outline-3">
-<h3 id="org5b02248"><span class="section-number-3">3.2.</span> Centaur tabs<a aria-hidden="true" href="#org5b02248">#</a> </h3>
+<div id="outline-container-org4581db3" class="outline-3">
+<h3 id="org4581db3"><span class="section-number-3">3.2.</span> Centaur tabs<a aria-hidden="true" href="#org4581db3">#</a> </h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 There isn&rsquo;t much of a point having tabs when you only have one buffer open. This checks the number of tabs, and hides them if theres only one left
 </p>
-<details id='org3bc1177' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='org847f3db' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#org3bc1177'>#</a>
+<a href='#org847f3db'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">defun</span> <span class="org-function-name">centaur-tabs-get-total-tab-length</span> <span class="org-rainbow-delimiters-depth-2">()</span>
@@ -968,9 +968,9 @@ There isn&rsquo;t much of a point having tabs when you only have one buffer open
 <p>
 I also like to have icons with my tabs.
 </p>
-<details id='org2106915' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='org96af47a' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#org2106915'>#</a>
+<a href='#org96af47a'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">after!</span> centaur-tabs
@@ -988,9 +988,9 @@ I also like to have icons with my tabs.
 <p>
 Lastly lets swap the bg and fg colors so it looks cleaner
 </p>
-<details id='org00ece6d' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='org98302ba' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#org00ece6d'>#</a>
+<a href='#org98302ba'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">custom-set-faces!</span>
@@ -1003,15 +1003,15 @@ Lastly lets swap the bg and fg colors so it looks cleaner
 </div>
 </div>
 
-<div id="outline-container-orgf620d53" class="outline-3">
-<h3 id="orgf620d53"><span class="section-number-3">3.3.</span> Treemacs<a aria-hidden="true" href="#orgf620d53">#</a> </h3>
+<div id="outline-container-orgf13c3b6" class="outline-3">
+<h3 id="orgf13c3b6"><span class="section-number-3">3.3.</span> Treemacs<a aria-hidden="true" href="#orgf13c3b6">#</a> </h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 Lets theme treemacs while we&rsquo;re at it
 </p>
-<details id='org35c2e0b' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='orgee309db' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#org35c2e0b'>#</a>
+<a href='#orgee309db'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">make treemacs thinner</span>
@@ -1024,15 +1024,15 @@ Lets theme treemacs while we&rsquo;re at it
 </div>
 </div>
 
-<div id="outline-container-org9811c66" class="outline-3">
-<h3 id="org9811c66"><span class="section-number-3">3.4.</span> Emojis<a aria-hidden="true" href="#org9811c66">#</a> </h3>
+<div id="outline-container-org067e591" class="outline-3">
+<h3 id="org067e591"><span class="section-number-3">3.4.</span> Emojis<a aria-hidden="true" href="#org067e591">#</a> </h3>
 <div class="outline-text-3" id="text-3-4">
 <p>
 Disable some annoying emojis
 </p>
-<details id='orgfb54a22' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='org886d8b4' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#orgfb54a22'>#</a>
+<a href='#org886d8b4'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">defvar</span> <span class="org-variable-name">emojify-disabled-emojis</span>
@@ -1057,16 +1057,16 @@ Disable some annoying emojis
 </div>
 </div>
 
-<div id="outline-container-orgfaf7f48" class="outline-3">
-<h3 id="orgfaf7f48"><span class="section-number-3">3.5.</span> Splash screen<a aria-hidden="true" href="#orgfaf7f48">#</a> </h3>
+<div id="outline-container-org85b1d1a" class="outline-3">
+<h3 id="org85b1d1a"><span class="section-number-3">3.5.</span> Splash screen<a aria-hidden="true" href="#org85b1d1a">#</a> </h3>
 <div class="outline-text-3" id="text-3-5">
 <p>
 Emacs can render an image as the splash screen, and the emacs logo looks pretty cool
 Now we just make it theme-appropriate, and resize with the frame.
 </p>
-<details id='orgb2cec18' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
+<details id='org5427d63' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
 <div class='gutter'>
-<a href='#orgb2cec18'>#</a>
+<a href='#org5427d63'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">defvar</span> <span class="org-variable-name">fancy-splash-image-template</span>
@@ -1167,9 +1167,9 @@ Now we just make it theme-appropriate, and resize with the frame.
 <p>
 Lets add a little phrase in there as well
 </p>
-<details id='org3f5c7b1' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='org0143eea' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#org3f5c7b1'>#</a>
+<a href='#org0143eea'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">defvar</span> <span class="org-variable-name">phrase-api-url</span>
@@ -1262,9 +1262,9 @@ Lets add a little phrase in there as well
 <p>
 Lastly, the doom dashboard &ldquo;useful commands&rdquo; are no longer useful to me. So, we&rsquo;ll disable them and then for a particularly <i>clean</i> look disable the modeline, then also hide the cursor.
 </p>
-<details id='org9489053' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
+<details id='org051d70d' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
 <div class='gutter'>
-<a href='#org9489053'>#</a>
+<a href='#org051d70d'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-constant">remove-hook</span> <span class="org-highlight-quoted-quote">'</span><span class="org-variable-name">+doom-dashboard-functions</span> <span class="org-highlight-quoted-quote">#'</span><span class="org-highlight-quoted-symbol">doom-dashboard-widget-shortmenu</span><span class="org-rainbow-delimiters-depth-1">)</span>
@@ -1276,15 +1276,15 @@ Lastly, the doom dashboard &ldquo;useful commands&rdquo; are no longer useful to
 </div>
 </div>
 
-<div id="outline-container-org2713115" class="outline-3">
-<h3 id="org2713115"><span class="section-number-3">3.6.</span> Writeroom<a aria-hidden="true" href="#org2713115">#</a> </h3>
+<div id="outline-container-org568b75d" class="outline-3">
+<h3 id="org568b75d"><span class="section-number-3">3.6.</span> Writeroom<a aria-hidden="true" href="#org568b75d">#</a> </h3>
 <div class="outline-text-3" id="text-3-6">
 <p>
 For starters, I think Doom is a bit over-zealous when zooming in
 </p>
-<details id='orgffa850a' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
+<details id='org12bcaa8' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
 <div class='gutter'>
-<a href='#orgffa850a'>#</a>
+<a href='#org12bcaa8'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">setq</span> <span class="org-variable-name">+zen-text-scale</span> <span class="org-highlight-numbers-number">0.8</span><span class="org-rainbow-delimiters-depth-1">)</span>
@@ -1308,9 +1308,9 @@ tweaks. Namely:
 <li>Disabling <code>doom-modeline</code></li>
 </ul>
 
-<details id='org1e7cfe1' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='org63227a5' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#org1e7cfe1'>#</a>
+<a href='#org63227a5'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">defvar</span> <span class="org-variable-name">+zen-serif-p</span> t
@@ -1363,9 +1363,9 @@ tweaks. Namely:
 <p>
 I have to export files pretty often, lets setup some keybindings to make it easier
 </p>
-<details id='orgfabe679' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='orgea47514' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#orgfabe679'>#</a>
+<a href='#orgea47514'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">spc+v = view exported file</span>
@@ -1402,15 +1402,15 @@ I have to export files pretty often, lets setup some keybindings to make it easi
 </div>
 </div>
 
-<div id="outline-container-orgc94c354" class="outline-3">
-<h3 id="orgc94c354"><span class="section-number-3">3.7.</span> Font Display<a aria-hidden="true" href="#orgc94c354">#</a> </h3>
+<div id="outline-container-orgd3670d6" class="outline-3">
+<h3 id="orgd3670d6"><span class="section-number-3">3.7.</span> Font Display<a aria-hidden="true" href="#orgd3670d6">#</a> </h3>
 <div class="outline-text-3" id="text-3-7">
 <p>
 Mixed pitch is great. As is <code>+org-pretty-mode</code>, let&rsquo;s use them.
 </p>
-<details id='org2d41e3f' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
+<details id='orgf437469' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
 <div class='gutter'>
-<a href='#org2d41e3f'>#</a>
+<a href='#orgf437469'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-constant">add-hook</span> <span class="org-highlight-quoted-quote">'</span><span class="org-variable-name">org-mode-hook</span> <span class="org-highlight-quoted-quote">#'</span><span class="org-variable-name">+org-pretty-mode</span><span class="org-rainbow-delimiters-depth-1">)</span>
@@ -1422,9 +1422,9 @@ Mixed pitch is great. As is <code>+org-pretty-mode</code>, let&rsquo;s use them.
 <p>
 Let&rsquo;s make headings a bit bigger
 </p>
-<details id='orgfa08df0' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
+<details id='orgf79023a' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
 <div class='gutter'>
-<a href='#orgfa08df0'>#</a>
+<a href='#orgf79023a'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">custom-set-faces!</span>
@@ -1443,9 +1443,9 @@ Let&rsquo;s make headings a bit bigger
 <p>
 And the same with the title.
 </p>
-<details id='org61e2573' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
+<details id='org74aacdc' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
 <div class='gutter'>
-<a href='#org61e2573'>#</a>
+<a href='#org74aacdc'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">custom-set-faces!</span>
@@ -1457,9 +1457,9 @@ And the same with the title.
 <p>
 It seems reasonable to have deadlines in the error face when they&rsquo;re passed.
 </p>
-<details id='org1ca1099' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
+<details id='org44812dd' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
 <div class='gutter'>
-<a href='#org1ca1099'>#</a>
+<a href='#org44812dd'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">setq</span> <span class="org-variable-name">org-agenda-deadline-faces</span>
@@ -1474,9 +1474,9 @@ It seems reasonable to have deadlines in the error face when they&rsquo;re passe
 <p>
 We can then have quote blocks stand out a bit more by making them <i>italic</i>.
 </p>
-<details id='org73b040a' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
+<details id='orgfeecd6d' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
 <div class='gutter'>
-<a href='#org73b040a'>#</a>
+<a href='#orgfeecd6d'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">setq</span> <span class="org-variable-name">org-fontify-quote-and-verse-blocks</span> t<span class="org-rainbow-delimiters-depth-1">)</span>
@@ -1484,9 +1484,9 @@ We can then have quote blocks stand out a bit more by making them <i>italic</i>.
 </div>
 </details>
 
-<details id='orgfd610f0' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
+<details id='orga344cb8' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
 <div class='gutter'>
-<a href='#orgfd610f0'>#</a>
+<a href='#orga344cb8'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">use-package!</span> org-appear
@@ -1507,9 +1507,9 @@ Feeling like you&rsquo;re typing through molasses in large files is no fun, but 
 is a way I can defer font-locking when typing to make the experience more
 responsive.
 </p>
-<details id='org914447f' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
+<details id='orgd5d67f1' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
 <div class='gutter'>
-<a href='#org914447f'>#</a>
+<a href='#orgd5d67f1'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">defun</span> <span class="org-function-name">locally-defer-font-lock</span> <span class="org-rainbow-delimiters-depth-2">()</span>
@@ -1530,7 +1530,7 @@ do I&rsquo;ll use the above.
 </div>
 
 <ol class="org-ol">
-<li><a id="orgb9e8ed4"></a>Fontifying inline src blocks<br>
+<li><a id="orgb6b1f72"></a>Fontifying inline src blocks<br>
 <div class="outline-text-5" id="text-3-7-0-1">
 <p>
 Org does lovely things with <kbd>#+begin_src</kbd> blocks, like using font-lock for
@@ -1553,9 +1553,9 @@ the value-surrounding constructs hidden by mimicking the behaviour of
 <code>prettify-symbols-mode</code>.
 </p>
 
-<details id='org170458a' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
+<details id='orgc1ae56a' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
 <div class='gutter'>
-<a href='#org170458a'>#</a>
+<a href='#orgc1ae56a'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">defvar</span> <span class="org-variable-name">org-prettify-inline-results</span> t
@@ -1644,12 +1644,12 @@ the value-surrounding constructs hidden by mimicking the behaviour of
 </ol>
 </div>
 
-<div id="outline-container-org4203e99" class="outline-3">
-<h3 id="org4203e99"><span class="section-number-3">3.8.</span> Symbols<a aria-hidden="true" href="#org4203e99">#</a> </h3>
+<div id="outline-container-org69ca059" class="outline-3">
+<h3 id="org69ca059"><span class="section-number-3">3.8.</span> Symbols<a aria-hidden="true" href="#org69ca059">#</a> </h3>
 <div class="outline-text-3" id="text-3-8">
-<details id='orgc6ddc6a' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
+<details id='org027ab9e' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
 <div class='gutter'>
-<a href='#orgc6ddc6a'>#</a>
+<a href='#org027ab9e'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">make bullets look better</span>
@@ -1752,9 +1752,9 @@ the value-surrounding constructs hidden by mimicking the behaviour of
 <p>
 Lets also add a function that makes it easy to convert from upper to lowercase
 </p>
-<details id='orgfef66c5' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='orgb4f6094' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#orgfef66c5'>#</a>
+<a href='#orgb4f6094'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">defun</span> <span class="org-function-name">org-syntax-convert-keyword-case-to-lower</span> <span class="org-rainbow-delimiters-depth-2">()</span>
@@ -1775,15 +1775,15 @@ Lets also add a function that makes it easy to convert from upper to lowercase
 </div>
 </div>
 
-<div id="outline-container-org41ba402" class="outline-3">
-<h3 id="org41ba402"><span class="section-number-3">3.9.</span> Keycast<a aria-hidden="true" href="#org41ba402">#</a> </h3>
+<div id="outline-container-orgf6b2ea8" class="outline-3">
+<h3 id="orgf6b2ea8"><span class="section-number-3">3.9.</span> Keycast<a aria-hidden="true" href="#orgf6b2ea8">#</a> </h3>
 <div class="outline-text-3" id="text-3-9">
 <p>
 Its nice for demonstrations
 </p>
-<details id='orgb541fd3' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='org917d833' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#orgb541fd3'>#</a>
+<a href='#org917d833'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">use-package!</span> keycast
@@ -1810,16 +1810,16 @@ Its nice for demonstrations
 </div>
 </div>
 
-<div id="outline-container-org9e9dc27" class="outline-3">
-<h3 id="org9e9dc27"><span class="section-number-3">3.10.</span> Transparency<a aria-hidden="true" href="#org9e9dc27">#</a> </h3>
+<div id="outline-container-org1453cf7" class="outline-3">
+<h3 id="org1453cf7"><span class="section-number-3">3.10.</span> Transparency<a aria-hidden="true" href="#org1453cf7">#</a> </h3>
 <div class="outline-text-3" id="text-3-10">
 <p>
 I&rsquo;m not too big of a fan of transparency, but some people like it. You can use
 this little function to toggle it now
 </p>
-<details id='org2fc7f19' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='org7865c08' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#org2fc7f19'>#</a>
+<a href='#org7865c08'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"> <span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">defun</span> <span class="org-function-name">toggle-transparency</span> <span class="org-rainbow-delimiters-depth-2">()</span>
@@ -1840,15 +1840,15 @@ this little function to toggle it now
 </div>
 </div>
 
-<div id="outline-container-orgd9d6d6d" class="outline-3">
-<h3 id="orgd9d6d6d"><span class="section-number-3">3.11.</span> Screenshots<a aria-hidden="true" href="#orgd9d6d6d">#</a> </h3>
+<div id="outline-container-org07669b4" class="outline-3">
+<h3 id="org07669b4"><span class="section-number-3">3.11.</span> Screenshots<a aria-hidden="true" href="#org07669b4">#</a> </h3>
 <div class="outline-text-3" id="text-3-11">
 <p>
 Make it easy to take screenshots
 </p>
-<details id='org046fa28' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='orgc6ecd45' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#org046fa28'>#</a>
+<a href='#orgc6ecd45'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">use-package!</span> screenshot
@@ -1861,20 +1861,20 @@ Make it easy to take screenshots
 </div>
 </div>
 
-<div id="outline-container-org5ffea9d" class="outline-2">
-<h2 id="org5ffea9d"><span class="section-number-2">4.</span> Org<a aria-hidden="true" href="#org5ffea9d">#</a> </h2>
+<div id="outline-container-org515ae4c" class="outline-2">
+<h2 id="org515ae4c"><span class="section-number-2">4.</span> Org<a aria-hidden="true" href="#org515ae4c">#</a> </h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-org67ba44e" class="outline-3">
-<h3 id="org67ba44e"><span class="section-number-3">4.1.</span> Org-Mode<a aria-hidden="true" href="#org67ba44e">#</a> </h3>
+<div id="outline-container-org15d8182" class="outline-3">
+<h3 id="org15d8182"><span class="section-number-3">4.1.</span> Org-Mode<a aria-hidden="true" href="#org15d8182">#</a> </h3>
 <div class="outline-text-3" id="text-4-1">
 <p>
 Org mode is the best writing format, no contest. The defaults are more terminal-oriented, so lets make it look a little better
 I like a little padding on my org blocks, just a millimeter or two on the top and bottom should do
 </p>
-<details id='orgd7d6249' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='orgd24e32b' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#orgd7d6249'>#</a>
+<a href='#orgd24e32b'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">use image previews</span>
@@ -1898,9 +1898,9 @@ I like a little padding on my org blocks, just a millimeter or two on the top an
 <p>
 Lets add org pretty table as well
 </p>
-<details id='org92abba8' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='org994df23' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#org92abba8'>#</a>
+<a href='#org994df23'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">use-package!</span> org-pretty-table
@@ -1912,9 +1912,9 @@ Lets add org pretty table as well
 <p>
 Sadly I can&rsquo;t always work in org, but I can import stuff into it!
 </p>
-<details id='org1cbbb75' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
+<details id='org4aa83ff' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
 <div class='gutter'>
-<a href='#org1cbbb75'>#</a>
+<a href='#org4aa83ff'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">use-package!</span> org-pandoc-import
@@ -1926,9 +1926,9 @@ Sadly I can&rsquo;t always work in org, but I can import stuff into it!
 <p>
 I prefer /org as my directory. Lets change some other defaults too
 </p>
-<details id='org527c826' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='org341da7e' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#org527c826'>#</a>
+<a href='#org341da7e'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">setq</span> <span class="org-variable-name">org-directory</span> <span class="org-string">"~/org"</span>                      <span class="org-comment-delimiter">; </span><span class="org-comment">let's put files here</span>
@@ -1966,9 +1966,9 @@ I prefer /org as my directory. Lets change some other defaults too
 <p>
 Lets add some spellcheck
 </p>
-<details id='org8b66881' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='org78994ed' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#org8b66881'>#</a>
+<a href='#org78994ed'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-constant">add-hook</span> <span class="org-highlight-quoted-quote">'</span><span class="org-variable-name">org-mode-hook</span> <span class="org-highlight-quoted-quote">'</span><span class="org-highlight-quoted-symbol">turn-on-flyspell</span><span class="org-rainbow-delimiters-depth-1">)</span>
@@ -1979,9 +1979,9 @@ Lets add some spellcheck
 <p>
 org-ol-tree is nice for viewing the structure of an org file
 </p>
-<details id='org9c62e6f' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='orgdad500e' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#org9c62e6f'>#</a>
+<a href='#orgdad500e'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">use-package!</span> org-ol-tree
@@ -1995,12 +1995,12 @@ org-ol-tree is nice for viewing the structure of an org file
 </details>
 </div>
 
-<div id="outline-container-orgc2f3622" class="outline-4">
-<h4 id="orgc2f3622"><span class="section-number-4">4.1.1.</span> HTML<a aria-hidden="true" href="#orgc2f3622">#</a> </h4>
+<div id="outline-container-org9a682a0" class="outline-4">
+<h4 id="org9a682a0"><span class="section-number-4">4.1.1.</span> HTML<a aria-hidden="true" href="#org9a682a0">#</a> </h4>
 <div class="outline-text-4" id="text-4-1-1">
-<details id='org84c8861' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='orgf97dd8f' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#org84c8861'>#</a>
+<a href='#orgf97dd8f'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">use-package!</span> ox-gfm
@@ -2015,9 +2015,9 @@ org-ol-tree is nice for viewing the structure of an org file
 <p>
 For some reason this only works if you have org first
 </p>
-<details id='orge7ac7e6' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='org71bc65a' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#orge7ac7e6'>#</a>
+<a href='#org71bc65a'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">after!</span> org
@@ -2547,9 +2547,9 @@ For some reason this only works if you have org first
 There are quite a few instances where I want to modify variables defined in
 <kbd>ox-html</kbd>, so we&rsquo;ll wrap the contents of this section in a
 </p>
-<details id='org7ed47b8' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
+<details id='orgb8f07c4' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
 <div class='gutter'>
-<a href='#org7ed47b8'>#</a>
+<a href='#orgb8f07c4'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">after!</span> ox-html
@@ -2562,9 +2562,9 @@ There are quite a few instances where I want to modify variables defined in
 <p>
 Tecosaur has a good collection of fonts, might as well take some
 </p>
-<details id='org3c224b9' class='code' open><summary><span class="lang">HTML</span></summary>
+<details id='org24cdf8c' class='code' open><summary><span class="lang">HTML</span></summary>
 <div class='gutter'>
-<a href='#org3c224b9'>#</a>
+<a href='#org24cdf8c'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-html">&lt;<span class="org-function-name">link</span> <span class="org-variable-name">rel</span>=<span class="org-string">"icon"</span> <span class="org-variable-name">href</span>=<span class="org-string">"https://tecosaur.com/resources/org/nib.ico"</span> <span class="org-variable-name">type</span>=<span class="org-string">"image/ico"</span> /&gt;
@@ -2578,9 +2578,9 @@ Tecosaur has a good collection of fonts, might as well take some
 </div>
 </details>
 
-<details id='org8684801' class='code' open><summary class='named'><span class="name">Example, fixed width, and property blocks</span><span class="lang">Emacs Lisp</span></summary>
+<details id='org7023884' class='code' open><summary class='named'><span class="name">Example, fixed width, and property blocks</span><span class="lang">Emacs Lisp</span></summary>
 <div class='gutter'>
-<a href='#org8684801'>#</a>
+<a href='#org7023884'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">defun</span> <span class="org-function-name">org-html-block-collapsable</span> <span class="org-rainbow-delimiters-depth-2">(</span>orig-fn block contents info<span class="org-rainbow-delimiters-depth-2">)</span>
@@ -2623,15 +2623,15 @@ Tecosaur has a good collection of fonts, might as well take some
 </div>
 </div>
 
-<div id="outline-container-orgf0c6d5f" class="outline-3">
-<h3 id="orgf0c6d5f"><span class="section-number-3">4.2.</span> Org-Roam<a aria-hidden="true" href="#orgf0c6d5f">#</a> </h3>
+<div id="outline-container-orgd233f41" class="outline-3">
+<h3 id="orgd233f41"><span class="section-number-3">4.2.</span> Org-Roam<a aria-hidden="true" href="#orgd233f41">#</a> </h3>
 <div class="outline-text-3" id="text-4-2">
 <p>
 I would like to get into the habit of using org-roam for my notes, mainly because of that cool reddit post with the server.
 </p>
-<details id='orgec2e401' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='orgbe3be3f' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#orgec2e401'>#</a>
+<a href='#orgbe3be3f'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">setq</span> <span class="org-variable-name">org-roam-directory</span> <span class="org-string">"~/org/roam/"</span><span class="org-rainbow-delimiters-depth-1">)</span>
@@ -2642,9 +2642,9 @@ I would like to get into the habit of using org-roam for my notes, mainly becaus
 <p>
 Lets set up the org-roam-ui as well
 </p>
-<details id='org47f2733' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='org8557acb' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#org47f2733'>#</a>
+<a href='#org8557acb'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">use-package!</span> websocket
@@ -2659,9 +2659,9 @@ Lets set up the org-roam-ui as well
 <p>
 The doom-modeline is a bit messy with roam, lets adjust that
 </p>
-<details id='org136f981' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='org39372fa' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#org136f981'>#</a>
+<a href='#org39372fa'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">defadvice!</span> doom-modeline--buffer-file-name-roam-aware-a <span class="org-rainbow-delimiters-depth-2">(</span>orig-fun<span class="org-rainbow-delimiters-depth-2">)</span>
@@ -2685,9 +2685,9 @@ To do that, we need to:
 <ol class="org-ol">
 <li>Disable the regular buffer</li>
 </ol>
-<details id='org94c4ce2' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='org7ab3a0b' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#org94c4ce2'>#</a>
+<a href='#org7ab3a0b'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">after!</span> org-roam
@@ -2699,9 +2699,9 @@ To do that, we need to:
 <ol class="org-ol">
 <li>Create a minor-mode to open the url (<a href="http://127.0.0.1:35901/">http://127.0.0.1:35901/</a>)</li>
 </ol>
-<details id='org174125f' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='orgf91de9d' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#org174125f'>#</a>
+<a href='#orgf91de9d'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">defcustom</span> <span class="org-variable-name">org-roam-ui-use-webkit</span> t
@@ -2747,9 +2747,9 @@ To do that, we need to:
 <ol class="org-ol">
 <li><del>Lets set it to use the nord colors</del> <code>orui-sync-theme</code> does this already apparently</li>
 </ol>
-<details id='org83b0e6d' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='org7661258' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#org83b0e6d'>#</a>
+<a href='#org7661258'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">(setq org-roam-ui-sync-theme nil)</span>
@@ -2772,15 +2772,15 @@ To do that, we need to:
 </div>
 </div>
 
-<div id="outline-container-org396a4f5" class="outline-3">
-<h3 id="org396a4f5"><span class="section-number-3">4.3.</span> Org-Agenda<a aria-hidden="true" href="#org396a4f5">#</a> </h3>
+<div id="outline-container-org78c2af6" class="outline-3">
+<h3 id="org78c2af6"><span class="section-number-3">4.3.</span> Org-Agenda<a aria-hidden="true" href="#org78c2af6">#</a> </h3>
 <div class="outline-text-3" id="text-4-3">
 <p>
 Set the directory
 </p>
-<details id='orgd59c7c7' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='orga250af3' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#orgd59c7c7'>#</a>
+<a href='#orga250af3'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">setq</span> <span class="org-variable-name">org-agenda-files</span> <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-constant">list</span> <span class="org-string">"~/org/school.org"</span>
@@ -2792,9 +2792,9 @@ Set the directory
 <p>
 Org-super-agenda!
 </p>
-<details id='org9b8687b' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='orge6e85bf' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#org9b8687b'>#</a>
+<a href='#orge6e85bf'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">use-package!</span> org-super-agenda
@@ -2874,15 +2874,15 @@ Org-super-agenda!
 </div>
 </div>
 
-<div id="outline-container-org7ae669a" class="outline-3">
-<h3 id="org7ae669a"><span class="section-number-3">4.4.</span> Org-Capture<a aria-hidden="true" href="#org7ae669a">#</a> </h3>
+<div id="outline-container-orga3275a3" class="outline-3">
+<h3 id="orga3275a3"><span class="section-number-3">4.4.</span> Org-Capture<a aria-hidden="true" href="#orga3275a3">#</a> </h3>
 <div class="outline-text-3" id="text-4-4">
 <p>
 Use doct
 </p>
-<details id='org8dc7d4d' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
+<details id='org637c5af' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
 <div class='gutter'>
-<a href='#org8dc7d4d'>#</a>
+<a href='#org637c5af'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">use-package!</span> doct
@@ -2892,15 +2892,15 @@ Use doct
 </details>
 </div>
 
-<div id="outline-container-orgf5a9964" class="outline-4">
-<h4 id="orgf5a9964"><span class="section-number-4">4.4.1.</span> Prettify<a aria-hidden="true" href="#orgf5a9964">#</a> </h4>
+<div id="outline-container-orgd822abd" class="outline-4">
+<h4 id="orgd822abd"><span class="section-number-4">4.4.1.</span> Prettify<a aria-hidden="true" href="#orgd822abd">#</a> </h4>
 <div class="outline-text-4" id="text-4-4-1">
 <p>
 Improve the look of the capture dialog (idea borrowed from <a href="https://github.com/tecosaur">tecosaur</a>)
 </p>
-<details id='orgfba35f9' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
+<details id='orgd34bcff' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
 <div class='gutter'>
-<a href='#orgfba35f9'>#</a>
+<a href='#orgd34bcff'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">defun</span> <span class="org-function-name">org-capture-select-template-prettier</span> <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-type">&amp;optional</span> keys<span class="org-rainbow-delimiters-depth-2">)</span>
@@ -3019,9 +3019,9 @@ The <a href="file:///home/shauryasingh/.emacs.doom/bin/org-capture">org-capture 
 no modeline.
 </p>
 
-<details id='orge91075e' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
+<details id='org831f53c' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
 <div class='gutter'>
-<a href='#orge91075e'>#</a>
+<a href='#org831f53c'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">setf</span> <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-constant">alist-get</span> <span class="org-highlight-quoted-quote">'</span><span class="org-highlight-quoted-symbol">height</span> <span class="org-variable-name">+org-capture-frame-parameters</span><span class="org-rainbow-delimiters-depth-2">)</span> <span class="org-highlight-numbers-number">15</span><span class="org-rainbow-delimiters-depth-1">)</span>
@@ -3038,9 +3038,9 @@ no modeline.
 <p>
 Sprinkle in some <kbd>doct</kbd> utility functions
 </p>
-<details id='orgdd3d3bb' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
+<details id='org246f49e' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
 <div class='gutter'>
-<a href='#orgdd3d3bb'>#</a>
+<a href='#org246f49e'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">defun</span> <span class="org-function-name">+doct-icon-declaration-to-icon</span> <span class="org-rainbow-delimiters-depth-2">(</span>declaration<span class="org-rainbow-delimiters-depth-2">)</span>
@@ -3070,15 +3070,15 @@ Sprinkle in some <kbd>doct</kbd> utility functions
 </div>
 </div>
 
-<div id="outline-container-orgfee29f6" class="outline-4">
-<h4 id="orgfee29f6"><span class="section-number-4">4.4.2.</span> Templates<a aria-hidden="true" href="#orgfee29f6">#</a> </h4>
+<div id="outline-container-org1ae83c8" class="outline-4">
+<h4 id="org1ae83c8"><span class="section-number-4">4.4.2.</span> Templates<a aria-hidden="true" href="#org1ae83c8">#</a> </h4>
 <div class="outline-text-4" id="text-4-4-2">
 <p>
 And we can now add some templates! This isn&rsquo;t even remotely set in stone, I wouldn&rsquo;t even describe them as set in <i>jelly</i> really.
 </p>
-<details id='org5e682c5' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
+<details id='org90061c6' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
 <div class='gutter'>
-<a href='#org5e682c5'>#</a>
+<a href='#org90061c6'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">setq</span> <span class="org-variable-name">org-capture-templates</span>
@@ -3129,15 +3129,15 @@ And we can now add some templates! This isn&rsquo;t even remotely set in stone, 
 </div>
 </div>
 
-<div id="outline-container-org2a326ef" class="outline-3">
-<h3 id="org2a326ef"><span class="section-number-3">4.5.</span> ORG Plot<a aria-hidden="true" href="#org2a326ef">#</a> </h3>
+<div id="outline-container-orga712749" class="outline-3">
+<h3 id="orga712749"><span class="section-number-3">4.5.</span> ORG Plot<a aria-hidden="true" href="#orga712749">#</a> </h3>
 <div class="outline-text-3" id="text-4-5">
 <p>
 Tell it to use the doom theme colors
 </p>
-<details id='org650dcc8' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='orgc28b95d' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#org650dcc8'>#</a>
+<a href='#orgc28b95d'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">after!</span> org-plot
@@ -3217,12 +3217,12 @@ Tell it to use the doom theme colors
 </div>
 </div>
 
-<div id="outline-container-org3d6dc04" class="outline-3">
-<h3 id="org3d6dc04"><span class="section-number-3">4.6.</span> View Exported File<a aria-hidden="true" href="#org3d6dc04">#</a> </h3>
+<div id="outline-container-orgb2fcc3d" class="outline-3">
+<h3 id="orgb2fcc3d"><span class="section-number-3">4.6.</span> View Exported File<a aria-hidden="true" href="#orgb2fcc3d">#</a> </h3>
 <div class="outline-text-3" id="text-4-6">
-<details id='org5d3a6a8' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
+<details id='orgd5e0d79' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
 <div class='gutter'>
-<a href='#org5d3a6a8'>#</a>
+<a href='#orgd5e0d79'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">map!</span> <span class="org-builtin">:map</span> <span class="org-variable-name">org-mode-map</span>
@@ -3257,9 +3257,9 @@ Tell it to use the doom theme colors
 <p>
 Same thing but only for html
 </p>
-<details id='org545f9fc' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
+<details id='org3c39aef' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
 <div class='gutter'>
-<a href='#org545f9fc'>#</a>
+<a href='#org3c39aef'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">defcustom</span> <span class="org-variable-name">org-html-use-webkit</span> t
@@ -3327,19 +3327,19 @@ Same thing but only for html
 </div>
 </div>
 
-<div id="outline-container-org102102a" class="outline-2">
-<h2 id="org102102a"><span class="section-number-2">5.</span> Latex<a aria-hidden="true" href="#org102102a">#</a> </h2>
+<div id="outline-container-org8710952" class="outline-2">
+<h2 id="org8710952"><span class="section-number-2">5.</span> Latex<a aria-hidden="true" href="#org8710952">#</a> </h2>
 <div class="outline-text-2" id="text-5">
 </div>
-<div id="outline-container-org91a8a67" class="outline-3">
-<h3 id="org91a8a67"><span class="section-number-3">5.1.</span> Basic configuration<a aria-hidden="true" href="#org91a8a67">#</a> </h3>
+<div id="outline-container-org775d136" class="outline-3">
+<h3 id="org775d136"><span class="section-number-3">5.1.</span> Basic configuration<a aria-hidden="true" href="#org775d136">#</a> </h3>
 <div class="outline-text-3" id="text-5-1">
 <p>
 Use XeLateX
 </p>
-<details id='org1ef2b4b' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='org6e0c76b' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#org1ef2b4b'>#</a>
+<a href='#org6e0c76b'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">setq</span> <span class="org-variable-name">TeX-save-query</span> nil
@@ -3354,9 +3354,9 @@ Use XeLateX
 <p>
 First of all, lets use pdf-tools to preview pdfs by defaults
 </p>
-<details id='org6cbbc8d' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='org13941ef' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#org6cbbc8d'>#</a>
+<a href='#org13941ef'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">setq</span> <span class="org-variable-name">+latex-viewers</span> <span class="org-highlight-quoted-quote">'</span><span class="org-rainbow-delimiters-depth-2">(</span>pdf-tools evince zathura okular skim sumatrapdf<span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
@@ -3367,9 +3367,9 @@ First of all, lets use pdf-tools to preview pdfs by defaults
 <p>
 I also want to adjust the look of those previews
 </p>
-<details id='org450e9f5' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='org8a4094b' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#org450e9f5'>#</a>
+<a href='#org8a4094b'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">after!</span> org
@@ -3385,9 +3385,9 @@ I also want to adjust the look of those previews
 <p>
 Lets add cdlatex org mode integration
 </p>
-<details id='orgfad9d4d' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='orgf7e70ff' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#orgfad9d4d'>#</a>
+<a href='#orgf7e70ff'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">after!</span> org
@@ -3403,9 +3403,9 @@ Lets add cdlatex org mode integration
 <p>
 I like to preview images inline too
 </p>
-<details id='org9dc78d7' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='orgb692975' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#org9dc78d7'>#</a>
+<a href='#orgb692975'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">setq</span> org-display-inline-images t<span class="org-rainbow-delimiters-depth-1">)</span>
@@ -3418,9 +3418,9 @@ I like to preview images inline too
 <p>
 I prefer svgs to pngs. It takes a little more time, but scales better on HiDPI displays
 </p>
-<details id='org77e4670' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='org729e6c2' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#org77e4670'>#</a>
+<a href='#org729e6c2'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">setq-default</span> <span class="org-variable-name">org-html-with-latex</span> <span class="org-highlight-quoted-quote">`</span><span class="org-highlight-quoted-symbol">dvisvgm</span><span class="org-rainbow-delimiters-depth-1">)</span>
@@ -3432,9 +3432,9 @@ I prefer svgs to pngs. It takes a little more time, but scales better on HiDPI d
 <p>
 Obviously we can&rsquo;t edit a png though. Let use org-fragtog to toggle between previews and text mode
 </p>
-<details id='org4888228' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='org4534a00' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#org4888228'>#</a>
+<a href='#org4534a00'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-comment-delimiter">;;</span><span class="org-comment">auto toggle between preview/raw latex</span>
@@ -3447,9 +3447,9 @@ Obviously we can&rsquo;t edit a png though. Let use org-fragtog to toggle betwee
 <p>
 Here&rsquo;s just my private LaTeX config.
 </p>
-<details id='org94304ba' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='org1e1b43f' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#org94304ba'>#</a>
+<a href='#org1e1b43f'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">setq</span> <span class="org-variable-name">org-format-latex-header</span> <span class="org-string">"\\documentclass{article}</span>
@@ -3480,8 +3480,8 @@ Here&rsquo;s just my private LaTeX config.
 </div>
 </div>
 
-<div id="outline-container-orgdd53730" class="outline-3">
-<h3 id="orgdd53730"><span class="section-number-3">5.2.</span> CalcTeX<a aria-hidden="true" href="#orgdd53730">#</a> </h3>
+<div id="outline-container-orgd22314f" class="outline-3">
+<h3 id="orgd22314f"><span class="section-number-3">5.2.</span> CalcTeX<a aria-hidden="true" href="#orgd22314f">#</a> </h3>
 <div class="outline-text-3" id="text-5-2">
 <p>
 We&rsquo;d like to use CalcTeX too, so let&rsquo;s set that up, and fix some glaring
@@ -3490,9 +3490,9 @@ that <i>only works on your local machine</i>, consequently breaking the package 
 everyone else!?
 </p>
 
-<details id='org8cb5b18' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
+<details id='orga2d7025' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
 <div class='gutter'>
-<a href='#org8cb5b18'>#</a>
+<a href='#orga2d7025'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">use-package!</span> calctex
@@ -3535,8 +3535,8 @@ everyone else!?
 </details>
 </div>
 
-<div id="outline-container-org751a86e" class="outline-4">
-<h4 id="org751a86e"><span class="section-number-4">5.2.1.</span> Embedded calc<a aria-hidden="true" href="#org751a86e">#</a> </h4>
+<div id="outline-container-orgfbbf7fe" class="outline-4">
+<h4 id="orgfbbf7fe"><span class="section-number-4">5.2.1.</span> Embedded calc<a aria-hidden="true" href="#orgfbbf7fe">#</a> </h4>
 <div class="outline-text-4" id="text-5-2-1">
 <p>
 Embedded calc is a lovely feature which let&rsquo;s us use calc to operate on LaTeX
@@ -3544,9 +3544,9 @@ maths expressions. The standard keybinding is a bit janky however (<kbd>C-x * e<
 we&rsquo;ll add a localleader-based alternative.
 </p>
 
-<details id='orge9fa09e' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
+<details id='orgd75ce79' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
 <div class='gutter'>
-<a href='#orge9fa09e'>#</a>
+<a href='#orgd75ce79'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">map!</span> <span class="org-builtin">:map</span> <span class="org-variable-name">calc-mode-map</span>
@@ -3568,15 +3568,15 @@ we&rsquo;ll add a localleader-based alternative.
 </div>
 </div>
 
-<div id="outline-container-org32d7e3b" class="outline-3">
-<h3 id="org32d7e3b"><span class="section-number-3">5.3.</span> PDF-Tools<a aria-hidden="true" href="#org32d7e3b">#</a> </h3>
+<div id="outline-container-orgc16a3b4" class="outline-3">
+<h3 id="orgc16a3b4"><span class="section-number-3">5.3.</span> PDF-Tools<a aria-hidden="true" href="#orgc16a3b4">#</a> </h3>
 <div class="outline-text-3" id="text-5-3">
 <p>
 DocView gives me a headache, but pdf-tools can be improved, lets configure it a little more
 </p>
-<details id='org3812e4d' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='org6b8182d' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#org3812e4d'>#</a>
+<a href='#org6b8182d'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">use-package</span> pdf-view
@@ -3590,16 +3590,16 @@ DocView gives me a headache, but pdf-tools can be improved, lets configure it a 
 </details>
 </div>
 </div>
-<div id="outline-container-org027dc87" class="outline-3">
-<h3 id="org027dc87"><span class="section-number-3">5.4.</span> Export<a aria-hidden="true" href="#org027dc87">#</a> </h3>
+<div id="outline-container-orgb27de7d" class="outline-3">
+<h3 id="orgb27de7d"><span class="section-number-3">5.4.</span> Export<a aria-hidden="true" href="#orgb27de7d">#</a> </h3>
 <div class="outline-text-3" id="text-5-4">
 </div>
 <ol class="org-ol">
-<li><a id="org648c3ad"></a>Conditional features<br>
+<li><a id="org629b0d2"></a>Conditional features<br>
 <div class="outline-text-5" id="text-5-4-0-1">
-<details id='org09bbca2' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
+<details id='org8dc0fc7' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
 <div class='gutter'>
-<a href='#org09bbca2'>#</a>
+<a href='#org8dc0fc7'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">defvar</span> <span class="org-variable-name">org-latex-italic-quotes</span> t
@@ -3645,9 +3645,9 @@ DocView gives me a headache, but pdf-tools can be improved, lets configure it a 
 </div>
 </details>
 
-<details id='org95c30ae' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
+<details id='org613fdf6' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
 <div class='gutter'>
-<a href='#org95c30ae'>#</a>
+<a href='#org613fdf6'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">defvar</span> <span class="org-variable-name">org-latex-caption-preamble</span> <span class="org-string">"</span>
@@ -3688,9 +3688,9 @@ DocView gives me a headache, but pdf-tools can be improved, lets configure it a 
 </div>
 </details>
 
-<details id='org9723840' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
+<details id='org3cae35b' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
 <div class='gutter'>
-<a href='#org9723840'>#</a>
+<a href='#org3cae35b'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">defvar</span> <span class="org-variable-name">org-latex-feature-implementations</span>
@@ -3739,9 +3739,9 @@ DocView gives me a headache, but pdf-tools can be improved, lets configure it a 
 </div>
 </details>
 
-<details id='org4a18837' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
+<details id='org66bd950' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
 <div class='gutter'>
-<a href='#org4a18837'>#</a>
+<a href='#org66bd950'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">defun</span> <span class="org-function-name">org-latex-detect-features</span> <span class="org-rainbow-delimiters-depth-2">(</span><span class="org-type">&amp;optional</span> buffer info<span class="org-rainbow-delimiters-depth-2">)</span>
@@ -3767,9 +3767,9 @@ DocView gives me a headache, but pdf-tools can be improved, lets configure it a 
 </div>
 </details>
 
-<details id='org1f16fba' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
+<details id='org5863f57' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
 <div class='gutter'>
-<a href='#org1f16fba'>#</a>
+<a href='#org5863f57'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">defun</span> <span class="org-function-name">org-latex-expand-features</span> <span class="org-rainbow-delimiters-depth-2">(</span>features<span class="org-rainbow-delimiters-depth-2">)</span>
@@ -3807,9 +3807,9 @@ DocView gives me a headache, but pdf-tools can be improved, lets configure it a 
 </div>
 </details>
 
-<details id='org3f3356a' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
+<details id='orgcf34873' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
 <div class='gutter'>
-<a href='#org3f3356a'>#</a>
+<a href='#orgcf34873'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">defun</span> <span class="org-function-name">org-latex-generate-features-preamble</span> <span class="org-rainbow-delimiters-depth-2">(</span>features<span class="org-rainbow-delimiters-depth-2">)</span>
@@ -3835,9 +3835,9 @@ DocView gives me a headache, but pdf-tools can be improved, lets configure it a 
 </div>
 </details>
 
-<details id='org0b48f55' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
+<details id='org8bcd31d' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
 <div class='gutter'>
-<a href='#org0b48f55'>#</a>
+<a href='#org8bcd31d'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">defvar</span> <span class="org-variable-name">info--tmp</span> nil<span class="org-rainbow-delimiters-depth-1">)</span>
@@ -3860,14 +3860,14 @@ DocView gives me a headache, but pdf-tools can be improved, lets configure it a 
 </div>
 </li>
 
-<li><a id="org2ef8deb"></a>Tectonic<br>
+<li><a id="orgc5741bc"></a>Tectonic<br>
 <div class="outline-text-5" id="text-5-4-0-2">
 <p>
 Use tectonic
 </p>
-<details id='org9788abc' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
+<details id='org500c33e' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
 <div class='gutter'>
-<a href='#org9788abc'>#</a>
+<a href='#org500c33e'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">setq</span> <span class="org-variable-name">org-latex-pdf-process</span> <span class="org-highlight-quoted-quote">'</span><span class="org-rainbow-delimiters-depth-2">(</span><span class="org-string">"tectonic -X compile --outdir=%o -Z shell-escape %f"</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
@@ -3878,9 +3878,9 @@ Use tectonic
 <p>
 With that, we can disable auctex
 </p>
-<details id='org3313a70' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
+<details id='org7f1b63e' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
 <div class='gutter'>
-<a href='#org3313a70'>#</a>
+<a href='#org7f1b63e'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">defadvice!</span> no-auto-mode-alist <span class="org-rainbow-delimiters-depth-2">(</span>orig-fn <span class="org-type">&amp;rest</span> args<span class="org-rainbow-delimiters-depth-2">)</span>
@@ -3894,14 +3894,14 @@ With that, we can disable auctex
 </div>
 </li>
 
-<li><a id="orge5a0254"></a>Classes<br>
+<li><a id="orgfb4737b"></a>Classes<br>
 <div class="outline-text-5" id="text-5-4-0-3">
 <p>
 Now for some class setup (likely to change over time)
 </p>
-<details id='org9054737' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
+<details id='org07489f0' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
 <div class='gutter'>
-<a href='#org9054737'>#</a>
+<a href='#org07489f0'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">after!</span> ox-latex
@@ -3919,9 +3919,9 @@ Now for some class setup (likely to change over time)
 <p>
 And some saner default for them
 </p>
-<details id='orge78b41c' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
+<details id='orgd92f304' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
 <div class='gutter'>
-<a href='#orge78b41c'>#</a>
+<a href='#orgd92f304'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">after!</span> ox-latex
@@ -3952,14 +3952,14 @@ And some saner default for them
 </div>
 </li>
 
-<li><a id="org405f03a"></a>Packages<br>
+<li><a id="orgf739195"></a>Packages<br>
 <div class="outline-text-5" id="text-5-4-0-4">
 <p>
 Add some packages (also very likely to change)
 </p>
-<details id='org0fe71cb' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
+<details id='orgcedddf4' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
 <div class='gutter'>
-<a href='#org0fe71cb'>#</a>
+<a href='#orgcedddf4'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">setq</span> <span class="org-variable-name">org-latex-default-packages-alist</span>
@@ -3990,11 +3990,11 @@ Add some packages (also very likely to change)
 </div>
 </li>
 
-<li><a id="orgec25dd0"></a>Pretty code blocks<br>
+<li><a id="org02f950d"></a>Pretty code blocks<br>
 <div class="outline-text-5" id="text-5-4-0-5">
-<details id='orga9455c9' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
+<details id='orgc7b224a' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
 <div class='gutter'>
-<a href='#orga9455c9'>#</a>
+<a href='#orgc7b224a'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">use-package!</span> engrave-faces-latex
@@ -4005,9 +4005,9 @@ Add some packages (also very likely to change)
 </div>
 </details>
 
-<details id='org6fbf274' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
+<details id='org16e72dc' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
 <div class='gutter'>
-<a href='#org6fbf274'>#</a>
+<a href='#org16e72dc'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">defadvice!</span> org-latex-src-block-engraved <span class="org-rainbow-delimiters-depth-2">(</span>orig-fn src-block contents info<span class="org-rainbow-delimiters-depth-2">)</span>
@@ -4173,15 +4173,15 @@ Add some packages (also very likely to change)
 </div>
 </li>
 
-<li><a id="org79aa7c9"></a>Chameleon<br>
+<li><a id="org32e66e8"></a>Chameleon<br>
 <div class="outline-text-5" id="text-5-4-0-6">
 <p>
 Attempt to improve default PDF export by using the current theme
 </p>
 
-<details id='orgbc635ae' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='orgc084d8d' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#orgbc635ae'>#</a>
+<a href='#orgc084d8d'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">defface</span> <span class="org-variable-name">org-cite</span>
@@ -4191,9 +4191,9 @@ Attempt to improve default PDF export by using the current theme
 </div>
 </details>
 
-<details id='org964b171' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='org37af5e7' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#org964b171'>#</a>
+<a href='#org37af5e7'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">after!</span> ox
@@ -4406,8 +4406,8 @@ Attempt to improve default PDF export by using the current theme
 </div>
 </div>
 
-<div id="outline-container-org917a12f" class="outline-2">
-<h2 id="org917a12f"><span class="section-number-2">6.</span> Mu4e<a aria-hidden="true" href="#org917a12f">#</a> </h2>
+<div id="outline-container-orgdcacedd" class="outline-2">
+<h2 id="orgdcacedd"><span class="section-number-2">6.</span> Mu4e<a aria-hidden="true" href="#orgdcacedd">#</a> </h2>
 <div class="outline-text-2" id="text-6">
 <p>
 I&rsquo;m trying out emails in emacs, should be nice. Related, check .mbsyncrc to
@@ -4417,9 +4417,9 @@ setup your emails first
 <p>
 10 minutes is a reasonable update time
 </p>
-<details id='org352636e' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
+<details id='org62afc82' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
 <div class='gutter'>
-<a href='#org352636e'>#</a>
+<a href='#org62afc82'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">setq</span> mu4e-update-interval <span class="org-highlight-numbers-number">300</span><span class="org-rainbow-delimiters-depth-1">)</span>
@@ -4427,9 +4427,9 @@ setup your emails first
 </div>
 </details>
 
-<details id='orgfc46a47' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='orgef91b4d' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#orgfc46a47'>#</a>
+<a href='#orgef91b4d'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-function-name">set-email-account!</span> <span class="org-string">"shaunsingh0207"</span>
@@ -4476,9 +4476,9 @@ setup your emails first
 <p>
 We can also send messages using msmtp
 </p>
-<details id='org232e5b4' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
+<details id='org3b8ad4a' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
 <div class='gutter'>
-<a href='#org232e5b4'>#</a>
+<a href='#org3b8ad4a'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">setq</span> sendmail-program <span class="org-string">"/opt/homebrew/bin/msmtp"</span>
@@ -4493,9 +4493,9 @@ We can also send messages using msmtp
 <p>
 Notifications are quite nifty, especially if I&rsquo;m as lazy as I am
 </p>
-<details id='org7b9fb36' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
+<details id='orgf497755' class='code' open><summary><span class="lang">Emacs Lisp</span></summary>
 <div class='gutter'>
-<a href='#org7b9fb36'>#</a>
+<a href='#orgf497755'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-emacs-lisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">setq</span> alert-default-style <span class="org-highlight-quoted-quote">'</span><span class="org-highlight-quoted-symbol">osx-notifier</span><span class="org-rainbow-delimiters-depth-1">)</span>
@@ -4505,15 +4505,15 @@ Notifications are quite nifty, especially if I&rsquo;m as lazy as I am
 </div>
 </div>
 
-<div id="outline-container-org4179120" class="outline-2">
-<h2 id="org4179120"><span class="section-number-2">7.</span> Magit<a aria-hidden="true" href="#org4179120">#</a> </h2>
+<div id="outline-container-org79640b8" class="outline-2">
+<h2 id="org79640b8"><span class="section-number-2">7.</span> Magit<a aria-hidden="true" href="#org79640b8">#</a> </h2>
 <div class="outline-text-2" id="text-7">
 <p>
 Show gravatars where possible
 </p>
-<details id='orge954667' class='code' open><summary><span class="lang">elisp</span></summary>
+<details id='org0f913b1' class='code' open><summary><span class="lang">elisp</span></summary>
 <div class='gutter'>
-<a href='#orge954667'>#</a>
+<a href='#org0f913b1'>#</a>
 <button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button></div>
 <div class="org-src-container">
 <pre class="src src-elisp"><span class="org-rainbow-delimiters-depth-1">(</span><span class="org-keyword">setq</span> <span class="org-variable-name">magit-revision-show-gravatars</span> <span class="org-highlight-quoted-quote">'</span><span class="org-rainbow-delimiters-depth-2">(</span><span class="org-string">"^Author:     "</span> . <span class="org-string">"^Commit:     "</span><span class="org-rainbow-delimiters-depth-2">)</span><span class="org-rainbow-delimiters-depth-1">)</span>
@@ -4526,7 +4526,7 @@ Show gravatars where possible
 <div id="postamble" class="status">
 <p class="date">Date: <!--<a href="https://github.com/shaunsingh/vimrc-dotfiles/commit/fatal: not a git repository (or any of the parent directories): .git" style="text-decoration: none"><code style="padding: 0; color: var(--text-light); font-size: inherit; opacity: 0.7">fatal: not a git repository (or any of the parent directories): .git</code></a>--> 2021-08-19 04:46 UTC, <a href="https://github.com/shaunsingh/vimrc-dotfiles/commit/fatal: not a git repository (or any of the parent directories): .git" style="text-decoration: none"><code style="padding: 0; color: var(--text-light); font-size: inherit; opacity: 0.7">fatal: not a git repository (or any of the parent directories): .git</code></a></p>
 <p class="author">Author: Shaurya Singh</p>
-<p class="date">Created: 2021-08-19 Thu 04:47</p>
+<p class="date">Created: 2021-08-19 Thu 05:31</p>
 </div>
 </div>
 </body>
