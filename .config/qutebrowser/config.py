@@ -1,9 +1,9 @@
 config.load_autoconfig(False)
 
 base00 = "#242730"
-base01 = "#2a2e38"
-base02 = "#484854"
-base03 = "#62686E"
+base01 = "#242730"
+base02 = "#242730"
+base03 = "#242730"
 base04 = "#bbc2cf"
 base05 = "#bbc2cf"
 base06 = "#bbc2cf"
