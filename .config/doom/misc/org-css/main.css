@@ -95,22 +95,22 @@ summary {
   --switch-text: "dark mode?"; }
 
 #theme-switch:checked ~ #page {
-  --accent: #002642;
-  --accent-dark: #daf1ff;
-  --code-foreground: #a1a8ae;
-  --code-background: #222;
-  --code-func: #bd56ad;
-  --code-const: #8755ab;
-  --code-regex: #a184b3;
-  --back-white: #000;
-  --back-light: #181818;
-  --back-medium: #444;
-  --text-light: #7b7b7b;
-  --text-gray: #c8c8c8;
-  --text-medium: #ddd;
-  --text-dark: #efefef;
+  --accent: #2a2e38;
+  --accent-dark: #484854;
+  --code-foreground: #bbc2cf;
+  --code-background: #2a2e38;
+  --code-func: #7bc275;
+  --code-const: #C57BDB;
+  --code-regex: #51afef;
+  --back-white: #242730;
+  --back-light: #242730;
+  --back-medium: #5d656b;
+  --text-light: #62686e;
+  --text-gray: #51afef;
+  --text-medium: #c57bdb;
+  --text-dark: #BBC2cf;
   --switch-icon: "🌝";
-  --switch-shadow-color: #fce477;
+  --switch-shadow-color: #FCCE7b;
   --switch-text: "light mode?"; }
   #theme-switch:checked ~ #page img.invertible, #theme-switch:checked ~ #page object.invertible[type="image/svg+xml"] {
     filter: invert(90%) hue-rotate(180deg) sepia(1%); }
