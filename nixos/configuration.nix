@@ -99,6 +99,7 @@
     ## neovim-nightly
     ## emacsPgtkGcc
     neovim
+
     emacsNg-src.defaultPackage.x86_64-linux
 
     # Emacs config deps (latex, aspell)
