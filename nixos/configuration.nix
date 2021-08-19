@@ -98,7 +98,7 @@
     # Editors
     neovim-nightly
     emacsPgtkGcc
-    ## neovim
+    # neovim
     ## emacsNg-src.defaultPackage.x86_64-linux
 
     # Emacs config deps (latex, aspell)
@@ -106,13 +106,6 @@
     (aspellWithDicts (dicts: with dicts; [ en en-computers en-science ]))
     tectonic
 
-  ];
-
-  # sadly neovim-nightly's flake is broken
-  nixpkgs.overlays = [
-    (import (builtins.fetchTarball {
-      url = https://github.com/nix-community/neovim-nightly-overlay/archive/master.tar.gz;
-    }))
   ];
 
   # use sway :chad:
