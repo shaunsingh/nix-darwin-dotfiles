@@ -18,9 +18,6 @@
             nixpkgs.overlays = [
               emacs-overlay.overlay
               neovim-nightly-overlay.overlay
-              (self: super: {
-                unstable = nixpkgs-unstable.legacyPackages.x86_64-linux;
-              })
             ];
           })
         ];
