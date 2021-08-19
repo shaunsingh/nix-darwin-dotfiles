@@ -7,7 +7,7 @@ env:
 window:
    padding:
     x: 0
-    y: 5
+    y: 0
 
    decorations: None
 
@@ -27,7 +27,7 @@ font:
     style: Italic
 
   # Font size
-  # size: 11.0
+  size: 11.0
 
 mouse:
   hide_when_typing: true
