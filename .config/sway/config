@@ -197,7 +197,7 @@ bindsym XF86MonBrightnessDown exec brightnessctl -q set 5%- # decrease screen br
 ## border_images.urgent ~/.config/sway/borders/dropShadowDarkOffset.png
 
 # Window borders
-default_border pixel 15
+default_border pixel 1
 default_floating_border normal
 
 # don't like smart gaps
