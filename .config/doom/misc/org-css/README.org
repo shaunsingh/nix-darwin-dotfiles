@@ -1,4 +1,4 @@
-#+title: Pile Theme
+#+title: Doom Vibrant Theme
 #+property: header-args:shell :tangle build.sh :shebang "#!/usr/bin/env bash" :comments none
 
 A sass-based set of styles to be used by Org when exporting to HTML.
@@ -10,6 +10,8 @@ This is a modified version of [[https://lepisma.xyz/][lepisma]]'s lovely [[https
 A little non-essential JS has been added to provide:
 + Functionality for copy-to-clipboard buttons
 + Have the table of contents auto-expand based on the current scroll position
+
+CSS has also been adjusted to make use of the doom-vibrant colors
 
 * Development
 To build =main.css= and =main.js=, I simply run

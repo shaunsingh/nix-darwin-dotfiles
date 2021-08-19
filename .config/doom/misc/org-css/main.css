@@ -76,6 +76,27 @@ summary {
 
 /*! end normalise.css */
 #page {
+  --accent: #2a2e38;
+  --accent-dark: #484854;
+  --code-foreground: #bbc2cf;
+  --code-background: #2a2e38;
+  --code-func: #7bc275;
+  --code-const: #C57BDB;
+  --code-regex: #51afef;
+  --back-white: #000;
+  --back-light: #242730;
+  --back-medium: #484854;
+  --text-light: #c57BDB;
+  --text-gray: #51afef;
+  --text-medium: #c57BDB;
+  --text-dark: #BBC2cf;
+  --switch-icon: "🌝";
+  --switch-shadow-color: #FCCE7b;
+  --switch-text: "light mode?"; }
+  #page img.invertible, #page object[type="image/svg+xml"].invertible {
+    filter: invert(90%) hue-rotate(180deg) sepia(1%); }
+
+#theme-switch:checked ~ #page {
   --accent: #002642;
   --accent-dark: #00151c;
   --code-foreground: #2c3e50;
@@ -93,27 +114,6 @@ summary {
   --switch-icon: "🌚";
   --switch-shadow-color: #373d4e;
   --switch-text: "dark mode?"; }
-
-#theme-switch:checked ~ #page {
-  --accent: #2a2e38;
-  --accent-dark: #484854;
-  --code-foreground: #bbc2cf;
-  --code-background: #2a2e38;
-  --code-func: #7bc275;
-  --code-const: #C57BDB;
-  --code-regex: #51afef;
-  --back-white: #242730;
-  --back-light: #242730;
-  --back-medium: #5d656b;
-  --text-light: #62686e;
-  --text-gray: #51afef;
-  --text-medium: #c57bdb;
-  --text-dark: #BBC2cf;
-  --switch-icon: "🌝";
-  --switch-shadow-color: #FCCE7b;
-  --switch-text: "light mode?"; }
-  #theme-switch:checked ~ #page img.invertible, #theme-switch:checked ~ #page object[type="image/svg+xml"].invertible {
-    filter: invert(90%) hue-rotate(180deg) sepia(1%); }
 
 #theme-switch {
   display: none; }
