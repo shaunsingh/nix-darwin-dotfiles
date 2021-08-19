@@ -83,12 +83,12 @@ summary {
   --code-func: #7bc275;
   --code-const: #C57BDB;
   --code-regex: #51afef;
-  --back-white: #000;
+  --back-white: #2a2e38;
   --back-light: #242730;
   --back-medium: #5D656B;
   --text-light: #c57BDB;
   --text-gray: #51afef;
-  --text-medium: #c57BDB;
+  --text-medium: #7bc275;
   --text-dark: #BBC2cf;
   --switch-icon: "🌝";
   --switch-shadow-color: #FCCE7b;
@@ -1804,13 +1804,13 @@ table {
   height: 8px; }
 
 ::-webkit-scrollbar-track {
-  background: #9992; }
+  background: #242730; }
 
 ::-webkit-scrollbar-thumb {
-  background: #ccc; }
+  background: #2a2e38; }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #888; }
+  background: #484854; }
 
 @media (min-width: 1280px) {
   #table-of-contents {

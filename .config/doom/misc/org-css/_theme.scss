@@ -26,21 +26,27 @@ $text-dark: var(--text-dark);
 #page {
     --accent: #2a2e38;
     --accent-dark: #5D656B;
+
     --code-foreground: #bbc2cf;
     --code-background: #2a2e38;
+
     --code-func: #7bc275;
     --code-const: #C57BDB;
     --code-regex: #51afef;
-    --back-white: #000;
+
+    --back-white: #2a2e38;
     --back-light: #242730;
     --back-medium: #5D656B;
+
     --text-light: #c57BDB;
     --text-gray: #51afef;
-    --text-medium: #c57BDB;
+    --text-medium: #7bc275;
     --text-dark: #BBC2cf;
+
     --switch-icon: "🌝";
     --switch-shadow-color: #FCCE7b;
     --switch-text: "light mode?";
+
     img.invertible, object[type="image/svg+xml"].invertible {
         filter: invert(90.0%) hue-rotate(180deg) sepia(1%);
     }
