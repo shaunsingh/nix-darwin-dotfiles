@@ -26,6 +26,8 @@ if command -v csso &> /dev/null; then
 fi
 #+end_src
 
+#+RESULTS:
+
 Then for combining the JS
 
 #+begin_src shell
