@@ -96,7 +96,7 @@
     qutebrowser
 
     # Editors
-    ## neovim-nightly
+    neovim-nightly
     emacsPgtkGcc
     ## neovim
     ## emacsNg-src.defaultPackage.x86_64-linux
@@ -104,22 +104,16 @@
     # Emacs config deps (latex, aspell)
     ## (pkgs.texlive.combine { inherit (pkgs.texlive) scheme-small dvipng dvisvgm l3packages xcolor soul adjustbox collectbox amsmath siunitx cancel mathalpha capt-of chemfig wrapfig mhchem latexmk; })
     (aspellWithDicts (dicts: with dicts; [ en en-computers en-science ]))
-    ## tectonic
+    tectonic
 
   ];
 
-  let
-    unstable = import
-      (builtins.fetchTarball https://github.com/nixos/nixpkgs/tarball/<branch or commit>)
-      # reuse the current configuration
-      { config = config.nixpkgs.config; };
-    in
-  {
-    environment.systemPackages = with pkgs; [
-      neovim
-      tectonic
-    ];
-  }
+  # sadly neovim-nightly's flake is broken
+  nixpkgs.overlays = [
+    (import (builtins.fetchTarball {
+      url = https://github.com/nix-community/neovim-nightly-overlay/archive/master.tar.gz;
+    }))
+  ];
 
   # use sway :chad:
   programs.sway = {
