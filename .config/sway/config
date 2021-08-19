@@ -205,7 +205,9 @@ default_floating_border normal
 ## smart_gaps on
 
 # gaps to match alacritty
-gaps inner 30
+gaps inner 0
+gaps horizontal 30
+gaps vertical 30
 
 # Use colorscheme
 include colorscheme
