@@ -98,7 +98,7 @@
     # Editors
     ## neovim-nightly
     emacsPgtkGcc
-    neovim
+    ## neovim
     ## emacsNg-src.defaultPackage.x86_64-linux
 
     # Emacs config deps (latex, aspell)
@@ -108,6 +108,14 @@
 
   ];
 
+  
+  let
+    unstable-pkgs = import <unstable> {};
+  in
+  {
+    environment.systemPackages = [ unstable-pkgs.neovim ]
+  }
+  
   # use sway :chad:
   programs.sway = {
    enable = true;
