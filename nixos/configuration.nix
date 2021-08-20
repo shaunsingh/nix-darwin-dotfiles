@@ -156,9 +156,9 @@
   };
 
   # battery life stuff
-  services.tlp.enable = true;
+  # services.tlp.enable = true;
   services.auto-cpufreq.enable = true;
-  powerManagement.powertop.enable = true;
+  services.power-profiles-daemon.enable = true;
 
   # Macbook (non-pro), I mean it should work right?
   services.mbpfan.enable = true;
