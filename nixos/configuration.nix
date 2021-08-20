@@ -11,7 +11,6 @@
       experimental-features = nix-command flakes
     '';
   };
-
   # Use the unstable branch
   ## system.autoUpgrade.channel = https://nixos.org/channels/nixos-unstable;
 
@@ -36,7 +35,8 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   # Set your time zone.
-  time.timeZone = "US/New York";
+  ## time.timeZone = "US/New York";
+  services.localtime.enable = true;
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
