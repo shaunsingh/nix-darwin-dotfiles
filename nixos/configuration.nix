@@ -95,17 +95,16 @@
     ## nyxt
     qutebrowser
 
-    # Editors
-    ## neovim-nightly
-    ## emacsPgtkGcc
-    neovim
-
-    emacsNg-src.defaultPackage.x86_64-linux
-
     # Emacs config deps (latex, aspell)
     ## (pkgs.texlive.combine { inherit (pkgs.texlive) scheme-small dvipng dvisvgm l3packages xcolor soul adjustbox collectbox amsmath siunitx cancel mathalpha capt-of chemfig wrapfig mhchem latexmk; })
     (aspellWithDicts (dicts: with dicts; [ en en-computers en-science ]))
     tectonic
+
+    # Editors
+    ## neovim-nightly
+    ## emacsPgtkGcc
+    neovim
+    emacsNg-src.defaultPackage.x86_64-linux
 
   ];
 
@@ -158,6 +157,9 @@
 
   # battery life stuff
   services.tlp.enable = true;
+  powerManagement.powertop.enable = true;
+  services.thermald.enable = true;
+  services.auto-cpufreq.enable = true;
 
   # Use fish, launch sway after login
   programs.fish = {
