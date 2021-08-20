@@ -2755,7 +2755,7 @@ This is done according to `org-latex-feature-implementations'"
 **** Tectonic
 Use tectonic
 #+begin_src emacs-lisp
-(setq org-latex-pdf-process '("tectonic -X compile --outdir=%o -Z shell-escape %f"))
+(setq org-latex-pdf-process '("tectonic -X compile --print --outdir=%o %f"))
 #+end_src
 
 With that, we can disable auctex

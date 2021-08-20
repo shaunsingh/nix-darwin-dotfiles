@@ -2560,7 +2560,7 @@ This is done according to `org-latex-feature-implementations'"
               (org-latex-generate-features-preamble (org-latex-detect-features nil info--tmp))
               "\n"))))
 
-(setq org-latex-pdf-process '("tectonic -X compile --outdir=%o -Z shell-escape %f"))
+(setq org-latex-pdf-process '("tectonic -X compile --print --outdir=%o %f"))
 
 (defadvice! no-auto-mode-alist (orig-fn &rest args)
   "Wrap ORIG-FN in a let-binding that sets `auto-mode-alist' to nil."

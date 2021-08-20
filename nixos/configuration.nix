@@ -36,7 +36,7 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   # Set your time zone.
-  # time.timeZone = "Europe/Amsterdam";
+  time.timeZone = "US/New York";
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
@@ -58,7 +58,7 @@
   };
 
   # Enable printing via cups
-  services.printing.enable = true;
+  # services.printing.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.shauryasingh = {
@@ -163,7 +163,7 @@
   };
 
   # battery life stuff
-  # services.tlp.enable = true;
+  ## services.tlp.enable = true;
   services.auto-cpufreq.enable = true;
   services.power-profiles-daemon.enable = true;
 
