@@ -2,7 +2,8 @@
   nixConfig.extra-substituters = "https://emacsng.cachix.org";
   nixConfig.extra-trusted-public-keys = "emacsng.cachix.org-1:i7wOr4YpdRpWWtShI8bT6V7lOTnPeI7Ho6HaZegFWMI=";
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-21.05";
+    # nixpkgs.url = "github:NixOS/nixpkgs/nixos-21.05";
+    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     emacsNg-src.url = "github:emacs-ng/emacs-ng";
     emacs-overlay.url = "github:nix-community/emacs-overlay";
   };
