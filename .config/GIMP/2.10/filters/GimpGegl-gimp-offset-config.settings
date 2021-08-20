@@ -1,9 +1,0 @@
-# settings
-
-(GimpGegl-gimp-offset-config "2021-08-20 01:44:26"
-    (time 1629423866)
-    (type wrap-around)
-    (x 32)
-    (y 32))
-
-# end of settings
