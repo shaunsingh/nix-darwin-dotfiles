@@ -21,6 +21,7 @@ set $menu exec alacritty --config-file ~/.config/scripts/alacritty.yml --class l
 for_window [app_id="^launcher$"] floating enable, border none, resize set width 55 ppt height 2 ppt, move position 300 px 735 px
 
 # Default wallpaper
+# output * bg ~/wallpapers/keyswitch_grey.png fill
 output * bg ~/wallpapers/doom_vibrant_alt.png fill
 # output * bg ~/wallpapers/doom_vibrant.png fill
 
