@@ -157,12 +157,14 @@
 
   # battery life stuff
   services.tlp.enable = true;
-  services.thermald.enable = true;
   services.auto-cpufreq.enable = true;
   powerManagement.powertop.enable = true;
 
   # Macbook (non-pro), I mean it should work right?
   services.mbpfan.enable = true;
+
+  # Intel power daemon
+  services.thermald.enable = true;
 
   # Use fish, launch sway after login
   programs.fish = {
