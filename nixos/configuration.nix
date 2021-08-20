@@ -12,7 +12,14 @@
     '';
   };
 
-  # allow me to install unfree packages and firmware
+  ## Use the unstable branch
+  system.autoUpgrade.channel = https://nixos.org/channels/nixos-unstable;
+
+  # Always update nixOS
+  system.autoUpgrade.enable = true;
+  system.autoUpgrade.allowReboot = true;
+
+  # Allow me to install unfree packages and firmware
   nixpkgs.config.allowUnfree = true;
   hardware.enableRedistributableFirmware = true;
 
