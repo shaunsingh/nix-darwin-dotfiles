@@ -161,6 +161,9 @@
   services.auto-cpufreq.enable = true;
   powerManagement.powertop.enable = true;
 
+  # Macbook (non-pro), I mean it should work right?
+  services.mbpfan.enable = true;
+
   # Use fish, launch sway after login
   programs.fish = {
     enable = true;
