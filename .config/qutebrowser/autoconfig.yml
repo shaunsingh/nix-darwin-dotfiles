@@ -6,5 +6,5 @@
 
 config_version: 2
 settings:
-  content.notifications.enabled:
-    https://postimg.cc: false
+  content.media.video_capture:
+    https://webcamtests.com: true
