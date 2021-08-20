@@ -157,9 +157,9 @@
 
   # battery life stuff
   services.tlp.enable = true;
-  powerManagement.powertop.enable = true;
   services.thermald.enable = true;
   services.auto-cpufreq.enable = true;
+  powerManagement.powertop.enable = true;
 
   # Use fish, launch sway after login
   programs.fish = {
