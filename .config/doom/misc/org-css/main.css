@@ -695,7 +695,7 @@ li p + details.code {
   .src .org-rainbow-delimiters-depth-7,
   .src .org-rainbow-delimiters-depth-8,
   .src .org-rainbow-delimiters-depth-9 {
-    color: #555555; }
+    color: #5d656B; }
   .example .org-string,
   .src .org-string {
     color: #7bc275; }
@@ -703,7 +703,7 @@ li p + details.code {
   .example .org-comment-delimiter,
   .src .org-comment,
   .src .org-comment-delimiter {
-    color: #555555; }
+    color: #5d656B; }
   .example .org-function-name,
   .src .org-function-name {
     color: var(--code-func); }

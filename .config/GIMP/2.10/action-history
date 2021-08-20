@@ -1,0 +1,17 @@
+# GIMP action-history
+
+(history-item "layers-delete" 1)
+(history-item "file-open" 0)
+(history-item "view-zoom-fit-in" 0)
+(history-item "file-open-as-layers" 0)
+(history-item "filters-invert-perceptual" 0)
+(history-item "filters-offset" 1)
+(history-item "layers-new" 0)
+(history-item "image-new" 0)
+(history-item "tools-bucket-fill" 0)
+(history-item "tools-scale" 0)
+(history-item "filters-color-balance" 0)
+(history-item "layers-duplicate" 0)
+(history-item "file-quit" 1)
+
+# end of action-history

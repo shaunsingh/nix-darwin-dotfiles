@@ -7,4 +7,4 @@
 config_version: 2
 settings:
   content.notifications.enabled:
-    https://www.reddit.com: false
+    https://postimg.cc: false
