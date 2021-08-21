@@ -1,3 +1,11 @@
-insensitive=true
-matching=fuzzy
+show=drun
 normal_window=false
+matching=fuzzy
+width=500
+height=400
+always_parse_args=true
+show_all=true
+print_command=true
+layer=overlay
+insensitive=true
+prompt=
