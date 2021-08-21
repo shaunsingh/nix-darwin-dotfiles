@@ -128,7 +128,7 @@
      wofi
 
      # gtk
-     ## pop-icon-theme
+     pop-icon-theme
      ## nordic
 
      # utils
