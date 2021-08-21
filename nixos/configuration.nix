@@ -73,6 +73,9 @@
     # Dotfiles Management
     yadm
 
+    # Rust coreutils
+    uutils-coreutils
+
     # Utils
     wget
     git

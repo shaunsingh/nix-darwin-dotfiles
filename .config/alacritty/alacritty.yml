@@ -6,8 +6,8 @@ env:
 
 window:
    padding:
-    x: 30
-    y: 30
+    x: 45
+    y: 45
 
    decorations: None
 
