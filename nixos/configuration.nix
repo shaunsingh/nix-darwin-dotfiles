@@ -128,7 +128,8 @@
      wofi
 
      # gtk
-     pop-icon-theme
+     papirus-icon-theme
+     ## pop-icon-theme
      ## nordic
 
      # utils

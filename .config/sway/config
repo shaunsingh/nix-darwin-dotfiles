@@ -16,7 +16,7 @@ set $term alacritty
 # Note: I have bemenu, wofi, and alacritty setup. I find alacritty as a good balance
 
 # set $menu bemenu-run -b --ignorecase --prompt="Exec:" --fn "Liga SFMono Nerd Font 10" --nb='#2a2e38' --tb="#51afef" --fb="#2a2e38" --hb="#242730" --nf="#bbc2cf" --ff="#C57BDB" --tf="#242730" --hf="#bbc2cf"
-set $menu wofi --show=run --hide-scroll | xargs swaymsg exec --
+set $menu wofi --show=drun --allow-images --hide-scroll | xargs swaymsg exec --
 # set $menu exec alacritty --config-file ~/.config/scripts/alacritty.yml --class launcher --command sh -c 'echo -n [36m"M-x: "[37m; read cmd; swaymsg -t command exec $cmd'
 for_window [app_id="^launcher$"] floating enable, border none, resize set width 55 ppt height 2 ppt, move position 300 px 735 px
 
