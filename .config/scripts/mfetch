@@ -3,6 +3,28 @@ read -r host < /proc/sys/kernel/hostname
 read -r kernel < /proc/sys/kernel/osrelease
 . /etc/os-release
 
+## rose
+read -r -d '' rose <<- EOM
+\\033c\\033[31m    .--.---.
+   ( \\'--'/ )
+  ( '..-...' )
+   '.'-._.'.'
+ \\033[34m   <'-.,.->
+       \`\\(   _
+       < \\ / \\
+       __ \\\\|_/
+      /  \\ \\\\
+       '--'.\\ >
+             \\\\\\033[0m
+EOM
+
+## user
+user=${USER:-$(id -un)}
+
+## host
+host=${HOSTNAME:-${host:-$(hostname)}}
+[ "$host" ] || read -r host < /etc/hostname
+
 ## wm
   [ ! "$wm" ] && [ "$DISPLAY" ] && command -v xprop >/dev/null && {
     id=$(xprop -root -notype _NET_SUPPORTING_WM_CHECK)
@@ -28,6 +50,11 @@ elif command -v dpkg >/dev/null; then
 	pkgs=$(( pkgs - 32 ))
 fi
 
+## mem
+mem() {
+	free --mega | sed -n -E '2s/^[^0-9]*([0-9]+) *([0-9]+).*/'"${space}"'\2 \/ \1 MB/p'
+}
+
 ## palette
 s='[7m';   e='[m'
 c1='[31m'; c2='[32m'
@@ -37,13 +64,15 @@ c7='[30m'; c8='[37m'
 palette="$s$c7 $c7 $c1 $c1 $c2 $c2 $c3 $c3 $c4 $c4 $c5 $c5 $c6 $c6 $c8 $c8 $e"
 
 ## output
+printf "%b\\n\\n" "$rose"
 printf '%s\n' "
-  ${c3}shaunsingh${c8}
+  ${c3}${user}${c8}@${c3}${host}${c8}
   ${c6}os${c8} ~ ${PRETTY_NAME}
   ${c6}sh${c8} ~ ${SHELL##*/}
   ${c6}pa${c8} ~ ${pa}
   ${c6}wm${c8} ~ ${wm}
   ${c6}kr${c8} ~ ${ke}
+  ${c6}me${c8} ~ $(mem)
 
   ${palette}
 "

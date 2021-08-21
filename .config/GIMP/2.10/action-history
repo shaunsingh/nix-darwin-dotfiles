@@ -1,13 +1,15 @@
 # GIMP action-history
 
+(history-item "view-zoom-out" 1)
+(history-item "view-zoom-in" 4)
 (history-item "file-open" 0)
 (history-item "file-export-as" 1)
+(history-item "file-quit" 0)
+(history-item "file-save" 1)
 (history-item "tools-fuzzy-select" 0)
 (history-item "file-open-as-layers" 0)
 (history-item "layers-delete" 0)
-(history-item "filters-color-balance" 0)
-(history-item "file-save" 0)
-(history-item "file-quit" 1)
+(history-item "filters-color-balance" 1)
 (history-item "edit-fill-bg" 0)
 (history-item "image-scale" 0)
 (history-item "layers-scale" 1)
@@ -17,6 +19,7 @@
 (history-item "layers-new" 0)
 (history-item "filters-hue-saturation" 0)
 (history-item "filters-unsharp-mask" 0)
-(history-item "filters-cartoon" 1)
+(history-item "filters-cartoon" 0)
+(history-item "file-save-as" 1)
 
 # end of action-history
