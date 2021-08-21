@@ -43,7 +43,7 @@ tooltip {
 }
 
 #clock, #battery, #pulseaudio, #network, #workspaces {
-	background-color: #2a2e38;
+	background-color: #242730;
 	padding: 5px 10px;
 	margin: 5px 0px;
 }

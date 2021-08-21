@@ -16,13 +16,13 @@ set $term alacritty
 # Note: I have bemenu, wofi, and alacritty setup. I find alacritty as a good balance
 
 # set $menu bemenu-run -b --ignorecase --prompt="Exec:" --fn "Liga SFMono Nerd Font 10" --nb='#2a2e38' --tb="#51afef" --fb="#2a2e38" --hb="#242730" --nf="#bbc2cf" --ff="#C57BDB" --tf="#242730" --hf="#bbc2cf"
-# set $menu wofi --show=run --hide-scroll | xargs swaymsg exec --
-set $menu exec alacritty --config-file ~/.config/scripts/alacritty.yml --class launcher --command sh -c 'echo -n [36m"M-x: "[37m; read cmd; swaymsg -t command exec $cmd'
+set $menu wofi --show=run --hide-scroll | xargs swaymsg exec --
+# set $menu exec alacritty --config-file ~/.config/scripts/alacritty.yml --class launcher --command sh -c 'echo -n [36m"M-x: "[37m; read cmd; swaymsg -t command exec $cmd'
 for_window [app_id="^launcher$"] floating enable, border none, resize set width 55 ppt height 2 ppt, move position 300 px 735 px
 
 # Default wallpaper
-# output * bg ~/wallpapers/keyswitch_grey.png fill
-output * bg ~/wallpapers/doom_vibrant_alt.png fill
+output * bg ~/wallpapers/queen_chess fill
+# output * bg ~/wallpapers/doom_vibrant_alt.png fill
 # output * bg ~/wallpapers/doom_vibrant.png fill
 
 ### Input configuration
@@ -206,7 +206,8 @@ default_floating_border normal
 ## smart_gaps on
 
 # gaps to match alacritty
-gaps inner 0
+
+gaps inner 15
 gaps horizontal 30
 gaps vertical 30
 
