@@ -35,8 +35,8 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   # Set your time zone.
-  ## time.timeZone = "US/New York";
-  services.localtime.enable = true;
+  time.timeZone = "America/New_York";
+  ## services.localtime.enable = true;
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
