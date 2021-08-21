@@ -82,14 +82,16 @@ function _prompt_color_for_status
 end
 
 function fish_prompt
-  set -l last_status $status
+    set -l last_status $status
 
-  _print_in_color ""(prompt_pwd) blue
+    if test $HOME != $PWD
+        _print_in_color ""(prompt_pwd) blue
+    end
+    __fish_git_prompt " (%s)"
 
-  __fish_git_prompt " (%s)"
-
-  _print_in_color " λ " (_prompt_color_for_status $last_status)
+    _print_in_color " λ " (_prompt_color_for_status $last_status)
 end
+
 
 alias .. "cd .."
 alias ... "cd ../.."
@@ -105,6 +107,7 @@ alias neovide "~/IdeaProjects/neovim/neovide/target/release/neovide --multiGrid 
 alias git-rebase 'git rebase -i HEAD~2'
 alias update 'brew update; brew upgrade; brew cleanup'
 alias cleanup "find . -type f -name '*.DS_Store' -ls -delete"
+alias battery "sudo pow bat"
 
 set -x EDITOR "nvim"
 set -x PATH ~/.emacs.d/bin $PATH

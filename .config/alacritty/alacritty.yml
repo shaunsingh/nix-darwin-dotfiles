@@ -61,7 +61,7 @@ colors:
      cyan:    '#51afef'
      white:   '#bbc2cf'
 
-cursor:
+# cursor:
   # Cursor style
-  style:
-    shape: beam
+  # style:
+    # shape: beam

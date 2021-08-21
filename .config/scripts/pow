@@ -1,0 +1,165 @@
+#!/bin/sh
+#
+# pow - Simple laptop power management.
+
+log() {
+    printf '%s\n' "$*"
+}
+
+swap() {
+    # Swap between two values based on mode.
+    # Usage: swap bat_val pow_val dest_file.
+    [ "$mode" = bat ] || set -- "$2" "" "$3"
+    [ -f "$3" ]       || return 0
+
+    printf %s "$1" 2>/dev/null > "$3" || return 0
+    log Changed "$3" to "$1"
+}
+
+main() {
+    # Require root to run pow. Simply unset all arguments
+    # so the usage error is triggered below.
+    # [ "$(id -u)" = 0 ] ||
+        # set --
+
+    # Store the desired mode. If empty (no passed arg),
+    # exit displaying usage.
+    # mode=${1:?Usage: ${0##*/} bat|pow (run as root)}
+
+    # If an invalid mode was given as input, rerun main()
+    # with no argument to display the above usage message.
+    [ "$mode" = bat ]  || [ "$mode" = pow ] ||
+        main ""
+
+    log -\> Tweaking virtual memory; {
+        # How often the kernel will swap physical memory
+        # to the disk. The higher the value, the more
+        # swaps will occur.
+        #
+        # Leave this set at '10' regardless of power mode.
+        # The default is typically '60' for laptop/desktop
+        # workloads though '10' is being recommended more
+        # and more today.
+        #
+        # For reference, on server and hypervisor workloads
+        # this is usually set to '0'. Users of systems
+        # with a good amount of ram and an SSD sometimes
+        # set this to '1' to increase the lifespan of SSDs.
+        #
+        # This has the potential to improve performance
+        # though this is on a case-by-case basis and
+        # depends on the system and its workloads.
+        swap 10 10 /proc/sys/vm/swappiness
+
+        # The kernel flusher threads will periodically wake up
+        # and write old data out to disk. This controls how
+        # often this happens.
+        #
+        # Set to '1500' on battery as per powertop
+        # recommendations.
+        swap 1500 500 /proc/sys/vm/dirty_writeback_centisecs
+
+        # Let's not touch any other settings in /proc/sys/vm/
+        # and nstead toggle the kernel's built in laptop
+        # mode to handle them for us.
+        #
+        # kernel.org/doc/Documentation/laptops/laptop-mode.txt
+        swap 5 0 /proc/sys/vm/laptop_mode
+    }
+
+    log -\> Tweaking CPU governor/scheduler; {
+        # Set the CPU governor to 'ondemand' when running on
+        # battery and 'performance' when running on power.
+        #
+        # Most distributions today will leave the system on
+        # 'ondemand' by default regardless of mode.
+        for cpu in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor; do
+            swap ondemand performance "$cpu"
+        done
+
+        # Power aware CPU scheduler. Not all systems have
+        # this. pow will silently skip changing this option.
+        swap 1 0 /sys/devices/system/cpu/sched_mc_power_savings
+    }
+
+    log -\> Tweaking SCSI link power policy; {
+        for cpu in /sys/class/scsi_host/host*/link_power_management_policy; do
+            swap min_power max_performance "$cpu"
+        done
+    }
+
+    log -\> Tweaking device auto-suspend; {
+        for dev in /sys/bus/usb/devices/*/power/control \
+                   /sys/bus/pci/devices/*/power/control \
+                   /sys/bus/pci/devices/*/ata[0-9]*/power/control \
+                   /sys/bus/i2c/devices/*/power/control \
+                   /sys/block/*/power/control; do
+            swap auto on "$dev"
+        done
+    }
+
+    log -\> Tweaking ASPM; {
+        # WARNING: This may cause a system hang if ASPM isn't
+        #          supported by your hardware.
+        #
+        # WARNING: Comment this out if that is the case.
+        swap powersave performance /sys/module/pcie_aspm/parameters/policy
+    }
+
+    log -\> Tweaking display brightness; {
+        # Set the brightness to '80%' of the maximum when on
+        # battery. Change the '8' if you'd like to lower the
+        # brightness further.
+        for mon in /sys/class/backlight/*/; do
+            read -r max < "$mon/max_brightness"
+
+            swap "$((max * 8 / 10))" "$max" > "$mon/brightness"
+        done
+    }
+
+    # log -\> Turning Wifi off/on; {
+    #     # Self explanatory. Uncomment to enable the
+    #     # behavior.
+    #     case $mode in
+    #         bat) rfkill block   wlan ;;
+    #         pow) rfkill unblock wlan ;;
+    #     esac
+
+    #     rfkill list wlan
+    # } ||:
+
+    log -\> Turning bluetooth off/on; {
+        # Self explanatory. Comment this out to disable the
+        # behavior. Change pow's rfkill command to unblock
+        # to enable bluetooth on power.
+        case $mode in
+            bat) rfkill block bluetooth ;;
+            pow) rfkill block bluetooth ;;
+        esac
+
+        rfkill list bluetooth
+    } ||:
+
+    log -\> Tweaking wake on lan; {
+        # Let's always disable this regardless of mode.
+        # Comment this out or see the bluetooth section
+        # above for how to toggle it.
+        for dev in /sys/class/net/*; do
+            ethtool -s "$dev" wol d >/dev/null 2>&1
+        done
+    } ||:
+
+    log -\> Tweaking kernel watchdog; {
+        # Disable the kernel watchdog when on battery.
+        #
+        # This disables periodic interrupts which the kernel
+        # uses to monitor whether any CPU has locked up and
+        # and print debug messages if so.
+        #
+        # Set this to '0 1' to enable the kernel watchdog
+        # when on power. Default is always disabled.
+        swap 0 0 /proc/sys/kernel/nmi_watchdog
+    }
+}
+
+main "$@"i
