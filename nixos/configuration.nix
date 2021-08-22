@@ -19,9 +19,11 @@
   ## system.autoUpgrade.enable = true;
   ## system.autoUpgrade.allowReboot = true;
 
-  # Allow me to install unfree packages and firmware
+  # Allow me to install unfree packages
   nixpkgs.config.allowUnfree = true;
-  hardware.enableRedistributableFirmware = true;
+
+  # Use the Zen Kernel
+  boot.kernelPackages = pkgs.linuxPackages_zen;
 
   # Network settings.
   networking = {
@@ -85,9 +87,6 @@
     exa
     bat
     fd
-
-    # forgive me stallman
-    firmwareLinuxNonfree
 
     # Terminal stuff
     ## neofetch
