@@ -108,6 +108,8 @@ alias git-rebase 'git rebase -i HEAD~2'
 alias update 'brew update; brew upgrade; brew cleanup'
 alias cleanup "find . -type f -name '*.DS_Store' -ls -delete"
 alias battery "sudo pow bat"
+alias clock "alacritty --config-file ~/.config/scripts/alacritty.yml --class clock --command sh -c 'tty-clock -c -b -n -C6'"
+alias top "alacritty --config-file ~/.config/scripts/alacritty.yml --class htop --command sh -c 'htop -C -M'"
 
 set -x EDITOR "nvim"
 set -x PATH ~/.emacs.d/bin $PATH

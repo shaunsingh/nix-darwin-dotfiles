@@ -7,6 +7,7 @@
     emacsNg-src.url = "github:emacs-ng/emacs-ng";
     emacs-overlay.url = "github:nix-community/emacs-overlay";
     eww.url = "github:elkowar/eww";
+    neovim.url = "github:neovim/neovim?dir=contrib";
   };
   outputs = { nixpkgs, emacsNg-src, emacs-overlay, eww, ... }@inputs: {
     nixosConfigurations = {
@@ -19,6 +20,7 @@
           ({ pkgs, ... }: {
             nixpkgs.overlays = [
               emacs-overlay.overlay
+              neovim.overlay
             ];
           })
         ];

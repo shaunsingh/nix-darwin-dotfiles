@@ -219,10 +219,10 @@ client.placeholder      $base00 $base00 $base05 $base00 $base00
 client.background       $base07
 
 # clock and htop
-for_window [app_id="^htop$"] floating enable, border none, resize set width 35 ppt height 20 ppt, move position 737 px 220 px
-for_window [app_id="^clock$"] floating enable, border none, resize set width 35 ppt height 30 ppt, move position 722 px 30 px
-exec alacritty --config-file ~/.config/scripts/alacritty.yml --class clock --command sh -c 'tty-clock -c -b -n -C6'
-exec alacritty --config-file ~/.config/scripts/alacritty.yml --class htop --command sh -c 'htop -C -M'
+for_window [app_id="^htop$"] floating enable, border none, resize set width 35 ppt height 15 ppt, move position 730 px 380 px
+for_window [app_id="^clock$"] floating enable, border none, resize set width 35 ppt height 25 ppt, move position 700 px 230 px
+# exec alacritty --config-file ~/.config/scripts/alacritty.yml --class clock --command sh -c 'tty-clock -c -b -n -C6'
+# exec alacritty --config-file ~/.config/scripts/alacritty.yml --class htop --command sh -c 'htop -C -M'
 
 # use xwayland (lazy)
 xwayland enable
