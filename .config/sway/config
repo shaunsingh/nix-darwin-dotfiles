@@ -39,7 +39,7 @@ input type:keyboard {
 }
 
 ### Display Config
-output LVDS-1 mode 1280x800@120Hz
+# output LVDS-1 mode 1280x800@120Hz
 
 ### Lock and Sleep
 exec {
@@ -47,7 +47,7 @@ exec {
 	$idle_path
 }
 # Lock the screen
-bindsym $mod+l exec $lock_path
+bindsym $mod+x exec $lock_path
 
 ### Key bindings
 # Basics:
