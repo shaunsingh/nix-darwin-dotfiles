@@ -1,0 +1,13 @@
+font=Liga SFMono Nerd Font
+background-color=#242730d0
+progress-color=#bbc2cfd0
+icons=1
+padding=20
+width=450
+border-color=#2a2e38d0
+border-size=3
+border-radius=8
+actions=1
+default-timeout=3333
+# ignore-timeout=1
+layer=overlay
