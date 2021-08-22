@@ -65,4 +65,4 @@ cursor:
   # Cursor style
   style:
     shape: underline
-    blinking: on
+    blinking: off
