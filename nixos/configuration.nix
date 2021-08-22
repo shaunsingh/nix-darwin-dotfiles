@@ -1,6 +1,6 @@
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, emacsNg-src, ... }:
+{ config, pkgs, emacsNg-src, eww, ... }:
 
 {
 
@@ -138,6 +138,7 @@
      # utils
      grim
      slurp
+     eww.defaultPackage.x86_64-linux
 
      # clipboard and recording
      wl-clipboard

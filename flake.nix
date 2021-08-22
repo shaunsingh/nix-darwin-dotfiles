@@ -6,8 +6,9 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     emacsNg-src.url = "github:emacs-ng/emacs-ng";
     emacs-overlay.url = "github:nix-community/emacs-overlay";
+    eww.url = "github:elkowar/eww";
   };
-  outputs = { nixpkgs, emacsNg-src, emacs-overlay, ... }@inputs: {
+  outputs = { nixpkgs, emacsNg-src, emacs-overlay, eww, ... }@inputs: {
     nixosConfigurations = {
       shaunsingh-laptop = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
