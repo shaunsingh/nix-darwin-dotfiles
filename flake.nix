@@ -9,7 +9,7 @@
     eww.url = "github:elkowar/eww";
     neovim.url = "github:neovim/neovim?dir=contrib";
   };
-  outputs = { nixpkgs, emacsNg-src, emacs-overlay, eww, ... }@inputs: {
+  outputs = { nixpkgs, emacsNg-src, emacs-overlay, eww, neovim, ... }@inputs: {
     nixosConfigurations = {
       shaunsingh-laptop = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";

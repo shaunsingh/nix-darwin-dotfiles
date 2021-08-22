@@ -114,9 +114,9 @@
     tectonic
 
     # Editors
-    neovim-nightly
+    ## neovim-nightly
     ## emacsPgtkGcc
-    ## neovim
+    neovim
     emacsNg-src.defaultPackage.x86_64-linux
 
   ];

@@ -17,11 +17,11 @@
     },
     "emacs-overlay": {
       "locked": {
-        "lastModified": 1629563608,
-        "narHash": "sha256-lxaSJVP56WWC9fUNUUM1i5+VH4T1PbVTNPhwWZ6effc=",
+        "lastModified": 1629653295,
+        "narHash": "sha256-Nxx+1mX6bii9WDrPFYA+Tjt/X8yW9jzhesu5RKL7TW0=",
         "owner": "nix-community",
         "repo": "emacs-overlay",
-        "rev": "8fe125ce72dfaa90451f15ec6fd00c8a2d37599f",
+        "rev": "230f699f9dbf18fc665d484d26dfa6ed8943cb89",
         "type": "github"
       },
       "original": {
@@ -238,6 +238,21 @@
         "type": "github"
       }
     },
+    "flake-utils_5": {
+      "locked": {
+        "lastModified": 1623875721,
+        "narHash": "sha256-A8BU7bjS5GirpAUv4QA+QnJ4CceLHkcXdRp4xITDB0s=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "f7e004a55b120c02ecb6219596820fcd32ca8772",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
     "naersk": {
       "inputs": {
         "nixpkgs": [
@@ -273,6 +288,27 @@
       "original": {
         "owner": "nmattia",
         "repo": "naersk",
+        "type": "github"
+      }
+    },
+    "neovim": {
+      "inputs": {
+        "flake-utils": "flake-utils_5",
+        "nixpkgs": "nixpkgs_4"
+      },
+      "locked": {
+        "dir": "contrib",
+        "lastModified": 1629646157,
+        "narHash": "sha256-rCO1PyCZFRJwGOg+IwRchTiGAQSPc8eQ3UG5jHsgAjg=",
+        "owner": "neovim",
+        "repo": "neovim",
+        "rev": "649dbb3b15949aee9d9e25cd39cca1e3e3a4ee45",
+        "type": "github"
+      },
+      "original": {
+        "dir": "contrib",
+        "owner": "neovim",
+        "repo": "neovim",
         "type": "github"
       }
     },
@@ -322,6 +358,22 @@
     },
     "nixpkgs_4": {
       "locked": {
+        "lastModified": 1625697353,
+        "narHash": "sha256-/v85RkZ0Z+lxipkG2sjYNRINktc8VySbLQmPbirY0hQ=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "87807e64a5ef5206b745a40af118c7be8db73681",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_5": {
+      "locked": {
         "lastModified": 1629379651,
         "narHash": "sha256-k4WWTLqz3tYvCCVt9ANm3Ac7qR/qXi1Uk6Xf9RXO8VM=",
         "owner": "nixos",
@@ -363,7 +415,8 @@
         "emacs-overlay": "emacs-overlay",
         "emacsNg-src": "emacsNg-src",
         "eww": "eww",
-        "nixpkgs": "nixpkgs_4"
+        "neovim": "neovim",
+        "nixpkgs": "nixpkgs_5"
       }
     },
     "rust-analyzer-src": {
