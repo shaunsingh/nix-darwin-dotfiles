@@ -36,8 +36,8 @@ mouse:
 colors:
    # Default colors
    primary:
-     background: '#2a2e38'
-     foreground: '#bbc2cf'
+     background: '#bbc2cf'
+     foreground: '#242730'
 
    # Normal colors
    normal:
@@ -47,7 +47,7 @@ colors:
      yellow:  '#FCCE7B'
      blue:    '#5cEfFF'
      magenta: '#C57BDB'
-     cyan:    '#51afef'
+     cyan:    '#242730'
      white:   '#bbc2cf'
 
    # Bright colors
@@ -58,7 +58,7 @@ colors:
      yellow:  '#fcce7b'
      blue:    '#5cefff'
      magenta: '#c57bdb'
-     cyan:    '#51afef'
+     cyan:    '#242730'
      white:   '#bbc2cf'
 
 cursor:

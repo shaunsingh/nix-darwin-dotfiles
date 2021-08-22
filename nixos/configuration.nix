@@ -11,6 +11,7 @@
       experimental-features = nix-command flakes
     '';
   };
+
   # Use the unstable branch
   ## system.autoUpgrade.channel = https://nixos.org/channels/nixos-unstable;
 
@@ -93,6 +94,8 @@
     ## starship
     alacritty
     tmux
+    tty-clock
+    htop
 
     # Mail
     ## offlineimap
@@ -138,7 +141,7 @@
      # utils
      grim
      slurp
-     eww.defaultPackage.x86_64-linux
+     ## eww.defaultPackage.x86_64-linux
 
      # clipboard and recording
      wl-clipboard
