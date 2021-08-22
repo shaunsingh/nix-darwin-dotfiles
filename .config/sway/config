@@ -221,6 +221,7 @@ client.background       $base07
 # clock and htop
 for_window [app_id="^htop$"] floating enable, border none, resize set width 35 ppt height 15 ppt, move position 730 px 380 px
 for_window [app_id="^clock$"] floating enable, border none, resize set width 35 ppt height 25 ppt, move position 700 px 230 px
+for_window [app_id="^fetch$"] floating enable, border none, resize set width 35 ppt height 25 ppt, move position 730 px 480 px
 # exec alacritty --config-file ~/.config/scripts/alacritty.yml --class clock --command sh -c 'tty-clock -c -b -n -C6'
 # exec alacritty --config-file ~/.config/scripts/alacritty.yml --class htop --command sh -c 'htop -C -M'
 

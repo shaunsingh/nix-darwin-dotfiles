@@ -110,6 +110,7 @@ alias cleanup "find . -type f -name '*.DS_Store' -ls -delete"
 alias battery "sudo pow bat"
 alias clock "alacritty --config-file ~/.config/scripts/alacritty.yml --class clock --command sh -c 'tty-clock -c -b -n -C6'"
 alias top "alacritty --config-file ~/.config/scripts/alacritty.yml --class htop --command sh -c 'htop -C -M'"
+alias fetch "alacritty --config-file ~/.config/scripts/alacritty.yml --class fetch --command sh -c 'wfetch'"
 
 set -x EDITOR "nvim"
 set -x PATH ~/.emacs.d/bin $PATH

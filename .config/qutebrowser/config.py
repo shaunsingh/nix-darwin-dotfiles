@@ -17,6 +17,25 @@ base0D = "#FCCE7B"
 base0E = "#7bc275"
 base0F = "#C57BDB"
 
+
+# Default font size to use.
+c.fonts.default_size = '10pt'
+
+# Font used in the statusbar.
+c.fonts.statusbar = 'default_size "Liga SFMono Nerd Font"'
+
+# URLS n Stuff
+c.url.searchengines = {'DEFAULT': 'https://duckduckgo.com/?q={}', 'aw': 'https://wiki.archlinux.org/?search={}', 'goog': 'https://www.google.com/search?q={}', 're': 'https://www.reddit.com/r/{}', 'ub': 'https://www.urbandictionary.com/define.php?term={}', 'wiki': 'https://en.wikipedia.org/wiki/{}', 'yt': 'https://www.youtube.com/results?search_query={}'}
+
+# Font used in the completion widget.
+c.fonts.completion.entry = 'default_size "Liga SFMono Nerd Font"'
+
+# Font used for the debugging console.
+c.fonts.debug_console = 'default_size "Liga SFMono Nerd Font"'
+
+# Font used for prompts.
+c.fonts.prompts = 'default_size Liga SFMono Nerd Font'
+
 # set qutebrowser colors
 
 # Text color of the completion widget. May be a single color to use for
@@ -294,5 +313,6 @@ c.colors.tabs.selected.even.fg = base05
 c.colors.tabs.selected.even.bg = base02
 
 # Background color for webpages if unset (or empty to use the theme's
-# color).
-# c.colors.webpage.bg = base00
+c.colors.webpage.bg = base00
+
+config.bind('aq', 'config-cycle content.user_stylesheets ~/.config/qutebrowser/doom-vibrant.css ""')
