@@ -141,7 +141,13 @@
      # utils
      grim
      slurp
+     mako
      ## eww.defaultPackage.x86_64-linux
+
+     # locking
+     ## swaylock
+     swaylock-effects
+     swayidle
 
      # clipboard and recording
      wl-clipboard

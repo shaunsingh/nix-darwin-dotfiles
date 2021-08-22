@@ -9,6 +9,10 @@ set $down j
 set $up k
 set $right l
 
+# Lock and idle
+set $lock_path ~/.config/scripts/lock.sh
+set $idle_path ~/.config/scripts/idle.sh
+
 # Your preferred terminal emulator
 set $term alacritty
 
@@ -36,6 +40,14 @@ input type:keyboard {
 
 ### Display Config
 output LVDS-1 mode 1280x800@120Hz
+
+### Lock and Sleep
+exec {
+	$env mako
+	$idle_path
+}
+# Lock the screen
+bindsym $mod+l exec $lock_path
 
 ### Key bindings
 # Basics:
