@@ -1,6 +1,7 @@
 swaylock --screenshots --clock --indicator-idle-visible \
 	--indicator-radius 100 \
 	--indicator-thickness 7 \
+	--ignore-empty-password \
 	--ring-color 2a2e38 \
 	--key-hl-color 51afef \
 	--text-color bbc2cf \
