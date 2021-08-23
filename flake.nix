@@ -14,7 +14,7 @@
       shaunsingh-laptop = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         overrides = self: super: rec {
-          sway = sway.overrideAttrs ({ src = "github:fluix-dev/sway-borders"  })
+          sway = sway.overrideAttrs ({ src = "github:fluix-dev/sway-borders";  })
         };
         modules = [
           { _module.args = inputs; }
