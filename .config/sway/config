@@ -211,7 +211,7 @@ bindsym $mod+z exec ~/.config/scripts/wofi-power.sh
 ## border_images.urgent ~/.config/sway/borders/dropShadowDarkOffset.png
 
 # Window borders
-default_border pixel 1
+default_border pixel 0
 default_floating_border normal
 
 # don't like smart gaps
