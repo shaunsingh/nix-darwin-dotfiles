@@ -16,6 +16,7 @@
         modules = [
           { _module.args = inputs; }
           ./nixos/configuration.nix
+          ./nixos/macbook.nix
           ./nixos/hardware-configuration.nix
           ({ pkgs, ... }: {
             nixpkgs.overlays = [

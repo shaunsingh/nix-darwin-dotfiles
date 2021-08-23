@@ -6,5 +6,9 @@
 
 config_version: 2
 settings:
-  content.register_protocol_handler:
-    https://mail.google.com?extsrc=mailto&url=%25s: false
+  content.media.audio_capture:
+    https://us02web.zoom.us: true
+  content.media.audio_video_capture:
+    https://us02web.zoom.us: true
+  content.media.video_capture:
+    https://us02web.zoom.us: true

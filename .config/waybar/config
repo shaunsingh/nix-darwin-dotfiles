@@ -1,7 +1,7 @@
 {
     "position": "bottom",
     "height": 30,
-    "modules-center": ["sway/workspaces", "network", "pulseaudio", "battery", "clock"],
+    "modules-center": ["sway/workspaces", "network", "pulseaudio", "battery", "clock", "custom/wofi-power"],
     // Modules configuration
 	"sway/workspaces": {
 		"disable-scroll": true,
@@ -65,6 +65,11 @@
             	"portable": "",
             	"car": "",
             	"default": ["", "", ""]
+        },
+        "custom/wofi-power": {
+            "format": "",
+            "interval": "once",
+            "on-click": "~/.config/scripts/wofi-power.sh",
         },
     }
 }
