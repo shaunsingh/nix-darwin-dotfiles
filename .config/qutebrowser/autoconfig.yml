@@ -6,9 +6,5 @@
 
 config_version: 2
 settings:
-  content.media.audio_capture:
-    https://us02web.zoom.us: true
-  content.media.audio_video_capture:
-    https://us02web.zoom.us: true
-  content.media.video_capture:
-    https://us02web.zoom.us: true
+  content.notifications.enabled:
+    https://discourse.nixos.org: false
