@@ -9,13 +9,10 @@
     eww.url = "github:elkowar/eww";
     neovim.url = "github:neovim/neovim?dir=contrib";
   };
-  outputs = { nixpkgs, emacsNg-src, emacs-overlay, eww, neovim, ... }@inputs: {
+  outputs = { self, nixpkgs, emacsNg-src, emacs-overlay, eww, neovim, ... }@inputs: {
     nixosConfigurations = {
       shaunsingh-laptop = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        overrides = self: super: rec {
-          sway = sway.overrideAttrs ({ src = "github:fluix-dev/sway-borders";  })
-        };
         modules = [
           { _module.args = inputs; }
           ./nixos/configuration.nix
@@ -24,10 +21,21 @@
             nixpkgs.overlays = [
               emacs-overlay.overlay
               neovim.overlay
+              self.overlays.sway
             ];
           })
         ];
       };
+    };
+    overlays.sway = final: prev: {
+      sway = prev.sway.overrideAttrs (old: rec {
+        src = final.fetchFromGitHub {
+          owner = "fluix-dev";
+          repo = "sway-borders";
+          rev = "2512828b95463c52f6cb3df7c04dab60ef8b0407";
+          sha256 = "sha256-5XRXncQShg9HbHy2KKrnmCPDs2mvHEa5UXf8+nsQBFM=";
+        };
+      });
     };
   };
 }
