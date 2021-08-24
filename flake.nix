@@ -22,14 +22,14 @@
             nixpkgs.overlays = [
               emacs-overlay.overlay
               neovim.overlay
-              self.overlays.sway-unwrapped
+              self.overlays.sway
             ];
           })
         ];
       };
     };
-    overlays.sway-unwrapped = final: prev: {
-      sway-unwrapped = prev.sway-unwrapped.overrideAttrs (old: rec {
+    overlays.sway = final: prev: {
+      sway = prev.sway.overrideAttrs (old: rec {
         src = final.fetchFromGitHub {
           owner = "fluix-dev";
           repo = "sway-borders";
