@@ -27,15 +27,14 @@
         inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # emacs-ng with webrender
-    nixpkgs-emacs-ng = {
-        url = "path:./nixos/overlay/emacs-ng/";
-        inputs.nixpkgs.follows = "nixpkgs";
-    };
-
   };
 
-  outputs = { self, nixpkgs, nixpkgs-f2k, nixpkgs-sway-border, nixpkgs-emacs-ng, emacsNg-src, emacs-overlay, neovim, ... }@inputs: {
+  outputs = { self, nixpkgs, nixpkgs-f2k, nixpkgs-sway-border, emacsNg-src, emacs-overlay, neovim, ... }@inputs: {
+    overlays.emacsNg-src = final: prev: {
+      emacsNg-src.defaultPackage.x86_64-linux = prev.emacsNg-src.defaultPackage.x86_64-linux.overrideAttrs (old: rec {
+        #withWebrender = true;
+      });
+    };
     nixosConfigurations = {
       # macbook 6,1 config
       shaunsingh-laptop = nixpkgs.lib.nixosSystem {
@@ -46,7 +45,6 @@
           # use those extra packages as an overlay
           { nixpkgs.overlays = [ nixpkgs-f2k.overlay ]; }
           { nixpkgs.overlays = [ nixpkgs-sway-border.overlay ]; }
-          { nixpkgs.overlays = [ nixpkgs-emacs-ng.overlay ]; }
 
           # source our two config files, obviously
           ./nixos/configuration.nix
@@ -57,6 +55,7 @@
             nixpkgs.overlays = [
               emacs-overlay.overlay
               neovim.overlay
+              self.overlays.emacsNg-src
             ];
           })
         ];
