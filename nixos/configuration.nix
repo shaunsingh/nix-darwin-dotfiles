@@ -1,6 +1,6 @@
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, self, emacsNg-src, eww, ... }:
+{ config, pkgs, emacsNg-src, eww, ... }:
 
 {
 
