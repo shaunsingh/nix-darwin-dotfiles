@@ -27,6 +27,12 @@
         inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # emacs-ng with webrender
+    nixpkgs-sway-border = {
+        url = "path:./nixos/overlay/emacs-ng/";
+        inputs.nixpkgs.follows = "nixpkgs";
+    };
+
   };
 
   outputs = { self, nixpkgs, nixpkgs-f2k, nixpkgs-sway-border, emacsNg-src, emacs-overlay, neovim, ... }@inputs: {
@@ -40,12 +46,13 @@
           # use those extra packages as an overlay
           { nixpkgs.overlays = [ nixpkgs-f2k.overlay ]; }
           { nixpkgs.overlays = [ nixpkgs-sway-border.overlay ]; }
+          { nixpkgs.overlays = [ nixpkgs-emacs-ng.overlay ]; }
 
           # source our two config files, obviously
           ./nixos/configuration.nix
           ./nixos/hardware-configuration.nix
 
-          # add both the neovim and emacs overlay, as well as my own sway overlay
+          # add both the neovim and emacs overlay
           ({ pkgs, ... }: {
             nixpkgs.overlays = [
               emacs-overlay.overlay
