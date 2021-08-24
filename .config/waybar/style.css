@@ -25,6 +25,7 @@ tooltip {
 }
 
 #workspaces button.focused {
+    box-shadow: 5px 2px 2px black;
     color: #242730;
     background-color: #51afef;
     border-radius: 15px;

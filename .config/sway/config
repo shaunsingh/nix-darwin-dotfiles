@@ -221,8 +221,8 @@ default_floating_border normal
 # gaps to match alacritty
 
 gaps inner 45
-gaps horizontal 15
-gaps vertical 15
+gaps horizontal 0
+gaps vertical 0
 
 # Use colorscheme
 include colorscheme
