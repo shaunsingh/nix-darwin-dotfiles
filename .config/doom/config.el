@@ -81,10 +81,10 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
                          (sleep-for 0.5))))))
   ";; No missing fonts detected")
 
-;;(setq doom-theme 'doom-vibrant)
-;;(setq doom-vibrant-padded-modeline t)
-(setq doom-theme 'doom-one-light)
-(setq doom-one-light-padded-modeline t)
+(setq doom-theme 'doom-vibrant)
+(setq doom-vibrant-padded-modeline t)
+;;(setq doom-theme 'doom-one-light)
+;;(setq doom-one-light-padded-modeline t)
 
 (after! company
   (setq company-idle-delay 0.5
