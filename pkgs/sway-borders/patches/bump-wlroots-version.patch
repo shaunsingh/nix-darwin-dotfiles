@@ -1,0 +1,23 @@
+From 5ae4f65045c04df7ad2d87142b4064803d97a73e Mon Sep 17 00:00:00 2001
+From: Simon Ser <contact@emersion.fr>
+Date: Sun, 8 Nov 2020 15:15:15 +0100
+Subject: [PATCH] build: bump wlroots dependency to 0.12.0
+
+---
+ meson.build | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/meson.build b/meson.build
+index 372c6db0a..4c58c4526 100644
+--- a/meson.build
++++ b/meson.build
+@@ -60,7 +60,7 @@ math           = cc.find_library('m')
+ rt             = cc.find_library('rt')
+ 
+ # Try first to find wlroots as a subproject, then as a system dependency
+-wlroots_version = ['>=0.11.0', '<0.12.0']
++wlroots_version = ['>=0.12.0', '<0.13.0']
+ wlroots_proj = subproject(
+ 	'wlroots',
+ 	default_options: ['examples=false'],
+

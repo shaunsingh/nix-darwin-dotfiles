@@ -6,37 +6,35 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     emacsNg-src.url = "github:emacs-ng/emacs-ng";
     emacs-overlay.url = "github:nix-community/emacs-overlay";
-    eww.url = "github:elkowar/eww";
     neovim.url = "github:neovim/neovim?dir=contrib";
-    meson.url = "github:jtojnar/nixpkgs/meson-0.58";
+    nixpkgs-f2k = {
+        url = "github:fortuneteller2k/nixpkgs-f2k";
+        inputs.nixpkgs.follows = "nixpkgs";
+    };
+    flake-utils.url = "github:numtide/flake-utils";
   };
-  outputs = { self, nixpkgs, emacsNg-src, emacs-overlay, eww, neovim, meson, ... }@inputs: {
+  outputs = { self, nixpkgs, nixpkgs-f2k, emacsNg-src, emacs-overlay, neovim, flake-utils, ... }@inputs: {
+    overlay = final: prev: {
+      nixpkgs-extra = {
+        sway-borders        = prev.callPackage ./pkgs/sway-borders {};
+      };
+    };
     nixosConfigurations = {
       shaunsingh-laptop = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         modules = [
           { _module.args = inputs; }
+          { nixpkgs.overlays = [ nixpkgs-f2k.overlay ]; }
           ./nixos/configuration.nix
           ./nixos/hardware-configuration.nix
           ({ pkgs, ... }: {
             nixpkgs.overlays = [
               emacs-overlay.overlay
               neovim.overlay
-              self.overlays.sway
             ];
           })
         ];
       };
-    };
-    overlays.sway = final: prev: {
-      sway = prev.sway.overrideAttrs (old: rec {
-        src = final.fetchFromGitHub {
-          owner = "fluix-dev";
-          repo = "sway-borders";
-          rev = "2512828b95463c52f6cb3df7c04dab60ef8b0407";
-          sha256 = "sha256-5XRXncQShg9HbHy2KKrnmCPDs2mvHEa5UXf8+nsQBFM=";
-        };
-      });
     };
   };
 }

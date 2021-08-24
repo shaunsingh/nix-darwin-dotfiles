@@ -91,7 +91,8 @@
     # Terminal stuff
     ## neofetch
     ## starship
-    alacritty
+    ## alacritty
+    alacritty-ligatures
     tmux
     tty-clock
     htop
@@ -124,10 +125,6 @@
   programs.sway = {
    enable = true;
    extraPackages = with pkgs; [
-
-     # deps
-     meson
-
      # bar
      waybar
 
