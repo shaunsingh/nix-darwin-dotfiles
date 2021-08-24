@@ -618,17 +618,13 @@
         "wlroots-src": "wlroots-src_2"
       },
       "locked": {
-        "lastModified": 1629814191,
-        "narHash": "sha256-o2nzOwiAbE+W8fsM3oHB4alHdq71DTlhv1I5b9jdF5I=",
-        "owner": "shaunsingh",
-        "repo": "nixpkgs-sway-border",
-        "rev": "96a5cc6c50df6c02fabc40e6d9c20d41de23ef8e",
-        "type": "github"
+        "narHash": "sha256-1Dm2mSdfEwYSEEFZY654De6mSfpNwiwqIYi0gVPz9y8=",
+        "path": "./nixos/overlay/sway-border/",
+        "type": "path"
       },
       "original": {
-        "owner": "shaunsingh",
-        "repo": "nixpkgs-sway-border",
-        "type": "github"
+        "path": "./nixos/overlay/sway-border/",
+        "type": "path"
       }
     },
     "nixpkgs_2": {

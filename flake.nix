@@ -23,7 +23,7 @@
 
     # attempt to use sway-borders
     nixpkgs-sway-border = {
-        url = "path:/nixos/overlay/sway-border";
+        url = "path:./nixos/overlay/sway-border/";
         inputs.nixpkgs.follows = "nixpkgs";
     };
 
