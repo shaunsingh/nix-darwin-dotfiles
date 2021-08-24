@@ -205,13 +205,13 @@ bindsym XF86MonBrightnessDown exec brightnessctl -q set 5%- # decrease screen br
 bindsym $mod+z exec ~/.config/scripts/wofi-power.sh
 
 # This is for use with sway-borders
-# border_images.focused ~/.config/sway/borders/dropShadowDarkOffset.png
-# border_images.focused_inactive ~/.config/sway/borders/dropShadowDarkOffset.png
-# border_images.unfocused ~/.config/sway/borders/dropShadowDarkOffset.png
-# border_images.urgent ~/.config/sway/borders/dropShadowDarkOffset.png
+border_images.focused ~/.config/sway/borders/dropShadowDarkOffset.png
+border_images.focused_inactive ~/.config/sway/borders/dropShadowDarkOffset.png
+border_images.unfocused ~/.config/sway/borders/dropShadowDarkOffset.png
+border_images.urgent ~/.config/sway/borders/dropShadowDarkOffset.png
 
 # Window borders
-default_border pixel 0
+default_border pixel 1
 default_floating_border normal
 
 # don't like smart gaps
@@ -220,7 +220,7 @@ default_floating_border normal
 
 # gaps to match alacritty
 
-gaps inner 15
+gaps inner 45
 gaps horizontal 15
 gaps vertical 15
 
