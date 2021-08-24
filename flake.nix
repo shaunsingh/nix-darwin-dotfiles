@@ -8,8 +8,9 @@
     emacs-overlay.url = "github:nix-community/emacs-overlay";
     eww.url = "github:elkowar/eww";
     neovim.url = "github:neovim/neovim?dir=contrib";
+    meson.url = "github:jtojnar/nixpkgs/meson-0.58";
   };
-  outputs = { self, nixpkgs, emacsNg-src, emacs-overlay, eww, neovim, ... }@inputs: {
+  outputs = { self, nixpkgs, emacsNg-src, emacs-overlay, eww, neovim, meson, ... }@inputs: {
     nixosConfigurations = {
       shaunsingh-laptop = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
