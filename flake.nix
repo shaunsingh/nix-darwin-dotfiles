@@ -16,7 +16,7 @@
   outputs = { self, nixpkgs, nixpkgs-f2k, emacsNg-src, emacs-overlay, neovim, flake-utils, ... }@inputs: {
     overlay = final: prev: {
       nixpkgs-extra = {
-        sway-borders        = prev.callPackage ./pkgs/sway-borders {};
+        sway-borders        = prev.callPackage ./nixos/pkgs/sway-borders {};
       };
     };
     nixosConfigurations = {
