@@ -35,7 +35,7 @@
 
   };
 
-  outputs = { self, nixpkgs, nixpkgs-f2k, nixpkgs-sway-border, emacsNg-src, emacs-overlay, neovim, ... }@inputs: {
+  outputs = { self, nixpkgs, nixpkgs-f2k, nixpkgs-sway-border, nixpkgs-emacs-ng, emacsNg-src, emacs-overlay, neovim, ... }@inputs: {
     nixosConfigurations = {
       # macbook 6,1 config
       shaunsingh-laptop = nixpkgs.lib.nixosSystem {
