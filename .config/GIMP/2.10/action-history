@@ -1,8 +1,8 @@
 # GIMP action-history
 
 (history-item "view-zoom-out" 1)
-(history-item "view-zoom-in" 2)
-(history-item "file-open" 1)
+(history-item "view-zoom-in" 1)
+(history-item "file-open" 2)
 (history-item "file-export-as" 1)
 (history-item "file-quit" 1)
 (history-item "file-save" 1)
