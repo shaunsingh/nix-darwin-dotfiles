@@ -1,6 +1,6 @@
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, emacsNg-src, eww, ... }:
+{ config, pkgs, emacsNg-src, ... }:
 
 {
 
@@ -118,6 +118,9 @@
     ## emacsPgtkGcc
     neovim
     emacsNg-src.defaultPackage.x86_64-linux
+
+    # sway-borders
+    sway-borders-git
 
   ];
 
