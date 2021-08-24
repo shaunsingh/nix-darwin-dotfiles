@@ -30,11 +30,6 @@
   };
 
   outputs = { self, nixpkgs, nixpkgs-f2k, nixpkgs-sway-border, emacsNg-src, emacs-overlay, neovim, ... }@inputs: {
-    overlays.emacsNg-src = final: prev: {
-      emacsNg-src.defaultPackage.x86_64-linux = prev.emacsNg-src.defaultPackage.x86_64-linux.overrideAttrs (old: rec {
-        #withWebrender = true;
-      });
-    };
     nixosConfigurations = {
       # macbook 6,1 config
       shaunsingh-laptop = nixpkgs.lib.nixosSystem {
@@ -55,7 +50,6 @@
             nixpkgs.overlays = [
               emacs-overlay.overlay
               neovim.overlay
-              self.overlays.emacsNg-src
             ];
           })
         ];

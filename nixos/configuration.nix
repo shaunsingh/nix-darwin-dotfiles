@@ -117,7 +117,10 @@
     ## neovim-nightly
     ## emacsPgtkGcc
     neovim
-    emacsNg-src.defaultPackage.x86_64-linux
+
+    emacsNg-src.defaultPackage.x86_64-linux = prev.emacsNg-src.defaultPackage.x86_64-linux.overrideAttrs (old: rec {
+        #withWebrender = true;
+    });
 
     # sway-borders
     sway-borders-git
