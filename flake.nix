@@ -28,7 +28,7 @@
     };
 
     # emacs-ng with webrender
-    nixpkgs-sway-border = {
+    nixpkgs-emacs-ng = {
         url = "path:./nixos/overlay/emacs-ng/";
         inputs.nixpkgs.follows = "nixpkgs";
     };
