@@ -77,6 +77,7 @@
     yadm
 
     # Rust coreutils
+    rust-nightly
     uutils-coreutils
 
     # Utils
@@ -117,10 +118,7 @@
     ## neovim-nightly
     ## emacsPgtkGcc
     neovim
-
-    emacsNg-src.defaultPackage.x86_64-linux = prev.emacsNg-src.defaultPackage.x86_64-linux.overrideAttrs (old: rec {
-        #withWebrender = true;
-    });
+    (emacsNg-src.defaultPackage.x86_64-linux.overrideAttrs (old: rec { withWebrender = true; }))
 
     # sway-borders
     sway-borders-git
