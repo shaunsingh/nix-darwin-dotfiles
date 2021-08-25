@@ -231,9 +231,9 @@ client.placeholder      $base00 $base00 $base05 $base00 $base00
 client.background       $base07
 
 # clock and htop
-for_window [app_id="^htop$"] floating enable, border none, resize set width 35 ppt height 15 ppt, move position 730 px 380 px
-for_window [app_id="^clock$"] floating enable, border none, resize set width 35 ppt height 25 ppt, move position 700 px 230 px
-for_window [app_id="^fetch$"] floating enable, border none, resize set width 35 ppt height 25 ppt, move position 730 px 480 px
+for_window [app_id="^htop$"] floating enable, border pixel 0, resize set width 35 ppt height 15 ppt, move position 730 px 380 px
+for_window [app_id="^clock$"] floating enable, border pixel 0, resize set width 35 ppt height 25 ppt, move position 730 px 200 px
+for_window [app_id="^fetch$"] floating enable, border pixel 0, resize set width 35 ppt height 25 ppt, move position 730 px 480 px
 
 # use xwayland (lazy)
 xwayland enable
