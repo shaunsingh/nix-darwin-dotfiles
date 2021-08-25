@@ -1,8 +1,0 @@
-# GIMP gimp-crop-tool options
-
-(aspect-denominator 1080)
-(aspect-numerator 1920)
-(background (color-rgb 0.14117647058823529 0.15294117647058825 0.18823529411764706))
-(pattern "Stripes")
-
-# end of gimp-crop-tool options
