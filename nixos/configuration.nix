@@ -186,7 +186,7 @@
   ## services.tlp.enable = true;
   services.power-profiles-daemon.enable = true;
   # Scale cpu
-  ## services.auto-cpufreq.enable = true;
+  services.auto-cpufreq.enable = true;
   # Macbook (non-pro), I mean it should work right?
   services.mbpfan.enable = true;
   # Intel power daemon
