@@ -119,7 +119,7 @@
     ## emacsPgtkGcc
     neovim
     (emacsNg-src.defaultPackage.x86_64-linux.overrideAttrs (old: rec {
-        #withWebrender = true;
+        withWebrender = true;
     }))
 
     # sway-borders
