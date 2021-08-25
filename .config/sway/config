@@ -42,10 +42,7 @@ input type:keyboard {
 # output LVDS-1 mode 1280x800@120Hz
 
 ### Lock and Sleep
-exec {
-	$env mako
-	$idle_path
-}
+exec $idle_path
 # Lock the screen
 bindsym $mod+x exec $lock_path
 
@@ -240,5 +237,8 @@ for_window [app_id="^fetch$"] floating enable, border none, resize set width 35 
 
 # use xwayland (lazy)
 xwayland enable
+
+# start mako
+exec mako
 
 include /etc/sway/config.d/*
