@@ -5,6 +5,9 @@
     padding-top: 1px;
     font-size: 11px;
     min-height: 0;
+
+    /* border: 10px solid transparent;
+    border-image: url(~/.config/sway/borders/dropShadowDarkOffset2.png) 30 stretch; */
 }
 
 window#waybar {

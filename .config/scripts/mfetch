@@ -66,12 +66,12 @@ palette="$s$c7 $c7 $c1 $c1 $c2 $c2 $c3 $c3 $c4 $c4 $c5 $c5 $c6 $c6 $c8 $c8 $e"
 printf "%b\\n\\n" "$rose"
 printf '%s\n' "
 ${c3}${user}${c8}@${c3}${host}${c8}
-${c6}os${c8} ~ ${PRETTY_NAME}
-${c6}sh${c8} ~ ${SHELL##*/}
-${c6}pa${c8} ~ ${pa}
-${c6}wm${c8} ~ ${wm}
-${c6}kr${c8} ~ ${ke}
-${c6}me${c8} ~ $(mem)
+${c6}os${c8} >>= ${PRETTY_NAME}
+${c6}sh${c8} >>= ${SHELL##*/}
+${c6}pa${c8} >>= ${pa}
+${c6}wm${c8} >>= ${wm}
+${c6}kr${c8} >>= ${ke}
+${c6}me${c8} >>= $(mem)
 
   ${palette}
 "
