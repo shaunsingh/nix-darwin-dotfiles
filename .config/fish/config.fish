@@ -99,7 +99,7 @@ alias .... "cd ../../.."
 alias ..... "cd ../../../.."
 alias ll 'exa -lF --color-scale --no-user --no-time --no-permissions --group-directories-first -a'
 alias ls 'exa -F --group-directories-first -a'
-alias tree 'tree -C'
+alias tree 'tree -a -C'
 alias cat 'bat --paging=never -p'
 alias nixos-rebuild-config 'sudo nixos-rebuild switch --cores 2 --upgrade --flake github:shaunsingh/vimrc-dotfiles#shaunsingh-laptop --recreate-lock-file --no-write-lock-file'
 alias nixos-rebuild-config-local 'sudo nixos-rebuild switch --cores 2 --upgrade --flake . --recreate-lock-file'
