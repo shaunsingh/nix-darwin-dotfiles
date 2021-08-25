@@ -88,6 +88,7 @@
     exa
     bat
     fd
+    tree
 
     # Terminal stuff
     ## neofetch

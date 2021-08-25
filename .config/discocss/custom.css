@@ -1,4 +1,4 @@
-/*  
+/*
     Discord Doom-Vibrant
     https://github.com/joinemm/discord-css
 */
@@ -11,20 +11,20 @@
     --background-tertiary: #242730;
     --background-accent: #242730;
     --channeltextarea-background: #242730;
-    --text-normal: #6c605a;
-    --text-muted: #ce9c85;
-    --channels-default: #a09c80;
-    --interactive-normal: #242730;
-    --interactive-hover: #a09c80;
-    --interactive-active: #a09c80;
-    --interactive-muted: #665c54;
-    --header-primary: #6c605a;
-    --header-secondary: #5c605a;
+    --text-normal: #bbc2cf;
+    --text-muted: #62686E;
+    --channels-default: #62686E;
+    --interactive-normal: #62686E;
+    --interactive-hover: #C57BDB;
+    --interactive-active: #bbc2cf;
+    --interactive-muted: #FCCE7B;
+    --header-primary: #bbc2cf;
+    --header-secondary: #51afef;
     --background-floating: #242730;
-    --scrollbar-auto-thumb: #1d2021;
-    --scrollbar-auto-track: #3c3836;
-    --text-link: #8f8678;
-    --selection: #92837480; 
+    --scrollbar-auto-thumb: #2a2e38;
+    --scrollbar-auto-track: #242730;
+    --text-link: #51afef;
+    --selection: #2a2e38;
 }
 
 * {
@@ -198,7 +198,7 @@
 
 .hljs,
 .hljs-subst {
-  color: #ebdbb2;
+  color: #2a2e38;
 }
 
 /* Doom Red */
@@ -207,7 +207,7 @@
 .hljs-keyword,
 .hljs-link,
 .hljs-selector-tag {
-  color: #fb4934;
+  color: #ff665c;
 }
 
 /* Doom Blue */
@@ -218,7 +218,7 @@
 .hljs-strong,
 .hljs-title,
 .hljs-variable {
-  color: #83a598;
+  color: #51afef;
 }
 
 /* Doom Yellow */
@@ -226,7 +226,7 @@
 .hljs-params,
 .hljs-template-tag,
 .hljs-type {
-  color: #fabd2f;
+  color: #FCCE7B;
 }
 
 /* Doom Purple */
@@ -234,7 +234,7 @@
 .hljs-doctag,
 .hljs-literal,
 .hljs-number {
-  color: #8f3f71;
+  color: #C57BDB;
 }
 
 /* Doom Orange */
@@ -243,7 +243,7 @@
 .hljs-regexp,
 .hljs-selector-id,
 .hljs-template-variable {
-  color: #fe8019;
+  color: #e69055;
 }
 
 /* Doom Green */
@@ -254,7 +254,7 @@
 .hljs-selector-class,
 .hljs-string,
 .hljs-symbol {
-  color: #b8bb26;
+  color: #7bc275;
 }
 
 /* Doom Aqua */
@@ -266,19 +266,19 @@
 .hljs-meta-keyword,
 .hljs-selector-pseudo,
 .hljs-tag {
-  color: #8ec07c;
+  color: #51afef;
 }
 
 /* Doom Gray */
 .hljs-comment {
-  color: #928374;
+  color: #C57BDB;
 }
 
 /* Doom Purple */
 .hljs-link_label,
 .hljs-literal,
 .hljs-number {
-  color: #d3869b;
+  color: #c57BDB;
 }
 
 .hljs-comment,
@@ -314,4 +314,3 @@
         }
         .sidebar-2K8pFh:hover {
             width: 240px !important;
-        
