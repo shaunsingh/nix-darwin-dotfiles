@@ -122,6 +122,10 @@
         withWebrender = true;
     }))
 
+    # Chat
+    discord
+    discocss
+
     # sway-borders
     sway-borders-git
 
