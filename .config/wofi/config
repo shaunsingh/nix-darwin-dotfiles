@@ -5,4 +5,5 @@ show_all=true
 print_command=true
 layer=overlay
 insensitive=true
+content_halign=center
 prompt=

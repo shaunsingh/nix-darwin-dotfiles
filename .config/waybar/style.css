@@ -1,12 +1,14 @@
 * {
-    border: none;
     border-radius: 0;
     font-family: Liga SFMono Nerd Font;
+    padding-bottom: 1px;
+    padding-top: 1px;
     font-size: 11px;
     min-height: 0;
 }
 
 window#waybar {
+    padding: 15px;
     background: transparent;
     color: white;
 }

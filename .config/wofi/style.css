@@ -1,27 +1,29 @@
 window {
 margin: 0px;
-border: 5px solid #242730;
+border: 2px solid #2a2e38;
 border-radius: 15px;
 background-color: #242730;
 font-family: Liga SFMono Nerd Font;
-font-size: 13px;
+font-size: 14px;
 }
 
 #input {
-margin: 5px;
-border: 1px solid #2a2e38;
+margin: 15px;
+border: 1px solid #242730;
 border-radius: 15px;
 color: #bbc2cf;
 background-color: #2a2e38;
 }
 
 #input image {
-	color: #bbc2cf;
+	color: #2a2e38;
 }
 
 #inner-box {
 margin: 5px;
 border: none;
+padding-left: 10px;
+padding-right: 10px;
 background-color: #242730;
 }
 
@@ -42,10 +44,15 @@ border: none;
 color: #bbc2cf;
 }
 
+#entry {
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
 #entry:selected {
 	background-color: #51afef;
 	font-weight: normal;
-	border-radius: 5px;
+	border-radius: 15px;
 }
 
 #text:selected {
