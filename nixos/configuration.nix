@@ -77,7 +77,7 @@
     yadm
 
     # Rust coreutils
-    # rust-nightly
+    ## rust-nightly
     uutils-coreutils
 
     # Utils
@@ -87,8 +87,8 @@
     ripgrep
     exa
     bat
-    fd
     tree
+    fd
 
     # Terminal stuff
     ## neofetch
@@ -126,6 +126,9 @@
     # Chat
     discord
     discocss
+
+    # Pdf/images
+    zathura
 
     # sway-borders
     sway-borders-git
