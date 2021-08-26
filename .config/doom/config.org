@@ -80,12 +80,12 @@ Using pgtk/wayland, theres a bug where it can't use the clipboard, to fix this w
 
 ** Fonts
 I like the apple fonts for programming, so I'll go with Liga SFMono Nerd Font. I
-prefer a rounder font for plain text, so I'll go with IBM Plex Sans for that. I have a retina display as well, so lets keep the fonts light.
+prefer a rounder font for plain text, so I'll go with Overpass for that. I have a retina display as well, so lets keep the fonts light.
 #+begin_src elisp
 ;;fonts
 (setq doom-font (font-spec :family "Liga SFMono Nerd Font" :size 14)
       doom-big-font (font-spec :family "Liga SFMono Nerd Font" :size 20)
-      doom-variable-pitch-font (font-spec :family "IBM Plex Sans" :size 16)
+      doom-variable-pitch-font (font-spec :family "Overpass" :size 16)
       doom-unicode-font (font-spec :family "Liga SFMono Nerd Font")
       doom-serif-font (font-spec :family "Liga SFMono Nerd Font" :weight 'Regular))
 #+end_src
@@ -112,7 +112,7 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
     "A variable-pitch face with serifs."
     :group 'basic-faces)
   (setq mixed-pitch-set-height t)
-  (setq variable-pitch-serif-font (font-spec :family "IBM Plex Sans" :size 16 :weight 'Medium))
+  (setq variable-pitch-serif-font (font-spec :family "Overpass" :size 16 :weight 'Medium))
   (set-face-attribute 'variable-pitch-serif nil :font variable-pitch-serif-font)
   (defun mixed-pitch-serif-mode (&optional arg)
     "Change the default face of the current buffer to a serifed variable pitch, while keeping some faces fixed pitch."
@@ -124,7 +124,7 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 Just in case the fonts aren't there, lets add a fallback
 #+name: detect-missing-fonts
 #+begin_src elisp
-(defvar required-fonts '("IBM Plex Sans" "Liga SFMono Nerd Font" ))
+(defvar required-fonts '("Overpass" "Liga SFMono Nerd Font" ))
 (defvar available-fonts
   (delete-dups (or (font-family-list)
                    (split-string (shell-command-to-string "fc-list : family")
@@ -2830,7 +2830,7 @@ Add some packages (also very likely to change)
         ("colorlinks=true, linkcolor=Blue, citecolor=BrickRed, urlcolor=PineGreen" "hyperref" nil)
     ("" "indentfirst" nil)
     ;;for fonts I tried sfpro+mono, mono is nice pro is ok
-    "\\setmainfont[Ligatures=TeX]{IBM Plex Sans}"
+    "\\setmainfont[Ligatures=TeX]{Overpass}"
     "\\setmonofont[Ligatures=TeX]{Liga SFMono Nerd Font}"))
 #+end_src
 
