@@ -76,9 +76,9 @@
     # Dotfiles Management
     yadm
 
-    # Rust coreutils
+    # Rust coreutils (Note: using busybox)
     ## rust-nightly
-    uutils-coreutils
+    ## uutils-coreutils
 
     # Utils
     wget
