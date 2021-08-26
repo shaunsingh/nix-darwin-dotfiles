@@ -14,10 +14,10 @@ set $lock_path ~/.config/scripts/lock.sh
 set $idle_path ~/.config/scripts/idle.sh
 
 # Your preferred terminal emulator
-set $term alacritty
+set $term foot
 
 # Your preffered launcher
-# Note: I have bemenu, wofi, and alacritty setup. I find alacritty as a good balance
+# Note: I have bemenu, wofi, and alacritty setup. I find alacritty as a good balance, but wofi is much faster
 
 # set $menu bemenu-run -b --ignorecase --prompt="Exec:" --fn "Liga SFMono Nerd Font 10" --nb='#2a2e38' --tb="#51afef" --fb="#2a2e38" --hb="#242730" --nf="#bbc2cf" --ff="#C57BDB" --tf="#242730" --hf="#bbc2cf"
 set $menu wofi --show=run --hide-scroll | xargs swaymsg exec --

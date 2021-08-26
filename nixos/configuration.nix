@@ -94,7 +94,8 @@
     ## neofetch
     ## starship
     ## alacritty
-    alacritty-ligatures
+    ## alacritty-ligatures
+    foot
     tmux
     tty-clock
     htop
@@ -156,7 +157,7 @@
      grim
      slurp
      mako
-     ## eww.defaultPackage.x86_64-linux
+     ## eww
 
      # locking
      ## swaylock
