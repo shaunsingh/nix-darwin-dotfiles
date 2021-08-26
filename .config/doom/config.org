@@ -1846,7 +1846,7 @@ Lets set up the org-roam-ui as well
 (use-package! org-roam-ui
   :after org-roam
   :commands org-roam-ui-open
-  :hook (org-roam . org-roam-ui-mode)
+  :hook (org-roam . org-roam-ui-mode))
 #+end_src
 
 The doom-modeline is a bit messy with roam, lets adjust that

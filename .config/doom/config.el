@@ -1159,7 +1159,7 @@ MathJax = {
 (use-package! org-roam-ui
   :after org-roam
   :commands org-roam-ui-open
-  :hook (org-roam . org-roam-ui-mode)
+  :hook (org-roam . org-roam-ui-mode))
 
 (defadvice! doom-modeline--buffer-file-name-roam-aware-a (orig-fun)
   :around #'doom-modeline-buffer-file-name ; takes no args
