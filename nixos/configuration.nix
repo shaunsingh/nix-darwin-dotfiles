@@ -115,7 +115,6 @@
     ## (pkgs.texlive.combine { inherit (pkgs.texlive) scheme-small dvipng dvisvgm l3packages xcolor soul adjustbox collectbox amsmath siunitx cancel mathalpha capt-of chemfig wrapfig mhchem latexmk; })
     (aspellWithDicts (dicts: with dicts; [ en en-computers en-science ]))
     tectonic
-    ibm-plex
 
     # Editors
     ## neovim-nightly
@@ -135,6 +134,10 @@
     # sway-borders
     sway-borders-git
 
+  ];
+
+  fonts.fonts = with pkgs; [
+    ibm-plex
   ];
 
   # use sway :chad:
