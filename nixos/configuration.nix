@@ -94,7 +94,7 @@
     ## neofetch
     ## starship
     ## alacritty
-    ## alacritty-ligatures
+    alacritty-ligatures
     foot
     tmux
     tty-clock
