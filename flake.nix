@@ -31,8 +31,10 @@
 
   outputs = { self, nixpkgs, nixpkgs-f2k, nixpkgs-sway-border, emacsNg-src, emacs-overlay, neovim, ... }@inputs: {
 
-    # use busybox instead of coreutils
-    final: prev: { oldutils = prev.coreutils; coreutils = final.busybox; };
+    overlay = final: prev: {
+      # use busybox coreutils
+      oldutils = prev.coreutils; coreutils = final.busybox;
+    };
 
     nixosConfigurations = {
       # macbook 6,1 config
@@ -54,6 +56,7 @@
             nixpkgs.overlays = [
               emacs-overlay.overlay
               neovim.overlay
+              self.overlay
             ];
           })
         ];
