@@ -160,10 +160,10 @@ Just in case the fonts aren't there, lets add a fallback
 ** Themes
 Right now I'm using doom-vibrant, but I use doom-one-light sometimes
 #+begin_src elisp
-(setq doom-theme 'doom-vibrant)
-(setq doom-vibrant-padded-modeline t)
-;;(setq doom-theme 'doom-one-light)
-;;(setq doom-one-light-padded-modeline t)
+;;(setq doom-theme 'doom-vibrant)
+;;(setq doom-vibrant-padded-modeline t)
+(setq doom-theme 'doom-flatwhite)
+(setq doom-fw-padded-modeline t)
 #+end_src
 
 ** Lsp, and Company
@@ -183,6 +183,11 @@ The default lsp config is nice, but has a few invasive features we can disable. 
 
 ;;nested snippets
 (setq yas-triggers-in-field t)
+#+end_src
+
+I'm trying out some ui stuff too
+#+begin_src emacs-lisp
+(setq lsp-lens-enable t)
 #+end_src
 
 Lets add some snippets for latex
@@ -1836,10 +1841,12 @@ I would like to get into the habit of using org-roam for my notes, mainly becaus
 Lets set up the org-roam-ui as well
 #+begin_src elisp
 (use-package! websocket
-    :after org-roam)
+  :after org-roam)
 
 (use-package! org-roam-ui
-    :after org-roam)
+  :after org-roam
+  :commands org-roam-ui-open
+  :hook (org-roam . org-roam-ui-mode)
 #+end_src
 
 The doom-modeline is a bit messy with roam, lets adjust that
@@ -2241,6 +2248,10 @@ set linetype 5 lw 2 lc rgb '%s' # orange
 set linetype 6 lw 2 lc rgb '%s' # yellow
 set linetype 7 lw 2 lc rgb '%s' # teal
 set linetype 8 lw 2 lc rgb '%s' # violet
+
+# border styles
+set tics out nomirror
+set border 3
 
 # palette
 set palette maxcolors 8

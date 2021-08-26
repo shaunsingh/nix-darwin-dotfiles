@@ -21,7 +21,7 @@
 ;;fonts
 (setq doom-font (font-spec :family "Liga SFMono Nerd Font" :size 14)
       doom-big-font (font-spec :family "Liga SFMono Nerd Font" :size 20)
-      doom-variable-pitch-font (font-spec :family "Overpass" :size 16)
+      doom-variable-pitch-font (font-spec :family "IBM Plex Sans" :size 16)
       doom-unicode-font (font-spec :family "Liga SFMono Nerd Font")
       doom-serif-font (font-spec :family "Liga SFMono Nerd Font" :weight 'Regular))
 
@@ -45,7 +45,7 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
     "A variable-pitch face with serifs."
     :group 'basic-faces)
   (setq mixed-pitch-set-height t)
-  (setq variable-pitch-serif-font (font-spec :family "Overpass" :size 16 :weight 'Medium))
+  (setq variable-pitch-serif-font (font-spec :family "IBM Plex Sans" :size 16 :weight 'Medium))
   (set-face-attribute 'variable-pitch-serif nil :font variable-pitch-serif-font)
   (defun mixed-pitch-serif-mode (&optional arg)
     "Change the default face of the current buffer to a serifed variable pitch, while keeping some faces fixed pitch."
@@ -53,7 +53,7 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
     (let ((mixed-pitch-face 'variable-pitch-serif))
       (mixed-pitch-mode (or arg 'toggle)))))
 
-(defvar required-fonts '("Overpass" "Liga SFMono Nerd Font" ))
+(defvar required-fonts '("IBM Plex Sans" "Liga SFMono Nerd Font" ))
 (defvar available-fonts
   (delete-dups (or (font-family-list)
                    (split-string (shell-command-to-string "fc-list : family")
@@ -81,10 +81,10 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
                          (sleep-for 0.5))))))
   ";; No missing fonts detected")
 
-(setq doom-theme 'doom-vibrant)
-(setq doom-vibrant-padded-modeline t)
-;;(setq doom-theme 'doom-one-light)
-;;(setq doom-one-light-padded-modeline t)
+;;(setq doom-theme 'doom-vibrant)
+;;(setq doom-vibrant-padded-modeline t)
+(setq doom-theme 'doom-flatwhite)
+(setq doom-fw-padded-modeline t)
 
 (after! company
   (setq company-idle-delay 0.5
@@ -1154,10 +1154,12 @@ MathJax = {
 (setq org-roam-directory "~/org/roam/")
 
 (use-package! websocket
-    :after org-roam)
+  :after org-roam)
 
 (use-package! org-roam-ui
-    :after org-roam)
+  :after org-roam
+  :commands org-roam-ui-open
+  :hook (org-roam . org-roam-ui-mode)
 
 (defadvice! doom-modeline--buffer-file-name-roam-aware-a (orig-fun)
   :around #'doom-modeline-buffer-file-name ; takes no args
@@ -1328,6 +1330,10 @@ set linetype 5 lw 2 lc rgb '%s' # orange
 set linetype 6 lw 2 lc rgb '%s' # yellow
 set linetype 7 lw 2 lc rgb '%s' # teal
 set linetype 8 lw 2 lc rgb '%s' # violet
+
+# border styles
+set tics out nomirror
+set border 3
 
 # palette
 set palette maxcolors 8
@@ -1679,20 +1685,9 @@ set palette defined ( 0 '%s',\
 
 (setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
 
-(unless noninteractive
-  (add-hook! 'doom-init-ui-hook
-    (run-at-time nil nil
-		 (lambda nil
-		   (message "%s missing the following fonts: %s"
-			    (propertize "Warning!" 'face
-					'(bold warning))
-			    (mapconcat
-			     (lambda
-			       (font)
-			       (propertize font 'face 'font-lock-variable-name-face))
-			     '("Overpass")
-			     ", "))
-		   (sleep-for 0.5)))))
+;; No missing fonts detected
+
+(setq lsp-lens-enable t)
 
 (sp-local-pair
  '(org-mode)
@@ -2633,7 +2628,7 @@ This is done according to `org-latex-feature-implementations'"
         ("colorlinks=true, linkcolor=Blue, citecolor=BrickRed, urlcolor=PineGreen" "hyperref" nil)
     ("" "indentfirst" nil)
     ;;for fonts I tried sfpro+mono, mono is nice pro is ok
-    "\\setmainfont[Ligatures=TeX]{Overpass}"
+    "\\setmainfont[Ligatures=TeX]{IBM Plex Sans}"
     "\\setmonofont[Ligatures=TeX]{Liga SFMono Nerd Font}"))
 
 (use-package! engrave-faces-latex
