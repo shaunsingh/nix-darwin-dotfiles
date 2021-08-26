@@ -14,7 +14,7 @@ set $lock_path ~/.config/scripts/lock.sh
 set $idle_path ~/.config/scripts/idle.sh
 
 # Your preferred terminal emulator
-set $term foot
+set $term alacritty
 
 # Your preffered launcher
 # Note: I have bemenu, wofi, and alacritty setup. I find alacritty as a good balance, but wofi is much faster

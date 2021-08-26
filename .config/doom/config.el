@@ -21,7 +21,7 @@
 ;;fonts
 (setq doom-font (font-spec :family "Liga SFMono Nerd Font" :size 14)
       doom-big-font (font-spec :family "Liga SFMono Nerd Font" :size 20)
-      doom-variable-pitch-font (font-spec :family "SF Pro" :size 16)
+      doom-variable-pitch-font (font-spec :family "IBM Plex Sans" :size 16)
       doom-unicode-font (font-spec :family "Liga SFMono Nerd Font")
       doom-serif-font (font-spec :family "Liga SFMono Nerd Font" :weight 'Regular))
 
@@ -45,7 +45,7 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
     "A variable-pitch face with serifs."
     :group 'basic-faces)
   (setq mixed-pitch-set-height t)
-  (setq variable-pitch-serif-font (font-spec :family "SF Pro" :size 16 :weight 'Medium))
+  (setq variable-pitch-serif-font (font-spec :family "IBM Plex Sans" :size 16 :weight 'Medium))
   (set-face-attribute 'variable-pitch-serif nil :font variable-pitch-serif-font)
   (defun mixed-pitch-serif-mode (&optional arg)
     "Change the default face of the current buffer to a serifed variable pitch, while keeping some faces fixed pitch."
@@ -53,7 +53,7 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
     (let ((mixed-pitch-face 'variable-pitch-serif))
       (mixed-pitch-mode (or arg 'toggle)))))
 
-(defvar required-fonts '("SF Pro" "Liga SFMono Nerd Font" ))
+(defvar required-fonts '("IBM Plex Sans" "Liga SFMono Nerd Font" ))
 (defvar available-fonts
   (delete-dups (or (font-family-list)
                    (split-string (shell-command-to-string "fc-list : family")
@@ -1679,7 +1679,20 @@ set palette defined ( 0 '%s',\
 
 (setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
 
-;; No missing fonts detected
+(unless noninteractive
+  (add-hook! 'doom-init-ui-hook
+    (run-at-time nil nil
+		 (lambda nil
+		   (message "%s missing the following fonts: %s"
+			    (propertize "Warning!" 'face
+					'(bold warning))
+			    (mapconcat
+			     (lambda
+			       (font)
+			       (propertize font 'face 'font-lock-variable-name-face))
+			     '("IBM Plex Sans")
+			     ", "))
+		   (sleep-for 0.5)))))
 
 (sp-local-pair
  '(org-mode)
@@ -2620,7 +2633,7 @@ This is done according to `org-latex-feature-implementations'"
         ("colorlinks=true, linkcolor=Blue, citecolor=BrickRed, urlcolor=PineGreen" "hyperref" nil)
     ("" "indentfirst" nil)
     ;;for fonts I tried sfpro+mono, mono is nice pro is ok
-    ;;"\\setmainfont[Ligatures=TeX]{SF Pro}"
+    "\\setmainfont[Ligatures=TeX]{IBM Plex Sans}"
     "\\setmonofont[Ligatures=TeX]{Liga SFMono Nerd Font}"))
 
 (use-package! engrave-faces-latex
