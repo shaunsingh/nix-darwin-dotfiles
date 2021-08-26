@@ -1,12 +1,12 @@
 font=Liga SFMono Nerd Font
 background-color=#242730
 progress-color=#bbc2cf
-width= 250
-height=120
+width= 350
+height=150
 icons=1
 padding=20
 border-color=#2a2e38
 border-size=3
 border-radius=3
-default-timeout=3333
+default-timeout=5000
 layer=overlay

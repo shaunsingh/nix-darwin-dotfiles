@@ -6,5 +6,5 @@
 
 config_version: 2
 settings:
-  content.register_protocol_handler:
-    https://mail.google.com?extsrc=mailto&url=%25s: false
+  content.notifications.enabled:
+    https://web.whatsapp.com: true
