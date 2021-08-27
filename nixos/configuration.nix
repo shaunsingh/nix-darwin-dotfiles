@@ -1,6 +1,6 @@
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, emacsNg-src, ... }:
+{ config, pkgs, lib, emacsNg-src, ... }:
 
 {
 
@@ -33,10 +33,16 @@
     networkmanager.enable = true; # Enable networkmanager
   };
 
-  # Use the GRUB 2 boot loader.
+  # Bootloader
+  # boot.loader.efi.canTouchEfiVariables  = true;
+  # boot.loader.systemd-boot.enable = true;
+
   boot.loader.grub.enable = true;
-  boot.loader.grub.version = 2;
-  boot.loader.grub.device = "/dev/sda"; # or "nodev" for efi only
+  boot.loader.grub.devices = [ "nodev" ];
+  boot.loader.grub.efiInstallAsRemovable = true;
+  boot.loader.grub.efiSupport = true;
+  boot.loader.grub.useOSProber = true;
+  hardware.enableRedistributableFirmware = true;
 
   # Set your time zone.
   time.timeZone = "America/New_York";
@@ -201,9 +207,8 @@
   # battery life stuff
   ## services.tlp.enable = true;
   services.power-profiles-daemon.enable = true;
-  # Scale cpu
-  services.auto-cpufreq.enable = true;
-
+  powerManagement.cpuFreqGovernor = lib.mkDefault "performance";
+  services.thermald.enable = true;
 
   # Macbook (non-pro), I mean it should work right?
   services.mbpfan = {
@@ -215,9 +220,6 @@
     minFanSpeed = 1200;
     pollingInterval = 7;
   };
-
-  # Intel power daemon
-  services.thermald.enable = true;
 
   # Use fish, launch sway after login
   programs.fish = {
