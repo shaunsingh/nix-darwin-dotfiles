@@ -137,8 +137,9 @@
   ];
 
   fonts.fonts = with pkgs; [
-    ibm-plex
-    ## overpass
+    ## ibm-plex
+    overpass
+    ## alegreya
   ];
 
   # use sway :chad:

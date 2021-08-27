@@ -141,13 +141,13 @@ bindsym $mod+x exec $lock_path
     bindsym $mod+a layout toggle split
 
     # Make the current focus fullscreen
-    bindsym $mod+g fullscreen
+    bindsym $mod+Shift+f fullscreen
 
     # Toggle the current focus between tiling and floating mode
     bindsym $mod+f floating toggle
 
     # Swap focus between the tiling area and the floating area
-    bindsym $mod+Shift+f focus mode_toggle
+    bindsym $mod+g focus mode_toggle
 
 # Scratchpad:
     # Sway has a "scratchpad", which is a bag of holding for windows.
