@@ -95,15 +95,15 @@
     ## starship
     ## alacritty
     alacritty-ligatures
-    foot
+    ## foot
     tmux
-    tty-clock
-    htop
+    ## tty-clock
+    ## htop
 
     # Mail
     ## offlineimap
     mu
-    msmtp
+    ## msmtp
     isync
 
     # Browsers
@@ -137,7 +137,8 @@
   ];
 
   fonts.fonts = with pkgs; [
-    ibm-plex
+    ## ibm-plex
+    overpass
   ];
 
   # use sway :chad:
