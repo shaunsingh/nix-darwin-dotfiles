@@ -1685,7 +1685,20 @@ set palette defined ( 0 '%s',\
 
 (setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
 
-;; No missing fonts detected
+(unless noninteractive
+  (add-hook! 'doom-init-ui-hook
+    (run-at-time nil nil
+		 (lambda nil
+		   (message "%s missing the following fonts: %s"
+			    (propertize "Warning!" 'face
+					'(bold warning))
+			    (mapconcat
+			     (lambda
+			       (font)
+			       (propertize font 'face 'font-lock-variable-name-face))
+			     '("IBM Plex Sans")
+			     ", "))
+		   (sleep-for 0.5)))))
 
 (setq lsp-lens-enable t)
 
