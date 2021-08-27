@@ -16,7 +16,13 @@ set $idle_path ~/.config/scripts/idle.sh
 # Your preferred terminal emulator
 set $term alacritty
 
-# Your preffered launcher
+# Your preferred editor
+set $editor emacs
+
+# Your preferred browser
+set $browser qutebrowser
+
+# Your preferred launcher
 # Note: I have bemenu, wofi, and alacritty setup. I find alacritty as a good balance, but wofi is much faster
 
 # set $menu bemenu-run -b --ignorecase --prompt="Exec:" --fn "Liga SFMono Nerd Font 10" --nb='#2a2e38' --tb="#51afef" --fb="#2a2e38" --hb="#242730" --nf="#bbc2cf" --ff="#C57BDB" --tf="#242730" --hf="#bbc2cf"
@@ -56,7 +62,13 @@ bindsym $mod+x exec $lock_path
     bindsym $mod+q kill
 
     # Start your launcher
-    bindsym $mod+d exec $menu
+    bindsym $mod+space exec $menu
+
+    # Start your editor
+    bindsym $mod+e exec $editor
+
+    # Start your browser
+    bindsym $mod+d exec $browser
 
     # mouse button for dragging.
     floating_modifier $mod normal
@@ -126,19 +138,16 @@ bindsym $mod+x exec $lock_path
     # Switch the current container between different layout styles
     bindsym $mod+s layout stacking
     bindsym $mod+w layout tabbed
-    bindsym $mod+e layout toggle split
+    bindsym $mod+a layout toggle split
 
     # Make the current focus fullscreen
-    bindsym $mod+f fullscreen
+    bindsym $mod+g fullscreen
 
     # Toggle the current focus between tiling and floating mode
-    bindsym $mod+Shift+space floating toggle
+    bindsym $mod+Shift+f floating toggle
 
     # Swap focus between the tiling area and the floating area
-    bindsym $mod+space focus mode_toggle
-
-    # Move focus to the parent container
-    bindsym $mod+a focus parent
+    bindsym $mod+f focus mode_toggle
 
 # Scratchpad:
     # Sway has a "scratchpad", which is a bag of holding for windows.
