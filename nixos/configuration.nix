@@ -202,8 +202,19 @@
   services.power-profiles-daemon.enable = true;
   # Scale cpu
   services.auto-cpufreq.enable = true;
+
+
   # Macbook (non-pro), I mean it should work right?
-  services.mbpfan.enable = true;
+  services.mbpfan = {
+    enable = true;
+    lowTemp = 65;
+    highTemp = 75;
+    maxTemp = 80;
+    maxFanSpeed = 6500;
+    minFanSpeed = 1200;
+    pollingInterval = 7;
+  };
+
   # Intel power daemon
   services.thermald.enable = true;
 
