@@ -22,10 +22,11 @@ set $term alacritty
 # set $menu bemenu-run -b --ignorecase --prompt="Exec:" --fn "Liga SFMono Nerd Font 10" --nb='#2a2e38' --tb="#51afef" --fb="#2a2e38" --hb="#242730" --nf="#bbc2cf" --ff="#C57BDB" --tf="#242730" --hf="#bbc2cf"
 set $menu wofi --show=run --hide-scroll | xargs swaymsg exec --
 
-# Default wallpaper
+# Wallpaper
 output * bg ~/wallpapers/queen_chess.png fill
 # output * bg ~/wallpapers/doom_vibrant_alt.png fill
 # output * bg ~/wallpapers/doom_vibrant.png fill
+# output * bg ~/wallpapers/nixos.png fill
 
 ### Input configuration
 input type:touchpad {
