@@ -24,6 +24,7 @@
 
   # Use the Zen Kernel
   boot.kernelPackages = pkgs.linuxPackages_zen;
+  hardware.enableRedistributableFirmware = true;
 
   # Network settings.
   networking = {
@@ -34,15 +35,15 @@
   };
 
   # Bootloader
-  # boot.loader.efi.canTouchEfiVariables  = true;
-  # boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables  = true;
+  boot.loader.systemd-boot.enable = true;
 
-  boot.loader.grub.enable = true;
-  boot.loader.grub.devices = [ "nodev" ];
-  boot.loader.grub.efiInstallAsRemovable = true;
-  boot.loader.grub.efiSupport = true;
-  boot.loader.grub.useOSProber = true;
-  hardware.enableRedistributableFirmware = true;
+  # boot.loader.grub.enable = true;
+  # boot.loader.grub.devices = [ "nodev" ];
+  # boot.loader.grub.efiInstallAsRemovable = true;
+  # boot.loader.grub.efiSupport = true;
+  # boot.loader.grub.useOSProber = true;
+
 
   # Set your time zone.
   time.timeZone = "America/New_York";
