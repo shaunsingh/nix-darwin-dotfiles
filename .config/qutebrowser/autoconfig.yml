@@ -6,7 +6,5 @@
 
 config_version: 2
 settings:
-  content.media.video_capture:
-    https://www.photopea.com: true
   content.notifications.enabled:
-    https://web.whatsapp.com: true
+    https://discord.com: true
