@@ -51,18 +51,18 @@ set __fish_git_prompt_color_upstream cyan
 set __fish_git_prompt_color_cleanstate green
 set __fish_git_prompt_color_invalidstate red
 
-set __fish_git_prompt_char_dirtystate '*'
+set __fish_git_prompt_char_dirtystate '~~'
 set __fish_git_prompt_char_stateseparator ' '
-set __fish_git_prompt_char_untrackedfiles ' …'
+set __fish_git_prompt_char_untrackedfiles ' ...'
 set __fish_git_prompt_char_cleanstate '✓'
-set __fish_git_prompt_char_stagedstate '⇢ '
+set __fish_git_prompt_char_stagedstate '-> '
 set __fish_git_prompt_char_conflictedstate "✕"
 
 set __fish_git_prompt_char_upstream_prefix ''
 set __fish_git_prompt_char_upstream_equal ''
-set __fish_git_prompt_char_upstream_ahead '⇡'
-set __fish_git_prompt_char_upstream_behind '⇣'
-set __fish_git_prompt_char_upstream_diverged '⇡⇣'
+set __fish_git_prompt_char_upstream_ahead '>>='
+set __fish_git_prompt_char_upstream_behind '=<<'
+set __fish_git_prompt_char_upstream_diverged '<=>'
 
 function _print_in_color
   set -l string $argv[1]
@@ -97,17 +97,20 @@ alias .. "cd .."
 alias ... "cd ../.."
 alias .... "cd ../../.."
 alias ..... "cd ../../../.."
+alias git-rebase 'git rebase -i HEAD~2'
 alias ll 'exa -lF --color-scale --no-user --no-time --no-permissions --group-directories-first --icons -a'
 alias ls 'exa -F --group-directories-first --icons -a'
 alias tree 'tree -a -C'
 alias cat 'bat --paging=never -p'
+
 alias nixos-rebuild-config 'sudo nixos-rebuild switch --cores 2 --upgrade --flake github:shaunsingh/vimrc-dotfiles#shaunsingh-laptop --recreate-lock-file --no-write-lock-file'
 alias nixos-rebuild-config-local 'sudo nixos-rebuild switch --cores 2 --upgrade --flake . --recreate-lock-file'
-alias neovide "~/IdeaProjects/neovim/neovide/target/release/neovide --multiGrid --frameless"
-alias git-rebase 'git rebase -i HEAD~2'
+
 alias update 'brew update; brew upgrade; brew cleanup'
 alias cleanup "find . -type f -name '*.DS_Store' -ls -delete && rm -r ~/.config/discord && rm -r ~/.config/GIMP "
+
 alias battery "sudo pow bat"
+alias neovide "~/IdeaProjects/neovim/neovide/target/release/neovide --multiGrid --frameless"
 alias clock "alacritty --config-file ~/.config/scripts/alacritty.yml --class clock --command sh -c 'tty-clock -c -b -n -C6'"
 alias top "alacritty --config-file ~/.config/scripts/alacritty.yml --class htop --command sh -c 'htop -C -M'"
 alias fetch "alacritty --config-file ~/.config/scripts/alacritty.yml --class fetch --command sh -c 'wfetch'"
