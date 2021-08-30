@@ -257,6 +257,6 @@ xwayland enable
 exec mako
 
 # Only set opacity for unfocused windows
-exec ~/.config/scripts/inactive-windows-transparency.py -o 0.95
+# exec ~/.config/scripts/inactive-windows-transparency.py -o 0.95
 
 include /etc/sway/config.d/*
