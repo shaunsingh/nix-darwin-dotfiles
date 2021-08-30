@@ -108,6 +108,12 @@
     ## tty-clock
     ## htop
 
+    # Python
+    my-python-packages = python-packages: with python-packages; [
+      i3ipc
+    ];
+    python-with-my-packages = python3.withPackages my-python-packages;
+
     # Mail
     ## offlineimap
     mu
@@ -185,10 +191,6 @@
      # Control
      brightnessctl
      playerctl
-
-     # Transparency
-     python3
-     python39Packages.i3ipc
 
    ];
    extraSessionCommands = ''
