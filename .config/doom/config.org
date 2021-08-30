@@ -83,14 +83,14 @@ I like the apple fonts for programming, so I'll go with Liga SFMono Nerd Font. I
 prefer a rounder font for plain text, so I'll go with Overpass for that. I have a retina display as well, so lets keep the fonts light.
 #+begin_src elisp
 ;;fonts
-(setq doom-font (font-spec :family "Liga SFMono Nerd Font" :size 12)
-      doom-big-font (font-spec :family "Liga SFMono Nerd Font" :size 18)
-      doom-variable-pitch-font (font-spec :family "Overpass" :size 12)
+(setq doom-font (font-spec :family "Liga SFMono Nerd Font" :size 14)
+      doom-big-font (font-spec :family "Liga SFMono Nerd Font" :size 20)
+      doom-variable-pitch-font (font-spec :family "Overpass" :size 16)
       doom-unicode-font (font-spec :family "Liga SFMono Nerd Font")
-      doom-serif-font (font-spec :family "IBM Plex Mono" :weight 'light))
+      doom-serif-font (font-spec :family "Liga SFMono Nerd Font" :weight 'light))
 #+end_src
 
-For mixed pitch, I would go with something comfier. I like helvetica, so lets go with that
+For mixed pitch, I would go with something comfier. I like Overpass, so lets go with that
 #+begin_src elisp
 ;;mixed pitch modes
 (defvar mixed-pitch-modes '(org-mode LaTeX-mode markdown-mode gfm-mode Info-mode)
@@ -112,7 +112,7 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
     "A variable-pitch face with serifs."
     :group 'basic-faces)
   (setq mixed-pitch-set-height t)
-  (setq variable-pitch-serif-font (font-spec :family "Overpass" :size 16 :weight 'Medium))
+  (setq variable-pitch-serif-font (font-spec :family "IBM Plex Sans" :size 16))
   (set-face-attribute 'variable-pitch-serif nil :font variable-pitch-serif-font)
   (defun mixed-pitch-serif-mode (&optional arg)
     "Change the default face of the current buffer to a serifed variable pitch, while keeping some faces fixed pitch."
@@ -124,7 +124,7 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 Just in case the fonts aren't there, lets add a fallback
 #+name: detect-missing-fonts
 #+begin_src elisp
-(defvar required-fonts '("Overpass" "Liga SFMono Nerd Font" ))
+(defvar required-fonts '("Overpass" "Liga SFMono Nerd Font" "IBM Plex Mono"))
 (defvar available-fonts
   (delete-dups (or (font-family-list)
                    (split-string (shell-command-to-string "fc-list : family")
@@ -2840,8 +2840,7 @@ Add some packages (also very likely to change)
         ("dvipsnames" "xcolor" nil)
         ("colorlinks=true, linkcolor=Blue, citecolor=BrickRed, urlcolor=PineGreen" "hyperref" nil)
     ("" "indentfirst" nil)
-    ;;for fonts I tried sfpro+mono, mono is nice pro is ok
-    "\\setmainfont[Ligatures=TeX]{Overpass}"
+    "\\setmainfont[Ligatures=TeX]{IBM Plex Sans}"
     "\\setmonofont[Ligatures=TeX]{Liga SFMono Nerd Font}"))
 #+end_src
 

@@ -107,7 +107,7 @@ alias nixos-rebuild-config 'sudo nixos-rebuild switch --cores 2 --upgrade --flak
 alias nixos-rebuild-config-local 'sudo nixos-rebuild switch --cores 2 --upgrade --flake . --recreate-lock-file'
 
 alias update 'brew update; brew upgrade; brew cleanup'
-alias cleanup "find . -type f -name '*.DS_Store' -ls -delete && rm -r ~/.config/discord && rm -r ~/.config/GIMP "
+alias cleanup "find . -type f -name '*.DS_Store' -ls -delete && rm -r ~/.config/discord && rm -r ~/.config/GIMP && rm -r ~/.config/chromium "
 
 alias battery "sudo pow bat"
 alias neovide "~/IdeaProjects/neovim/neovide/target/release/neovide --multiGrid --frameless"
