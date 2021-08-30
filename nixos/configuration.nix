@@ -109,7 +109,7 @@
     ## htop
 
     # Python
-    (python39.withPackages(ps: with ps; [ i3ipc ]))
+    # (python39.withPackages(ps: with ps; [ i3ipc ]))
 
     # Mail
     ## offlineimap

@@ -1,8 +1,6 @@
-#!/usr/bin/python
+#!/usr/bin/env nix-shell
+#! nix-shell -i python3 -p python3 python39Packages.i3ipc
 
-# This script requires i3ipc-python package (install it from a system package manager
-# or pip).
-# It makes inactive windows transparent. Use `transparency_val` variable to control
 # transparency strength in range of 0…1 or use the command line argument -o.
 
 import argparse
