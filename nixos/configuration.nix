@@ -186,6 +186,9 @@
      brightnessctl
      playerctl
 
+     # Transparency
+     python39Packages.i3ipc
+
    ];
    extraSessionCommands = ''
      export SDL_VIDEODRIVER=wayland

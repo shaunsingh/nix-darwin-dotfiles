@@ -217,6 +217,11 @@ border_images.focused_inactive ~/.config/sway/borders/dropShadowDarkOffset.png
 border_images.unfocused ~/.config/sway/borders/dropShadowDarkOffset.png
 border_images.urgent ~/.config/sway/borders/dropShadowDarkOffset.png
 
+# Transparency
+## set $opacity 0.95
+## for_window [class=".*"] opacity $opacity
+## for_window [app_id=".*"] opacity $opacity
+
 # Window borders
 default_border pixel 1
 default_floating_border normal
@@ -250,5 +255,8 @@ xwayland enable
 
 # start mako
 exec mako
+
+# Only set opacity for unfocused windows
+exec python ~/.config/scripts/inactive-windows-transparency.py -o 0.97
 
 include /etc/sway/config.d/*
