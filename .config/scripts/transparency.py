@@ -1,7 +1,5 @@
 #!/usr/bin/python3
 
-# transparency strength in range of 0…1 or use the command line argument -o.
-
 import argparse
 import i3ipc
 import signal
@@ -37,7 +35,7 @@ def remove_opacity(ipc):
 
 
 if __name__ == "__main__":
-    transparency_val = "0.80"
+    transparency_val = "0.92"
 
     parser = argparse.ArgumentParser(
         description="This script allows you to set the transparency of unfocused windows in sway."
