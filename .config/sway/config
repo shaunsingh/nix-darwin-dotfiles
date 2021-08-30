@@ -257,6 +257,6 @@ xwayland enable
 exec mako
 
 # Only set opacity for unfocused windows
-exec python3.9 ~/.config/scripts/transparency.py -o 0.95
+exec python3.9 ~/.config/scripts/transparency.py
 
 include /etc/sway/config.d/*
