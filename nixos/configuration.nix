@@ -149,7 +149,7 @@
 
   fonts.fonts = with pkgs; [
     ibm-plex
-    ## overpass
+    overpass
     ## alegreya
   ];
 

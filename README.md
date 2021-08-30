@@ -1,19 +1,10 @@
 # Dotfiles
 
-Configurations for the following are included
-
-1. fish/starship/alacritty/neofetch/tmux
-2. yabai/skhd
-3. neovim/vim/neovide/goneovim
-4. emacs
-
-Managed via [YADM](https://github.com/TheLocehiliosan/yadm)
+Managed via [YADM](https://github.com/TheLocehiliosan/yadm) and nix
 
 ## Installation
 
 **Warning:** If you want to give these dotfiles a try, you should first fork this repository, review the code, and remove things you don’t want or need. Don’t blindly use my settings unless you know what that entails.
-
-This setup was created first and foremost for macOS. Although most dotfiles should transfer well between macOS and Linux, some might not.
 
 ## Install
 
@@ -52,7 +43,7 @@ chmod +x bootstrap.d/*.sh
 Install via flakes
 ```zsh
 nix-shell -p nixUnstable git
-nixos-install --flake https://github.com/shaunsingh/vimrc-dotfiles#somehost
+nixos-install --flake https://github.com/shaunsingh/vimrc-dotfiles#shaunsingh-laptop
 ```
 
 Clone the dotiles
@@ -77,7 +68,7 @@ You will have to manually install the otf files from ~/fonts
 On linux, you will have to install 3 fonts
 1. Fira SFMono Nerd Font (https://github.com/shaunsingh/SFMono-Nerd-Font-Ligaturized)
 2. SF Pro
-3. Menlo
+3. IBM Plex Sans
 
 ### Fish
 
