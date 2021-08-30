@@ -187,7 +187,7 @@
      playerctl
 
      # Transparency
-     python310
+     python3
      python39Packages.i3ipc
 
    ];
