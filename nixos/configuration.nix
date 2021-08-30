@@ -109,10 +109,7 @@
     ## htop
 
     # Python
-    my-python-packages = python-packages: with python-packages; [
-      i3ipc
-    ];
-    python-with-my-packages = python3.withPackages my-python-packages;
+    (python39.withPackages(ps: with ps; [ i3ipc ]))
 
     # Mail
     ## offlineimap
