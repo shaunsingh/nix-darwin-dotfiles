@@ -81,10 +81,10 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
                          (sleep-for 0.5))))))
   ";; No missing fonts detected")
 
-(setq doom-theme 'doom-vibrant)
+;;(setq doom-theme 'doom-vibrant)
 (setq doom-vibrant-padded-modeline t)
-;;(setq doom-theme 'doom-one-light)
-;;(setq doom-one-light-padded-modeline t)
+(setq doom-theme 'doom-one-light)
+(setq doom-one-light-padded-modeline t)
 
 (after! company
   (setq company-idle-delay 0.5
@@ -196,9 +196,8 @@ Made for `org-tab-first-hook'."
       scroll-margin 2                              ;having a little margin is nice
       auto-save-default t                          ;I dont like to lose work
       display-line-numbers-type nil                ;I dislike line numbers
-      truncate-string-ellipsis "…"                 ;default ellipses suck
-      browse-url-browser-function 'xwidget-webkit-browse-url ;;use xwidgets as my browser
-      frame-resize-pixelwise t)                    ;needed for twms
+      ;;browse-url-browser-function 'xwidget-webkit-browse-url
+      truncate-string-ellipsis "…")                ;default ellipses suck
 
 (setq-default delete-by-moving-to-trash t) ;delete to system trash instead
 (add-to-list 'default-frame-alist '(inhibit-double-buffering . t)) ;;stops flickering
@@ -343,6 +342,48 @@ Made for `org-tab-first-hook'."
   `(centaur-tabs-default :background ,(doom-color 'bg))
   `(centaur-tabs-selected :background ,(doom-color 'bg_alt))
   `(centaur-tabs-unselected :background ,(doom-color 'bg)))
+
+(after! marginalia
+
+  (setq marginalia-censor-variables nil)
+
+  (defun +marginalia-annotate-file-colorful (cand)
+  "Annotate file CAND with its size, modification time and other attrs.
+These annotations are skipped for remote paths."
+  (if (or (marginalia--remote-p cand)
+          (when-let (win (active-minibuffer-window))
+            (with-current-buffer (window-buffer win)
+              (marginalia--remote-p (minibuffer-contents-no-properties)))))
+      (marginalia--fields ("*Remote*" :face 'marginalia-documentation))
+    (when-let (attrs (file-attributes (substitute-in-file-name
+                                       (marginalia--full-candidate cand))
+                                      'integer))
+      (marginalia--fields
+       ((marginalia--file-owner attrs)
+        :width 12 :face 'marginalia-file-owner)
+       ((marginalia--file-modes attrs))
+       ((+marginalia-file-size-colorful (file-attribute-size attrs))
+        :width 7)
+       ((+marginalia--time-colorful (file-attribute-modification-time attrs))
+        :width 12)))))
+
+  (defun +marginalia--time-colorful (time)
+    (let* ((seconds (float-time (time-subtract (current-time) time)))
+           (color (doom-blend
+                   (face-attribute 'marginalia-date :foreground nil t)
+                   (face-attribute 'marginalia-documentation :foreground nil t)
+                   (/ 1.0 (log (+ 3 (/ (+ 1 seconds) 345600.0)))))))
+      ;; 1 - log(3 + 1/(days + 1)) % grey
+      (propertize (marginalia--time time) 'face (list :foreground color))))
+
+  (defun +marginalia-file-size-colorful (size)
+    (let* ((size-index (/ (log10 (+ 1 size)) 7.0))
+           (color (if (< size-index 10000000) ; 10m
+                      (doom-blend 'orange 'green size-index)
+                    (doom-blend 'red 'orange (- size-index 1)))))
+      (propertize (file-size-human-readable size) 'face (list :foreground color))))
+
+  (setcdr (assq 'file marginalia-annotator-registry) '(+marginalia-annotate-file-colorful builtin none)))
 
 ;;make treemacs thinner
 (setq treemacs-width 25)
@@ -1831,6 +1872,11 @@ set palette defined ( 0 '%s',\
                 jit-lock-stealth-time 1)))
 
 (add-hook 'org-mode-hook #'locally-defer-font-lock)
+
+
+(custom-set-faces!
+  `(org-block-end-line :background ,(doom-color 'base2))
+  `(org-block-begin-line :background ,(doom-color 'base2)))
 
 (defvar org-prettify-inline-results t
   "Whether to use (ab)use prettify-symbols-mode on {{{results(...)}}}.
