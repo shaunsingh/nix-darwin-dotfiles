@@ -465,18 +465,11 @@ Doom modeline already looks good, but it can be better. Lets add some icons, the
 #+begin_src elisp
 (after! doom-modeline
   (display-time-mode 1)                              ;Enable time in the mode-line
-  (display-battery-mode 1)                             ;display the battery
-  (setq all-the-icons-scale-factor 1.1
-        inhibit-compacting-font-caches t
-        auto-revert-check-vc-info t
-        doom-modeline-major-mode-icon (display-graphic-p)
-        doom-modeline-major-mode-color-icon (display-graphic-p)
-        doom-modeline-enable-word-count (display-graphic-p)
-        doom-modeline-vcs-max-length 60)
-  (doom-modeline-def-modeline 'main
-    '(bar workspace-name window-number modals persp-name buffer-info matches remote-host github debug)
-    '(vcs github mu4e grip gnus checker misc-info repl lsp " ")))
-
+  (display-battery-mode 1)                           ;display the battery
+  (setq doom-modeline-major-mode-icon t              ;Show major mode name
+        doom-modeline-enable-word-count t            ;Show word count
+        doom-modeline-modal-icon t                   ;Show vim mode icon
+        inhibit-compacting-font-caches t))           ;Don't compact font caches in gc
 #+end_src
 
 The encoding is always UTF-8, so its a bit redundant. Lets take that out
@@ -846,7 +839,10 @@ tweaks. Namely:
                   (org-superstar-restart))               (setq
                  +zen--original-org-indent-mode-p org-indent-mode)
                 (org-indent-mode -1))))
-
+  (add-hook! 'writeroom-mode-hook
+    (if writeroom-mode
+        (add-hook 'post-command-hook #'recenter nil t)
+      (remove-hook 'post-command-hook #'recenter t)))
   (add-hook! 'writeroom-mode-hook (minimap-mode (if writeroom-mode +1 -1)))
   (add-hook 'writeroom-mode-enable-hook #'doom-disable-line-numbers-h)
   (add-hook 'writeroom-mode-disable-hook #'doom-enable-line-numbers-h)
