@@ -9,4 +9,14 @@
 	process = git-lfs filter-process
 	required = true
 [credential]
-	helper = store
+    helper = store
+[color]
+    ui = always
+    branch = always
+    diff = always
+    interactive = always
+    status = always
+    grep = always
+    pager = true
+    decorate = always
+    showbranch = always
