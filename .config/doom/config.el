@@ -196,9 +196,12 @@ Made for `org-tab-first-hook'."
       scroll-margin 2                              ;having a little margin is nice
       auto-save-default t                          ;I dont like to lose work
       display-line-numbers-type nil                ;I dislike line numbers
+      history-length 25                            ;Slight speedup
       ;;browse-url-browser-function 'xwidget-webkit-browse-url
       truncate-string-ellipsis "…")                ;default ellipses suck
 
+(setq eshell-prefer-lisp-functions t) ;use the lisp version of stuff for eshell
+(setq doom-scratch-initial-major-mode 'lisp-interaction-mode) ;start doom in lisp for an empty buffer
 (setq-default delete-by-moving-to-trash t) ;delete to system trash instead
 (add-to-list 'default-frame-alist '(inhibit-double-buffering . t)) ;;stops flickering
 (fringe-mode 0) ;;disable fringe
@@ -298,13 +301,19 @@ Made for `org-tab-first-hook'."
     '(bar window-number pdf-pages pdf-icon buffer-name)
     '(misc-info matches major-mode process vcs)))
 
-;;modeline (icons, config, battery)
-(display-time-mode 1)                              ;Enable time in the mode-line
-(display-battery-mode 1)                             ;display the battery
-(setq doom-modeline-major-mode-icon t)             ;Show major mode name
-(setq doom-modeline-enable-word-count t)           ;Show word count
-(setq doom-modeline-modal-icon t)                  ;Show vim mode icon
-(setq inhibit-compacting-font-caches t)            ;Don't compact font caches in gc
+(after! doom-modeline
+  (display-time-mode 1)                              ;Enable time in the mode-line
+  (display-battery-mode 1)                             ;display the battery
+  (setq all-the-icons-scale-factor 1.1
+        inhibit-compacting-font-caches t
+        auto-revert-check-vc-info t
+        doom-modeline-major-mode-icon (display-graphic-p)
+        doom-modeline-major-mode-color-icon (display-graphic-p)
+        doom-modeline-enable-word-count (display-graphic-p)
+        doom-modeline-vcs-max-length 60)
+  (doom-modeline-def-modeline 'main
+    '(bar workspace-name window-number modals persp-name buffer-info matches remote-host github debug)
+    '(vcs github mu4e grip gnus checker misc-info repl lsp " ")))
 
 (defun doom-modeline-conditional-buffer-encoding ()
   "We expect the encoding to be LF UTF-8, so only show the modeline when this is not the case"
@@ -524,7 +533,7 @@ These annotations are skipped for remote paths."
                  +zen--original-org-indent-mode-p org-indent-mode)
                 (org-indent-mode -1))))
 
-  ;;(add-hook! 'writeroom-mode-hook (minimap-mode (if writeroom-mode +1 -1)))
+  (add-hook! 'writeroom-mode-hook (minimap-mode (if writeroom-mode +1 -1)))
   (add-hook 'writeroom-mode-enable-hook #'doom-disable-line-numbers-h)
   (add-hook 'writeroom-mode-disable-hook #'doom-enable-line-numbers-h)
   (add-hook 'writeroom-mode-disable-hook
