@@ -59,11 +59,11 @@
         "rust-overlay": "rust-overlay"
       },
       "locked": {
-        "lastModified": 1630307346,
-        "narHash": "sha256-aOqOaBK+JpfShEMAfSZUXEpEnGmspIx6tvsK0Ku+bJA=",
+        "lastModified": 1630477428,
+        "narHash": "sha256-1OzN4/Tyn6XmF8KuXXzGgRuy0SHtFZ7EbmO3uQtEsOk=",
         "owner": "emacs-ng",
         "repo": "emacs-ng",
-        "rev": "c90cc066893f5bb9cff4ddd434b3ea04d6052af6",
+        "rev": "e9c4e9c74606018fd222c0e62cc4713bde579bdd",
         "type": "github"
       },
       "original": {
@@ -362,11 +362,11 @@
       },
       "locked": {
         "dir": "contrib",
-        "lastModified": 1630339793,
-        "narHash": "sha256-dWc1b1qCJsRsU/34QOBCUSZnD3amCZpLmQR6fHOfbJk=",
+        "lastModified": 1630514573,
+        "narHash": "sha256-aY7AdUmWyWTBHZIQSgM39iDb1eQsiN9K5qCvEIw13aQ=",
         "owner": "neovim",
         "repo": "neovim",
-        "rev": "9695691ee4868ea9fdd8a6d84b9980fc22c77aa3",
+        "rev": "6751d6254b35d216a86817cd414d5d06e3ff641d",
         "type": "github"
       },
       "original": {
