@@ -313,7 +313,6 @@ The defaults for emacs aren't so good nowadays. Lets fix that up a bit
       auto-save-default t                          ;I dont like to lose work
       display-line-numbers-type nil                ;I dislike line numbers
       history-length 25                            ;Slight speedup
-      ;;browse-url-browser-function 'xwidget-webkit-browse-url
       truncate-string-ellipsis "…")                ;default ellipses suck
 
 (setq eshell-prefer-lisp-functions t) ;use the lisp version of stuff for eshell
@@ -484,6 +483,11 @@ The encoding is always UTF-8, so its a bit redundant. Lets take that out
 (add-hook 'after-change-major-mode-hook #'doom-modeline-conditional-buffer-encoding) ;;remove encoding
 #+end_src
 
+** Magit
+Show gravatars where possible
+#+begin_src elisp
+(setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
+#+end_src
 ** Centaur tabs
 There isn't much of a point having tabs when you only have one buffer open. This checks the number of tabs, and hides them if theres only one left
 #+begin_src elisp
@@ -574,6 +578,17 @@ Lets theme treemacs while we're at it
 (setq treemacs-width 25)
 ;;set treemacs to use the theme
 (setq doom-themes-treemacs-theme "doom-colors")
+#+end_src
+
+** Monkeytype
+Just a few tweaks, making it insert my default, etc
+#+begin_src elisp
+(defun my/monkeytype-mode-hook ()
+  "Hooks for monkeytype-mode."
+  (centered-cursor-mode)
+  (evil-escape-mode -1)
+  (evil-insert -1))
+(add-hook 'monkeytype-mode-hook #'my/monkeytype-mode-hook)
 #+end_src
 
 ** Emojis
@@ -843,7 +858,7 @@ tweaks. Namely:
     (if writeroom-mode
         (add-hook 'post-command-hook #'recenter nil t)
       (remove-hook 'post-command-hook #'recenter t)))
-  (add-hook! 'writeroom-mode-hook (minimap-mode (if writeroom-mode +1 -1)))
+  ;;(add-hook! 'writeroom-mode-hook (minimap-mode (if writeroom-mode +1 -1)))
   (add-hook 'writeroom-mode-enable-hook #'doom-disable-line-numbers-h)
   (add-hook 'writeroom-mode-disable-hook #'doom-enable-line-numbers-h)
   (add-hook 'writeroom-mode-disable-hook
@@ -3343,8 +3358,36 @@ Notifications are quite nifty, especially if I'm as lazy as I am
 (setq alert-default-style 'osx-notifier)
 #+end_src
 
-* Magit
-Show gravatars where possible
+* Webkit
+Eventually I want to use emacs for everything. Instead of using xwidgets, which
+requires a custom (non-cached) build of emacs, I prefer to use webkit which is a
+tad bit outdated but works
+#+begin_src emacs-lisp
+(use-package webkit)
+(use-package 'webkit-ace)
+(use-package 'webkit-dark)
+
+(setq webkit-search-prefix "https://google.com/search?q=")
+(setq webkit-history-file nil)
+(setq webkit-cookie-file nil)
+(setq browse-url-browser-function 'webkit-browse-url)
+(setq webkit-browse-url-force-new t)
+(defun webkit--display-progress (progress)
+  (setq webkit--progress-formatted
+        (if (equal progress 100.0)
+            ""
+          (format "%s%.0f%%  " (all-the-icons-faicon "spinner") progress)))
+  (force-mode-line-update))
+(setq webkit-download-action-alist '(("\\.pdf\\'" . webkit-download-open)
+                                     ("\\.png\\'" . webkit-download-save)
+                                     (".*" . webkit-download-default))
+
+(setq webkit-dark-mode t)
+#+end_src
+
+I also want to use evil bindings with this. It's not upstreamed yet, so I'll steal the ones from the repo
 #+begin_src elisp
-(setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
+(use-package evil-collection-webkit
+  :config
+  (evil-collection-xwidget-setup))
 #+end_src

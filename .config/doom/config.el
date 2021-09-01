@@ -197,7 +197,6 @@ Made for `org-tab-first-hook'."
       auto-save-default t                          ;I dont like to lose work
       display-line-numbers-type nil                ;I dislike line numbers
       history-length 25                            ;Slight speedup
-      ;;browse-url-browser-function 'xwidget-webkit-browse-url
       truncate-string-ellipsis "…")                ;default ellipses suck
 
 (setq eshell-prefer-lisp-functions t) ;use the lisp version of stuff for eshell
@@ -317,6 +316,8 @@ Made for `org-tab-first-hook'."
                            (not (memq (coding-system-eol-type buffer-file-coding-system) '(1 2))))
                 t)))
 (add-hook 'after-change-major-mode-hook #'doom-modeline-conditional-buffer-encoding) ;;remove encoding
+
+(setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
 
 (defun centaur-tabs-get-total-tab-length ()
   (length (centaur-tabs-tabs (centaur-tabs-current-tabset))))
@@ -530,7 +531,7 @@ These annotations are skipped for remote paths."
     (if writeroom-mode
         (add-hook 'post-command-hook #'recenter nil t)
       (remove-hook 'post-command-hook #'recenter t)))
-  (add-hook! 'writeroom-mode-hook (minimap-mode (if writeroom-mode +1 -1)))
+  ;;(add-hook! 'writeroom-mode-hook (minimap-mode (if writeroom-mode +1 -1)))
   (add-hook 'writeroom-mode-enable-hook #'doom-disable-line-numbers-h)
   (add-hook 'writeroom-mode-disable-hook #'doom-enable-line-numbers-h)
   (add-hook 'writeroom-mode-disable-hook
@@ -1730,7 +1731,9 @@ set palette defined ( 0 '%s',\
                    (replace-regexp-in-string "\\`.*/" "" (mu4e-message-field msg :maildir))
                    '+mu4e-header--folder-colors)))))))
 
-(setq magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
+(use-package evil-collection-webkit
+  :config
+  (evil-collection-xwidget-setup))
 
 ;; No missing fonts detected
 
@@ -2854,3 +2857,24 @@ This is done according to `org-latex-feature-implementations'"
         message-send-mail-function #'message-send-mail-with-sendmail)
 
 (setq alert-default-style 'osx-notifier)
+
+(use-package webkit)
+(use-package 'webkit-ace)
+(use-package 'webkit-dark)
+
+(setq webkit-search-prefix "https://google.com/search?q=")
+(setq webkit-history-file nil)
+(setq webkit-cookie-file nil)
+(setq browse-url-browser-function 'webkit-browse-url)
+(setq webkit-browse-url-force-new t)
+(defun webkit--display-progress (progress)
+  (setq webkit--progress-formatted
+        (if (equal progress 100.0)
+            ""
+          (format "%s%.0f%%  " (all-the-icons-faicon "spinner") progress)))
+  (force-mode-line-update))
+(setq webkit-download-action-alist '(("\\.pdf\\'" . webkit-download-open)
+                                     ("\\.png\\'" . webkit-download-save)
+                                     (".*" . webkit-download-default))
+
+(setq webkit-dark-mode t)

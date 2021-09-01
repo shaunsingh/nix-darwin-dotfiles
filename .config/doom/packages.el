@@ -29,6 +29,12 @@
 
 ;;markdown and html
 (package! ox-gfm)
+(package! webkit
+          :recipe (:host github
+                   :repo "akirakyle/emacs-webkit"
+                   :branch "main"
+                   :files (:defaults "*.js" "*.css" "*.so")
+                   :pre-build ("make")))
 
 ;;looks
 (package! solaire-mode :disable t)
@@ -38,3 +44,4 @@
 (package! keycast)
 (package! selectric-mode)
 (package! screenshot :recipe (:host github :repo "tecosaur/screenshot"))
+(package! monkeytype)
