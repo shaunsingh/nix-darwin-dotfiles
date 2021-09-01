@@ -563,11 +563,11 @@
     "wlroots-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1630336211,
-        "narHash": "sha256-7OJ53PR/kCFg5ZntOTjXpiZGFUfheo3CclW2BBdSO+8=",
+        "lastModified": 1630525863,
+        "narHash": "sha256-ux0ZNzfFMdTGeeRiFt6Ne1J31sVSf13WHhNAI8D5mC8=",
         "owner": "swaywm",
         "repo": "wlroots",
-        "rev": "c8d97e27916e1a1df6d103fa957a56829af6add3",
+        "rev": "267eb02c310a5905a5dab107fd10ac7c2d6137c4",
         "type": "github"
       },
       "original": {
