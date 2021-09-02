@@ -44,7 +44,6 @@
   # boot.loader.grub.efiSupport = true;
   # boot.loader.grub.useOSProber = true;
 
-
   # Set your time zone.
   time.timeZone = "America/New_York";
   ## services.localtime.enable = true;
@@ -97,7 +96,6 @@
     bat
     tree
     fd
-    glibc
 
     # Terminal stuff
     ## neofetch
