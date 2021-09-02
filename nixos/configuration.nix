@@ -126,10 +126,10 @@
     ## (pkgs.texlive.combine { inherit (pkgs.texlive) scheme-small dvipng dvisvgm l3packages xcolor soul adjustbox collectbox amsmath siunitx cancel mathalpha capt-of chemfig wrapfig mhchem latexmk; })
     (aspellWithDicts (dicts: with dicts; [ en en-computers en-science ]))
     tectonic
-    pkg-config
-    gtk3
-    glib-networking
-    webkitgtk
+    # pkg-config
+    # gtk3
+    # glib-networking
+    # webkitgtk
 
     # Editors
     ## neovim-nightly

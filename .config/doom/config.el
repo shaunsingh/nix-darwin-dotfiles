@@ -394,6 +394,13 @@ These annotations are skipped for remote paths."
 ;;set treemacs to use the theme
 (setq doom-themes-treemacs-theme "doom-colors")
 
+(defun my/monkeytype-mode-hook ()
+  "Hooks for monkeytype-mode."
+  (centered-cursor-mode)
+  (evil-escape-mode -1)
+  (evil-insert -1))
+(add-hook 'monkeytype-mode-hook #'my/monkeytype-mode-hook)
+
 (defvar emojify-disabled-emojis
   '(;; Org
     "◼" "☑" "☸" "⚙" "⏩" "⏪" "⬆" "⬇" "❓"
@@ -1099,9 +1106,9 @@ to allow the TOC to be a collapseable tree."
 (add-to-list 'org-export-filter-headline-functions
              'org-export-html-headline-anchor)
 
-(org-link-set-parameters "Https"
-                         :follow (lambda (url arg) (browse-url (concat "https:" url) arg))
-                         :export #'org-url-fancy-export)
+;;(org-link-set-parameters "Https"
+                         ;;:follow (lambda (url arg) (browse-url (concat "https:" url) arg))
+                         ;;:export #'org-url-fancy-export)
 
  (defun org-url-fancy-export (url _desc backend)
   (let ((metadata (org-url-unfurl-metadata (concat "https:" url))))
@@ -1732,6 +1739,7 @@ set palette defined ( 0 '%s',\
                    '+mu4e-header--folder-colors)))))))
 
 (use-package evil-collection-webkit
+  :defer t
   :config
   (evil-collection-xwidget-setup))
 
@@ -2858,23 +2866,29 @@ This is done according to `org-latex-feature-implementations'"
 
 (setq alert-default-style 'osx-notifier)
 
-(use-package webkit)
-(use-package 'webkit-ace)
-(use-package 'webkit-dark)
+(use-package org
+  :ensure t)
 
-(setq webkit-search-prefix "https://google.com/search?q=")
-(setq webkit-history-file nil)
-(setq webkit-cookie-file nil)
-(setq browse-url-browser-function 'webkit-browse-url)
-(setq webkit-browse-url-force-new t)
-(defun webkit--display-progress (progress)
-  (setq webkit--progress-formatted
-        (if (equal progress 100.0)
-            ""
-          (format "%s%.0f%%  " (all-the-icons-faicon "spinner") progress)))
-  (force-mode-line-update))
-(setq webkit-download-action-alist '(("\\.pdf\\'" . webkit-download-open)
-                                     ("\\.png\\'" . webkit-download-save)
-                                     (".*" . webkit-download-default))
+(use-package webkit
+  :defer t
+  :commands webkit
+  :init
+  (setq webkit-search-prefix "https://google.com/search?q="
+        webkit-history-file nil
+        webkit-cookie-file nil
+        browse-url-browser-function 'webkit-browse-url
+        webkit-browse-url-force-new t
+        webkit-dark-mode t
+        webkit-download-action-alist '(("\\.pdf\\'" . webkit-download-open)
+                                       ("\\.png\\'" . webkit-download-save)
+                                       (".*" . webkit-download-default)))
 
-(setq webkit-dark-mode t)
+  (defun webkit--display-progress (progress)
+    (setq webkit--progress-formatted
+          (if (equal progress 100.0)
+              ""
+            (format "%s%.0f%%  " (all-the-icons-faicon "spinner") progress)))
+    (force-mode-line-update)))
+
+;;(use-package 'webkit-ace)
+;;(use-package 'webkit-dark)
