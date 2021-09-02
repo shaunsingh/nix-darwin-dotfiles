@@ -118,8 +118,8 @@
 
     # Browsers
     ## firefox
-    ## nyxt
-    qutebrowser
+    nyxt
+    ## qutebrowser
 
     # Emacs config deps (latex, aspell)
     ## (pkgs.texlive.combine { inherit (pkgs.texlive) scheme-small dvipng dvisvgm l3packages xcolor soul adjustbox collectbox amsmath siunitx cancel mathalpha capt-of chemfig wrapfig mhchem latexmk; })
