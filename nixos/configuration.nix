@@ -97,6 +97,7 @@
     bat
     tree
     fd
+    glibc
 
     # Terminal stuff
     ## neofetch
