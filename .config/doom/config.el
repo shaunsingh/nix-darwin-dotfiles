@@ -53,7 +53,7 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
     (let ((mixed-pitch-face 'variable-pitch-serif))
       (mixed-pitch-mode (or arg 'toggle)))))
 
-(defvar required-fonts '("Overpass" "Liga SFMono Nerd Font" "IBM Plex Mono"))
+(defvar required-fonts '("Overpass" "Liga SFMono Nerd Font" "IBM Plex Mono" "IBM Plex Sans"))
 (defvar available-fonts
   (delete-dups (or (font-family-list)
                    (split-string (shell-command-to-string "fc-list : family")
@@ -146,49 +146,6 @@ Made for `org-tab-first-hook'."
          (when (bound-and-true-p org-superstar-mode)
            (org-superstar-restart)))))
 
-(use-package! lsp-ui
-  :hook (lsp-mode . lsp-ui-mode)
-  :config
-  (setq lsp-ui-sideline-enable nil; not anymore useful than flycheck
-        lsp-ui-doc-enable nil
-        lsp-enable-symbol-highlighting nil))
-
-;;java home for java-lsp
-(setenv "JAVA_HOME"  "/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home")
-(setq lsp-java-java-path "/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home/bin/java")
-
-;;latex
-(setq lsp-tex-server 'digestif)
-
-(cl-defmacro lsp-org-babel-enable (lang)
-  "Support LANG in org source code block."
-  (setq centaur-lsp 'lsp-mode)
-  (cl-check-type lang stringp)
-  (let* ((edit-pre (intern (format "org-babel-edit-prep:%s" lang)))
-         (intern-pre (intern (format "lsp--%s" (symbol-name edit-pre)))))
-    `(progn
-       (defun ,intern-pre (info)
-         (let ((file-name (->> info caddr (alist-get :file))))
-           (unless file-name
-             (setq file-name (make-temp-file "babel-lsp-")))
-           (setq buffer-file-name file-name)
-           (lsp-deferred)))
-       (put ',intern-pre 'function-documentation
-            (format "Enable lsp-mode in the buffer of org source block (%s)."
-                    (upcase ,lang)))
-       (if (fboundp ',edit-pre)
-           (advice-add ',edit-pre :after ',intern-pre)
-         (progn
-           (defun ,edit-pre (info)
-             (,intern-pre info))
-           (put ',edit-pre 'function-documentation
-                (format "Prepare local buffer environment for org source block (%s)."
-                        (upcase ,lang))))))))
-(defvar org-babel-lang-list
-  '("go" "python" "ipython" "bash" "sh" ))
-(dolist (lang org-babel-lang-list)
-  (eval `(lsp-org-babel-enable ,lang)))
-
 (set-file-template! "\\.org$" :trigger "__" :mode 'org-mode)
 
 (setq undo-limit 80000000                          ;I mess up too much
@@ -197,12 +154,10 @@ Made for `org-tab-first-hook'."
       auto-save-default t                          ;I dont like to lose work
       display-line-numbers-type nil                ;I dislike line numbers
       history-length 25                            ;Slight speedup
+      eshell-prefer-lisp-functions t               ;Use the lisp version of stuff for eshell
+      delete-by-moving-to-trash t                  ;delete to system trash instead
       truncate-string-ellipsis "…")                ;default ellipses suck
 
-(setq eshell-prefer-lisp-functions t) ;use the lisp version of stuff for eshell
-(setq doom-scratch-initial-major-mode 'lisp-interaction-mode) ;start doom in lisp for an empty buffer
-(setq-default delete-by-moving-to-trash t) ;delete to system trash instead
-(add-to-list 'default-frame-alist '(inhibit-double-buffering . t)) ;;stops flickering
 (fringe-mode 0) ;;disable fringe
 (global-subword-mode 1) ;;navigate through Camel Case words
 
@@ -236,7 +191,6 @@ Made for `org-tab-first-hook'."
         window-divider-default-right-width 0)
   (window-divider-mode -1))
 
-;;disable cursorline
 (remove-hook 'doom-first-buffer-hook #'global-hl-line-mode)
 
 (defadvice! fix-+evil-default-cursor-fn ()
@@ -246,15 +200,14 @@ Made for `org-tab-first-hook'."
   :override #'+evil-emacs-cursor-fn
   (evil-set-cursor-color (face-foreground 'warning)))
 
-;;make minimap transparent
 (setq minimap-highlight-line nil)
 (custom-set-faces!
   `(minimap-active-region-background :background unspecified))
 
 (set-frame-parameter nil 'internal-border-width 15)
-(setq-default left-margin-width 2)
-(setq-default right-margin-width 2)
-(setq-default line-spacing 0.35)
+(setq-default left-margin-width 2
+              right-margin-width 2
+              line-spacing 0.35)
 
 (use-package! selectric-mode
   :commands selectric-mode)
@@ -386,9 +339,7 @@ These annotations are skipped for remote paths."
 
   (setcdr (assq 'file marginalia-annotator-registry) '(+marginalia-annotate-file-colorful builtin none)))
 
-;;make treemacs thinner
 (setq treemacs-width 25)
-;;set treemacs to use the theme
 (setq doom-themes-treemacs-theme "doom-colors")
 
 (defvar emojify-disabled-emojis
@@ -409,10 +360,9 @@ These annotations are skipped for remote paths."
 (add-hook! '(mu4e-compose-mode org-msg-edit-mode) (emoticon-to-emoji 1))
 
 (defvar phrase-api-url
-  (nth (random 3)
+  (nth (random 2)
        '(("https://corporatebs-generator.sameerkumar.website/" :phrase)
-         ("https://useless-facts.sameerkumar.website/api" :data)
-         ("https://dev-excuses-api.herokuapp.com/" :text))))
+         ("https://useless-facts.sameerkumar.website/api" :data))))
 
 (defmacro phrase-generate-callback (token &optional format-fn ignore-read-only callback buffer-name)
   `(lambda (status)
@@ -431,7 +381,7 @@ These annotations are skipped for remote paths."
            ,callback)))))
 
 (defvar phrase-last nil)
-(defvar phrase-timeout 5)
+(defvar phrase-timeout 10)
 
 (defmacro phrase-insert-async (&optional format-fn token ignore-read-only callback buffer-name)
   `(let ((inhibit-message t))
@@ -528,7 +478,6 @@ These annotations are skipped for remote paths."
     (if writeroom-mode
         (add-hook 'post-command-hook #'recenter nil t)
       (remove-hook 'post-command-hook #'recenter t)))
-  ;;(add-hook! 'writeroom-mode-hook (minimap-mode (if writeroom-mode +1 -1)))
   (add-hook 'writeroom-mode-enable-hook #'doom-disable-line-numbers-h)
   (add-hook 'writeroom-mode-disable-hook #'doom-enable-line-numbers-h)
   (add-hook 'writeroom-mode-disable-hook
@@ -539,34 +488,93 @@ These annotations are skipped for remote paths."
                   (org-superstar-restart))
                 (when +zen--original-org-indent-mode-p (org-indent-mode 1))))))
 
-;;spc+v = view exported file
-(map! :map org-mode-map
-      :localleader
-      :desc "View exported file" "v" #'org-view-output-file)
+(setq org-ellipsis " ▾ "
+      org-hide-leading-stars t
+      org-priority-highest ?A
+      org-priority-lowest ?E
+      org-priority-faces
+      '((?A . 'all-the-icons-red)
+        (?B . 'all-the-icons-orange)
+        (?C . 'all-the-icons-yellow)
+        (?D . 'all-the-icons-green)
+        (?E . 'all-the-icons-blue)))
 
-(defun org-view-output-file (&optional org-file-path)
-  "Visit buffer open on the first output file (if any) found, using `org-view-output-file-extensions'"
-  (interactive)
-  (let* ((org-file-path (or org-file-path (buffer-file-name) ""))
-         (dir (file-name-directory org-file-path))
-         (basename (file-name-base org-file-path))
-         (output-file nil))
-    (dolist (ext org-view-output-file-extensions)
-      (unless output-file
-        (when (file-exists-p
-               (concat dir basename "." ext))
-          (setq output-file (concat dir basename "." ext)))))
-    (if output-file
-        (if (member (file-name-extension output-file) org-view-external-file-extensions)
-            (browse-url-xdg-open output-file)
-          (pop-to-bufferpop-to-buffer (or (find-buffer-visiting output-file)
-                             (find-file-noselect output-file))))
-      (message "No exported file found"))))
-
-(defvar org-view-output-file-extensions '("pdf" "md" "rst" "txt" "tex" "html")
-  "Search for output files with these extensions, in order, viewing the first that matches")
-(defvar org-view-external-file-extensions '("html")
-  "File formats that should be opened externally.")
+(appendq! +ligatures-extra-symbols
+          `(:checkbox      "☐"
+            :pending       "◼"
+            :checkedbox    "☑"
+            :list_property "∷"
+            :em_dash       "—"
+            :ellipses      "…"
+            :arrow_right   "→"
+            :arrow_left    "←"
+            :property      "☸"
+            :options       "⌥"
+            :startup       "⏻"
+            :html_head     "🅷"
+            :html          "🅗"
+            :latex_class   "🄻"
+            :latex_header  "🅻"
+            :beamer_header "🅑"
+            :latex         "🅛"
+            :attr_latex    "🄛"
+            :attr_html     "🄗"
+            :attr_org      "⒪"
+            :begin_quote   "❝"
+            :end_quote     "❞"
+            :caption       "☰"
+            :header        "›"
+            :begin_export  "⏩"
+            :end_export    "⏪"
+            :properties    "⚙"
+            :end           "∎"
+            :priority_a   ,(propertize "⚑" 'face 'all-the-icons-red)
+            :priority_b   ,(propertize "⬆" 'face 'all-the-icons-orange)
+            :priority_c   ,(propertize "■" 'face 'all-the-icons-yellow)
+            :priority_d   ,(propertize "⬇" 'face 'all-the-icons-green)
+            :priority_e   ,(propertize "❓" 'face 'all-the-icons-blue)))
+(set-ligatures! 'org-mode
+  :merge t
+  :checkbox      "[ ]"
+  :pending       "[-]"
+  :checkedbox    "[X]"
+  :list_property "::"
+  :em_dash       "---"
+  :ellipsis      "..."
+  :arrow_right   "->"
+  :arrow_left    "<-"
+  :title         "#+title:"
+  :subtitle      "#+subtitle:"
+  :author        "#+author:"
+  :date          "#+date:"
+  :property      "#+property:"
+  :options       "#+options:"
+  :startup       "#+startup:"
+  :macro         "#+macro:"
+  :html_head     "#+html_head:"
+  :html          "#+html:"
+  :latex_class   "#+latex_class:"
+  :latex_header  "#+latex_header:"
+  :beamer_header "#+beamer_header:"
+  :latex         "#+latex:"
+  :attr_latex    "#+attr_latex:"
+  :attr_html     "#+attr_html:"
+  :attr_org      "#+attr_org:"
+  :begin_quote   "#+begin_quote"
+  :end_quote     "#+end_quote"
+  :caption       "#+caption:"
+  :header        "#+header:"
+  :begin_export  "#+begin_export"
+  :end_export    "#+end_export"
+  :results       "#+RESULTS:"
+  :property      ":PROPERTIES:"
+  :end           ":END:"
+  :priority_a    "[#A]"
+  :priority_b    "[#B]"
+  :priority_c    "[#C]"
+  :priority_d    "[#D]"
+  :priority_e    "[#E]")
+(plist-put +ligatures-extra-symbols :name "⁍")
 
 (defun org-syntax-convert-keyword-case-to-lower ()
   "Convert all #+KEYWORDS to #+keywords."
@@ -617,20 +625,17 @@ These annotations are skipped for remote paths."
   :defer t
   :config (setq screenshot-upload-fn "upload $s 2>/dev/null"))
 
-;;use image previews
-(setq org-startup-with-inline-images t)            ;inline images in org mode
-
-;;add padding in org
 (use-package! org-padding)
-
 (add-hook 'org-mode-hook #'org-padding-mode)
 (setq org-padding-block-begin-line-padding '(1.15 . 0.15))
 (setq org-padding-block-end-line-padding '(1.15 . 0.15))
 
- (defadvice! shut-up-org-problematic-hooks (orig-fn &rest args)
+(defadvice! shut-up-org-problematic-hooks (orig-fn &rest args)
   :around #'org-fancy-priorities-mode
   :around #'org-superstar-mode
   (ignore-errors (apply orig-fn args)))
+
+(setq org-startup-with-inline-images t)
 
 (use-package! org-pretty-table
   :commands (org-pretty-table-mode global-org-pretty-table-mode))
@@ -652,7 +657,6 @@ These annotations are skipped for remote paths."
         (:tangle . "no")
         (:comments . "link")))
 
-(remove-hook 'text-mode-hook #'visual-line-mode)
 (add-hook 'text-mode-hook #'auto-fill-mode)
 
 (map! :map evil-org-mode-map
@@ -1096,9 +1100,9 @@ to allow the TOC to be a collapseable tree."
 (add-to-list 'org-export-filter-headline-functions
              'org-export-html-headline-anchor)
 
-;;(org-link-set-parameters "Https"
-                         ;;:follow (lambda (url arg) (browse-url (concat "https:" url) arg))
-                         ;;:export #'org-url-fancy-export)
+(org-link-set-parameters "Https"
+                         :follow (lambda (url arg) (browse-url (concat "https:" url) arg))
+                         :export #'org-url-fancy-export)
 
  (defun org-url-fancy-export (url _desc backend)
   (let ((metadata (org-url-unfurl-metadata (concat "https:" url))))
@@ -1218,63 +1222,12 @@ MathJax = {
 (after! org-roam
    (setq +org-roam-open-buffer-on-find-file nil))
 
-(defcustom org-roam-ui-use-webkit t
-  "Use embedded webkit to preview.
-This requires GNU/Emacs version >= 26 and built with the `--with-xwidgets`
-option."
-  :type 'boolean
-  :group 'roam)
-
-(defun org-roam-ui-browser (url)
-  "Use browser specified by user to load URL.
-Use default browser if nil."
-  (if org-roam-ui-url-browser
-      (let ((browse-url-generic-program org-roam-ui-url-browser)
-            (browse-url-generic-args roam-url-args))
-        (ignore browse-url-generic-program)
-        (ignore browse-url-generic-args)
-        (browse-url-generic url))
-    (browse-url url)))
-
-(defun org-roam-ui-open-url (url)
-  "Ask the browser to load URL.
-Use default browser unless `xwidget' is available."
-  (if (and org-roam-ui-use-webkit
-           (featurep 'xwidget-internal))
-      (progn
-        (xwidget-webkit-browse-url url)
-        (let ((buf (xwidget-buffer (xwidget-webkit-current-session))))
-          (when (buffer-live-p buf)
-            (and (eq buf (current-buffer)) (quit-window))
-            (let (display-buffer-alist)(pop-to-buffer buf)))))
-    (org-roam-ui-browser url)))
-
-;;;###autoload
-(define-minor-mode org-roam-ui-open-in-browser
-  "open org-roam-ui in the browser"
- :lighter "roam"
- (org-roam-ui-open-url "http://127.0.0.1:35901"))
-
-;;(setq org-roam-ui-sync-theme nil)
-;; (setq org-roam-ui-custom-theme
-;;       `((bg . "#2E3440")
-;;         (bg-alt . "#3B4252")
-;;         (fg . "#D8DEE9")
-;;         (fg-alt . "#E5E9F0")
-;;         (red . "#BF616A")
-;;         (orange . "#D08770")
-;;         (yellow ."#EBCB8B")
-;;         (green . "#A3BE8C")
-;;         (cyan . "#88C0D0")
-;;         (blue . "#81A1C1")
-;;         (violet . "#B48EAD")
-;;         (magenta . "#8FBCBB")))
-
 (setq org-agenda-files (list "~/org/school.org"
                              "~/org/todo.org"))
 
 (use-package! org-super-agenda
   :commands (org-super-agenda-mode))
+
 (after! org-agenda
   (org-super-agenda-mode))
 
@@ -1421,11 +1374,34 @@ set palette defined ( 0 '%s',\
   (setq org-plot/gnuplot-script-preamble #'org-plot/generate-theme)
   (setq org-plot/gnuplot-term-extra #'org-plot/gnuplot-term-properties))
 
-(setq TeX-save-query nil
-      TeX-show-compilation t
-      TeX-command-extra-options "-shell-escape")
-(after! latex
-  (add-to-list 'TeX-command-list '("XeLaTeX" "%`xelatex%(mode)%' %t" TeX-run-TeX nil t)))
+;;spc+v = view exported file
+(map! :map org-mode-map
+      :localleader
+      :desc "View exported file" "v" #'org-view-output-file)
+
+(defun org-view-output-file (&optional org-file-path)
+  "Visit buffer open on the first output file (if any) found, using `org-view-output-file-extensions'"
+  (interactive)
+  (let* ((org-file-path (or org-file-path (buffer-file-name) ""))
+         (dir (file-name-directory org-file-path))
+         (basename (file-name-base org-file-path))
+         (output-file nil))
+    (dolist (ext org-view-output-file-extensions)
+      (unless output-file
+        (when (file-exists-p
+               (concat dir basename "." ext))
+          (setq output-file (concat dir basename "." ext)))))
+    (if output-file
+        (if (member (file-name-extension output-file) org-view-external-file-extensions)
+            (browse-url-xdg-open output-file)
+          (pop-to-bufferpop-to-buffer (or (find-buffer-visiting output-file)
+                             (find-file-noselect output-file))))
+      (message "No exported file found"))))
+
+(defvar org-view-output-file-extensions '("pdf" "md" "rst" "txt" "tex" "html")
+  "Search for output files with these extensions, in order, viewing the first that matches")
+(defvar org-view-external-file-extensions '("html")
+  "File formats that should be opened externally.")
 
 (setq +latex-viewers '(pdf-tools evince zathura okular skim sumatrapdf))
 
@@ -1450,7 +1426,6 @@ set palette defined ( 0 '%s',\
 (setq-default org-html-with-latex `dvisvgm)
 (setq org-preview-latex-default-process 'dvisvgm)
 
-;;auto toggle between preview/raw latex
 (use-package! org-fragtog
   :hook (org-mode . org-fragtog-mode))
 
@@ -1740,6 +1715,10 @@ set palette defined ( 0 '%s',\
  "<<" ">>"
  :actions '(insert))
 
+(add-to-list 'default-frame-alist '(inhibit-double-buffering . t)) ;;stops flickering
+
+(setq doom-scratch-initial-major-mode 'lisp-interaction-mode)
+
 (defvar fancy-splash-image-template
   (expand-file-name "misc/splash-images/emacs-e-template.svg" doom-private-dir)
   "Default template svg used for the splash image, with substitutions from ")
@@ -1839,9 +1818,11 @@ set palette defined ( 0 '%s',\
 (setq +zen-text-scale 0.8)
 
 (add-hook 'org-mode-hook #'+org-pretty-mode)
-(setq org-pretty-entities-include-sub-superscripts nil) ;;doesn't play well with latex
+
+(setq org-pretty-entities-include-sub-superscripts nil)
 
 (custom-set-faces!
+  '(org-document-title :height 1.2)
   '(outline-1 :weight extra-bold :height 1.25)
   '(outline-2 :weight bold :height 1.15)
   '(outline-3 :weight bold :height 1.12)
@@ -1850,9 +1831,6 @@ set palette defined ( 0 '%s',\
   '(outline-6 :weight semi-bold :height 1.03)
   '(outline-8 :weight semi-bold)
   '(outline-9 :weight semi-bold))
-
-(custom-set-faces!
-  '(org-document-title :height 1.2))
 
 (setq org-agenda-deadline-faces
       '((1.0 . error)
@@ -1966,95 +1944,6 @@ Must be run as part of `org-font-lock-set-keywords-hook'."
 (after! org-superstar
   (setq org-superstar-headline-bullets-list '("◉" "○" "✸" "✿" "✤" "✜" "◆" "▶")
         org-superstar-prettify-item-bullets t ))
-
-(setq org-ellipsis " ▾ "
-      org-hide-leading-stars t
-      org-priority-highest ?A
-      org-priority-lowest ?E
-      org-priority-faces
-      '((?A . 'all-the-icons-red)
-        (?B . 'all-the-icons-orange)
-        (?C . 'all-the-icons-yellow)
-        (?D . 'all-the-icons-green)
-        (?E . 'all-the-icons-blue)))
-
-;;lets replace some unicode chars
-(appendq! +ligatures-extra-symbols
-          `(:checkbox      "☐"
-            :pending       "◼"
-            :checkedbox    "☑"
-            :list_property "∷"
-            :em_dash       "—"
-            :ellipses      "…"
-            :arrow_right   "→"
-            :arrow_left    "←"
-            :property      "☸"
-            :options       "⌥"
-            :startup       "⏻"
-            :html_head     "🅷"
-            :html          "🅗"
-            :latex_class   "🄻"
-            :latex_header  "🅻"
-            :beamer_header "🅑"
-            :latex         "🅛"
-            :attr_latex    "🄛"
-            :attr_html     "🄗"
-            :attr_org      "⒪"
-            :begin_quote   "❝"
-            :end_quote     "❞"
-            :caption       "☰"
-            :header        "›"
-            :begin_export  "⏩"
-            :end_export    "⏪"
-            :properties    "⚙"
-            :end           "∎"
-            :priority_a   ,(propertize "⚑" 'face 'all-the-icons-red)
-            :priority_b   ,(propertize "⬆" 'face 'all-the-icons-orange)
-            :priority_c   ,(propertize "■" 'face 'all-the-icons-yellow)
-            :priority_d   ,(propertize "⬇" 'face 'all-the-icons-green)
-            :priority_e   ,(propertize "❓" 'face 'all-the-icons-blue)))
-(set-ligatures! 'org-mode
-  :merge t
-  :checkbox      "[ ]"
-  :pending       "[-]"
-  :checkedbox    "[X]"
-  :list_property "::"
-  :em_dash       "---"
-  :ellipsis      "..."
-  :arrow_right   "->"
-  :arrow_left    "<-"
-  :title         "#+title:"
-  :subtitle      "#+subtitle:"
-  :author        "#+author:"
-  :date          "#+date:"
-  :property      "#+property:"
-  :options       "#+options:"
-  :startup       "#+startup:"
-  :macro         "#+macro:"
-  :html_head     "#+html_head:"
-  :html          "#+html:"
-  :latex_class   "#+latex_class:"
-  :latex_header  "#+latex_header:"
-  :beamer_header "#+beamer_header:"
-  :latex         "#+latex:"
-  :attr_latex    "#+attr_latex:"
-  :attr_html     "#+attr_html:"
-  :attr_org      "#+attr_org:"
-  :begin_quote   "#+begin_quote"
-  :end_quote     "#+end_quote"
-  :caption       "#+caption:"
-  :header        "#+header:"
-  :begin_export  "#+begin_export"
-  :end_export    "#+end_export"
-  :results       "#+RESULTS:"
-  :property      ":PROPERTIES:"
-  :end           ":END:"
-  :priority_a    "[#A]"
-  :priority_b    "[#B]"
-  :priority_c    "[#C]"
-  :priority_d    "[#D]"
-  :priority_e    "[#E]")
-(plist-put +ligatures-extra-symbols :name "⁍")
 
 (use-package! org-pandoc-import
   :after org)
@@ -2279,91 +2168,6 @@ is selected, only the bare key is returned."
                            :keyword "%U"
                            :file +org-capture-project-notes-file)))
               )))
-
-(map! :map org-mode-map
-      :leader
-      :desc "View exported file" "v" #'org-view-output-file)
-
-(defun org-view-output-file (&optional org-file-path)
-  "Visit buffer open on the first output file (if any) found, using `org-view-output-file-extensions'"
-  (interactive)
-  (let* ((org-file-path (or org-file-path (buffer-file-name) ""))
-         (dir (file-name-directory org-file-path))
-         (basename (file-name-base org-file-path))
-         (output-file nil))
-    (dolist (ext org-view-output-file-extensions)
-      (unless output-file
-        (when (file-exists-p
-               (concat dir basename "." ext))
-          (setq output-file (concat dir basename "." ext)))))
-    (if output-file
-        (if (member (file-name-extension output-file) org-view-external-file-extensions)
-            (browse-url-xdg-open output-file)
-          (pop-to-buffer (or (find-buffer-visiting output-file)
-                             (find-file-noselect output-file))))
-      (message "No exported file found"))))
-
-(defvar org-view-output-file-extensions '( "pdf" "md" "rst" "txt" "tex")
-  "Search for output files with these extensions, in order, viewing the first that matches")
-
-(defcustom org-html-use-webkit t
-  "Use embedded webkit to preview.
-This requires GNU/Emacs version >= 26 and built with the `--with-xwidgets`
-option."
-  :type 'boolean)
-
-(defun org-html-browser (url)
-  "Use browser specified by user to load URL.
-Use default browser if nil."
-  (if org-html-url-browser
-      (let ((browse-url-generic-program org-html-url-browser)
-            (browse-url-generic-args roam-url-args))
-        (ignore browse-url-generic-program)
-        (ignore browse-url-generic-args)
-        (browse-url-generic url))
-    (browse-url url)))
-
-(defun org-html-open-url (url)
-  "Ask the browser to load URL.
-Use default browser unless `xwidget' is available."
-  (if (and org-html-use-webkit
-           (featurep 'xwidget-internal))
-      (progn
-        (xwidget-webkit-browse-url url)
-        (let ((buf (xwidget-buffer (xwidget-webkit-current-session))))
-          (when (buffer-live-p buf)
-            (and (eq buf (current-buffer)) (quit-window))
-            (let (display-buffer-alist)(pop-to-buffer buf)))))
-    (org-html-browser url)))
-
-(map! :map org-mode-map
-      :leader
-      :desc "View exported file" "V" #'org-view-output-file-html)
-
-(defun org-view-output-file-html (&optional org-file-path)
-  "Visit buffer open on the first output file (if any) found, using `org-view-output-file-extensions'"
-  (interactive)
-  (let* ((org-file-path (or org-file-path (buffer-file-name) ""))
-         (dir (file-name-directory org-file-path))
-         (basename (file-name-base org-file-path))
-         (output-file nil))
-    (dolist (ext org-view-output-file-extensions-html)
-      (unless output-file
-        (when (file-exists-p
-               (concat dir basename "." ext))
-          (setq output-file (concat dir basename "." ext)))))
-    (if output-file
-        (if (member (file-name-extension output-file) org-view-external-file-extensions)
-            (defun org-html-preview-url ()
-                "Return grip preview url."
-                 (format "file://%s" output-file))
-            (org-html-open-url org-html-preview-url))
-      (message "No exported file found"))))
-
-(defvar org-view-output-file-extensions-html '( "html")
-  "Search for output files with these extensions, in order, viewing the first that matches")
-(defvar org-view-external-file-extensions '("html")
-  "File formats that should be opened externally.")
 
 (use-package! calctex
   :commands calctex-mode
@@ -2846,16 +2650,16 @@ This is done according to `org-latex-feature-implementations'"
 
 (setq mu4e-update-interval 300)
 
-(setq sendmail-program "/opt/homebrew/bin/msmtp"
+(setq sendmail-program "msmtp"
         send-mail-function #'smtpmail-send-it
         message-sendmail-f-is-evil t
         message-sendmail-extra-arguments '("--read-envelope-from")
         message-send-mail-function #'message-send-mail-with-sendmail)
 
-(setq alert-default-style 'osx-notifier)
+;;(setq alert-default-style 'osx-notifier)
 
 ;; (use-package org
-;;   :ensure t)
+;;   :demand t)
 
 ;; (use-package webkit
 ;;   :defer t

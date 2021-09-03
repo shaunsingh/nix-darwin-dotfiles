@@ -2,7 +2,6 @@
 ;;; $DOOMDIR/packages.el
 
 ;;org
-(unpin! org)
 (package! org-appear)
 (package! org-super-agenda)
 (package! doct
@@ -45,4 +44,3 @@
 (package! keycast)
 (package! selectric-mode)
 (package! screenshot :recipe (:host github :repo "tecosaur/screenshot"))
-;;(package! monkeytype)
