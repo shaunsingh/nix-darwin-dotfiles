@@ -4,20 +4,25 @@
 (define-configuration browser
   ((session-restore-prompt :never-restore)))
 
+(define-configuration nyxt/web-mode:web-mode
+  ((nyxt/web-mode:hints-alphabet "DSJKHLFAGNMXCWEIO")))
+
 (define-configuration (buffer web-buffer prompt-buffer)
   ((default-modes (append '(vi-normal-mode)
                           %slot-default%))))
 
+;; theme
+
 (let ((bg "#242730")
       (fg "#bbc2cf")
       (mlbg "#2a2e38") ; modeline bg
-      (mlfg "#C57BDB")
-      (ml-highlight-fg "#FCCE7B")
+      (mlfg "#51afef")
+      (ml-highlight-fg "#C57BDB")
       (h1 "#bbc2cf")
-      (a "#51afef")
+      (a "#C57BDB")
       (cursor "#51afef")
-      (mb-prompt "#bbc2cf") ; minibuffer prompt
-      (mb-separator "#C57BDB"))
+      (mb-prompt "#FCCE7B") ; minibuffer prompt
+      (mb-separator "#7bc275"))
 
   ;; minibuffer (bg and fg colors)
   (define-configuration prompt-buffer
@@ -26,13 +31,11 @@
          %slot-default%
          (cl-css:css
           `((body
-             :border-top ,(str:concat "1px solid" mb-separator)
              :background-color ,bg
              :color ,fg)
             ("#input"
 	     :background-color ,bg
-             :color ,fg
-             :border-bottom ,(str:concat "solid 1px " mb-separator))
+             :color ,fg)
             ("#cursor"
              :background-color ,cursor
              :color ,fg)
@@ -46,11 +49,11 @@
 	     :background-color ,mlbg
 	     :color ,mlfg)
             (.marked
-             :background-color mlbg
-             :color bg)
+             :background-color "#ff665c"
+             :color "#2a2e38")
             (.selected
-             :background-color mlfg
-             :color bg)))))))
+             :background-color "#FCCE7B"
+             :color "#2a2e38")))))))
 
   (defun override (color)
     (concatenate 'string color " !important"))
@@ -114,44 +117,6 @@
   (hooks:add-hook nyxt/web-mode:scroll-to-bottom-after-hook
                   (hooks:make-handler-void #'nyxt::print-status))
 
-(define-parenscript %percentage ()
-  (defun percentage ()
-    (let* ((height-of-window (ps:@ window inner-height))
-           (content-scrolled (ps:@ window page-y-offset))
-           (body-height (if (not (or (eql window undefined)
-                                     (eql (ps:@ window document) undefined)
-                                     (eql (ps:chain window
-                                                    document
-                                                    (get-elements-by-tag-name "body"))
-                                          undefined)
-                                     (eql (ps:chain window
-                                                    document
-                                                    (get-elements-by-tag-name "body")
-                                                    0)
-                                          undefined)
-                                     (eql (ps:chain window
-                                                    document
-                                                    (get-elements-by-tag-name "body")
-                                                    0
-                                                    offset-height)
-                                          undefined)))
-                          (ps:chain window
-                                    document
-                                    (get-elements-by-tag-name "body")
-                                    0
-                                    offset-height)
-                          0))
-           (total (- body-height height-of-window))
-           (prc (* (/ content-scrolled total) 100)))
-      (if (> prc 100)
-          100
-          (round prc))))
-  (percentage))
-
-(define-command percentage ()
-  "Echo percentage."
-  (echo (%percentage)))
-
   (defun my-status-formatter (window)
     (let* ((buffer (current-buffer window))
            (buffer-count (1+ (or (position buffer
@@ -172,10 +137,7 @@
                           "(Loading) "
                           "")
                       (render-url (url buffer))
-                      (title buffer)))
-             (:span :id "percentage"
-                    :style "float:right"
-                    (format nil "~:[0~;~:*~a~]%" (%percentage)))))))
+                      (title buffer)))))))
 
   (define-configuration window
       ((message-buffer-style
@@ -185,11 +147,7 @@
           `((body
              :background-color ,(override bg)
              :color ,(override fg))))))
-       (status-formatter #'my-status-formatter))))
-
-
-
-(define-configuration web-buffer
+       (status-formatter #'my-status-formatter))))(define-configuration web-buffer
   ((default-modes (append
                    '(auto-mode
                      emacs-mode
