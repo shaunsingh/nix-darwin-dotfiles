@@ -59,11 +59,11 @@
         "rust-overlay": "rust-overlay"
       },
       "locked": {
-        "lastModified": 1630477428,
-        "narHash": "sha256-1OzN4/Tyn6XmF8KuXXzGgRuy0SHtFZ7EbmO3uQtEsOk=",
+        "lastModified": 1630670373,
+        "narHash": "sha256-Ll022hX+yB/DfPWGCnR8rkixyfYMSAicLm4tStWXXEw=",
         "owner": "emacs-ng",
         "repo": "emacs-ng",
-        "rev": "e9c4e9c74606018fd222c0e62cc4713bde579bdd",
+        "rev": "098a8a38171bb3c2b2ce1bd4b9ed8a1b09cc4f20",
         "type": "github"
       },
       "original": {
@@ -362,11 +362,11 @@
       },
       "locked": {
         "dir": "contrib",
-        "lastModified": 1630514573,
-        "narHash": "sha256-aY7AdUmWyWTBHZIQSgM39iDb1eQsiN9K5qCvEIw13aQ=",
+        "lastModified": 1630603799,
+        "narHash": "sha256-me1koKpU9rApd2m3xxfMTOyBq16IyO5JVA1mjI41fKc=",
         "owner": "neovim",
         "repo": "neovim",
-        "rev": "6751d6254b35d216a86817cd414d5d06e3ff641d",
+        "rev": "5f8518b3f04c2295be24912dba78d3e34ca74b91",
         "type": "github"
       },
       "original": {
@@ -563,11 +563,11 @@
     "wlroots-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1630525863,
-        "narHash": "sha256-ux0ZNzfFMdTGeeRiFt6Ne1J31sVSf13WHhNAI8D5mC8=",
+        "lastModified": 1630700018,
+        "narHash": "sha256-cqTt820sJcbAdA4SkK3415LasuBzBXn8nIUhFquRCUM=",
         "owner": "swaywm",
         "repo": "wlroots",
-        "rev": "267eb02c310a5905a5dab107fd10ac7c2d6137c4",
+        "rev": "38cd1b4f4fa8f82944fb0d378bcde3242e0a69ff",
         "type": "github"
       },
       "original": {
