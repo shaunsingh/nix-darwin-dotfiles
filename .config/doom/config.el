@@ -628,8 +628,6 @@ These annotations are skipped for remote paths."
   :defer t
   :config (setq screenshot-upload-fn "upload $s 2>/dev/null"))
 
-#
-⎘
 (map! :map elfeed-search-mode-map
       :after elfeed-search
       [remap kill-this-buffer] "q"

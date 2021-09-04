@@ -1151,9 +1151,6 @@ clipboard work though.
 ** RSS
 RSS is a nice simple way of getting my news. Lets set that up
 #+begin_src elisp
-
-#
-⎘
 (map! :map elfeed-search-mode-map
       :after elfeed-search
       [remap kill-this-buffer] "q"
