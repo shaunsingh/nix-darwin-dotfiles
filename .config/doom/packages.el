@@ -44,3 +44,4 @@
 (package! keycast)
 (package! selectric-mode)
 (package! screenshot :recipe (:host github :repo "tecosaur/screenshot"))
+(package! screenshot :recipe (:host github :repo "tecosaur/lexic"))
