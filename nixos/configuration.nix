@@ -137,6 +137,7 @@
     # Chat
     discord
     discocss
+    bitlbee-discord
 
     # Pdf/images
     zathura
@@ -151,6 +152,8 @@
     overpass
     ## alegreya
   ];
+
+  services.bitlbee.enable = true;
 
   # use sway :chad:
   programs.sway = {
