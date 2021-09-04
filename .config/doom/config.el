@@ -151,13 +151,22 @@ Made for `org-tab-first-hook'."
 
 (set-file-template! "\\.org$" :trigger "__" :mode 'org-mode)
 
+(use-package! lsp-ui
+  :hook (lsp-mode . lsp-ui-mode)
+  :config
+  (setq lsp-ui-sideline-enable nil; not anymore useful than flycheck
+        lsp-ui-doc-enable nil
+        lsp-tex-server 'digestif
+        lsp-headerline-breadcrumb-enable t
+        lsp-enable-folding t
+        lsp-enable-symbol-highlighting nil))
+
 (setq undo-limit 80000000                          ;I mess up too much
       evil-want-fine-undo t                        ;By default while in insert all changes are one big blob. Be more granular
       scroll-margin 2                              ;having a little margin is nice
       auto-save-default t                          ;I dont like to lose work
       display-line-numbers-type nil                ;I dislike line numbers
       history-length 25                            ;Slight speedup
-      eshell-prefer-lisp-functions t               ;Use the lisp version of stuff for eshell
       delete-by-moving-to-trash t                  ;delete to system trash instead
       truncate-string-ellipsis "…")                ;default ellipses suck
 
@@ -1944,6 +1953,8 @@ set palette defined ( 0 '%s',\
  '(org-mode)
  "<<" ">>"
  :actions '(insert))
+
+(setq lsp-lens-enable t)
 
 (add-to-list 'default-frame-alist '(inhibit-double-buffering . t)) ;;stops flickering
 

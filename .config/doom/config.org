@@ -257,6 +257,25 @@ And lastly lets add some helpful snippets for org-mode, and add a better templet
 (set-file-template! "\\.org$" :trigger "__" :mode 'org-mode)
 #+end_src
 
+** LSP
+I'm trying out some ui stuff too
+#+begin_src emacs-lisp
+(setq lsp-lens-enable t)
+#+end_src
+
+I think the LSP is a bit intrusive (especially with inline suggestions), so lets make it behave a bit more
+#+begin_src elisp
+(use-package! lsp-ui
+  :hook (lsp-mode . lsp-ui-mode)
+  :config
+  (setq lsp-ui-sideline-enable nil; not anymore useful than flycheck
+        lsp-ui-doc-enable nil
+        lsp-tex-server 'digestif
+        lsp-headerline-breadcrumb-enable t
+        lsp-enable-folding t
+        lsp-enable-symbol-highlighting nil))
+#+end_src
+
 ** Better Defaults
 The defaults for emacs aren't so good nowadays. Lets fix that up a bit
 #+begin_src elisp
@@ -266,7 +285,6 @@ The defaults for emacs aren't so good nowadays. Lets fix that up a bit
       auto-save-default t                          ;I dont like to lose work
       display-line-numbers-type nil                ;I dislike line numbers
       history-length 25                            ;Slight speedup
-      eshell-prefer-lisp-functions t               ;Use the lisp version of stuff for eshell
       delete-by-moving-to-trash t                  ;delete to system trash instead
       truncate-string-ellipsis "…")                ;default ellipses suck
 
