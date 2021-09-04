@@ -135,9 +135,8 @@
     }))
 
     # Chat
-    discord
-    discocss
-    bitlbee-discord
+    # discord
+    # discocss
 
     # Pdf/images
     zathura
@@ -147,13 +146,29 @@
 
   ];
 
+  # Add ibm and overpass fonts for emacs
   fonts.fonts = with pkgs; [
     ibm-plex
     overpass
     ## alegreya
   ];
 
-  services.bitlbee.enable = true;
+  # use bitlbee for hangouts and discord
+  services.bitlbee = {
+    enable = true;
+
+    plugins = with pkgs; [
+      # bitlbee-facebook
+      # bitlbee-steam
+      # bitlbee-mastodon
+      bitlbee-discord
+    ];
+
+    libpurple_plugins = with pkgs; [
+      # telegram-purple
+      purple-hangouts
+    ];
+  };
 
   # use sway :chad:
   programs.sway = {
