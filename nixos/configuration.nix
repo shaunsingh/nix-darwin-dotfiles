@@ -154,6 +154,7 @@
   ];
 
   # use bitlbee for hangouts and discord
+  # nixpkgs.config.bitlbee.enableLibPurple = true;
   services.bitlbee = {
     enable = true;
 
@@ -166,7 +167,7 @@
 
     libpurple_plugins = with pkgs; [
       # telegram-purple
-      purple-hangouts
+      # purple-hangouts
     ];
   };
 
