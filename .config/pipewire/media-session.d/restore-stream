@@ -3,5 +3,6 @@
  "restore.stream.Input/Audio.application.name:QtWebEngineProcess": { "volume": 1.000000, "mute": false, "volumes": [ 1.000000, 1.000000 ], "channels": [ "FL", "FR" ] },
  "restore.stream.Output/Audio.application.name:Chromium": { "volume": 1.000000, "mute": false, "volumes": [ 1.000000, 1.000000 ], "channels": [ "FL", "FR" ] },
  "restore.stream.Output/Audio.application.name:aplay": { "volume": 1.000000, "mute": false, "volumes": [ 1.000000, 1.000000 ], "channels": [ "FL", "FR" ] },
- "restore.stream.Output/Audio.media.role:Movie": { "volume": 1.000000, "mute": true, "volumes": [ 1.000000, 1.000000 ], "channels": [ "FL", "FR" ] }
+ "restore.stream.Output/Audio.media.role:Movie": { "volume": 1.000000, "mute": true, "volumes": [ 1.000000, 1.000000 ], "channels": [ "UNK", "UNK" ] },
+ "restore.stream.Output/Audio.media.role:Music": { "volume": 1.000000, "mute": false, "volumes": [ 1.000000, 1.000000 ], "channels": [ "FL", "FR" ] }
 }

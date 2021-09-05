@@ -834,6 +834,10 @@ These annotations are skipped for remote paths."
             (url-copy-file pdf file)
             (funcall file-view-function file)))))))
 
+(use-package! accord
+    :defer t
+    :commands accord-mode)
+
 (use-package! org-padding)
 (add-hook 'org-mode-hook #'org-padding-mode)
 (setq org-padding-block-begin-line-padding '(1.15 . 0.15))

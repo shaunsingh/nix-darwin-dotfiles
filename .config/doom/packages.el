@@ -43,5 +43,9 @@
 ;;fun
 (package! keycast)
 (package! selectric-mode)
-(package! screenshot :recipe (:host github :repo "tecosaur/screenshot"))
-(package! lexic :recipe (:host github :repo "tecosaur/lexic"))
+(package! screenshot
+  :recipe (:host github :repo "tecosaur/screenshot"))
+(package! lexic
+  :recipe (:host github :repo "tecosaur/lexic"))
+(package! accord
+  :recipe (:host github :repo "progfolio/accord"))
