@@ -133,8 +133,10 @@
     ## emacsPgtkGcc
     neovim
     (emacsNg-src.defaultPackage.x86_64-linux.overrideAttrs (old: rec {
-        withWebrender = true;
-    }))
+      withWebrender = true;
+    })emacsWithPackages (epkgs: [
+      epkgs.vterm
+    ]))
 
     # Chat
     # discord
