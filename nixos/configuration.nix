@@ -152,7 +152,7 @@
   fonts.fonts = with pkgs; [
     ibm-plex
     overpass
-    ## alegreya
+    alegreya
   ];
 
   # use bitlbee for hangouts and discord

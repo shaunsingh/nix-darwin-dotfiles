@@ -131,7 +131,7 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 Just in case the fonts aren't there, lets add a fallback
 #+name: detect-missing-fonts
 #+begin_src elisp
-(defvar required-fonts '("Overpass" "Liga SFMono Nerd Font" "IBM Plex Mono" "IBM Plex Sans"))
+(defvar required-fonts '("Overpass" "Liga SFMono Nerd Font" "IBM Plex Sans" "Alegreya"))
 (defvar available-fonts
   (delete-dups (or (font-family-list)
                    (split-string (shell-command-to-string "fc-list : family")
@@ -2920,11 +2920,11 @@ I also want previews to work, so lets set the alist
                   :image-converter
                   ("dvipng -D %D -T tight -bg Transparent -o %O %f"))
           (dvisvgm :programs
-                   ("latex" "dvisvgm")
-                   :description "dvi > svg" :message "you need to install the programs: latex and dvisvgm." :image-input-type "dvi" :image-output-type "svg" :image-size-adjust
+                   ("tectonic" "dvisvgm")
+                   :description "dvi > svg" :message "you need to install the programs: tectonic and dvisvgm." :image-input-type "dvi" :image-output-type "svg" :image-size-adjust
                    (1.7 . 1.5)
                    :latex-compiler
-                   ("latex -interaction nonstopmode -output-directory %o %f")
+                   ("tectonic --outdir %o %f")
                    :image-converter
                    ("dvisvgm %f -n -b min -c %S -o %O"))
           (imagemagick :programs
@@ -2998,7 +2998,7 @@ Add some packages (also very likely to change)
         ("dvipsnames" "xcolor" nil)
         ("colorlinks=true, linkcolor=Blue, citecolor=BrickRed, urlcolor=PineGreen" "hyperref" nil)
     ("" "indentfirst" nil)
-    "\\setmainfont[Ligatures=TeX]{IBM Plex Sans}"
+    "\\setmainfont[Ligatures=TeX]{Alegreya}"
     "\\setmonofont[Ligatures=TeX]{Liga SFMono Nerd Font}"))
 #+end_src
 
