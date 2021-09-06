@@ -1,0 +1,31 @@
+[info   ] UserConfig: Could not read user config file '/home/shauryasingh/.config/supertuxkart/config-0.10/config.xml'.  A new file will be created.
+[info   ] [FileManager]: Data files will be fetched from: '/nix/store/rvrvwg6hc6icj8fqdaqyznm569krmldz-supertuxkart-1.2/share/supertuxkart/data/'
+[info   ] [FileManager]: Data files will be fetched from: '/nix/store/awinswl7k10gv160hi3b0rmyp27pgii6-stk-assets/'
+[info   ] [FileManager]: User directory is '/home/shauryasingh/.config/supertuxkart/config-0.10/'.
+[info   ] [FileManager]: Addons files will be stored in '/home/shauryasingh/.local/share/supertuxkart/addons/'.
+[info   ] [FileManager]: Screenshots will be stored in '/home/shauryasingh/.local/share/supertuxkart/screenshots/'.
+[info   ] [FileManager]: User-defined grand prix will be stored in '/home/shauryasingh/.local/share/supertuxkart/grandprix/'.
+[info   ] [FileManager]: Asset 0 will be loaded from '/nix/store/rvrvwg6hc6icj8fqdaqyznm569krmldz-supertuxkart-1.2/share/supertuxkart/data/challenges/'.
+[info   ] [FileManager]: Asset 1 will be loaded from '/nix/store/rvrvwg6hc6icj8fqdaqyznm569krmldz-supertuxkart-1.2/share/supertuxkart/data/gfx/'.
+[info   ] [FileManager]: Asset 2 will be loaded from '/nix/store/rvrvwg6hc6icj8fqdaqyznm569krmldz-supertuxkart-1.2/share/supertuxkart/data/grandprix/'.
+[info   ] [FileManager]: Asset 3 will be loaded from '/nix/store/rvrvwg6hc6icj8fqdaqyznm569krmldz-supertuxkart-1.2/share/supertuxkart/data/gui/icons/'.
+[info   ] [FileManager]: Asset 4 will be loaded from '/nix/store/rvrvwg6hc6icj8fqdaqyznm569krmldz-supertuxkart-1.2/share/supertuxkart/data/gui/screens/'.
+[info   ] [FileManager]: Asset 5 will be loaded from '/nix/store/rvrvwg6hc6icj8fqdaqyznm569krmldz-supertuxkart-1.2/share/supertuxkart/data/gui/dialogs/'.
+[info   ] [FileManager]: Asset 6 will be loaded from '/nix/store/rvrvwg6hc6icj8fqdaqyznm569krmldz-supertuxkart-1.2/share/supertuxkart/data/replay/'.
+[info   ] [FileManager]: Asset 7 will be loaded from '/nix/store/rvrvwg6hc6icj8fqdaqyznm569krmldz-supertuxkart-1.2/share/supertuxkart/data/shaders/'.
+[info   ] [FileManager]: Asset 8 will be loaded from '/nix/store/rvrvwg6hc6icj8fqdaqyznm569krmldz-supertuxkart-1.2/share/supertuxkart/data/skins/'.
+[info   ] [FileManager]: Asset 9 will be loaded from '/nix/store/rvrvwg6hc6icj8fqdaqyznm569krmldz-supertuxkart-1.2/share/supertuxkart/data/ttf/'.
+[info   ] [FileManager]: Asset 10 will be loaded from '/nix/store/rvrvwg6hc6icj8fqdaqyznm569krmldz-supertuxkart-1.2/share/supertuxkart/data/po/'.
+[info   ] [FileManager]: Asset 11 will be loaded from '/nix/store/awinswl7k10gv160hi3b0rmyp27pgii6-stk-assets/library/'.
+[info   ] [FileManager]: Asset 12 will be loaded from '/nix/store/awinswl7k10gv160hi3b0rmyp27pgii6-stk-assets/models/'.
+[info   ] [FileManager]: Asset 13 will be loaded from '/nix/store/awinswl7k10gv160hi3b0rmyp27pgii6-stk-assets/music/'.
+[info   ] [FileManager]: Asset 14 will be loaded from '/nix/store/awinswl7k10gv160hi3b0rmyp27pgii6-stk-assets/sfx/'.
+[info   ] [FileManager]: Asset 15 will be loaded from '/nix/store/awinswl7k10gv160hi3b0rmyp27pgii6-stk-assets/textures/'.
+[info   ] [FileManager]: Asset 16 will be loaded from '/nix/store/awinswl7k10gv160hi3b0rmyp27pgii6-stk-assets/tracks/'.
+[verbose  ] translation: Env var LANGUAGE = 'en_US.UTF-8'.
+[verbose  ] translation: Language 'English (United States)'.
+[info   ] tinygettext: Adding language fallback en
+
+[info   ] ServerConfig: Could not read server config file '/home/shauryasingh/.config/supertuxkart/config-0.10/server_config.xml'. A new file will be created.
+[fatal  ] irr_driver: Couldn't initialise irrlicht device. Quitting.
+

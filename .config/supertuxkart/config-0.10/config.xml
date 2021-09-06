@@ -1,0 +1,385 @@
+<?xml version="1.0"?>
+<stkconfig version="8" >
+
+    <!-- Audio Settings
+             sfx_on : Whether sound effects are enabled or not (true or false)
+             music_on : Whether musics are enabled or not (true or false)
+             sfx_volume : Volume for sound effects, see openal AL_GAIN for interpretation
+             music_volume : Music volume from 0.0 to 1.0 -->
+    <Audio
+        sfx_on="true"
+        music_on="true"
+        sfx_volume="0.600000"
+        music_volume="0.500000"
+    >
+    </Audio>
+
+    <!-- Race Setup Settings
+             numkarts : Default number of karts. -1 means use all
+             numlaps : Default number of laps.
+             ffa-time-limit : Time limit in ffa mode.
+             use-ffa-mode : Use ffa mode instead of 3 strikes battle.
+             numgoals : Default number of goals in soccer mode.
+             soccer-default-team : Default team in soccer mode for single player.
+             soccer-time-limit : Time limit in soccer mode.
+             soccer-use-time-limit : Enable time limit in soccer mode.
+             random-arena-item : Enable random location of items in an arena.
+             difficulty : Default race difficulty. 0=easy, 1=medium, 2=hard
+             game_mode : Game mode. 0=standard, 1=time trial, 2=follow the leader, 3=3 strikes
+             soccer-red-ai-num : Number of red AI karts in soccer mode.
+             soccer-blue-ai-num : Number of blue AI karts in soccer mode.
+             karts-powerup-gui : Show other karts' held powerups in race gui.
+             soccer-player-list : Show player list icon in soccer mode.
+             addon-tux-online : Always show online addon karts as tux when live join is on. -->
+    <RaceSetup
+        numkarts="4"
+        numlaps="4"
+        ffa-time-limit="3"
+        use-ffa-mode="false"
+        numgoals="3"
+        soccer-default-team="0"
+        soccer-time-limit="3"
+        soccer-use-time-limit="false"
+        random-arena-item="false"
+        difficulty="0"
+        game_mode="0"
+        soccer-red-ai-num="0"
+        soccer-blue-ai-num="0"
+        karts-powerup-gui="false"
+        soccer-player-list="false"
+        addon-tux-online="false"
+    >
+    </RaceSetup>
+
+    <!-- Kart to select by default (the last used kart) -->
+    <kart value="tux" />
+
+    <!-- Last selected kart group -->
+    <last_kart_group value="all" />
+
+    <!-- Settings for the wiimote
+             wiimote-raw-max : At what raw input value maximum steering is reached (between 1 and 25).
+             wiimote-weight-linear : A weight applied to the linear component of mapping wiimote angle to steering angle
+             wiimote-weight-square : A weight applied to the square component of mapping wiimote angle to steering angle
+             wiimote-weight-asin : A weight applied to the asin component of mapping wiimote angle to steering angle
+             wiimote-weight-sin : A weight applied to the sin component of mapping wiimote angle to steering angle -->
+    <WiiMote
+        wiimote-raw-max="20.000000"
+        wiimote-weight-linear="1.000000"
+        wiimote-weight-square="0.000000"
+        wiimote-weight-asin="0.000000"
+        wiimote-weight-sin="0.000000"
+    >
+    </WiiMote>
+
+    <!-- Settings for the multitouch device
+             multitouch_active : Enable multitouch support: 0 = disabled, 1 = if available, 2 = enabled
+             multitouch_draw_gui : Enable multitouch race GUI
+             multitouch_inverted : Draw steering wheel on right side.
+             multitouch_controls : Multitouch mode: 0 = undefined, 1 = steering wheel, 2 = accelerometer, 3 = gyroscope
+             multitouch_deadzone : A parameter in range [0, 0.5] that determines the zone that is considered as centered in steering button.
+             multitouch_sensitivity_x : A parameter in range [0, 1.0] that determines the sensitivity for x axis.
+             multitouch_sensitivity_y : A parameter in range [0, 1.0] that determines the sensitivity for y axis.
+             multitouch_tilt_factor : A parameter that determines general accelerometer sensitivity.
+             multitouch_scale : A parameter in range [0.5, 1.5] that determines the scale of the multitouch interface.
+             screen_keyboard_status : STK screen keyboard status: 0 = disabled, 1 = enabled -->
+    <Multitouch
+        multitouch_active="1"
+        multitouch_draw_gui="false"
+        multitouch_inverted="false"
+        multitouch_controls="0"
+        multitouch_deadzone="0.100000"
+        multitouch_sensitivity_x="0.200000"
+        multitouch_sensitivity_y="0.650000"
+        multitouch_tilt_factor="4.000000"
+        multitouch_scale="1.200000"
+        screen_keyboard_status="0"
+    >
+    </Multitouch>
+
+    <!-- Order karts start in GP
+             most_points_first : Starting order from most to least points (true) or other way around (false)
+             player_last : Always put the player at the back or not (Bully mode). -->
+    <GpStartOrder
+        most_points_first="true"
+        player_last="false"
+    >
+    </GpStartOrder>
+
+    <!-- Directory with additional GP's. -->
+    <additional_gp_directory value="" />
+
+    <!-- Video Settings
+             width : Screen/window width in pixels
+             height : Screen/window height in pixels
+             prev_width : Previous screen/window width
+             prev_height : Previous screen/window height
+             window_x : If remember_window_location is true
+             window_y : If remember_window_location is true
+             show_fps : Display frame per seconds
+             show_story_mode_timer : Display the story mode timer
+             show_speedrun_timer : Display the speedrun timer
+             max_fps : Maximum fps, should be at least 60
+             force_legacy_device : Force OpenGL 2 context, even if OpenGL 3 is available.
+             split_screen_horizontally : When playing a non-square amount of players (e.g. 2), should it split horizontally (top/bottom)
+             enable_texture_compression : Enable Texture Compression
+             enable_high_definition_textures : Enable high definition textures. Bit flag: bit 0 = enabled/disabled; bit 1 = set by user/set as default
+             enable_glow : Enable Glow
+             enable_bloom : Enable Bloom
+             enable_light_shaft : Enable Light Shafts
+             enable_dynamic_lights : Enable Dynamic Lights
+             enable_dof : Enable Depth of Field
+             old_driver_popup : Determines if popup message about too old drivers should be displayed.
+             scale_rtts_factor : Allows one to increase performance by setting lower RTTs resolution. Value should be smaller or equal to 1.0
+             max_texture_size : Max texture size when high definition textures are disabled
+             hq_mipmap : Generate mipmap for textures using high quality method with SSE
+             font_size : The size of fonts. 0 is the smallest and 6 is the biggest -->
+    <Video
+        width="1024"
+        height="768"
+        fullscreen="false"
+        prev_width="1024"
+        prev_height="768"
+        prev_fullscreen="false"
+        remember_window_location="false"
+        window_x="-1"
+        window_y="-1"
+        show_fps="false"
+        show_story_mode_timer="true"
+        show_speedrun_timer="false"
+        max_fps="120"
+        force_legacy_device="false"
+        split_screen_horizontally="true"
+        enable_texture_compression="true"
+        enable_high_definition_textures="1"
+        enable_glow="false"
+        enable_bloom="false"
+        enable_light_shaft="false"
+        enable_dynamic_lights="true"
+        enable_dof="false"
+        old_driver_popup="true"
+        scale_rtts_factor="1.000000"
+        max_texture_size="512"
+        hq_mipmap="false"
+        font_size="3.000000"
+    >
+    </Video>
+
+    <!-- Recording Settings
+             limit_game_fps : Limit game framerate not beyond the fps of recording video.
+             video_format : Specify the video for record, which is the enum of VideoFormat in libopenglrecorder. It will auto fallback to MJPEG if libopenglrecorder was not compiled with such video encoder.
+             audio_bitrate : Specify the bitrate for audio
+             video_bitrate : Specify the bitrate for video
+             recorder_jpg_quality : Specify the jpg compression level of recorder
+             record_fps : Specify the fps of recording video -->
+    <Recording
+        limit_game_fps="true"
+        video_format="0"
+        audio_bitrate="112000"
+        video_bitrate="20000"
+        recorder_jpg_quality="90"
+        record_fps="30"
+    >
+    </Recording>
+
+    <!-- The stun servers that will be used to know the public address (ipv4 only) with port -->
+    <stun-servers-ipv4>
+        <stun-server address="stunv4.7.supertuxkart.net:3478" ping="0"/>
+        <stun-server address="stunv4.8.supertuxkart.net:3478" ping="0"/>
+        <stun-server address="stunv4.linuxreviews.org:3478" ping="0"/>
+    </stun-servers-ipv4>
+
+    <!-- The stun servers that will be used to know the public address (including ipv6) with port -->
+    <stun-servers-ipv6>
+        <stun-server address="stun.l.google.com:19302" ping="0"/>
+        <stun-server address="stun1.l.google.com:19302" ping="0"/>
+        <stun-server address="stun2.l.google.com:19302" ping="0"/>
+        <stun-server address="stun3.l.google.com:19302" ping="0"/>
+        <stun-server address="stun4.l.google.com:19302" ping="0"/>
+        <stun-server address="stunv6.linuxreviews.org:3478" ping="0"/>
+    </stun-servers-ipv6>
+
+    <!-- Network Settings
+             enable-network-splitscreen : The default value of enable splitscreen checkbox in online screen.
+             log-network-packets : If all network packets should be logged
+             random-client-port : Use random port for client connection (check stk_config.xml for default value)
+             random-server-port : Use random port for server connection (check stk_config.xml for default value)
+             lobby-chat : Enable chatting in networking lobby, if off than no chat message will be displayed from any players.
+             race-chat : Enable chatting during races.
+             ipv6-lan : Enable IPv6 LAN server discovery.
+             max-players : Maximum number of players on the server (for gui server creation.
+             timer-sync-difference-tolerance : Max time difference tolerance (in ms) to synchronize timer with server.
+             default-ip-type : Default IP type of this machine, 0 detect every time, 1 IPv4, 2 IPv6, 3 IPv6 NAT64, 4 Dual stack. -->
+    <Network
+        enable-network-splitscreen="false"
+        log-network-packets="false"
+        random-client-port="true"
+        random-server-port="false"
+        lobby-chat="true"
+        race-chat="true"
+        ipv6-lan="true"
+        max-players="8"
+        timer-sync-difference-tolerance="5"
+        default-ip-type="0"
+    >
+    </Network>
+
+    <!-- The Number of karts per gamemode. -->
+    <num-karts-per-gamemode>
+        <gamemode-list gamemode="0" num-karts="4"/>
+        <gamemode-list gamemode="1002" num-karts="5"/>
+        <gamemode-list gamemode="1100" num-karts="4"/>
+        <gamemode-list gamemode="1101" num-karts="4"/>
+        <gamemode-list gamemode="2000" num-karts="4"/>
+        <gamemode-list gamemode="2001" num-karts="4"/>
+    </num-karts-per-gamemode>
+
+    <!-- Graphics Quality Settings
+             particles-effecs : Particles effects: 0 disabled, 1 only important, 2 enabled
+             christmas-mode : Christmas hats: 0 use current date, 1 always on, 2 always off
+             easter-ear-mode : Easter Bunny Ears: 0 use current date, 1 always on, 2 always off
+             animated-characters : Whether to display animated characters
+             geometry_level : Geometry quality 0=everything is displayed; 1=a few details are displayed; 2=lowest level, no details
+             anisotropic : Quality of anisotropic filtering (usual values include 2-4-8-16; 0 to disable)
+             swap_interval : Swap interval for vsync: 0 = disabled, 1 = full
+             motionblur_enabled : Whether motion blur should be enabled
+             mlaa : Whether MLAA anti-aliasing should be enabled
+             ssao : Enable Screen Space Ambient Occlusion
+             light_scatter : Enable light scattering shaders
+             shadows_resolution : Shadow resolution (0 = disabled
+             Degraded_IBL : Disable specular IBL -->
+    <GFX
+        particles-effecs="2"
+        christmas-mode="0"
+        easter-ear-mode="0"
+        animated-characters="true"
+        geometry_level="0"
+        anisotropic="4"
+        swap_interval="0"
+        motionblur_enabled="false"
+        mlaa="false"
+        ssao="false"
+        light_scatter="true"
+        shadows_resolution="0"
+        Degraded_IBL="true"
+    >
+    </GFX>
+
+    <cache-overworld value="true" />
+
+    <crashed value="false" />
+
+    <!-- Camera settings for player.
+             distance : Distance between kart and camera
+             forward-up-angle : Angle between camera and plane of kart (pitch) when the camera is pointing forward
+             forward-smoothing : if true, use smoothing (forward-up-angle become relative to speed) when pointing forward
+             backward-up-angle : Angle between camera and plane of kart (pitch) when the camera is pointing backwards. This is usually larger than the forward-up-angle, since the kart itself otherwise obstricts too much of the view
+             fov : Focal distance (single player) -->
+    <camera-normal
+        distance="1.000000"
+        forward-up-angle="0.000000"
+        forward-smoothing="true"
+        backward-up-angle="5.000000"
+        fov="80"
+    >
+    </camera-normal>
+
+    <!-- (Debug) camera settings.
+             reverse_look_threshold : If the kart is driving backwards faster than this value,
+switch automatically to reverse camera (set to 0 to disable).
+             fpscam_rotation_speed : How fast the first person camera's direction speed changes when
+moving the mouse (means acceleration).
+             fpscam_smooth_rotation_max_speed : How fast the first person camera's direction can change.
+             fpscam_angular_velocity : How fast the first person camera's rotation speed changes.
+             fpscam_max_angular_velocity : How fast the first person camera can rotate. -->
+    <camera
+        reverse_look_threshold="0"
+        fpscam_rotation_speed="0.003000"
+        fpscam_smooth_rotation_max_speed="0.040000"
+        fpscam_angular_velocity="0.020000"
+        fpscam_max_angular_velocity="1.000000"
+    >
+    </camera>
+
+    <!-- Name of the .items file to use. -->
+    <item_style value="items" />
+
+    <!-- Name of the last track used. -->
+    <last_track value="olivermath" />
+
+    <!-- Last selected track group -->
+    <last_track_group value="all" />
+
+    <!-- Name of the skin to use -->
+    <skin_name value="peach" />
+
+    <!-- Minimap: 0 bottom-left, 1 middle-right, 2 hidden, 3 center -->
+    <minimap_display value="0" />
+
+    <!-- Everything related to spectator mode.
+             camera-distance : Distance between kart and camera.
+             camera-angle : Angle between ground, kart and camera. -->
+    <Spectator
+        camera-distance="6.750000"
+        camera-angle="40.000000"
+    >
+    </Spectator>
+
+    <!-- Use ball camera in soccer mode, instead of reverse -->
+    <reverse-look-use-soccer-cam value="false" />
+
+    <!-- Everything related to handicaps.
+             per_player_difficulty : If handicapped users can be selected -->
+    <Handicap
+        per_player_difficulty="false"
+    >
+    </Handicap>
+
+    <!-- Status of internet: 0 user wasn't asked, 1: allowed, 2: not allowed -->
+    <enable_internet value="0" />
+
+    <!-- Everything related to hardware configuration.
+             report-version : Version of hardware report that was reported last
+             random-identifier : A random number to avoid duplicated reports.
+             hw-report-enabled : If HW reports are enabled. -->
+    <HWReport
+        report-version="0"
+        random-identifier="0"
+        hw-report-enabled="false"
+    >
+    </HWReport>
+
+    <!-- Always show the login screen even if last player's session was saved. -->
+    <always_show_login_screen value="false" />
+
+    <!-- Addon and news related settings
+             news_last_updated : Time news was updated last.
+             news_frequency : How often news should be updated.
+             news_display_count : How often all news messages have been displayed
+             last_important_message_id : Don't show important message with this or a lower id again
+             addon_last_updated : Time addon-list was updated last. -->
+    <AddonServer
+        news_last_updated="0"
+        news_frequency="0"
+        news_display_count=""
+        last_important_message_id="-1"
+        addon_last_updated="0"
+    >
+    </AddonServer>
+
+    <!-- Which language to use (language code or 'system') -->
+    <language value="system" />
+
+    <!-- Whether to enable track debugging features -->
+    <artist_debug_mode value="false" />
+
+    <!-- Whether to hide the GUI (artist debug mode) -->
+    <debug_hide_gui value="false" />
+
+    <!-- Enable all karts and tracks: 0 = disabled, 1 = everything except final race, 2 = everything -->
+    <unlock_everything value="0" />
+
+    <!-- Allows one to set commandline args in config file -->
+    <commandline value="" />
+
+</stkconfig>
