@@ -46,7 +46,7 @@ nix-shell -p nixUnstable git
 nixos-install --flake https://github.com/shaunsingh/vimrc-dotfiles#shaunsingh-laptop
 ```
 
-Clone the dotiles
+Boot, clone the dotiles
 ```zsh
 yadm clone https://github.com/shaunsingh/vimrc-dotfiles.git --no-bootstrap
 yadm remote add origin https://github.com/shaunsingh/vimrc-dotfiles.git
@@ -61,14 +61,17 @@ Note: Brew will install the native-compilation version of emacs-plus, but it may
 For linux users, either install `emacs` (emacs 27) or [recommended] `emacs-pgtk-native-comp` (emacs 28) via your package manager of choice.
 
 ### Fonts
-Emacs uses 3 fonts not installed by default. Menlo, Liga SF Mono (nerd font) and SF Pro. Although homebrew should handle the installation process, you can reinstall them if nessecary
+My configuruation uses 4 fonts not installed by default. My nix config should
+handle installing the fonts, homebrew should as well. If you need to, install
+the following fonts manually:
 
-You will have to manually install the otf files from ~/fonts
-
-On linux, you will have to install 3 fonts
+Required:
 1. Fira SFMono Nerd Font (https://github.com/shaunsingh/SFMono-Nerd-Font-Ligaturized)
-2. SF Pro
-3. IBM Plex Sans
+
+Required for emacs
+1. Overpass
+2. IBM Plex Sans
+3. Alegreya
 
 ### Fish
 
@@ -82,8 +85,6 @@ or for Apple Silicon macs
 
 
 ### Emacs
-
-My emacs configuration is designed for org-mode editing, as well as moderate programming use.
 
 If you want to recompile the literate configuration, you can run
 
@@ -99,22 +100,8 @@ doom upgrade
 
 If you modify your shell configuration, run `doom env` to regenerate env vars
 
-You may get errors due to missing fonts on linux. In which case either switch the fonts to what you need, or use DejaVu fonts:
-```lisp
-;;fonts
-(setq doom-font (font-spec :family "DejaVu Sans Mono" :size 14 :weight 'light)
-      doom-big-font (font-spec :family "DejaVu Sans Mono" :size 20 :weight 'light)
-      doom-variable-pitch-font (font-spec :family "DejaVu Sans" :size 16 :weight 'Medium)
-      doom-unicode-font (font-spec :family "DejaVu Sans Mono":weight 'light)
-      doom-serif-font (font-spec :family "DejaVu Sans Mono" :weight 'Regular))
-```
-
-(and adjust the serif writeroom font, from SF Pro to DejaVu Sans)
-
 #### Mu4e and Gmail
 Email will have a few issues, since its hardcoded to my account and my machines path. Do the following steps to get email up and running for you
-
-**Note:** ~/.mbsyncrc isn't included anymore since I find it didn't make much sense too. You can find more info about making your own here: https://github.com/hlissner/doom-emacs/blob/develop/modules/email/mu4e/README.org
 
 1. modify `~/.mbsyncrc` to include your email and password
 2. replace instances of my name and email in `~/.doom.d/config.org`
@@ -131,13 +118,8 @@ Indexed mail will go under `~/.mbsync/`, you can either manually mbsync or use e
 
 ### Org Mode
 
-**Note:** If you run my install script, it clones my notes repo, you can either delete it, ignore it, or borrow my notes if you would like.
-
-My org mode config includes two additional plugins, org-agenda and org-roam. Both these plugins need a set directory.
-
-All org files can go under the created `~/org` dir. Roam files go under `~/org/roam`
-
-The install script creates two files for my agenda, `school.org` and `work.org`. You can edit them to your liking
+My org mode config includes two additional plugins, org-agenda and org-roam.
+Both these plugins need a set directory. All org files can go under the created `~/org` dir. Roam files go under `~/org/roam`
 
 ### Neovim
 
