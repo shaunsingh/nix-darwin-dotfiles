@@ -28,13 +28,12 @@
 
 ;;markdown and html
 (package! ox-gfm)
-;; (package! webkit
-;;           :recipe (:host github
-;;                    :repo "akirakyle/emacs-webkit"
-;;                    :branch "main"
-;;                    :files (:defaults "*.js" "*.css" "*.so" "*.nix")
-;;                    :pre-build
-;;                    (("nix-shell" "shell.nix") ("make"))))
+;;(package! webkit
+;;          :recipe (:host github
+;;                   :repo "akirakyle/emacs-webkit"
+;;                   :branch "main"
+;;                   :files (:defaults "*.js" "*.css" "*.so" "*.nix")
+;;                   :pre-build (("nix-shell" "shell.nix" "--command make"))))
 
 ;;looks
 (package! solaire-mode :disable t)

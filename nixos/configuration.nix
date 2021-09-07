@@ -114,7 +114,7 @@
     # Mail
     ## offlineimap
     mu
-    ## msmtp
+    msmtp
     isync
 
     # Browsers

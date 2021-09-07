@@ -3434,11 +3434,12 @@ setup your emails first
 
 We can also send messages using msmtp
 #+begin_src emacs-lisp
-(setq sendmail-program "msmtp"
+(after! mu4e
+  (setq sendmail-program "~/.nix-profile/bin/msmtp"
         send-mail-function #'smtpmail-send-it
         message-sendmail-f-is-evil t
         message-sendmail-extra-arguments '("--read-envelope-from")
-        message-send-mail-function #'message-send-mail-with-sendmail)
+        message-send-mail-function #'message-send-mail-with-sendmail))
 #+end_src
 
 Notifications are quite nifty, especially if I'm as lazy as I am
@@ -3452,40 +3453,36 @@ Eventually I want to use emacs for everything. Instead of using xwidgets, which
 requires a custom (non-cached) build of emacs. Emacs-webkit is a good
 alternative, but is quite buggy right now. Once its stable, I'll fix this config
 #+begin_src emacs-lisp
-;; (use-package org
-;;   :demand t)
+;;(use-package org
+;;  :demand t)
 
-;; (use-package webkit
-;;   :defer t
-;;   :commands webkit
-;;   :init
-;;   (setq webkit-search-prefix "https://google.com/search?q="
-;;         webkit-history-file nil
-;;         webkit-cookie-file nil
-;;         browse-url-browser-function 'webkit-browse-url
-;;         webkit-browse-url-force-new t
-;;         webkit-dark-mode t
-;;         webkit-download-action-alist '(("\\.pdf\\'" . webkit-download-open)
-;;                                        ("\\.png\\'" . webkit-download-save)
-;;                                        (".*" . webkit-download-default)))
+(use-package webkit
+  :defer t
+  :commands webkit
+  :init
+  (setq webkit-search-prefix "https://google.com/search?q="
+        webkit-history-file nil
+        webkit-cookie-file nil
+        browse-url-browser-function 'webkit-browse-url
+        webkit-browse-url-force-new t
+        webkit-download-action-alist '(("\\.pdf\\'" . webkit-download-open)
+                                       ("\\.png\\'" . webkit-download-save)
+                                       (".*" . webkit-download-default)))
 
-;;   (defun webkit--display-progress (progress)
-;;     (setq webkit--progress-formatted
-;;           (if (equal progress 100.0)
-;;               ""
-;;             (format "%s%.0f%%  " (all-the-icons-faicon "spinner") progress)))
-;;     (force-mode-line-update)))
-
-;;(use-package 'webkit-ace)
-;;(use-package 'webkit-dark)
+  (defun webkit--display-progress (progress)
+    (setq webkit--progress-formatted
+          (if (equal progress 100.0)
+              ""
+            (format "%s%.0f%%  " (all-the-icons-faicon "spinner") progress)))
+    (force-mode-line-update)))
 #+end_src
 
 I also want to use evil bindings with this. It's not upstreamed yet, so I'll steal the ones from the repo
 #+begin_src elisp
-;; (use-package evil-collection-webkit
-;;   :defer t
-;;   :config
-;;   (evil-collection-xwidget-setup))
+(use-package evil-collection-webkit
+   :defer t
+   :config
+   (evil-collection-xwidget-setup))
 #+end_src
 
 ** IRC

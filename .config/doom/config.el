@@ -1946,10 +1946,10 @@ set palette defined ( 0 '%s',\
                    (replace-regexp-in-string "\\`.*/" "" (mu4e-message-field msg :maildir))
                    '+mu4e-header--folder-colors)))))))
 
-;; (use-package evil-collection-webkit
-;;   :defer t
-;;   :config
-;;   (evil-collection-xwidget-setup))
+(use-package evil-collection-webkit
+   :defer t
+   :config
+   (evil-collection-xwidget-setup))
 
 ;; No missing fonts detected
 
@@ -2930,32 +2930,28 @@ This is done according to `org-latex-feature-implementations'"
 
 ;;(setq alert-default-style 'osx-notifier)
 
-;; (use-package org
-;;   :demand t)
+;;(use-package org
+;;  :demand t)
 
-;; (use-package webkit
-;;   :defer t
-;;   :commands webkit
-;;   :init
-;;   (setq webkit-search-prefix "https://google.com/search?q="
-;;         webkit-history-file nil
-;;         webkit-cookie-file nil
-;;         browse-url-browser-function 'webkit-browse-url
-;;         webkit-browse-url-force-new t
-;;         webkit-dark-mode t
-;;         webkit-download-action-alist '(("\\.pdf\\'" . webkit-download-open)
-;;                                        ("\\.png\\'" . webkit-download-save)
-;;                                        (".*" . webkit-download-default)))
+(use-package webkit
+  :defer t
+  :commands webkit
+  :init
+  (setq webkit-search-prefix "https://google.com/search?q="
+        webkit-history-file nil
+        webkit-cookie-file nil
+        browse-url-browser-function 'webkit-browse-url
+        webkit-browse-url-force-new t
+        webkit-download-action-alist '(("\\.pdf\\'" . webkit-download-open)
+                                       ("\\.png\\'" . webkit-download-save)
+                                       (".*" . webkit-download-default)))
 
-;;   (defun webkit--display-progress (progress)
-;;     (setq webkit--progress-formatted
-;;           (if (equal progress 100.0)
-;;               ""
-;;             (format "%s%.0f%%  " (all-the-icons-faicon "spinner") progress)))
-;;     (force-mode-line-update)))
-
-;;(use-package 'webkit-ace)
-;;(use-package 'webkit-dark)
+  (defun webkit--display-progress (progress)
+    (setq webkit--progress-formatted
+          (if (equal progress 100.0)
+              ""
+            (format "%s%.0f%%  " (all-the-icons-faicon "spinner") progress)))
+    (force-mode-line-update)))
 
 (after! circe
   (setq-default circe-use-tls t)
