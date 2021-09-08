@@ -86,12 +86,22 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 
 ;;(setq doom-theme 'doom-vibrant)
 (setq doom-vibrant-padded-modeline t)
-(setq doom-theme 'doom-one-light)
-(setq doom-one-light-padded-modeline t)
+(setq doom-theme 'doom-flatwhite)
+(setq doom-fw-padded-modeline t)
+
+(use-package! vlf-setup
+  :defer-incrementally vlf-tune vlf-base vlf-write vlf-search vlf-occur vlf-follow vlf-ediff vlf)
 
 (after! company
-  (setq company-idle-delay 0.5
-        company-minimum-prefix-length 2))
+   (setq company-idle-delay 0.1
+      company-minimum-prefix-length 1
+      company-selection-wrap-around t
+      company-require-match 'never
+      company-dabbrev-downcase nil
+      company-dabbrev-ignore-case t
+      company-dabbrev-other-buffers nil
+      company-tooltip-limit 5
+      company-tooltip-minimum-width 50))
 (set-company-backend!
   '(text-mode
     markdown-mode
@@ -297,17 +307,11 @@ Made for `org-tab-first-hook'."
 
 (after! centaur-tabs
   (centaur-tabs-mode -1)
-  (setq centaur-tabs-height 36
+  (setq centaur-tabs-height 20
         centaur-tabs-set-icons t
         centaur-tabs-gray-out-icons 'buffer)
   (add-hook 'window-configuration-change-hook 'centaur-tabs-hide-on-window-change)
-  (centaur-tabs-change-fonts "Liga SFMono Nerd Font" 140)
-  (centaur-tabs-headline-match))
-
-(custom-set-faces!
-  `(centaur-tabs-default :background ,(doom-color 'bg))
-  `(centaur-tabs-selected :background ,(doom-color 'bg_alt))
-  `(centaur-tabs-unselected :background ,(doom-color 'bg)))
+  (centaur-tabs-change-fonts "Liga SFMono Nerd Font" 105))
 
 (after! marginalia
 
@@ -2922,11 +2926,12 @@ This is done according to `org-latex-feature-implementations'"
 
 (setq mu4e-update-interval 300)
 
-(setq sendmail-program "msmtp"
+(after! mu4e
+  (setq sendmail-program "~/.nix-profile/bin/msmtp"
         send-mail-function #'smtpmail-send-it
         message-sendmail-f-is-evil t
         message-sendmail-extra-arguments '("--read-envelope-from")
-        message-send-mail-function #'message-send-mail-with-sendmail)
+        message-send-mail-function #'message-send-mail-with-sendmail))
 
 ;;(setq alert-default-style 'osx-notifier)
 

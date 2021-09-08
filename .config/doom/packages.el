@@ -39,12 +39,16 @@
 (package! solaire-mode :disable t)
 (unpin! doom-themes)
 
-;;fun
-(package! keycast)
-(package! selectric-mode)
+;;emacs additions
+;;(package! vlf :recipe (:host github :repo "m00natic/vlfi" :files ("*.el")))
 (package! screenshot
   :recipe (:host github :repo "tecosaur/screenshot"))
 (package! lexic
   :recipe (:host github :repo "tecosaur/lexic"))
+
+;;fun
+(package! keycast)
+(package! selectric-mode)
 (package! accord
   :recipe (:host github :repo "progfolio/accord"))
+ 

@@ -1,9 +1,9 @@
-$blue: #51afef;
-$green: #7bc275;
-$red: #ff665c;
-$orange: #e69055;
-$cyan: #5cEfFF;
-$purple: #c57BDB;
+$blue: #3a81c3;
+$green: #2d9574;
+$red: #ba2f59;
+$orange: #dc752f;
+$cyan: #2aa1ae;
+$purple: #715ab1;
 
 $accent: var(--accent);
 $accent-dark: var(--accent-dark);
@@ -24,34 +24,6 @@ $text-medium: var(--text-medium);
 $text-dark: var(--text-dark);
 
 #page {
-    --accent: #2a2e38;
-    --accent-dark: #5D656B;
-
-    --code-foreground: #bbc2cf;
-    --code-background: #2a2e38;
-
-    --code-func: #7bc275;
-    --code-const: #C57BDB;
-    --code-regex: #51afef;
-
-    --back-white: #2a2e38;
-    --back-light: #242730;
-    --back-medium: #5D656B;
-
-    --text-light: #c57BDB;
-    --text-gray: #51afef;
-    --text-medium: #7bc275;
-    --text-dark: #BBC2cf;
-
-    --switch-icon: "🌝";
-    --switch-shadow-color: #FCCE7b;
-    --switch-text: "light mode?";
-
-    img.invertible, object[type="image/svg+xml"].invertible {
-        filter: invert(90.0%) hue-rotate(180deg) sepia(1%);
-    }
-}
-#theme-switch:checked ~ #page {
   --accent: #002642;
   --accent-dark: #00151c;
 
@@ -73,6 +45,33 @@ $text-dark: var(--text-dark);
   --switch-icon: "🌚";
   --switch-shadow-color: #373d4e;
   --switch-text: "dark mode?";
+}
+
+#theme-switch:checked ~ #page {
+    --accent: #002642;
+    --accent-dark: #daf1ff;
+
+    --code-foreground: #a1a8ae;
+    --code-background: #222;
+    --code-func: #bd56ad;
+    --code-const: #8755ab;
+    --code-regex: #a184b3;
+
+    --back-white: #000;
+    --back-light: #181818;
+    --back-medium: #444;
+
+    --text-light: #7b7b7b;
+    --text-gray: #c8c8c8;
+    --text-medium: #ddd;
+    --text-dark: #efefef;
+
+    --switch-icon: "🌝";
+    --switch-shadow-color: #fce477;
+    --switch-text: "light mode?";
+    img.invertible, object[type="image/svg+xml"].invertible {
+        filter: invert(90.0%) hue-rotate(180deg) sepia(1%);
+    }
 }
 
 #theme-switch {
