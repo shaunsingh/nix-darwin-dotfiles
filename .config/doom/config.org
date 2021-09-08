@@ -1372,14 +1372,6 @@ RSS is a nice simple way of getting my news. Lets set that up
             (funcall file-view-function file)))))))
 #+end_src
 
-** Accord
-Good way to use discord within emacs
-#+begin_src elisp
-(use-package! accord
-    :defer t
-    :commands accord-mode)
-#+end_src
-
 * Org
 ** Org-Mode
 Org mode is the best writing format, no contest. The defaults are more

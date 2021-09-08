@@ -59,10 +59,7 @@ return packer.startup(
             end
         }
 
-        use {
-            "kabouzeid/nvim-lspinstall",
-            event = "BufRead"
-        }
+        use { "kabouzeid/nvim-lspinstall" }
 
         use {
             "neovim/nvim-lspconfig",
@@ -80,28 +77,55 @@ return packer.startup(
             end
         }
 
-        -- load compe in insert mode only
         use {
-            "hrsh7th/nvim-compe",
-            event = "InsertEnter",
-            config = function()
-                require "plugins.compe"
-            end,
-            wants = "LuaSnip",
-            requires = {
-                {
-                    "L3MON4D3/LuaSnip",
-                    wants = "friendly-snippets",
-                    event = "InsertCharPre",
-                    config = function()
-                        require "plugins.luasnip"
-                    end
-                },
-                {
-                    "rafamadriz/friendly-snippets",
-                    event = "InsertCharPre"
-                }
-            },
+           "rafamadriz/friendly-snippets",
+           event = "InsertEnter",
+        }
+
+        use {
+           "hrsh7th/nvim-cmp",
+           after = "friendly-snippets",
+           config = function()
+              require "plugins.cmp"
+           end,
+        }
+
+        use {
+           "L3MON4D3/LuaSnip",
+           wants = "friendly-snippets",
+           after = "nvim-cmp",
+           config = function()
+              require("plugins.others").luasnip()
+           end,
+        }
+
+        use {
+           "saadparwaiz1/cmp_luasnip",
+           after = "LuaSnip",
+        }
+
+        use {
+           "hrsh7th/cmp-nvim-lua",
+           after = "cmp_luasnip",
+        }
+
+        use {
+           "hrsh7th/cmp-nvim-lsp",
+           after = "cmp-nvim-lua",
+        }
+
+        use {
+           "hrsh7th/cmp-buffer",
+           after = "cmp-nvim-lsp",
+        }
+
+        -- misc plugins
+        use {
+           "windwp/nvim-autopairs",
+           after = "nvim-cmp",
+           config = function()
+              require("plugins.configs.others").autopairs()
+           end,
         }
 
         -- file managing , picker etc
@@ -154,15 +178,6 @@ return packer.startup(
             end
         }
 
-        -- misc plugins
-        use {
-            "windwp/nvim-autopairs",
-            after = "nvim-compe",
-            config = function()
-                require "plugins.autopairs"
-            end
-        }
-
         use {
             "andymass/vim-matchup",
             event = "CursorMoved"
@@ -212,11 +227,12 @@ return packer.startup(
         }
 
         use {
-            "lukas-reineke/indent-blankline.nvim",
-            event = "BufRead",
-            setup = function()
-                require("plugins.others").blankline()
-            end
+           "lukas-reineke/indent-blankline.nvim",
+           disable = not plugin_status.blankline,
+           event = "BufRead",
+           config = function()
+              require("plugins.others").blankline()
+           end,
         }
 
         use {
