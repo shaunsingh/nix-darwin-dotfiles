@@ -1,10 +1,10 @@
---Load main config
-local doom_modules = {
-    "options",
-    "mappings",
-    "utils"
+local init_modules = {
+   "core",
 }
 
-for i = 1, #doom_modules, 1 do
-    pcall(require, doom_modules[i])
+for _, module in ipairs(init_modules) do
+   local ok, err = pcall(require, module)
+   if not ok then
+      error("Error loading " .. module .. "\n\n" .. err)
+   end
 end

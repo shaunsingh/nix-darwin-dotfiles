@@ -1,10 +1,8 @@
-local plugins_count = vim.fn.len(vim.fn.globpath('~/.local/share/nvim/site/pack/packer/start', '*', 0, 1))
-
 vim.g.dashboard_disable_at_vimenter = 1 -- dashboard is disabled by default
 vim.g.dashboard_default_executive = 'telescope'
 
 vim.g.dashboard_custom_footer = {
-        "DOOM Loaded " .. plugins_count .. ' plugins',
+        "Neovim v0.6dev",
     }
 
 vim.g.dashboard_custom_section = {
