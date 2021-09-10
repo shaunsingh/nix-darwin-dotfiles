@@ -6,6 +6,8 @@ local plugin_maps = maps.plugin
 
 local cmd = vim.cmd
 
+vim.g.mapleader = " "
+
 local M = {}
 
 -- these mappings will only be called during initialization
@@ -34,8 +36,6 @@ M.misc = function()
       map("t", term_maps.esc_hide_termmode, "<C-\\><C-n> :lua require('core.utils').close_buffer() <CR>")
       -- pick a hidden term
       map("n", term_maps.pick_term, ":Telescope terms <CR>")
-      -- Open terminals
-      -- TODO this opens on top of an existing vert/hori term, fixme
       map("n", term_maps.new_horizontal, ":execute 15 .. 'new +terminal' | let b:term_type = 'hori' | startinsert <CR>")
       map("n", term_maps.new_vertical, ":execute 'vnew +terminal' | let b:term_type = 'vert' | startinsert <CR>")
       map("n", term_maps.new_window, ":execute 'terminal' | let b:term_type = 'wind' | startinsert <CR>")
@@ -71,11 +71,6 @@ M.mapsheet = function()
    local m = plugin_maps.mapsheet
 
    map("n", m.default_keys, ":lua require('cheatsheet').show_cheatsheet_telescope() <CR>")
-   map(
-      "n",
-      m.user_keys,
-      ":lua require('cheatsheet').show_cheatsheet_telescope{bundled_cheatsheets = false, bundled_plugin_cheatsheets = false } <CR>"
-   )
 end
 
 M.comment = function()
@@ -92,10 +87,6 @@ M.neoformat = function()
    map("n", plugin_maps.neoformat.format, ":Neoformat <CR>")
 end
 
-M.lightspeed = function()
-   map("n", plugin_maps.neoformat.format, ":Neoformat <CR>")
-end
-
 M.telescope = function()
    local m = plugin_maps.telescope
 
@@ -106,7 +97,6 @@ M.telescope = function()
    map("n", m.help_tags, ":Telescope help_tags <CR>")
    map("n", m.live_grep, ":Telescope live_grep <CR>")
    map("n", m.oldfiles, ":Telescope oldfiles <CR>")
-   map("n", m.themes, ":Telescope themes <CR>")
 end
 
 M.telescope_media = function()

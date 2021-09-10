@@ -148,12 +148,6 @@ M.map = function(mode, keys, cmd, opt)
    map_wrapper(mode, keys, cmd, options)
 end
 
--- Base code: https://gist.github.com/revolucas/184aec7998a6be5d2f61b984fac1d7f7
--- Changes over it: preserving table 1 contents and also update with table b, without duplicating
--- 1st arg - base table
--- 2nd arg - table to merge
--- 3rg arg - list of nodes as a table, if the node is found replace the from table2 to result, rather than adding the value
--- e.g: merge_table(t1, t2, { ['plugin']['truezen']['mappings'] })
 M.merge_table = function(into, from, nodes_to_replace)
    -- make sure both are table
    if type(into) ~= "table" or type(from) ~= "table" then
@@ -174,9 +168,7 @@ return function(table1, table2)
    return table1
 end]]
       for _, node in ipairs(nodes_to_replace) do
-         -- replace the _node in base_fn to actual given node value
          local fn = base_fn:gsub("_node", node)
-         -- if the node if found, it is replaced, otherwise table 1 is returned
          table1 = loadstring(fn)()(table1, table2)
       end
    end
@@ -189,10 +181,6 @@ end]]
             local present = seen[v] or false
             if not present then
                if type(k) == "number" then
-                  -- add the value to seen table until value is found
-                  -- only do when key is number we just want to append to subtables
-                  -- todo: maybe improve this
-
                   for _, value in pairs(table1) do
                      if value == v then
                         present = true
@@ -249,19 +237,12 @@ M.mappings = {
    new_buffer = "<S-t>", -- open a new buffer
    new_tab = "<C-t>b", -- open a new vim tab
    save_file = "<C-s>", -- save file using :w
-   theme_toggler = "<leader>tt", -- for theme toggler, see in ui.theme_toggler
 
    -- terminal related mappings
    terminal = {
-      -- multiple mappings can be given for esc_termmode and esc_hide_termmode
-      -- get out of terminal mode
       esc_termmode = { "jk" }, -- multiple mappings allowed
-      -- get out of terminal mode and hide it
-      -- it does not close it, see pick_term mapping to see hidden terminals
       esc_hide_termmode = { "JK" }, -- multiple mappings allowed
-      -- show hidden terminal buffers in a telescope picker
       pick_term = "<leader>W",
-      -- below three are for spawning terminals
       new_horizontal = "<leader>h",
       new_vertical = "<leader>v",
       new_window = "<leader>w",
@@ -280,8 +261,7 @@ M.mappings.plugin = {
       moveDown = "<C-j>",
    },
    mapsheet = {
-      default_keys = "<leader>dk",
-      user_keys = "<leader>uk",
+      default_keys = "<leader>?",
    },
    comment = {
       toggle = "<leader>/", -- trigger comment on a single/selected lines/number prefix
@@ -290,26 +270,25 @@ M.mappings.plugin = {
       esc_insertmode = { "jk" }, -- multiple mappings allowed
    },
    nvimtree = {
-      toggle = "<C-n>", -- file manager
+      toggle = "<leader>op", -- file manager
    },
    neoformat = {
-      format = "<leader>fm",
+      format = "<leader>cf",
    },
    telescope = {
-      buffers = "<leader>fb",
-      find_files = "<leader>ff",
+      buffers = "<leader>bb",
+      find_files = "<leader>.",
       git_commits = "<leader>cm",
       git_status = "<leader>gt",
       help_tags = "<leader>fh",
-      live_grep = "<leader>fw",
-      oldfiles = "<leader>fo",
-      themes = "<leader>th",
+      live_grep = "<leader>sp",
+      oldfiles = "<leader>fr",
    },
    telescope_media = {
       media_files = "<leader>fp",
    },
    truezen = { -- distraction free modes mapping, hide statusline, tabline, line numbers
-      ataraxis_mode = "<leader>zz", -- center
+      ataraxis_mode = "<leader>tz", -- center
       focus_mode = "<leader>zf",
       minimalistic_mode = "<leader>zm", -- as it is
    },

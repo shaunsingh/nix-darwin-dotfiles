@@ -8,3 +8,4 @@ for _, module in ipairs(init_modules) do
       error("Error loading " .. module .. "\n\n" .. err)
    end
 end
+

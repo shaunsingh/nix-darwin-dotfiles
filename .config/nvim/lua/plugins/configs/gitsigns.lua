@@ -32,3 +32,4 @@ gitsigns.setup {
       interval = 100,
    },
 }
+

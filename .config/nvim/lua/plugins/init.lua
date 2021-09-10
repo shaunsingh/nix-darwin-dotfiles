@@ -33,7 +33,7 @@ return packer.startup(function()
    }
 
    use {
-      "famiu/feline.nvim",
+      "glepnir/galaxyline.nvim",
       after = "nvim-web-devicons",
       config = function()
          require "plugins.configs.statusline"
@@ -270,10 +270,7 @@ return packer.startup(function()
 
 use {
       "ggandor/lightspeed.nvim",
-      event = "InsertEnter",
-      setup = function()
-         require("core.mappings").lightspeed()
-      end,
+      event = "BufRead",
    }
 
 end)

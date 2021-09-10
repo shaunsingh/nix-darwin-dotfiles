@@ -8,6 +8,8 @@ vim.cmd "function! Doom_bufferline_quitvim(a,b,c,d) \n qa \n endfunction"
 
 local colors = {
   bg = "NONE",
+  black = "#2E3440",
+  black2 = "#3b4252",
   white = "#ECEFF4",
   fg = "#E5E9F0",
   yellow = "#EBCB8B",
@@ -64,7 +66,7 @@ bufferline.setup {
 
    highlights = {
       background = {
-         guifg = colors.grey_fg,
+         guifg = colors.fg,
          guibg = colors.black2,
       },
 
@@ -75,27 +77,27 @@ bufferline.setup {
          gui = "bold",
       },
       buffer_visible = {
-         guifg = colors.light_grey,
+         guifg = colors.gray,
          guibg = colors.black2,
       },
 
       -- for diagnostics = "nvim_lsp"
       error = {
-         guifg = colors.light_grey,
+         guifg = colors.gray,
          guibg = colors.black2,
       },
       error_diagnostic = {
-         guifg = colors.light_grey,
+         guifg = colors.gray,
          guibg = colors.black2,
       },
 
       -- close buttons
       close_button = {
-         guifg = colors.light_grey,
+         guifg = colors.gray,
          guibg = colors.black2,
       },
       close_button_visible = {
-         guifg = colors.light_grey,
+         guifg = colors.gray,
          guibg = colors.black2,
       },
       close_button_selected = {
@@ -103,7 +105,7 @@ bufferline.setup {
          guibg = colors.black,
       },
       fill = {
-         guifg = colors.grey_fg,
+         guifg = colors.fg,
          guibg = colors.black2,
       },
       indicator_selected = {
@@ -140,12 +142,12 @@ bufferline.setup {
       },
       -- tabs
       tab = {
-         guifg = colors.light_grey,
-         guibg = colors.one_bg3,
+         guifg = colors.fg,
+         guibg = colors.gray,
       },
       tab_selected = {
          guifg = colors.black2,
-         guibg = colors.nord_blue,
+         guibg = colors.fg,
       },
       tab_close = {
          guifg = colors.red,
