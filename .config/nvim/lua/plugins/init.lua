@@ -268,9 +268,27 @@ return packer.startup(function()
       end,
    }
 
-use {
+   use {
+       "folke/twilight.nvim",
+       cmd = {
+           "Twilight",
+           "TwilightEnable"
+       },
+       config = function()
+           require("twilight").setup {}
+       end
+   }
+
+   use {
       "ggandor/lightspeed.nvim",
       event = "BufRead",
    }
+
+    use {'kristijanhusak/orgmode.nvim',
+      ft = {'org'},
+      config = function()
+            require('orgmode').setup{}
+      end
+    }
 
 end)
