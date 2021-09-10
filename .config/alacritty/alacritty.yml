@@ -9,7 +9,7 @@ window:
     x: 45
     y: 45
 
-   decorations: None
+   decorations: full 
 
 font:
   normal:
