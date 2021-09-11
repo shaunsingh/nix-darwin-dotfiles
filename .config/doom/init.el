@@ -167,11 +167,11 @@
         ;;+dragndrop                  ; drag & drop files/images into org buffers
         ;;+hugo                     ; use Emacs for hugo blogging
         ;;+noter                      ; enhanced PDF notetaking
-        ;;+jupyter                    ; ipython/jupyter support for babel
+        +jupyter                    ; ipython/jupyter support for babel
         +pandoc                     ; export-with-pandoc support
-        ;;+gnuplot                    ; who doesn't like pretty pictures
-        ;;+pomodoro                 ; be fruitful with the tomato technique
-        ;;+present                    ; using org-mode for presentations
+        +gnuplot                    ; who doesn't like pretty pictures
+        +pomodoro                 ; be fruitful with the tomato technique
+        +present                    ; using org-mode for presentations
         +roam2)                      ; wander around notes
        ;;php               ; perl's insecure younger brother
        ;;plantuml          ; diagrams for confusing people more
