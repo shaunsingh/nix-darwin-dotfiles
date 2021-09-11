@@ -293,18 +293,6 @@ return packer.startup(function()
                 org_default_notes_file = '~/org/notes.org',
                 org_hide_leading_stars = true,
                 org_hide_emphasis_markers = true,
-                org_agenda_templates = {
-		    T = {
-		        description = 'Todo',
-		        template = '* TODO %?\n  DEADLINE: %T',
-		        target = '~/org/todo.org'
-		    },
-		    s = {
-		        description = 'School todo',
-		        template = '* TODO %?\n  DEADLINE: %T',
-		        target = '~/org/school.org'
-		    },
-		},
                 mappings = {
                   global = {
                     org_agenda = '<Leader>oa',
