@@ -33,13 +33,19 @@
 
 ;;looks
 (unpin! doom-themes)
+(unpin! doom-modeline)
 (package! solaire-mode :disable t)
+(package! ox-chameleon :recipe (:host github :repo "tecosaur/ox-chameleon"))
 
 ;;emacs additions
 ;;(package! vlf :recipe (:host github :repo "m00natic/vlfi" :files ("*.el")))
 (package! websocket)
 (package! screenshot :recipe (:host github :repo "tecosaur/screenshot"))
 (package! lexic :recipe (:host github :repo "tecosaur/lexic"))
+
+;;lsp
+(unpin! lsp-ui)
+(unpin! lsp-mode)
 
 ;;fun
 (package! keycast)

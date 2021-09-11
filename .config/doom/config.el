@@ -10,6 +10,8 @@
 
 (setq explicit-shell-file-name (executable-find "fish"))
 
+(setq vterm-always-compile-module t)
+
 ;; (when (getenv "WAYLAND_DISPLAY")
 ;;   (setq wl-copy-p nil
 ;;         interprogram-cut-function (lambda (text)
@@ -84,10 +86,12 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
                          (sleep-for 0.5))))))
   ";; No missing fonts detected")
 
-;;(setq doom-theme 'doom-vibrant)
+(setq doom-theme 'doom-vibrant)
 (setq doom-vibrant-padded-modeline t)
-(setq doom-theme 'doom-flatwhite)
+;;(setq doom-theme 'doom-flatwhite)
 (setq doom-fw-padded-modeline t)
+;;(setq doom-theme 'doom-one-light)
+(setq doom-one-light-padded-modeline t)
 
 (use-package! vlf-setup
   :defer-incrementally vlf-tune vlf-base vlf-write vlf-search vlf-occur vlf-follow vlf-ediff vlf)
@@ -1702,212 +1706,6 @@ set palette defined ( 0 '%s',\
   (setq pdf-view-resize-factor 1.1)
   (setq-default pdf-view-display-size 'fit-page))
 
-(defface org-cite
-  '((t :foreground "#800080"))
-  "Face for org-cite.")
-
-(after! ox
-  (defvar ox-chameleon-base-class "cb-doc"
-    "The base class that chameleon builds on")
-
-(defvar ox-chameleon--p nil
-    "Used to indicate whether the current export is trying to blend in. Set just before being accessed.")
-
-  ;; (setf (alist-get :filter-latex-class
-  ;;                  (org-export-backend-filters
-  ;;                   (org-export-get-backend 'latex)))
-  ;;       'ox-chameleon-latex-class-detector-filter)
-
-  ;; (defun ox-chameleon-latex-class-detector-filter (info backend)
-  ;;   ""
-  ;;   (setq ox-chameleon--p (when (equal (plist-get info :latex-class)
-  ;;                                      "chameleon")
-  ;;                           (plist-put info :latex-class ox-chameleon-base-class)
-  ;;                           t)))
-
-  ;; TODO make this less hacky. One ideas was as follows
-  ;; (map-put (org-export-backend-filters (org-export-get-backend 'latex))
-  ;;           :filter-latex-class 'ox-chameleon-latex-class-detector-filter))
-  ;; Never seemed to execute though
-  (defadvice! ox-chameleon-org-latex-detect (orig-fun info)
-    :around #'org-export-install-filters
-    (setq ox-chameleon--p (when (equal (plist-get info :latex-class)
-                                       "chameleon")
-                            (plist-put info :latex-class
-                                       (if (plist-get info :beamer-theme) "beamer"
-                                         ox-chameleon-base-class))
-                            t))
-    (funcall orig-fun info))
-
-  (defadvice! ox-chameleon-org-latex-export (orig-fn info &optional template snippet?)
-    :around #'org-latex-make-preamble
-    (setq .info info)
-    (if (and ox-chameleon--p (not snippet?))
-        (let ((engrave-faces-preset-styles (engrave-faces-generate-preset)))
-          (concat (funcall orig-fn info template snippet?)
-                  (ox-chameleon-generate-colourings info)))
-      (funcall orig-fn info template snippet?)))
-
-  (defun ox-chameleon-generate-colourings (info)
-    (concat
-     "\n%% make document follow Emacs theme\n"
-     (ox-chameleon--generate-fgbg-colours)
-     (if (plist-get info :beamer-theme)
-         (concat (ox-chameleon--generate-beamer-colourings)
-                 (ox-chameleon--generate-beamer-list-colourings))
-       (concat "\n\\pagecolor{obg}\n\\color{ofg}\n"
-               (ox-chameleon--generate-list-colourings)
-               (ox-chameleon--generate-koma-structural-colourings)))
-     (ox-chameleon--generate-text-colourings)
-     (ox-chameleon--generate-src-colourings)
-     "\n%% end customisations\n\n"))
-
-  (defun ox-chameleon--generate-fgbg-colours ()
-    (apply #'format
-           "\n\\definecolor{obg}{HTML}{%s}\n\\definecolor{ofg}{HTML}{%s}\n"
-           (mapcar (doom-rpartial #'substring 1)
-                   (list
-                    (face-attribute 'default :background)
-                    (face-attribute 'default :foreground)))))
-
-  (defun ox-chameleon--generate-text-colourings ()
-    (apply #'format
-           "
-%% textual elements
-
-\\definecolor{link}{HTML}{%s}
-\\definecolor{cite}{HTML}{%s}
-\\definecolor{itemlabel}{HTML}{%s}
-\\definecolor{code}{HTML}{%s}
-\\definecolor{verbatim}{HTML}{%s}
-
-\\renewcommand{\\labelitemi}{\\textcolor{itemlabel}{\\textbullet}}
-\\renewcommand{\\labelitemii}{\\textcolor{itemlabel}{\\normalfont\\bfseries \\textendash}}
-\\renewcommand{\\labelitemiii}{\\textcolor{itemlabel}{\\textasteriskcentered}}
-\\renewcommand{\\labelitemiv}{\\textcolor{itemlabel}{\\textperiodcentered}}
-
-\\renewcommand{\\labelenumi}{\\textcolor{itemlabel}{\\theenumi.}}
-\\renewcommand{\\labelenumii}{\\textcolor{itemlabel}{(\\theenumii)}}
-\\renewcommand{\\labelenumiii}{\\textcolor{itemlabel}{\\theenumiii.}}
-\\renewcommand{\\labelenumiv}{\\textcolor{itemlabel}{\\theenumiv.}}
-
-\\DeclareTextFontCommand{\\texttt}{\\color{code}\\ttfamily}
-\\makeatletter
-\\def\\verbatim@font{\\color{verbatim}\\normalfont\\ttfamily}
-\\makeatother
-"
-           (mapcar (doom-rpartial #'substring 1)
-                   (list
-                    (face-attribute 'link :foreground)
-                    (face-attribute 'org-cite :foreground)
-                    (face-attribute 'org-list-dt :foreground)
-                    (face-attribute 'org-code :foreground)
-                    (face-attribute 'org-verbatim :foreground)))))
-
-  (defun ox-chameleon--generate-list-colourings ()
-    (format "
-%% list labels
-
-\\definecolor{itemlabel}{HTML}{%s}
-
-\\renewcommand{\\labelitemi}{\\textcolor{itemlabel}{\\textbullet}}
-\\renewcommand{\\labelitemii}{\\textcolor{itemlabel}{\\normalfont\\bfseries \\textendash}}
-\\renewcommand{\\labelitemiii}{\\textcolor{itemlabel}{\\textasteriskcentered}}
-\\renewcommand{\\labelitemiv}{\\textcolor{itemlabel}{\\textperiodcentered}}
-
-\\renewcommand{\\labelenumi}{\\textcolor{itemlabel}{\\theenumi.}}
-\\renewcommand{\\labelenumii}{\\textcolor{itemlabel}{(\\theenumii)}}
-\\renewcommand{\\labelenumiii}{\\textcolor{itemlabel}{\\theenumiii.}}
-\\renewcommand{\\labelenumiv}{\\textcolor{itemlabel}{\\theenumiv.}}
-"
-            (substring (face-attribute 'org-list-dt :foreground) 1)))
-
-  (defun ox-chameleon--generate-src-colourings ()
-    (apply #'format
-           "
-%% code blocks
-
-\\definecolor{codebackground}{HTML}{%s}
-\\colorlet{EFD}{ofg}
-\\definecolor{codeborder}{HTML}{%s}
-"
-           (mapcar (doom-rpartial #'substring 1)
-                   (list
-                    (face-attribute 'default :background)
-                    (doom-blend (face-attribute 'default :background)
-                                (face-attribute 'default :foreground)
-                                0.95)))))
-
-  (defun ox-chameleon--generate-koma-structural-colourings ()
-    (apply #'format
-           "
-%% structural elements
-
-\\definecolor{documentTitle}{HTML}{%s}
-\\definecolor{documentInfo}{HTML}{%s}
-\\definecolor{level1}{HTML}{%s}
-\\definecolor{level2}{HTML}{%s}
-\\definecolor{level3}{HTML}{%s}
-\\definecolor{level4}{HTML}{%s}
-\\definecolor{level5}{HTML}{%s}
-\\definecolor{level6}{HTML}{%s}
-\\definecolor{level7}{HTML}{%s}
-\\definecolor{level8}{HTML}{%s}
-
-\\addtokomafont{title}{\\color{documentTitle}}
-\\addtokomafont{author}{\\color{documentInfo}}
-\\addtokomafont{date}{\\color{documentInfo}}
-\\addtokomafont{section}{\\color{level1}}
-\\newkomafont{sectionprefix}{\\color{level1}}
-\\addtokomafont{subsection}{\\color{level2}}
-\\newkomafont{subsectionprefix}{\\color{level2}}
-\\addtokomafont{subsubsection}{\\color{level3}}
-\\newkomafont{subsubsectionprefix}{\\color{level3}}
-\\addtokomafont{paragraph}{\\color{level4}}
-\\newkomafont{paragraphprefix}{\\color{level4}}
-\\addtokomafont{subparagraph}{\\color{level5}}
-\\newkomafont{subparagraphprefix}{\\color{level5}}
-"
-           (mapcar (doom-rpartial #'substring 1)
-                   (list
-                    (face-attribute 'org-document-title :foreground)
-                    (face-attribute 'org-document-info :foreground)
-                    (face-attribute 'outline-1 :foreground)
-                    (face-attribute 'outline-2 :foreground)
-                    (face-attribute 'outline-3 :foreground)
-                    (face-attribute 'outline-4 :foreground)
-                    (face-attribute 'outline-5 :foreground)
-                    (face-attribute 'outline-6 :foreground)
-                    (face-attribute 'outline-7 :foreground)
-                    (face-attribute 'outline-8 :foreground)))))
-
-  (defun ox-chameleon--generate-beamer-colourings ()
-    (format
-     "
-%% beamer
-
-\\definecolor{builtin}{HTML}{%s}
-
-\\NewCommandCopy{\\oldusetheme}{\\usetheme}
-\\renewcommand*{\\usetheme}[2][]{\\oldusetheme[#1]{#2}
-  \\setbeamercolor{normal text}{fg=ofg, bg=obg}
-  \\setbeamercolor{alerted text}{fg=builtin}
-  \\setbeamercolor{progress bar}{fg=builtin}
-  \\setbeamercolor{title separator}{fg=builtin}
-  \\setbeamercolor{progress bar in head/foot}{fg=builtin}
-  \\setbeamercolor{progress bar in section page}{fg=builtin}}
-"
-     (substring (face-attribute 'font-lock-builtin-face :foreground) 1)))
-
-  (defun ox-chameleon--generate-beamer-list-colourings ()
-    (format "
-%% beamer list labels
-
-\\definecolor{itemlabel}{HTML}{%s}
-\\setbeamercolor*{item}{fg=itemlabel}
-"
-            (substring (face-attribute 'org-list-dt :foreground) 1))))
-
 (set-email-account! "shaunsingh0207"
   '((mu4e-sent-folder       . "/Sent Mail")
     (mu4e-drafts-folder     . "/Drafts")
@@ -1950,6 +1748,10 @@ set palette defined ( 0 '%s',\
    :defer t
    :config
    (evil-collection-xwidget-setup))
+
+;;(require 'server)
+;;(when (not (server-running-p))
+;;  (server-start))
 
 ;; No missing fonts detected
 
@@ -2547,7 +2349,7 @@ existance of the feature.")
     (float-wrap    :snippet "\\usepackage{wrapfig}" :order 2)
     (rotate        :snippet "\\usepackage{rotating}" :order 2)
     (caption       :snippet org-latex-caption-preamble :order 2.1)
-    (acronym       :snippet "\\newcommand{\\acr}[1]{\\protect\\textls*[110]{\\scshape #1}}\n\\newcommand{\\acrs}{\\protect\\scalebox{.91}[.84]{\\hspace{0.15ex}s}}" :order 0.4)
+    (acronym       :snippet "\\newcommand{\\acr}[1]{\\protect\\textls*[110]{\\scshape #1}}\n\\newcommand{\\acrs}{\\protect\\scalebox{.91}[.84]\\hspace{0.15ex}s}" :order 0.4)
     (italic-quotes :snippet "\\renewcommand{\\quote}{\\list{}{\\rightmargin\\leftmargin}\\item\\relax\\em}\n" :order 0.5)
     (par-sep       :snippet "\\setlength{\\parskip}{\\baselineskip}\n\\setlength{\\parindent}{0pt}\n" :order 0.5)
     (.pifont       :snippet "\\usepackage{pifont}")
@@ -2670,39 +2472,6 @@ This is done according to `org-latex-feature-implementations'"
 
 (setq org-latex-pdf-process '("tectonic -X compile --print --outdir=%o %f"))
 
-(defadvice! no-auto-mode-alist (orig-fn &rest args)
-  "Wrap ORIG-FN in a let-binding that sets `auto-mode-alist' to nil."
-  :around #'org-export-to-file
-  (let ((auto-mode-alist nil))
-    (apply orig-fn args)))
-
-(setq org-preview-latex-process-alist
-'((dvipng :programs
-                  ("tectonic" "dvipng")
-                  :description "dvi > png" :message "you need to install the programs: tectonic and dvipng." :image-input-type "dvi" :image-output-type "png" :image-size-adjust
-                  (1.0 . 1.0)
-                  :latex-compiler
-                  ;; tectonic doesn't have a non interactive mode
-                  ("tectonic --outdir %o %f")
-                  :image-converter
-                  ("dvipng -D %D -T tight -bg Transparent -o %O %f"))
-          (dvisvgm :programs
-                   ("tectonic" "dvisvgm")
-                   :description "dvi > svg" :message "you need to install the programs: tectonic and dvisvgm." :image-input-type "dvi" :image-output-type "svg" :image-size-adjust
-                   (1.7 . 1.5)
-                   :latex-compiler
-                   ("tectonic --outdir %o %f")
-                   :image-converter
-                   ("dvisvgm %f -n -b min -c %S -o %O"))
-          (imagemagick :programs
-                       ("latex" "convert")
-                       :description "pdf > png" :message "you need to install the programs: latex and imagemagick." :image-input-type "pdf" :image-output-type "png" :image-size-adjust
-                       (1.0 . 1.0)
-                       :latex-compiler
-                       ("pdflatex -interaction nonstopmode -output-directory %o %f")
-                       :image-converter
-                       ("convert -density %D -trim -antialias %f -quality 100 %O"))))
-
 (after! ox-latex
   (add-to-list 'org-latex-classes
                '("cb-doc" "\\documentclass{scrartcl}"
@@ -2736,24 +2505,11 @@ This is done according to `org-latex-feature-implementations'"
         org-latex-reference-command "\\cref{%s}"))
 
 (setq org-latex-default-packages-alist
-      `(("AUTO" "inputenc" t
-         ("pdflatex"))
-        ("T1" "fontenc" t
-         ("pdflatex"))
+      `(("AUTO" "inputenc" t ("pdflatex"))
+        ("T1" "fontenc" t ("pdflatex"))
         ("" "fontspec" t)
-        ("" "graphicx" t)
-        ("" "grffile" t)
-        ("" "longtable" nil)
-        ("" "wrapfig" nil)
-        ("" "rotating" nil)
-        ("normalem" "ulem" t)
-        ("" "amsmath" t)
-        ("" "textcomp" t)
-        ("" "amssymb" t)
-        ("" "capt-of" nil)
-        ("dvipsnames" "xcolor" nil)
-        ("colorlinks=true, linkcolor=Blue, citecolor=BrickRed, urlcolor=PineGreen" "hyperref" nil)
-    ("" "indentfirst" nil)
+        ("" "xcolor" nil)
+        ("" "hyperref" nil)
     "\\setmainfont[Ligatures=TeX]{Alegreya}"
     "\\setmonofont[Ligatures=TeX]{Liga SFMono Nerd Font}"))
 
@@ -2919,6 +2675,16 @@ This is done according to `org-latex-feature-implementations'"
     (if (eq 'engraved (plist-get info :latex-listings))
         (format "\\begin{Code}[alt]\n%s\n\\end{Code}" output-block)
       output-block)))
+
+(defface org-cite
+  '((t :foreground "#800080"))
+  "Face for org-cite.")
+(use-package! ox-chameleon
+  :after ox)
+
+(setq org-export-in-background t)
+
+(setq org-export-with-sub-superscripts '{})
 
 (setq mu4e-update-interval 300)
 
