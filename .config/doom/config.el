@@ -1706,6 +1706,11 @@ set palette defined ( 0 '%s',\
   (setq pdf-view-resize-factor 1.1)
   (setq-default pdf-view-display-size 'fit-page))
 
+(defadvice! no-auto-mode-alist (orig-fn &rest args)
+  :around #'org-export-to-file
+  (let ((auto-mode-alist nil))
+    (apply orig-fn args)))
+
 (set-email-account! "shaunsingh0207"
   '((mu4e-sent-folder       . "/Sent Mail")
     (mu4e-drafts-folder     . "/Drafts")
@@ -2472,6 +2477,33 @@ This is done according to `org-latex-feature-implementations'"
 
 (setq org-latex-pdf-process '("tectonic -X compile --print --outdir=%o %f"))
 
+(setq org-preview-latex-process-alist
+'((dvipng :programs
+                  ("tectonic" "dvipng")
+                  :description "dvi > png" :message "you need to install the programs: tectonic and dvipng." :image-input-type "dvi" :image-output-type "png" :image-size-adjust
+                  (1.0 . 1.0)
+                  :latex-compiler
+                  ;; tectonic doesn't have a non interactive mode
+                  ("tectonic --outdir %o %f")
+                  :image-converter
+                  ("dvipng -D %D -T tight -bg Transparent -o %O %f"))
+          (dvisvgm :programs
+                   ("tectonic" "dvisvgm")
+                   :description "dvi > svg" :message "you need to install the programs: tectonic and dvisvgm." :image-input-type "dvi" :image-output-type "svg" :image-size-adjust
+                   (1.7 . 1.5)
+                   :latex-compiler
+                   ("tectonic --outdir %o %f")
+                   :image-converter
+                   ("dvisvgm %f -n -b min -c %S -o %O"))
+          (imagemagick :programs
+                       ("latex" "convert")
+                       :description "pdf > png" :message "you need to install the programs: latex and imagemagick." :image-input-type "pdf" :image-output-type "png" :image-size-adjust
+                       (1.0 . 1.0)
+                       :latex-compiler
+                       ("tectonic --outdir %o %f")
+                       :image-converter
+                       ("convert -density %D -trim -antialias %f -quality 100 %O"))))
+
 (after! ox-latex
   (add-to-list 'org-latex-classes
                '("cb-doc" "\\documentclass{scrartcl}"
@@ -2505,11 +2537,24 @@ This is done according to `org-latex-feature-implementations'"
         org-latex-reference-command "\\cref{%s}"))
 
 (setq org-latex-default-packages-alist
-      `(("AUTO" "inputenc" t ("pdflatex"))
-        ("T1" "fontenc" t ("pdflatex"))
+      `(("AUTO" "inputenc" t
+         ("pdflatex"))
+        ("T1" "fontenc" t
+         ("pdflatex"))
         ("" "fontspec" t)
-        ("" "xcolor" nil)
-        ("" "hyperref" nil)
+        ("" "graphicx" t)
+        ("" "grffile" t)
+        ("" "longtable" nil)
+        ("" "wrapfig" nil)
+        ("" "rotating" nil)
+        ("normalem" "ulem" t)
+        ("" "amsmath" t)
+        ("" "textcomp" t)
+        ("" "amssymb" t)
+        ("" "capt-of" nil)
+        ("dvipsnames" "xcolor" nil)
+        ("colorlinks=true, linkcolor=Blue, citecolor=BrickRed, urlcolor=PineGreen" "hyperref" nil)
+    ("" "indentfirst" nil)
     "\\setmainfont[Ligatures=TeX]{Alegreya}"
     "\\setmonofont[Ligatures=TeX]{Liga SFMono Nerd Font}"))
 
