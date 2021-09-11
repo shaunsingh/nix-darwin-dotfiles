@@ -287,7 +287,67 @@ return packer.startup(function()
     use {'kristijanhusak/orgmode.nvim',
       ft = {'org'},
       config = function()
-            require('orgmode').setup{}
+            require('orgmode').setup({
+                org_highlight_latex_and_related = 'entities',
+                org_agenda_files = '~/org/*',
+                org_default_notes_file = '~/org/notes.org',
+                org_hide_leading_stars = true,
+                org_hide_emphasis_markers = true,
+                mappings = {
+                  global = {
+                    org_agenda = '<Leader>oa',
+                    org_capture = '<Leader>oc',
+                  },
+                  agenda = {
+                    org_agenda_later = 'f',
+                    org_agenda_earlier = 'b',
+                    org_agenda_goto_today = '.',
+                    org_agenda_day_view = 'vd',
+                    org_agenda_week_view = 'vw',
+                    org_agenda_month_view = 'vm',
+                    org_agenda_year_view = 'vy',
+                    org_agenda_quit = 'q',
+                    org_agenda_switch_to = '<CR>',
+                    org_agenda_goto = { '<TAB>' },
+                    org_agenda_goto_date = 'J',
+                    org_agenda_redo = 'r',
+                    org_agenda_todo = 't',
+                    org_agenda_show_help = '?',
+                  },
+                  capture = {
+                    org_capture_finalize = '<C-c>',
+                    org_capture_refile = '<Leader>or',
+                    org_capture_kill = '<Leader>ok',
+                    org_capture_show_help = '?',
+                  },
+                  org = {
+                    org_increase_date = '<C-a>',
+                    org_decrease_date = '<C-x>',
+                    org_toggle_checkbox = '<C-Space>',
+                    org_open_at_point = '<Leader>oo',
+                    org_cycle = '<TAB>',
+                    org_global_cycle = '<S-TAB>',
+                    org_archive_subtree = '<Leader>o$',
+                    org_set_tags_command = '<Leader>ot',
+                    org_toggle_archive_tag = '<Leader>oA',
+                    org_do_promote = '<<',
+                    org_do_demote = '>>',
+                    org_promote_subtree = '<s',
+                    org_demote_subtree = '>s',
+                    org_meta_return = '<Leader><CR>', -- Add headling, item or row
+                    org_insert_heading_respect_content = '<Leader>oih', -- Add new headling after current heading block with same level
+                    org_insert_todo_heading = '<Leader>oiT', -- Add new todo headling right after current heading with same level
+                    org_insert_todo_heading_respect_content = '<Leader>oit', -- Add new todo headling after current heading block on same level
+                    org_move_subtree_up = '<Leader>oK',
+                    org_move_subtree_down = '<Leader>oJ',
+                    org_export = '<Leader>oe',
+                    org_next_visible_heading = '}',
+                    org_previous_visible_heading = '{',
+                    org_forward_heading_same_level = ']]',
+                    org_backward_heading_same_level = '[[',
+                  },
+                },
+            })
       end
     }
 

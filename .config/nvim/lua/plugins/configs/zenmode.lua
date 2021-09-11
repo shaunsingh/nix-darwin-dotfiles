@@ -28,8 +28,8 @@ true_zen.setup {
          top_padding = 1,
          bottom_padding = 1,
          ideal_writing_area_width = { 0 },
-         auto_padding = true,
-         keep_default_fold_fillchars = true,
+         auto_padding = false,
+         keep_default_fold_fillchars = false,
          custome_bg = "",
          bg_configuration = true,
          affected_higroups = {
@@ -49,9 +49,9 @@ true_zen.setup {
    },
    integrations = {
 	vim_gitgutter = false,
-	galaxyline = true,
+	galaxyline = false,
 	tmux = false,
-	gitsigns = false,
+	gitsigns = true,
 	nvim_bufferline = true,
 	limelight = false,
 	twilight = true,
