@@ -1754,9 +1754,8 @@ set palette defined ( 0 '%s',\
    :config
    (evil-collection-xwidget-setup))
 
-;;(require 'server)
-;;(when (not (server-running-p))
-;;  (server-start))
+(when 'native-comp-compiler-options
+                 (setq native-comp-compiler-options '("-O2" "-march=native" "-mtune=native")))
 
 ;; No missing fonts detected
 

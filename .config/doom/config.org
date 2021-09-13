@@ -44,11 +44,11 @@ Make this file run (slightly) faster with lexical binding
 ;;; config.el -*- lexical-binding: t; -*-
 #+end_src
 
-If a server doesn't exist, start it
+I want to run emacs28's new native-compiler with both -O2 and processor specific
+optimizations, if possible
 #+begin_src emacs-lisp
-;;(require 'server)
-;;(when (not (server-running-p))
-;;  (server-start))
+(when 'native-comp-compiler-options
+                 (setq native-comp-compiler-options '("-O2" "-march=native" "-mtune=native")))
 #+end_src
 
 I also don't want to compile my org config every time I make a change. Lets fix that
