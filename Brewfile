@@ -35,4 +35,3 @@ brew "tectonic"
 brew "d12frosted/emacs-plus/emacs-plus@28", args: ["with-elrumo2-icon", "with-native-comp", "with-xwidgets"]
 
 cask "font-sf-pro"
-cask "zathura"
