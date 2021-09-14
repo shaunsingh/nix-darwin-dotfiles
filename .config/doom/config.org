@@ -109,7 +109,7 @@ prefer a rounder font for plain text, so I'll go with Overpass for that. I have 
       doom-serif-font (font-spec :family "Liga SFMono Nerd Font" :weight 'light))
 #+end_src
 
-For mixed pitch, I would go with something comfier. I like IBM Plex Sans, so lets go with that
+For mixed pitch, I would go with something comfier. I like Alegreya, so lets go with that
 #+begin_src elisp
 ;;mixed pitch modes
 (defvar mixed-pitch-modes '(org-mode LaTeX-mode markdown-mode gfm-mode Info-mode)
@@ -131,7 +131,7 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
     "A variable-pitch face with serifs."
     :group 'basic-faces)
   (setq mixed-pitch-set-height t)
-  (setq variable-pitch-serif-font (font-spec :family "IBM Plex Sans" :size 16))
+  (setq variable-pitch-serif-font (font-spec :family "Alegreya" :size 16))
   (set-face-attribute 'variable-pitch-serif nil :font variable-pitch-serif-font)
   (defun mixed-pitch-serif-mode (&optional arg)
     "Change the default face of the current buffer to a serifed variable pitch, while keeping some faces fixed pitch."
@@ -140,10 +140,18 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
       (mixed-pitch-mode (or arg 'toggle)))))
 #+end_src
 
+Harfbuzz is missing the beautiful ff ffi ffj ffl fft fi fj ft Th ligatures,
+lets add those back in with the help of composition-function-table
+
+#+begin_src elisp
+(set-char-table-range composition-function-table ?f '(["\\(?:ff?[fijlt]\\)" 0 font-shape-gstring]))
+(set-char-table-range composition-function-table ?T '(["\\(?:Th\\)" 0 font-shape-gstring]))
+#+end_src
+
 Just in case the fonts aren't there, lets add a fallback
 #+name: detect-missing-fonts
 #+begin_src elisp
-(defvar required-fonts '("Overpass" "Liga SFMono Nerd Font" "IBM Plex Sans" "Alegreya"))
+(defvar required-fonts '("Overpass" "Liga SFMono Nerd Font" "Alegreya" ))
 (defvar available-fonts
   (delete-dups (or (font-family-list)
                    (split-string (shell-command-to-string "fc-list : family")
@@ -286,21 +294,18 @@ And lastly lets add some helpful snippets for org-mode, and add a better templet
 #+end_src
 
 ** LSP
-I'm trying out some ui stuff too
-#+begin_src emacs-lisp
-(setq lsp-lens-enable t)
-#+end_src
-
 I think the LSP is a bit intrusive (especially with inline suggestions), so lets make it behave a bit more
 #+begin_src elisp
 (use-package! lsp-ui
   :hook (lsp-mode . lsp-ui-mode)
   :config
   (setq lsp-ui-sideline-enable nil; not anymore useful than flycheck
-        lsp-ui-doc-enable nil
+        lsp-lens-enable t
+        lsp-ui-doc-enable t
         lsp-tex-server 'digestif
-        lsp-headerline-breadcrumb-enable t
-        lsp-enable-folding t
+        lsp-headerline-breadcrumb-enable nil
+        lsp-ui-peek-enable t
+        lsp-ui-peek-fontify 'on-demand
         lsp-enable-symbol-highlighting nil))
 #+end_src
 

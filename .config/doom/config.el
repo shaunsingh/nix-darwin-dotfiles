@@ -50,7 +50,7 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
     "A variable-pitch face with serifs."
     :group 'basic-faces)
   (setq mixed-pitch-set-height t)
-  (setq variable-pitch-serif-font (font-spec :family "IBM Plex Sans" :size 16))
+  (setq variable-pitch-serif-font (font-spec :family "Alegreya" :size 16))
   (set-face-attribute 'variable-pitch-serif nil :font variable-pitch-serif-font)
   (defun mixed-pitch-serif-mode (&optional arg)
     "Change the default face of the current buffer to a serifed variable pitch, while keeping some faces fixed pitch."
@@ -58,7 +58,10 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
     (let ((mixed-pitch-face 'variable-pitch-serif))
       (mixed-pitch-mode (or arg 'toggle)))))
 
-(defvar required-fonts '("Overpass" "Liga SFMono Nerd Font" "IBM Plex Sans" "Alegreya"))
+(set-char-table-range composition-function-table ?f '(["\\(?:ff?[fijlt]\\)" 0 font-shape-gstring]))
+(set-char-table-range composition-function-table ?T '(["\\(?:Th\\)" 0 font-shape-gstring]))
+
+(defvar required-fonts '("Overpass" "Liga SFMono Nerd Font" "Alegreya" ))
 (defvar available-fonts
   (delete-dups (or (font-family-list)
                    (split-string (shell-command-to-string "fc-list : family")
@@ -169,10 +172,12 @@ Made for `org-tab-first-hook'."
   :hook (lsp-mode . lsp-ui-mode)
   :config
   (setq lsp-ui-sideline-enable nil; not anymore useful than flycheck
-        lsp-ui-doc-enable nil
+        lsp-lens-enable t
+        lsp-ui-doc-enable t
         lsp-tex-server 'digestif
-        lsp-headerline-breadcrumb-enable t
-        lsp-enable-folding t
+        lsp-headerline-breadcrumb-enable nil
+        lsp-ui-peek-enable t
+        lsp-ui-peek-fontify 'on-demand
         lsp-enable-symbol-highlighting nil))
 
 (setq undo-limit 80000000                          ;I mess up too much
@@ -1763,8 +1768,6 @@ set palette defined ( 0 '%s',\
  '(org-mode)
  "<<" ">>"
  :actions '(insert))
-
-(setq lsp-lens-enable t)
 
 (add-to-list 'default-frame-alist '(inhibit-double-buffering . t)) ;;stops flickering
 

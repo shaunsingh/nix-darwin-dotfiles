@@ -150,7 +150,7 @@
 
   # Add ibm and overpass fonts for emacs
   fonts.fonts = with pkgs; [
-    ibm-plex
+    # ibm-plex
     overpass
     alegreya
   ];
