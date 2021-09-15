@@ -49,6 +49,7 @@ map('n', '<leader>f', '<cmd>Telescope current_buffer_fuzzy_find<CR>')
 map('n', '<leader>:', '<cmd>Telescope commands<CR>')
 map('n', '<leader>tz', '<cmd>TZAtaraxis<CR>')                           --ataraxis
 map('n', '<leader>op', '<cmd>NvimTreeToggle<CR>')                      --nvimtree
+map('n', '<leader>tw', '<cmd>set wrap!<CR>')                      --nvimtree
 map('n', '<c-k>', '<cmd>wincmd k<CR>')                                 --ctrlhjkl to navigate splits
 map('n', '<c-j>', '<cmd>wincmd j<CR>')
 map('n', '<c-h>', '<cmd>wincmd h<CR>')
@@ -1079,51 +1080,6 @@ return require('packer').startup(function()
                map_complete = true, -- insert () func completion
                map_cr = true,
             }
-      end,
-   }
-
-   use {
-      "glepnir/dashboard-nvim",
-      config = function()
-         local g = vim.g
-
-         local fn = vim.fn
-         local plugins_count = fn.len(fn.globpath("~/.local/share/nvim/site/pack/packer/start", "*", 0, 1))
-
-         g.dashboard_disable_at_vimenter = 0
-         g.dashboard_disable_statusline = 1
-         g.dashboard_default_executive = "telescope"
-         g.dashboard_custom_header = {
-            "                                   ",
-            "                                   ",
-            "                                   ",
-            "   ⣴⣶⣤⡤⠦⣤⣀⣤⠆     ⣈⣭⣿⣶⣿⣦⣼⣆          ",
-            "    ⠉⠻⢿⣿⠿⣿⣿⣶⣦⠤⠄⡠⢾⣿⣿⡿⠋⠉⠉⠻⣿⣿⡛⣦       ",
-            "          ⠈⢿⣿⣟⠦ ⣾⣿⣿⣷    ⠻⠿⢿⣿⣧⣄     ",
-            "           ⣸⣿⣿⢧ ⢻⠻⣿⣿⣷⣄⣀⠄⠢⣀⡀⠈⠙⠿⠄    ",
-            "          ⢠⣿⣿⣿⠈    ⣻⣿⣿⣿⣿⣿⣿⣿⣛⣳⣤⣀⣀   ",
-            "   ⢠⣧⣶⣥⡤⢄ ⣸⣿⣿⠘  ⢀⣴⣿⣿⡿⠛⣿⣿⣧⠈⢿⠿⠟⠛⠻⠿⠄  ",
-            "  ⣰⣿⣿⠛⠻⣿⣿⡦⢹⣿⣷   ⢊⣿⣿⡏  ⢸⣿⣿⡇ ⢀⣠⣄⣾⠄   ",
-            " ⣠⣿⠿⠛ ⢀⣿⣿⣷⠘⢿⣿⣦⡀ ⢸⢿⣿⣿⣄ ⣸⣿⣿⡇⣪⣿⡿⠿⣿⣷⡄  ",
-            " ⠙⠃   ⣼⣿⡟  ⠈⠻⣿⣿⣦⣌⡇⠻⣿⣿⣷⣿⣿⣿ ⣿⣿⡇ ⠛⠻⢷⣄ ",
-            "      ⢻⣿⣿⣄   ⠈⠻⣿⣿⣿⣷⣿⣿⣿⣿⣿⡟ ⠫⢿⣿⡆     ",
-            "       ⠻⣿⣿⣿⣿⣶⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⡟⢀⣀⣤⣾⡿⠃     ",
-            "                                   ",
-         }
-
-         g.dashboard_custom_section = {
-            a = { description = { "  Find File                 SPC f f" }, command = "Telescope find_files" },
-            b = { description = { "  Recents                   SPC f o" }, command = "Telescope oldfiles" },
-            c = { description = { "  Find Word                 SPC f w" }, command = "Telescope live_grep" },
-            d = { description = { "洛 New File                  SPC f n" }, command = "DashboardNewFile" },
-            e = { description = { "  Bookmarks                 SPC b m" }, command = "Telescope marks" },
-            f = { description = { "  Load Last Session         SPC l  " }, command = "SessionLoad" },
-         }
-
-         g.dashboard_custom_footer = {
-            "   ",
-            "DOOM Loaded " .. plugins_count .. " plugins",
-         }
       end,
    }
 
