@@ -323,17 +323,11 @@ Made for `org-tab-first-hook'."
   (centaur-tabs-change-fonts "Liga SFMono Nerd Font" 105))
 
 (after! marginalia
-
   (setq marginalia-censor-variables nil)
 
-  (defun +marginalia-annotate-file-colorful (cand)
-  "Annotate file CAND with its size, modification time and other attrs.
-These annotations are skipped for remote paths."
-  (if (or (marginalia--remote-p cand)
-          (when-let (win (active-minibuffer-window))
-            (with-current-buffer (window-buffer win)
-              (marginalia--remote-p (minibuffer-contents-no-properties)))))
-      (marginalia--fields ("*Remote*" :face 'marginalia-documentation))
+  (defadvice! +marginalia--anotate-local-file-colorful (cand)
+    "Just a more colourful version of `marginalia--anotate-local-file'."
+    :override #'marginalia--annotate-local-file
     (when-let (attrs (file-attributes (substitute-in-file-name
                                        (marginalia--full-candidate cand))
                                       'integer))
@@ -344,7 +338,7 @@ These annotations are skipped for remote paths."
        ((+marginalia-file-size-colorful (file-attribute-size attrs))
         :width 7)
        ((+marginalia--time-colorful (file-attribute-modification-time attrs))
-        :width 12)))))
+        :width 12))))
 
   (defun +marginalia--time-colorful (time)
     (let* ((seconds (float-time (time-subtract (current-time) time)))
@@ -360,9 +354,7 @@ These annotations are skipped for remote paths."
            (color (if (< size-index 10000000) ; 10m
                       (doom-blend 'orange 'green size-index)
                     (doom-blend 'red 'orange (- size-index 1)))))
-      (propertize (file-size-human-readable size) 'face (list :foreground color))))
-
-  (setcdr (assq 'file marginalia-annotator-registry) '(+marginalia-annotate-file-colorful builtin none)))
+      (propertize (file-size-human-readable size) 'face (list :foreground color)))))
 
 (setq treemacs-width 25)
 (setq doom-themes-treemacs-theme "doom-colors")
