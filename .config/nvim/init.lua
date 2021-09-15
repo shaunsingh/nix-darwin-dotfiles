@@ -47,6 +47,7 @@ map('n', '<leader>fr', '<cmd>Telescope oldfiles<CR>')                   --fuzzy
 map('n', '<leader>.', '<cmd>Telescope find_files<CR>')
 map('n', '<leader>f', '<cmd>Telescope current_buffer_fuzzy_find<CR>')
 map('n', '<leader>:', '<cmd>Telescope commands<CR>')
+map('n', '<leader>bb', '<cmd>Telescope buffers<CR>')
 map('n', '<leader>tz', '<cmd>TZAtaraxis<CR>')                           --ataraxis
 map('n', '<leader>op', '<cmd>NvimTreeToggle<CR>')                      --nvimtree
 map('n', '<leader>tw', '<cmd>set wrap!<CR>')                      --nvimtree
