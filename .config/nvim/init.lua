@@ -90,18 +90,17 @@ end
 
 return require('packer').startup(function()
 
-    use {
-        "tweekmonster/startuptime.vim",
-        cmd = "StartupTime"
-    }
-
    use {
-      "nvim-lua/plenary.nvim",
+      "wbthomason/packer.nvim",
    }
 
    use {
-      "wbthomason/packer.nvim",
-      event = "VimEnter",
+       "tweekmonster/startuptime.vim",
+       cmd = "StartupTime"
+   }
+
+   use {
+      "nvim-lua/plenary.nvim",
    }
 
    use {
@@ -110,7 +109,7 @@ return require('packer').startup(function()
       config = function()
           vim.g.nord_borders = false
           vim.g.nord_contrast = false
-          vim.g.nord_cursorline_transparent = false
+          vim.g.nord_cursorline_transparent = true
           vim.g.nord_disable_background = false
           vim.cmd[[colorscheme nord]]
       end,
