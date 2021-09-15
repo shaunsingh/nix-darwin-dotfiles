@@ -1,4 +1,4 @@
-local _2afile_2a = "plugin/compe.fnl"
+local _2afile_2a = ".config/nvim/fnl/dotfiles/plugin/compe.fnl"
 local _2amodule_name_2a = "dotfiles.plugin.compe"
 local _2amodule_2a
 do

@@ -1,4 +1,4 @@
-local _2afile_2a = "plugin/colorizer.fnl"
+local _2afile_2a = "colorizer.fnl"
 local _2amodule_name_2a = "dotfiles.plugin.colorizer"
 local _2amodule_2a
 do

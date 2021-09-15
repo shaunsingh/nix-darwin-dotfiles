@@ -73,10 +73,6 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/shauryasingh/.local/share/nvim/site/pack/packer/start/aniseed"
   },
-  ["compe-conjure"] = {
-    loaded = true,
-    path = "/home/shauryasingh/.local/share/nvim/site/pack/packer/start/compe-conjure"
-  },
   conjure = {
     loaded = true,
     path = "/home/shauryasingh/.local/share/nvim/site/pack/packer/start/conjure"
@@ -89,25 +85,9 @@ _G.packer_plugins = {
     loaded = true,
     path = "/home/shauryasingh/.local/share/nvim/site/pack/packer/start/nord.nvim"
   },
-  ["nvim-colorizer.lua"] = {
-    loaded = true,
-    path = "/home/shauryasingh/.local/share/nvim/site/pack/packer/start/nvim-colorizer.lua"
-  },
-  ["nvim-compe"] = {
-    loaded = true,
-    path = "/home/shauryasingh/.local/share/nvim/site/pack/packer/start/nvim-compe"
-  },
   ["nvim-local-fennel"] = {
     loaded = true,
     path = "/home/shauryasingh/.local/share/nvim/site/pack/packer/start/nvim-local-fennel"
-  },
-  ["nvim-lspconfig"] = {
-    loaded = true,
-    path = "/home/shauryasingh/.local/share/nvim/site/pack/packer/start/nvim-lspconfig"
-  },
-  ["nvim-lspinstall"] = {
-    loaded = true,
-    path = "/home/shauryasingh/.local/share/nvim/site/pack/packer/start/nvim-lspinstall"
   },
   ["nvim-treesitter"] = {
     loaded = true,

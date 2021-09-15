@@ -1,4 +1,4 @@
-local _2afile_2a = "plugin/lspconfig.fnl"
+local _2afile_2a = ".config/nvim/fnl/dotfiles/plugin/lspconfig.fnl"
 local _2amodule_name_2a = "dotfiles.plugin.lspconfig"
 local _2amodule_2a
 do

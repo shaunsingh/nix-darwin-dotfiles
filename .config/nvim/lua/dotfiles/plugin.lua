@@ -45,4 +45,4 @@ local function use(...)
   return packer.startup(_2_)
 end
 _2amodule_locals_2a["use"] = use
-return use("wbthomason/packer.nvim", {}, "Olical/aniseed", {branch = "develop"}, "Olical/conjure", {branch = "develop", mod = "conjure"}, "Olical/nvim-local-fennel", {}, "hrsh7th/nvim-compe", {mod = "compe"}, "shaunsingh/nord.nvim", {mod = "nord"}, "neovim/nvim-lspconfig", {mod = "lspconfig"}, "norcalli/nvim-colorizer.lua", {mod = "colorizer"}, "nvim-telescope/telescope.nvim", {requires = {{"nvim-lua/popup.nvim"}, {"nvim-lua/plenary.nvim"}}, mod = "telescope"}, "nvim-treesitter/nvim-treesitter", {run = ":TSUpdate", mod = "treesitter"}, "tami5/compe-conjure", {}, "anott03/nvim-lspinstall", {}, "ggandor/lightspeed.nvim", {})
+return use("wbthomason/packer.nvim", {}, "Olical/aniseed", {branch = "develop"}, "Olical/conjure", {branch = "develop", mod = "conjure"}, "Olical/nvim-local-fennel", {}, "shaunsingh/nord.nvim", {mod = "nord"}, "nvim-telescope/telescope.nvim", {requires = {{"nvim-lua/popup.nvim"}, {"nvim-lua/plenary.nvim"}}, mod = "telescope"}, "nvim-treesitter/nvim-treesitter", {run = ":TSUpdate", mod = "treesitter"}, "ggandor/lightspeed.nvim", {})
