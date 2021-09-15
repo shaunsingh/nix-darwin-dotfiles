@@ -515,8 +515,8 @@ return require('packer').startup(function()
 
          local colors = {
            bg = "NONE",
-           black = "#2E3440",
-           black2 = "#3b4252",
+           black = "#3b4252",
+           black2 = "#2E3440",
            white = "#ECEFF4",
            fg = "#E5E9F0",
            yellow = "#EBCB8B",
@@ -548,7 +548,7 @@ return require('packer').startup(function()
                view = "multiwindow",
                show_buffer_close_icons = true,
                separator_style = "thin",
-               always_show_bufferline = true,
+               always_show_bufferline = false,
                diagnostics = false, -- "or nvim_lsp"
                custom_filter = function(buf_number)
                   -- Func to filter out our managed/persistent split terms
