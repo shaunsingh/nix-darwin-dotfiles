@@ -4,10 +4,8 @@ local g = vim.g
 --options
 opt.fillchars = { eob = " " }
 opt.termguicolors = true
-opt.whichwrap:append "<>hl"
 opt.undofile = true
 opt.swapfile = false
-opt.ruler = true
 opt.ignorecase = true
 opt.splitbelow = true
 opt.splitright = true
@@ -26,6 +24,7 @@ opt.expandtab = true
 opt.shiftwidth = 4
 opt.smartindent = true
 opt.shortmess:append("casI") --disable intro
+opt.whichwrap:append "<>hl"
 
 --mappings
 local function map(mode, lhs, rhs, opts)
@@ -1368,7 +1367,7 @@ return require('packer').startup(function()
             },
             integrations = {
          	vim_gitgutter = false,
-         	galaxyline = false,
+         	galaxyline = true,
          	tmux = false,
          	gitsigns = true,
          	nvim_bufferline = true,
@@ -1398,7 +1397,14 @@ return require('packer').startup(function()
            "TwilightEnable"
        },
        config = function()
-           require("twilight").setup {}
+           require("twilight").setup {
+               dimming = {
+                   alpha = 0.25, -- amount of dimming
+                   inactive = true, -- when true, other windows will be fully dimmed (unless they contain the same buffer)
+                 },
+                 context = 0, -- amount of lines we will try to show around the current line
+                 treesitter = true, -- use treesitter when available for the filetype
+              }
        end
    }
 
