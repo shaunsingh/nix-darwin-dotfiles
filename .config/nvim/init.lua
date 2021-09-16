@@ -95,11 +95,6 @@ return require('packer').startup(function()
    }
 
    use {
-       "tweekmonster/startuptime.vim",
-       cmd = "StartupTime"
-   }
-
-   use {
       "nvim-lua/plenary.nvim",
    }
 
@@ -113,6 +108,55 @@ return require('packer').startup(function()
           vim.g.nord_disable_background = false
           vim.cmd[[colorscheme nord]]
       end,
+   }
+
+   use {
+       'goolord/alpha-nvim',
+       requires = { 'kyazdani42/nvim-web-devicons' },
+       config = function ()
+         local alpha = require'alpha'
+         local dashboard = require'alpha.themes.dashboard'
+         dashboard.section.header.val = {
+             [[            :h-                                  Nhy`               ]],
+             [[           -mh.                           h.    `Ndho               ]],
+             [[           hmh+                          oNm.   oNdhh               ]],
+             [[          `Nmhd`                        /NNmd  /NNhhd               ]],
+             [[          -NNhhy                      `hMNmmm`+NNdhhh               ]],
+             [[          .NNmhhs              ```....`..-:/./mNdhhh+               ]],
+             [[           mNNdhhh-     `.-::///+++////++//:--.`-/sd`               ]],
+             [[           oNNNdhhdo..://++//++++++/+++//++///++/-.`                ]],
+             [[      y.   `mNNNmhhhdy+/++++//+/////++//+++///++////-` `/oos:       ]],
+             [[ .    Nmy:  :NNNNmhhhhdy+/++/+++///:.....--:////+++///:.`:s+        ]],
+             [[ h-   dNmNmy oNNNNNdhhhhy:/+/+++/-         ---:/+++//++//.`         ]],
+             [[ hd+` -NNNy`./dNNNNNhhhh+-://///    -+oo:`  ::-:+////++///:`        ]],
+             [[ /Nmhs+oss-:++/dNNNmhho:--::///    /mmmmmo  ../-///++///////.       ]],
+             [[  oNNdhhhhhhhs//osso/:---:::///    /yyyyso  ..o+-//////////:/.      ]],
+             [[   /mNNNmdhhhh/://+///::://////     -:::- ..+sy+:////////::/:/.     ]],
+             [[     /hNNNdhhs--:/+++////++/////.      ..-/yhhs-/////////::/::/`    ]],
+             [[       .ooo+/-::::/+///////++++//-/ossyyhhhhs/:///////:::/::::/:    ]],
+             [[       -///:::::::////++///+++/////:/+ooo+/::///////.::://::---+`   ]],
+             [[       /////+//++++/////+////-..//////////::-:::--`.:///:---:::/:   ]],
+             [[       //+++//++++++////+++///::--                 .::::-------::   ]],
+             [[       :/++++///////////++++//////.                -:/:----::../-   ]],
+             [[       -/++++//++///+//////////////               .::::---:::-.+`   ]],
+             [[       `////////////////////////////:.            --::-----...-/    ]],
+             [[        -///://////////////////////::::-..      :-:-:-..-::.`.+`    ]],
+             [[         :/://///:///::://::://::::::/:::::::-:---::-.-....``/- -   ]],
+             [[           ::::://::://::::::::::::::----------..-:....`.../- -+oo/ ]],
+             [[            -/:::-:::::---://:-::-::::----::---.-.......`-/.      ``]],
+             [[           s-`::--:::------:////----:---.-:::...-.....`./:          ]],
+             [[          yMNy.`::-.--::..-dmmhhhs-..-.-.......`.....-/:`           ]],
+             [[         oMNNNh. `-::--...:NNNdhhh/.--.`..``.......:/-              ]],
+             [[        :dy+:`      .-::-..NNNhhd+``..`...````.-::-`                ]],
+             [[                        .-:mNdhh:.......--::::-`                    ]],
+             [[                           yNh/..------..`                          ]],
+             [[                                                                    ]],
+         }
+         dashboard.section.buttons.val = {
+             dashboard.button( "v0.9", "  DOOM NEOVIM" , "Telescope oldfiles<CR>"),
+         }
+         alpha.setup(dashboard.opts)
+     end
    }
 
    use {
