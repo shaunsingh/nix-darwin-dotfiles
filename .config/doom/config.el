@@ -96,8 +96,8 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 ;;(setq doom-theme 'doom-one-light)
 (setq doom-one-light-padded-modeline t)
 
-(use-package! vlf-setup
-  :defer-incrementally vlf-tune vlf-base vlf-write vlf-search vlf-occur vlf-follow vlf-ediff vlf)
+;;(use-package! vlf-setup
+  ;;:defer-incrementally vlf-tune vlf-base vlf-write vlf-search vlf-occur vlf-follow vlf-ediff vlf)
 
 (after! company
    (setq company-idle-delay 0.1
@@ -1422,7 +1422,12 @@ MathJax = {
 (use-package! org-roam-ui
   :after org-roam
   :commands org-roam-ui-open
-  :hook (org-roam . org-roam-ui-mode))
+  :hook (org-roam . org-roam-ui-mode)
+  :config
+      (setq org-roam-ui-sync-theme t
+          org-roam-ui-follow t
+          org-roam-ui-update-on-save t
+          org-roam-ui-open-on-start t))
 
 (defadvice! doom-modeline--buffer-file-name-roam-aware-a (orig-fun)
   :around #'doom-modeline-buffer-file-name ; takes no args
@@ -1702,11 +1707,6 @@ set palette defined ( 0 '%s',\
   :config
   (setq pdf-view-resize-factor 1.1)
   (setq-default pdf-view-display-size 'fit-page))
-
-(defadvice! no-auto-mode-alist (orig-fn &rest args)
-  :around #'org-export-to-file
-  (let ((auto-mode-alist nil))
-    (apply orig-fn args)))
 
 (set-email-account! "shaunsingh0207"
   '((mu4e-sent-folder       . "/Sent Mail")
@@ -2715,9 +2715,6 @@ This is done according to `org-latex-feature-implementations'"
         (format "\\begin{Code}[alt]\n%s\n\\end{Code}" output-block)
       output-block)))
 
-(defface org-cite
-  '((t :foreground "#800080"))
-  "Face for org-cite.")
 (use-package! ox-chameleon
   :after ox)
 

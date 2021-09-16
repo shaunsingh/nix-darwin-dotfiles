@@ -198,8 +198,8 @@ Right now I'm using doom-vibrant, but I use doom-one-light sometimes
 ** Very large files
 Emacs gets super slow with large files, this helps with that
 #+begin_src elisp
-(use-package! vlf-setup
-  :defer-incrementally vlf-tune vlf-base vlf-write vlf-search vlf-occur vlf-follow vlf-ediff vlf)
+;;(use-package! vlf-setup
+  ;;:defer-incrementally vlf-tune vlf-base vlf-write vlf-search vlf-occur vlf-follow vlf-ediff vlf)
 #+end_src
 
 ** Company
@@ -2080,7 +2080,12 @@ Lets set up the org-roam-ui as well
 (use-package! org-roam-ui
   :after org-roam
   :commands org-roam-ui-open
-  :hook (org-roam . org-roam-ui-mode))
+  :hook (org-roam . org-roam-ui-mode)
+  :config
+      (setq org-roam-ui-sync-theme t
+          org-roam-ui-follow t
+          org-roam-ui-update-on-save t
+          org-roam-ui-open-on-start t))
 #+end_src
 
 The doom-modeline is a bit messy with roam, lets adjust that
@@ -2908,14 +2913,6 @@ bother with ascii stuff
 (setq org-latex-pdf-process '("tectonic -X compile --print --outdir=%o %f"))
 #+end_src
 
-With that, we can disable auctex
-#+begin_src elisp
-(defadvice! no-auto-mode-alist (orig-fn &rest args)
-  :around #'org-export-to-file
-  (let ((auto-mode-alist nil))
-    (apply orig-fn args)))
-#+end_src
-
 Now, previews won't work anymore. For that we need to set emacs to use Tectonic
 instead of Pdflatex
 #+begin_src emacs-lisp
@@ -3185,12 +3182,8 @@ Teco is the goto for this, so basically just ripping off him. Engrave faces ftw
 #+end_src
 
 *** ox-chameleon
-Nice little package to color stuff for us. Since org-cite isn't installed yet,
-we need to adjust an extra face too
+Nice little package to color stuff for us.
 #+begin_src emacs-lisp
-(defface org-cite
-  '((t :foreground "#800080"))
-  "Face for org-cite.")
 (use-package! ox-chameleon
   :after ox)
 #+end_src
