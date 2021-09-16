@@ -30,6 +30,7 @@ opt.shiftwidth = 4
 opt.smartindent = true
 opt.shortmess:append("casI") --disable intro
 opt.whichwrap:append "<>hl"
+opt.guifont = "Liga SFMono Nerd Font Light:h14"
 
 g.mapleader = " "                                                     --leader
 map('i', 'jk', '<esc>')                                               --jk to exit
