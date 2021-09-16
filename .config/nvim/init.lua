@@ -153,7 +153,7 @@ return require('packer').startup(function()
              [[                                                                    ]],
          }
          dashboard.section.buttons.val = {
-             dashboard.button( "v0.9", "  DOOM NEOVIM" , "Telescope oldfiles<CR>"),
+             dashboard.button( "v0.9", "" , ":qa<CR>"),
          }
          alpha.setup(dashboard.opts)
      end
@@ -717,7 +717,7 @@ return require('packer').startup(function()
                filetype_exclude = {
                   "help",
                   "terminal",
-                  "dashboard",
+                  "alpha",
                   "packer",
                   "lspinfo",
                   "TelescopePrompt",
