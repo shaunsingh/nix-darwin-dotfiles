@@ -1,7 +1,12 @@
 local opt = vim.opt
 local g = vim.g
+local fn = vim.fn
+local function map(mode, lhs, rhs, opts)
+  local options = {noremap = true}
+  if opts then options = vim.tbl_extend('force', options, opts) end
+  vim.api.nvim_set_keymap(mode, lhs, rhs, options)
+end
 
---options
 opt.fillchars = { eob = " " }
 opt.termguicolors = true
 opt.undofile = true
@@ -26,13 +31,6 @@ opt.smartindent = true
 opt.shortmess:append("casI") --disable intro
 opt.whichwrap:append "<>hl"
 
---mappings
-local function map(mode, lhs, rhs, opts)
-  local options = {noremap = true}
-  if opts then options = vim.tbl_extend('force', options, opts) end
-  vim.api.nvim_set_keymap(mode, lhs, rhs, options)
-end
-
 g.mapleader = " "                                                     --leader
 map('i', 'jk', '<esc>')                                               --jk to exit
 map('c', 'jk', '<C-C>')
@@ -55,7 +53,6 @@ map('n', '<c-j>', '<cmd>wincmd j<CR>')
 map('n', '<c-h>', '<cmd>wincmd h<CR>')
 map('n', '<c-l>', '<cmd>wincmd l<CR>')
 
---disable builtin plugins
 local disabled_built_ins = {
    "2html_plugin",
    "getscript",
@@ -81,7 +78,6 @@ for _, plugin in pairs(disabled_built_ins) do
    g["loaded_" .. plugin] = 1
 end
 
-local fn = vim.fn
 local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
 if fn.empty(fn.glob(install_path)) > 0 then
   fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
@@ -1041,13 +1037,38 @@ return require('packer').startup(function()
             },
             formatting = {
                format = function(entry, vim_item)
-                  vim_item.menu = ({
-                     nvim_lsp = "[LSP]",
-                     nvim_lua = "[Lua]",
-                     buffer = "[BUF]",
-                  })[entry.source.name]
-
-                  return vim_item
+               vim_item.menu = ({
+                     nvim_lsp = '[LSPλ]',
+                     buffer   = '[BUF]',
+                   })[entry.source.name]
+                   vim_item.kind = ({
+                     Text = "",
+                     Method = "",
+                     Function = "",
+                     Constructor = "",
+                     Field = "ﰠ",
+                     Variable = "",
+                     Class = "ﴯ",
+                     Interface = "",
+                     Module = "",
+                     Property = "ﰠ",
+                     Unit = "塞",
+                     Value = "",
+                     Enum = "",
+                     Keyword = "",
+                     Snippet = "",
+                     Color = "",
+                     File = "",
+                     Reference = "",
+                     Folder = "",
+                     EnumMember = "",
+                     Constant = "",
+                     Struct = "פּ",
+                     Event = "",
+                     Operator = "",
+                     TypeParameter = "",
+                   })[vim_item.kind]
+                 return vim_item
                end,
             },
             mapping = {
