@@ -1,3 +1,5 @@
+require('impatient').enable_profile()
+
 local opt = vim.opt
 local g = vim.g
 local fn = vim.fn
@@ -93,6 +95,10 @@ return require('packer').startup(function()
 
    use {
       "nvim-lua/plenary.nvim",
+   }
+
+   use {
+       'lewis6991/impatient.nvim' 
    }
 
    use {
