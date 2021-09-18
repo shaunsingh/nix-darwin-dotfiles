@@ -6,7 +6,6 @@
 #+html_head: <link rel='shortcut icon' type='image/png' href='https://www.gnu.org/software/emacs/favicon.png'>
 #+property: header-args:emacs-lisp :tangle yes :comments link
 #+property: header-args:elisp :exports code
-#+property: header-args:shell :tangle "setup.sh"
 #+property: header-args :tangle no :results silent :eval no-export
 #+latex_class: chameleon
 #+startup: fold
@@ -2314,7 +2313,7 @@ Install org-roam-ui and its dependencies
 #+end_src
 
 I would like to get into the habit of using org-roam for my notes, mainly because of that cool reddit post with the server.
-,#+begin_src elisp
+#+begin_src elisp
 (setq org-roam-directory "~/org/roam/")
 #+end_src
 
@@ -2362,7 +2361,7 @@ Set the directory
 #+end_src
 
 Org-super-agenda!
-#+begin_src elisp :tangle packages.#+begin_src emacs-lisp :tangle yes
+#+begin_src elisp :tangle packages.el
 (package! org-super-agenda)
 #+end_src
 
