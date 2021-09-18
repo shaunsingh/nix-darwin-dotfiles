@@ -8,6 +8,15 @@ Managed via [YADM](https://github.com/TheLocehiliosan/yadm) and nix
 
 ## Install
 
+### Emacs
+
+After you get everything up and running, be aware you need to tangle the file before installing doom emacs: 
+```sh
+emacs --batch --eval "(progn (require 'org) (setq org-confirm-babel-evaluate nil) (org-babel-tangle-file \"~/.config/doom/config.org\"))"
+git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
+~/.emacs.d/bin/doom install
+```
+
 ### MacOS
 
 Install homebrew
