@@ -245,7 +245,7 @@ Make this file run (slightly) faster with lexical binding
 #+end_src
 
 On the other hand, don't byte compile the =packages.el= file
-#+begin_src elisp
+#+begin_src elisp :tangle packages.el
 ;; -*- no-byte-compile: t; -*-
 #+end_src
 
