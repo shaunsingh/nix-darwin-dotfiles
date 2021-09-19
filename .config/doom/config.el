@@ -1406,7 +1406,7 @@ MathJax = {
   :hook (org-roam . org-roam-ui-mode)
   :config
       (setq org-roam-ui-sync-theme t
-            org-roam-ui-browser-function #`xwidget-webkit-browse-url)
+            org-roam-ui-browser-function #`xwidget-webkit-browse-url
             org-roam-ui-follow t
             org-roam-ui-update-on-save t
             org-roam-ui-open-on-start t))
