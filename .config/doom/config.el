@@ -1734,7 +1734,8 @@ set palette defined ( 0 '%s',\
    (evil-collection-xwidget-setup))
 
 (when 'native-comp-compiler-options
-                 (setq native-comp-compiler-options '("-O3" "-march=native" "-mtune=native")))
+                 (setq native-comp-compiler-options '("-O3" "-march=native" "-mtune=native")
+                       native-comp-speed 3))
 
 ;; No missing fonts detected
 
