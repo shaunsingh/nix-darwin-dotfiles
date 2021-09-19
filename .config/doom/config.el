@@ -170,6 +170,7 @@ Made for `org-tab-first-hook'."
       display-line-numbers-type nil                ;I dislike line numbers
       history-length 25                            ;Slight speedup
       delete-by-moving-to-trash t                  ;delete to system trash instead
+      browse-url-browser-function 'xwidget-webkit-browse-url
       truncate-string-ellipsis "…")                ;default ellipses suck
 
 (fringe-mode 0) ;;disable fringe
@@ -1406,7 +1407,6 @@ MathJax = {
   :hook (org-roam . org-roam-ui-mode)
   :config
       (setq org-roam-ui-sync-theme t
-            org-roam-ui-browser-function #`xwidget-webkit-browse-url
             org-roam-ui-follow t
             org-roam-ui-update-on-save t
             org-roam-ui-open-on-start t))
