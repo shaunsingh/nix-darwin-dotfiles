@@ -310,7 +310,6 @@ return require('packer').startup(function()
       "NTBBloodbath/galaxyline.nvim",
       after = "nvim-web-devicons",
       config = function()
-
 local gl = require('galaxyline')
 local condition = require("galaxyline.condition")
 
@@ -319,9 +318,10 @@ gl.short_line_list = {'NvimTree', 'Packer', 'Telescope'}
 
 -- Colors
 local colors = {
-  bg = "#3B4252",
+  bg = "#2E3440",
   fg = "#E5E9F0",
-  section_bg = '#4C566A',
+  section_bg = '#3B4252',
+  section_bg2 = '#434C5E',
   yellow = "#EBCB8B",
   cyan = "#8FBCBB",
   darkblue = "#81A1C1",
@@ -356,13 +356,13 @@ gls.left[1] = {
   ViMode = {
     provider = function()
       local alias = {
-        n = '🅝 ',
-        i = '🅘 ',
-        c = '🅒 ',
-        V = '🅥 ',
-        [''] = '🅥 ',
-        v = '🅥 ',
-        R = '🅡 '
+        n = 'DOOM [N]',
+        i = 'DOOM [I]',
+        c = 'DOOM [C]',
+        V = 'DOOM [V]',
+        [''] = 'DOOM [V]',
+        v = 'DOOM [V]',
+        R = 'DOOM [R]'
       }
       vim.api.nvim_command('hi GalaxyViMode guibg=' .. mode_color())
       local alias_mode = alias[vim.fn.mode()]
@@ -490,25 +490,25 @@ gls.left[15] = {
 gls.right[1] = {
   FileFormat = {
     provider = function() return vim.bo.filetype end,
-    highlight = {colors.fg, colors.section_bg},
+    highlight = {colors.fg, colors.bg},
     separator = ' ',
-    separator_highlight = {colors.section_bg, colors.bg}
+    separator_highlight = {colors.bg, colors.bg}
   }
 }
 gls.right[2] = {
   LineInfo = {
     provider = 'LineColumn',
     highlight = { colors.fg, colors.section_bg },
-    separator = ' | ',
-    separator_highlight = { colors.bg, colors.section_bg },
+    separator = ' ',
+    separator_highlight = { colors.section_bg, colors.bg },
   },
 }
 gls.right[3] = {
   Logo = {
     provider = function() return ' ' end,
-    highlight = { colors.red, colors.section_bg },
-    separator = ' | ',
-    separator_highlight = { colors.bg, colors.section_bg },
+    highlight = { colors.red, colors.section_bg2 },
+    separator = ' ',
+    separator_highlight = { colors.section_bg2, colors.section_bg },
   }
 }
 
