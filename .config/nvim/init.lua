@@ -88,7 +88,7 @@ if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
 end
 
 local use = require("packer").use
-return require('packer').startup(function()
+return require('packer').startup({function()
 
    use {
       "wbthomason/packer.nvim",
@@ -208,22 +208,22 @@ return require('packer').startup(function()
                 },
                 html = {
                    icon = "",
-                   color = colors.baby_pink,
+                   color = colors.green,
                    name = "html",
                 },
                 jpeg = {
                    icon = "",
-                   color = colors.dark_purple,
+                   color = colors.purple,
                    name = "jpeg",
                 },
                 jpg = {
                    icon = "",
-                   color = colors.dark_purple,
+                   color = colors.purple,
                    name = "jpg",
                 },
                 js = {
                    icon = "",
-                   color = colors.sun,
+                   color = colors.yellow,
                    name = "js",
                 },
                 kt = {
@@ -258,7 +258,7 @@ return require('packer').startup(function()
                 },
                 png = {
                    icon = "",
-                   color = colors.dark_purple,
+                   color = colors.purple,
                    name = "png",
                 },
                 py = {
@@ -273,32 +273,32 @@ return require('packer').startup(function()
                 },
                 ts = {
                    icon = "ﯤ",
-                   color = colors.teal,
+                   color = colors.darkblue,
                    name = "ts",
                 },
                 rb = {
                    icon = "",
-                   color = colors.pink,
+                   color = colors.magenta,
                    name = "rb",
                 },
                 rpm = {
                    icon = "",
-                   color = colors.orange,
+                   color = colors.magenta,
                    name = "rpm",
                 },
                 vue = {
                    icon = "﵂",
-                   color = colors.vibrant_green,
+                   color = colors.green,
                    name = "vue",
                 },
                 xz = {
                    icon = "",
-                   color = colors.sun,
+                   color = colors.yellow,
                    name = "xz",
                 },
                 zip = {
                    icon = "",
-                   color = colors.sun,
+                   color = colors.yellow,
                    name = "zip",
                 },
              },
@@ -314,7 +314,7 @@ return require('packer').startup(function()
 	local condition = require("galaxyline.condition")
 	
 	local gls = gl.section
-	gl.short_line_list = {'NvimTree', 'packer' }
+	gl.short_line_list = { 'NvimTree', 'packer' }
 	
 	-- Colors
 	local colors = {
@@ -737,9 +737,7 @@ return require('packer').startup(function()
                hsl_fn = false, -- CSS hsl() and hsla() functions
                css = false, -- Enable all CSS features: rgb_fn, hsl_fn, names, RGB, RRGGBB
                css_fn = false, -- Enable all CSS *functions*: rgb_fn, hsl_fn
-
-               -- Available modes: foreground, background
-               mode = "background", -- Set the display mode.
+               mode = "foreground", -- Set the display mode.
             })
             vim.cmd "ColorizerReloadAllBuffers"
          end
@@ -771,8 +769,6 @@ return require('packer').startup(function()
                 enable = true,
                 extended_mode = true, -- Also highlight non-bracket delimiters like html tags, boolean or table: lang -> boolean
                 max_file_lines = nil, -- Do not enable for files with more than n lines, int
-                -- colors = {}, -- table of hex strings
-                -- termcolors = {} -- table of colour name strings
               }
             }
         end,
@@ -781,40 +777,49 @@ return require('packer').startup(function()
    use {
       "lewis6991/gitsigns.nvim",
       config = function()
-         local present, gitsigns = pcall(require, "gitsigns")
-         if not present then
-            return
-         end
-
-         gitsigns.setup {
-            keymaps = {
-               -- Default keymap options
-               buffer = true,
-               noremap = true,
-               ["n ]c"] = { expr = true, "&diff ? ']c' : '<cmd>lua require\"gitsigns\".next_hunk()<CR>'" },
-               ["n [c"] = { expr = true, "&diff ? '[c' : '<cmd>lua require\"gitsigns\".prev_hunk()<CR>'" },
-               ["n <leader>hs"] = '<cmd>lua require"gitsigns".stage_hunk()<CR>',
-               ["n <leader>hu"] = '<cmd>lua require"gitsigns".undo_stage_hunk()<CR>',
-               ["n <leader>hr"] = '<cmd>lua require"gitsigns".reset_hunk()<CR>',
-               ["n <leader>hp"] = '<cmd>lua require"gitsigns".preview_hunk()<CR>',
-               ["n <leader>hb"] = '<cmd>lua require"gitsigns".blame_line()<CR>',
-            },
-            numhl = false,
-
-            sign_priority = 5,
-            signs = {
-               add = { hl = "DiffAdd", text = "│", numhl = "GitSignsAddNr" },
-               change = { hl = "DiffChange", text = "│", numhl = "GitSignsChangeNr" },
-               changedelete = { hl = "DiffChange", text = "~", numhl = "GitSignsChangeNr" },
-               delete = { hl = "DiffDelete", text = "_", numhl = "GitSignsDeleteNr" },
-               topdelete = { hl = "DiffDelete", text = "‾", numhl = "GitSignsDeleteNr" },
-            },
-
-            status_formatter = nil, -- Use default
-            watch_index = {
-               interval = 100,
-            },
-         }
+        require('gitsigns').setup {
+	  signs = {
+	    add          = {hl = 'GitSignsAdd'   , text = '│', numhl='GitSignsAddNr'   , linehl='GitSignsAddLn'},
+	    change       = {hl = 'GitSignsChange', text = '│', numhl='GitSignsChangeNr', linehl='GitSignsChangeLn'},
+	    delete       = {hl = 'GitSignsDelete', text = '_', numhl='GitSignsDeleteNr', linehl='GitSignsDeleteLn'},
+	    topdelete    = {hl = 'GitSignsDelete', text = '‾', numhl='GitSignsDeleteNr', linehl='GitSignsDeleteLn'},
+	    changedelete = {hl = 'GitSignsChange', text = '~', numhl='GitSignsChangeNr', linehl='GitSignsChangeLn'},
+	  },
+	  signcolumn = true,  -- Toggle with `:Gitsigns toggle_signs`
+	  numhl      = false, -- Toggle with `:Gitsigns toggle_numhl`
+	  linehl     = false, -- Toggle with `:Gitsigns toggle_linehl`
+	  word_diff  = false, -- Toggle with `:Gitsigns toggle_word_diff`
+	  keymaps = {
+	    -- Default keymap options
+	    noremap = true,
+	
+	    ['n ]c'] = { expr = true, "&diff ? ']c' : '<cmd>lua require\"gitsigns.actions\".next_hunk()<CR>'"},
+	    ['n [c'] = { expr = true, "&diff ? '[c' : '<cmd>lua require\"gitsigns.actions\".prev_hunk()<CR>'"},
+	
+	    ['n <leader>hs'] = '<cmd>lua require"gitsigns".stage_hunk()<CR>',
+	    ['v <leader>hs'] = '<cmd>lua require"gitsigns".stage_hunk({vim.fn.line("."), vim.fn.line("v")})<CR>',
+	    ['n <leader>hu'] = '<cmd>lua require"gitsigns".undo_stage_hunk()<CR>',
+	    ['n <leader>hr'] = '<cmd>lua require"gitsigns".reset_hunk()<CR>',
+	    ['v <leader>hr'] = '<cmd>lua require"gitsigns".reset_hunk({vim.fn.line("."), vim.fn.line("v")})<CR>',
+	    ['n <leader>hR'] = '<cmd>lua require"gitsigns".reset_buffer()<CR>',
+	    ['n <leader>hp'] = '<cmd>lua require"gitsigns".preview_hunk()<CR>',
+	    ['n <leader>hb'] = '<cmd>lua require"gitsigns".blame_line(true)<CR>',
+	    ['n <leader>hS'] = '<cmd>lua require"gitsigns".stage_buffer()<CR>',
+	    ['n <leader>hU'] = '<cmd>lua require"gitsigns".reset_buffer_index()<CR>',
+	
+	    -- Text objects
+	    ['o ih'] = ':<C-U>lua require"gitsigns.actions".select_hunk()<CR>',
+	    ['x ih'] = ':<C-U>lua require"gitsigns.actions".select_hunk()<CR>'
+	  },
+	  watch_index = {
+	    interval = 1000,
+	    follow_files = true
+	  },
+	  update_debounce = 200,
+	  yadm = {
+	    enable = true
+	  },
+	} 
       end,
    }
 
@@ -1522,4 +1527,9 @@ return require('packer').startup(function()
            })
      end
    }
-end)
+end,
+config = {
+  display = {
+    open_fn = require('packer.util').float,
+  }
+}})
