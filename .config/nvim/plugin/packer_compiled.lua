@@ -164,7 +164,7 @@ _G.packer_plugins = {
     path = "/home/shaunsingh0207/.local/share/nvim/site/pack/packer/opt/hop"
   },
   ["indent-blankline.nvim"] = {
-    config = { "\27LJ\1\2¢\2\0\0\3\0\b\0\v4\0\0\0%\1\1\0>\0\2\0027\0\2\0003\1\3\0003\2\4\0:\2\5\0013\2\6\0:\2\a\1>\0\2\1G\0\1\0\20buftype_exclude\1\2\0\0\rterminal\21filetype_exclude\1\b\0\0\thelp\rterminal\nalpha\vpacker\flspinfo\20TelescopePrompt\21TelescopeResults\1\0\4\28show_first_indent_level\1\tchar\bâ–\23indentLine_enabled\3\1#show_trailing_blankline_indent\1\nsetup\21indent_blankline\frequire\0" },
+    config = { "\27LJ\1\2Œ\4\0\0\3\0\n\0\r4\0\0\0%\1\1\0>\0\2\0027\0\2\0003\1\3\0003\2\4\0:\2\5\0013\2\6\0:\2\a\0013\2\b\0:\2\t\1>\0\2\1G\0\1\0\20buftype_exclude\1\2\0\0\rterminal\21filetype_exclude\1\b\0\0\thelp\rterminal\14dashboard\vpacker\flspinfo\20TelescopePrompt\21TelescopeResults\21context_patterns\1\21\0\0\nclass\vreturn\rfunction\vmethod\b^if\v^while\16jsx_element\t^for\f^object\v^table\nblock\14arguments\17if_statement\16else_clause\16jsx_element\29jsx_self_closing_element\18try_statement\17catch_clause\21import_statement\19operation_type\1\0\3\25show_current_context\2\28show_first_indent_level\1#show_trailing_blankline_indent\1\nsetup\21indent_blankline\frequire\0" },
     loaded = false,
     needs_bufread = false,
     path = "/home/shaunsingh0207/.local/share/nvim/site/pack/packer/opt/indent-blankline.nvim"
@@ -228,7 +228,7 @@ _G.packer_plugins = {
   },
   ["nvim-treesitter"] = {
     after = { "nvim-ts-rainbow" },
-    config = { "\27LJ\1\2¦\1\0\0\5\0\a\0\r4\0\0\0004\1\1\0%\2\2\0>\0\3\3\14\0\0\0T\2\1€G\0\1\0007\2\3\0013\3\4\0003\4\5\0:\4\6\3>\2\2\1G\0\1\0\14highlight\1\0\2\21use_languagetree\2\venable\2\1\0\1\21ensure_installed\blua\nsetup\28nvim-treesitter.configs\frequire\npcall\0" },
+    config = { "\27LJ\1\2Ç\1\0\0\3\0\n\0\r4\0\0\0%\1\1\0>\0\2\0027\0\2\0003\1\3\0003\2\4\0:\2\5\0013\2\6\0:\2\a\0013\2\b\0:\2\t\1>\0\2\1G\0\1\0\14autopairs\1\0\1\venable\2\14highlight\1\0\2\21use_languagetree\2\venable\2\vindent\1\0\1\venable\2\1\0\1\21ensure_installed\blua\nsetup\28nvim-treesitter.configs\frequire\0" },
     loaded = false,
     needs_bufread = true,
     path = "/home/shaunsingh0207/.local/share/nvim/site/pack/packer/opt/nvim-treesitter"

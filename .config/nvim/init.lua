@@ -1,38 +1,38 @@
-local opt = vim.opt
-local g = vim.g
-local fn = vim.fn
 local function map(mode, lhs, rhs, opts)
   local options = {noremap = true}
   if opts then options = vim.tbl_extend('force', options, opts) end
   vim.api.nvim_set_keymap(mode, lhs, rhs, options)
 end
 
-opt.fillchars = { eob = " " }
-opt.termguicolors = true
-opt.undofile = true
-opt.swapfile = false
-opt.ignorecase = true
-opt.splitbelow = true
-opt.splitright = true
-opt.cursorline = true
-opt.mouse = "a"
-opt.signcolumn = "yes"
-opt.updatetime = 500
-opt.timeoutlen = 500
-opt.clipboard = "unnamedplus"
-opt.scrolloff = 3
-opt.lazyredraw = true
-opt.linebreak = true
-opt.number = false
-opt.numberwidth = 2
-opt.expandtab = true
-opt.shiftwidth = 4
-opt.smartindent = true
-opt.shortmess:append("casI") --disable intro
-opt.whichwrap:append "<>hl"
-opt.guifont = "Liga SFMono Nerd Font:h11"
+vim.g.neovide_fullscreen = true
+vim.g.neovide_cursor_vfx_mode = "ripple"
 
-g.mapleader = " "                                                     --leader
+vim.opt.fillchars = { eob = " " }
+vim.opt.termguicolors = true
+vim.opt.undofile = true
+vim.opt.swapfile = false
+vim.opt.ignorecase = true
+vim.opt.splitbelow = true
+vim.opt.splitright = true
+vim.opt.cursorline = true
+vim.opt.mouse = "a"
+vim.opt.signcolumn = "yes"
+vim.opt.updatetime = 500
+vim.opt.timeoutlen = 500
+vim.opt.clipboard = "unnamedplus"
+vim.opt.scrolloff = 3
+vim.opt.lazyredraw = true
+vim.opt.linebreak = true
+vim.opt.number = false
+vim.opt.numberwidth = 2
+vim.opt.expandtab = true
+vim.opt.shiftwidth = 4
+vim.opt.smartindent = true
+vim.opt.shortmess:append("casI") --disable intro
+vim.opt.whichwrap:append "<>hl"
+vim.opt.guifont = "Liga SFMono Nerd Font:h11"
+
+vim.g.mapleader = " "                                                     --leader
 map('i', 'jk', '<esc>')                                               --jk to exit
 map('c', 'jk', '<C-C>')
 map('n', ';', ':')                                                     --semicolon to enter command mode
@@ -53,6 +53,8 @@ map('n', '<c-k>', '<cmd>wincmd k<CR>')                                 --ctrlhjk
 map('n', '<c-j>', '<cmd>wincmd j<CR>')
 map('n', '<c-h>', '<cmd>wincmd h<CR>')
 map('n', '<c-l>', '<cmd>wincmd l<CR>')
+
+vim.cmd[[autocmd VimEnter,VimLeave * silent !tmux set status off]]
 
 local disabled_built_ins = {
    "2html_plugin",
@@ -75,19 +77,17 @@ local disabled_built_ins = {
    "zipPlugin",
 }
 
---disable tmux when neovim is running
-vim.cmd[[autocmd VimEnter,VimLeave * silent !tmux set status off]]
-
 for _, plugin in pairs(disabled_built_ins) do
-   g["loaded_" .. plugin] = 1
+   vim.g["loaded_" .. plugin] = 1
 end
 
-local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
-if fn.empty(fn.glob(install_path)) > 0 then
-  fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
+local install_path = vim.fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
+if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
+  vim.fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
   vim.cmd 'packadd packer.nvim'
 end
 
+local use = require("packer").use
 return require('packer').startup(function()
 
    use {
@@ -700,23 +700,26 @@ return require('packer').startup(function()
       "lukas-reineke/indent-blankline.nvim",
       event = "BufRead",
       config = function()
-         require("indent_blankline").setup {
-               indentLine_enabled = 1,
-               char = "▏",
-               filetype_exclude = {
-                  "help",
-                  "terminal",
-                  "alpha",
-                  "packer",
-                  "lspinfo",
-                  "TelescopePrompt",
-                  "TelescopeResults",
-               },
-               buftype_exclude = { "terminal" },
-               show_trailing_blankline_indent = false,
-               show_first_indent_level = false,
-            }
-      end,
+	require("indent_blankline").setup {
+	    show_current_context = true,
+	    context_patterns = {
+	        "class", "return", "function", "method", "^if", "^while", "jsx_element", "^for", "^object", "^table", "block", "arguments", "if_statement",
+	        "else_clause", "jsx_element", "jsx_self_closing_element", "try_statement", "catch_clause", "import_statement", "operation_type"
+	    },
+            filetype_exclude = {
+                "help",
+                "terminal",
+                "dashboard",
+                "packer",
+                "lspinfo",
+                "TelescopePrompt",
+                "TelescopeResults",
+            },
+            buftype_exclude = { "terminal" },
+            show_trailing_blankline_indent = false,
+            show_first_indent_level = false,
+	}
+    end,
    }
 
    use {
@@ -747,18 +750,15 @@ return require('packer').startup(function()
       "nvim-treesitter/nvim-treesitter",
       event = "BufRead",
       config = function()
-        local present, ts_config = pcall(require, "nvim-treesitter.configs")
-        if not present then
-           return
-        end
-
-        ts_config.setup {
-          ensure_installed = "lua", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
-          highlight = {
-            enable = true,              -- false will disable the whole extension
-            use_languagetree = true,
-          },
-        }
+	require'nvim-treesitter.configs'.setup {
+	    ensure_installed = "lua", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+	    indent = {enable = true},
+	    highlight = {
+	       enable = true,              -- false will disable the whole extension
+	       use_languagetree = true,
+	    },
+	    autopairs = {enable = true}
+	}
       end,
    }
 
