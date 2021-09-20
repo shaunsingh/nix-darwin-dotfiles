@@ -11,7 +11,7 @@ local no_errors, error_msg = pcall(function()
 
   local time
   local profile_info
-  local should_profile = false
+  local should_profile = true
   if should_profile then
     local hrtime = vim.loop.hrtime
     profile_info = {}
@@ -364,7 +364,7 @@ time([[Sourcing ftdetect script at: /home/shaunsingh0207/.local/share/nvim/site/
 vim.cmd [[source /home/shaunsingh0207/.local/share/nvim/site/pack/packer/opt/orgmode.nvim/ftdetect/org_archive.vim]]
 time([[Sourcing ftdetect script at: /home/shaunsingh0207/.local/share/nvim/site/pack/packer/opt/orgmode.nvim/ftdetect/org_archive.vim]], false)
 vim.cmd("augroup END")
-if should_profile then save_profiles() end
+if should_profile then save_profiles(1) end
 
 end)
 

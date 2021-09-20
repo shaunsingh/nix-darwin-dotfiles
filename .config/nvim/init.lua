@@ -1529,7 +1529,20 @@ return require('packer').startup({function()
    }
 end,
 config = {
+  profile = {
+    enable = true,
+    threshold = 1 -- the amount in ms that a plugins load time must be over for it to be included in the profile
+  },
   display = {
-    open_fn = require('packer.util').float,
-  }
+     open_fn = function()
+        return require("packer.util").float { border = "single" }
+     end,
+     prompt_border = "single",
+  },
+  git = {
+     clone_timeout = 600, -- Timeout, in seconds, for git clones
+  },
+  auto_clean = true,
+  compile_on_sync = true,
+  auto_reload_compiled = true
 }})
