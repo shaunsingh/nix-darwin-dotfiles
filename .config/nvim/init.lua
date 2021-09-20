@@ -373,7 +373,7 @@ return require('packer').startup(function()
 	    end,
 	    highlight = {colors.bg, colors.bg},
 	    separator = " ",
-	    separator_highlight = {colors.section_bg, colors.section_bg}
+	    separator_highlight = {colors.section_bg2, colors.section_bg2}
 	  }
 	}
 	gls.left[2] = {
