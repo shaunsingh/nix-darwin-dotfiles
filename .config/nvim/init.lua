@@ -30,7 +30,7 @@ opt.shiftwidth = 4
 opt.smartindent = true
 opt.shortmess:append("casI") --disable intro
 opt.whichwrap:append "<>hl"
-opt.guifont = "Liga SFMono Nerd Font Light:h14"
+opt.guifont = "Liga SFMono Nerd Font:h11"
 
 g.mapleader = " "                                                     --leader
 map('i', 'jk', '<esc>')                                               --jk to exit
@@ -506,7 +506,7 @@ return require('packer').startup(function()
 	}
 	gls.right[3] = {
 	  Logo = {
-	    provider = function() return ' ' end,
+	    provider = function() return '  ' end,
 	    highlight = { colors.red, colors.section_bg2 },
 	    separator = '  ',
 	    separator_highlight = { colors.section_bg2, colors.section_bg },
