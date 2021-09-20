@@ -10,7 +10,7 @@
 
 (setq explicit-shell-file-name (executable-find "fish"))
 
-(add-to-list '+ligatures-in-modes 'vterm-mode) ;;use ligatures
+(setq +ligatures-in-modes t)
 
 ;;fonts
 (setq doom-font (font-spec :family "Liga SFMono Nerd Font" :size 14)

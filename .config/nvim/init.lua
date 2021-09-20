@@ -102,7 +102,7 @@ return require('packer').startup(function()
       "shaunsingh/nord.nvim",
       after = "packer.nvim",
       config = function()
-          vim.g.nord_borders = true
+          vim.g.nord_borders = false
           vim.g.nord_contrast = false
           vim.g.nord_cursorline_transparent = true
           vim.g.nord_disable_background = false
@@ -318,7 +318,6 @@ return require('packer').startup(function()
 	
 	-- Colors
 	local colors = {
-	  --bg = "#2E3440",
 	  bg = "#3B4252",
 	  fg = "#E5E9F0",
           filebg = "#3B4252",

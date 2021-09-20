@@ -104,9 +104,9 @@ Useful functions for the shell-side integration provided by vterm.
 #+end_src
 
 **** Ligatures
-Use ligatures from within vterm
+Use ligatures from within vterm (and eshell), we do this by redefining the variable where /not/ to show ligatures
 #+begin_src elisp
-(add-to-list '+ligatures-in-modes 'vterm-mode) ;;use ligatures
+(setq +ligatures-in-modes t)
 #+end_src
 
 ** Fonts

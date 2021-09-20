@@ -178,7 +178,7 @@ _G.packer_plugins = {
   },
   ["nord.nvim"] = {
     after = { "nvim-web-devicons" },
-    config = { "\27LJ\1\2Å\1\0\0\2\0\b\0\0214\0\0\0007\0\1\0)\1\2\0:\1\2\0004\0\0\0007\0\1\0)\1\1\0:\1\3\0004\0\0\0007\0\1\0)\1\2\0:\1\4\0004\0\0\0007\0\1\0)\1\1\0:\1\5\0004\0\0\0007\0\6\0%\1\a\0>\0\2\1G\0\1\0\21colorscheme nord\bcmd\28nord_disable_background nord_cursorline_transparent\18nord_contrast\17nord_borders\6g\bvim\0" },
+    config = { "\27LJ\1\2Å\1\0\0\2\0\b\0\0214\0\0\0007\0\1\0)\1\1\0:\1\2\0004\0\0\0007\0\1\0)\1\1\0:\1\3\0004\0\0\0007\0\1\0)\1\2\0:\1\4\0004\0\0\0007\0\1\0)\1\1\0:\1\5\0004\0\0\0007\0\6\0%\1\a\0>\0\2\1G\0\1\0\21colorscheme nord\bcmd\28nord_disable_background nord_cursorline_transparent\18nord_contrast\17nord_borders\6g\bvim\0" },
     loaded = true,
     needs_bufread = false,
     path = "/home/shaunsingh0207/.local/share/nvim/site/pack/packer/opt/nord.nvim"
@@ -308,7 +308,7 @@ try_loadstring("\27LJ\1\2—\2\0\0\5\0\a\0\f4\0\0\0004\1\1\0%\2\2\0>\0\3\3\15\0\0\
 vim.cmd [[ packadd nord.nvim ]]
 
 -- Config for: nord.nvim
-try_loadstring("\27LJ\1\2Å\1\0\0\2\0\b\0\0214\0\0\0007\0\1\0)\1\2\0:\1\2\0004\0\0\0007\0\1\0)\1\1\0:\1\3\0004\0\0\0007\0\1\0)\1\2\0:\1\4\0004\0\0\0007\0\1\0)\1\1\0:\1\5\0004\0\0\0007\0\6\0%\1\a\0>\0\2\1G\0\1\0\21colorscheme nord\bcmd\28nord_disable_background nord_cursorline_transparent\18nord_contrast\17nord_borders\6g\bvim\0", "config", "nord.nvim")
+try_loadstring("\27LJ\1\2Å\1\0\0\2\0\b\0\0214\0\0\0007\0\1\0)\1\1\0:\1\2\0004\0\0\0007\0\1\0)\1\1\0:\1\3\0004\0\0\0007\0\1\0)\1\2\0:\1\4\0004\0\0\0007\0\1\0)\1\1\0:\1\5\0004\0\0\0007\0\6\0%\1\a\0>\0\2\1G\0\1\0\21colorscheme nord\bcmd\28nord_disable_background nord_cursorline_transparent\18nord_contrast\17nord_borders\6g\bvim\0", "config", "nord.nvim")
 
 vim.cmd [[ packadd nvim-web-devicons ]]
 
