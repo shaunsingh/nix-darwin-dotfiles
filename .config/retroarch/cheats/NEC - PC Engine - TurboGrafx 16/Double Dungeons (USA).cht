@@ -1,0 +1,21 @@
+cheats = 5
+
+cheat0_desc = "Free Inn Visits"
+cheat0_code = "1f0364:00"
+cheat0_enable = false
+
+cheat1_desc = "Max Level Up"
+cheat1_code = "1f0315:ff+1f0316:ff"
+cheat1_enable = false
+
+cheat2_desc = "Infinite Gold"
+cheat2_code = "1f0313:ff+1f0314:ff"
+cheat2_enable = false
+
+cheat3_desc = "Stat Current HP"
+cheat3_code = "1f0309:00+1f030a:04"
+cheat3_enable = false
+
+cheat4_desc = "Stat Max HP"
+cheat4_code = "1f030b:00+1f030c:04"
+cheat4_enable = false

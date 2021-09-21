@@ -1,0 +1,10 @@
+cheats = 2
+
+cheat0_desc = "Enable Code (Must Be On)"
+cheat0_code = "0000C90A+000A+100034EC+0007"
+cheat0_enable = false
+
+cheat1_desc = "Unlock Specials"
+cheat1_code = "33001310+00FF"
+cheat1_enable = false
+

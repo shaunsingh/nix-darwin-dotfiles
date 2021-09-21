@@ -1,0 +1,13 @@
+cheats = 3
+
+cheat0_desc = "Infinite Gold"
+cheat0_code = "1f0485:15+1f0486:15+1f0487:15"
+cheat0_enable = false
+
+cheat1_desc = "Infinite HP"
+cheat1_code = "1f0319:25+1f06e4:25+1f0742:25"
+cheat1_enable = false
+
+cheat2_desc = "Infinite MP"
+cheat2_code = "1f031b:25+1f06e6:25+1f0744:25"
+cheat2_enable = false

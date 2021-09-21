@@ -1,0 +1,5 @@
+cheats = 1
+
+cheat0_desc = "Enemy Has Zero Energy"
+cheat0_code = "1f06e2:00+1f0634:00+1f06e6:00+1f06e8:00"
+cheat0_enable = false

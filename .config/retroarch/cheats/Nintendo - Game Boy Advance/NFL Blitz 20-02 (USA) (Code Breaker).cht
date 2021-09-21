@@ -1,0 +1,30 @@
+cheats = 7
+
+cheat0_desc = "Enable Code (Must Be On)"
+cheat0_code = "000025CE+000A+10000834+0007"
+cheat0_enable = false
+
+cheat1_desc = "Team 1 Scores 100"
+cheat1_code = "83001840+0064"
+cheat1_enable = false
+
+cheat2_desc = "Team 1 Scores 0"
+cheat2_code = "83001840+0000"
+cheat2_enable = false
+
+cheat3_desc = "Team 2 Scores 100"
+cheat3_code = "8300187C+0064"
+cheat3_enable = false
+
+cheat4_desc = "Team 2 Scores 0"
+cheat4_code = "8300187C+0000"
+cheat4_enable = false
+
+cheat5_desc = "Always 1st Down"
+cheat5_code = "83001820+0001"
+cheat5_enable = false
+
+cheat6_desc = "Always 4th Down"
+cheat6_code = "83001820+0004"
+cheat6_enable = false
+

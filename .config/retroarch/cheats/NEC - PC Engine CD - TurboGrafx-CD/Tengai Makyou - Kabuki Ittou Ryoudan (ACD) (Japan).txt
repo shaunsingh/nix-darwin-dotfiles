@@ -1,0 +1,13 @@
+cheats = 11
+
+cheat0_desc = "Infinite Timer"
+cheat0_code = "1f124e:5a+1f124e:90"
+cheat0_enable = false
+
+cheat1_desc = "Freeze Timer"
+cheat1_code = "1f124f:39+1f124f:57"
+cheat1_enable = false
+
+cheat2_desc = "P1 Infinite HP"
+cheat2_code = "1f0760:6a+1f0761:00+1f0760:10"
+cheat2_enable = false

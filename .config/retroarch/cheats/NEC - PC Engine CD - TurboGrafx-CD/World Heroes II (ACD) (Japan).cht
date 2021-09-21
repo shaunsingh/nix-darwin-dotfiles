@@ -1,0 +1,21 @@
+cheats = 5
+
+cheat0_desc = "Infinite Time (Player Select)"
+cheat0_code = "1f1f16:1e"
+cheat0_enable = false
+
+cheat1_desc = "Infinite Time + Bonus (Normal)"
+cheat1_code = "1f0c08:99"
+cheat1_enable = false
+
+cheat2_desc = "No Time (Death Match)"
+cheat2_code = "1f0c09:00"
+cheat2_enable = false
+
+cheat3_desc = "P1 Infinite Health"
+cheat3_code = "1f180c:76+1f180d:76"
+cheat3_enable = false
+
+cheat4_desc = "P1 Instant Win (P2 Life Mod)"
+cheat4_code = "1f190c:ff+1f190d:ff"
+cheat4_enable = false

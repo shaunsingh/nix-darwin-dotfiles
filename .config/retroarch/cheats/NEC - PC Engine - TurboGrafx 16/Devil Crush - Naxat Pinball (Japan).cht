@@ -1,0 +1,5 @@
+cheats = 1
+
+cheat0_desc = "Infinite Balls"
+cheat0_code = "1f0d52:64"
+cheat0_enable = false

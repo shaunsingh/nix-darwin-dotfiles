@@ -1,0 +1,14 @@
+cheats = 3
+
+cheat0_desc = "Enable Code (Must Be On)"
+cheat0_code = "0000C6E3+000A+10001F04+0007"
+cheat0_enable = false
+
+cheat1_desc = "Quick Score Gain"
+cheat1_code = "83006724+FFFF"
+cheat1_enable = false
+
+cheat2_desc = "Max Score"
+cheat2_code = "83006724+423F+83006726+000F"
+cheat2_enable = false
+

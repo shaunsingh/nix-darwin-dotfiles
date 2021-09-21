@@ -1,0 +1,9 @@
+cheats = 2
+
+cheat0_desc = "Unlimited Time"
+cheat0_code = "1f07aa:00+1f07ab:00"
+cheat0_enable = false
+
+cheat1_desc = "Max Speed"
+cheat1_code = "1f05d3:ff+1f05d4:ff"
+cheat1_enable = false

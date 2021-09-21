@@ -1,0 +1,17 @@
+cheats = 4
+
+cheat0_desc = "Infinite Energy"
+cheat0_code = "1f0505:03"
+cheat0_enable = false
+
+cheat1_desc = "Infinite Grenades"
+cheat1_code = "1f051a:20"
+cheat1_enable = false
+
+cheat2_desc = "Easy Boss Kill"
+cheat2_code = "1f0041:00"
+cheat2_enable = false
+
+cheat2_desc = "Infinite Fuel"
+cheat2_code = "1f0516:06"
+cheat2_enable = false

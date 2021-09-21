@@ -1,0 +1,10 @@
+cheats = 2
+
+cheat0_desc = "Enable Code (Must Be On)"
+cheat0_code = "0000693E+000A+10025E10+0007"
+cheat0_enable = false
+
+cheat1_desc = "Press Select For 10 Moves"
+cheat1_code = "D0000020+0004+33000B04+000A"
+cheat1_enable = false
+

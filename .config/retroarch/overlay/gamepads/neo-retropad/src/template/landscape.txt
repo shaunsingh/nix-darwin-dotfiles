@@ -1,0 +1,45 @@
+1860	1046
+
+dpad_down.png					down						radial	128.000	158.000	112.000	294.000
+dpad_left.png					left						radial	158.000	128.000	6.000		400.000
+dpad_right.png					right						radial	158.000	128.000	188.000	400.000
+dpad_up.png						up							radial	128.000	158.000	112.000	476.000
+
+down_aux							down						rect		128.000	79.000	112.000	294.000
+left_aux							left						rect		79.000	128.000	6.000		400.000
+right_aux						right						rect		79.000	128.000	267.000	400.000
+up_aux							up							rect		128.000	79.000	112.000	555.000
+
+down_left						down|left				rect		90.000	90.000	6.000		294.000
+down_right						down|right				rect		90.000	90.000	256.000	294.000
+up_left							up|left					rect		90.000	90.000	6.000		544.000
+up_right							up|right					rect		90.000	90.000	256.000	544.000
+
+button_a.png					a							radial	128.000	128.000	1726.000		400.000
+button_b.png					b							radial	128.000	128.000	1620.000		294.000
+button_x.png					x							radial	128.000	128.000	1620.000		506.000
+button_y.png					y							radial	128.000	128.000	1514.000		400.000
+
+button_select.png				select					rect		112.000	80.000	6.000			150.000
+button_start.png				start						rect		112.000	80.000	1742.000		150.000
+
+button_l1.png					l							rect		112.000	96.000	6.000			698.000
+button_l2.png					l2							rect		112.000	96.000	6.000			821.000
+button_l3.png					l3							rect		112.000	96.000	6.000			944.000
+button_r1.png					r							rect		112.000	96.000	1742.000		698.000
+button_r2.png					r2							rect		112.000	96.000	1742.000		821.000
+button_r3.png					r3							rect		112.000	96.000	1742.000		944.000
+
+hotkey_analog.png				overlay_next			radial	80.000	80.000	6.000			6.000
+hotkey_fast_forward.png		toggle_fast_forward	radial	80.000	80.000	134.000		6.000
+hotkey_hide.png				overlay_next			radial	80.000	80.000	1774.000		6.000
+hotkey_menu.png				menu_toggle				radial	80.000	80.000	1646.000		6.000
+
+rotate							overlay_next			radial	80.000	80.000	890.000		960.000
+
+analog_bg.png					nul						radial	324.000	324.000	14.000		302.000
+analog_stick.png				analog_left				radial	188.000	188.000	82.000		370.000
+
+hotkey_digital.png			overlay_next			radial	80.000	80.000	6.000			6.000
+
+hotkey_show.png				overlay_next			radial	80.000	80.000	1774.000		6.000

@@ -1,0 +1,17 @@
+cheats = 4
+
+cheat0_desc = "Infinite Lives"
+cheat0_code = "1f0a1a:09"
+cheat0_enable = false
+
+cheat1_desc = "Invincibility"
+cheat1_code = "1f0e99:14"
+cheat1_enable = false
+
+cheat2_desc = "Infinite Health"
+cheat2_code = "1f0e86:0f"
+cheat2_enable = false
+
+cheat3_desc = "99 Smileys"
+cheat3_code = "1f0ec6:63"
+cheat3_enable = false

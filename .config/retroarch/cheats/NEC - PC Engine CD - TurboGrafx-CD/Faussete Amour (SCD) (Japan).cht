@@ -1,0 +1,21 @@
+cheats = 5
+
+cheat0_desc = "Infinite Lives"
+cheat0_code = "1f0007:02"
+cheat0_enable = false
+
+cheat1_desc = "Always Have Armour (Infinite Health)"
+cheat1_code = "1f0006:01"
+cheat1_enable = false
+
+cheat2_desc = "Invincibility"
+cheat2_code = "1f0ca9:02"
+cheat2_enable = false
+
+cheat3_desc = "Infinite Red Crystals"
+cheat3_code = "1f14af:09"
+cheat3_enable = false
+
+cheat4_desc = "1-Hit Kill (Sub-Bosses)"
+cheat4_code = "1f0e4d:00+1f0ef5:00"
+cheat4_enable = false

@@ -1,0 +1,17 @@
+cheats = 4
+
+cheat0_desc = "Infinite Energy"
+cheat0_code = "1f1004:0a"
+cheat0_enable = false
+
+cheat1_desc = "Infinite Lives"
+cheat1_code = "1f1003:03"
+cheat1_enable = false
+
+cheat2_desc = "Infinite Time"
+cheat2_code = "1f04f4:43"
+cheat2_enable = false
+
+cheat3_desc = "Instantly Beat Current Stage"
+cheat3_code = "1f1005:06"
+cheat3_enable = false

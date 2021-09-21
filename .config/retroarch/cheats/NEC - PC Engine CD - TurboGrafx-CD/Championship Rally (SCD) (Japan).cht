@@ -1,0 +1,5 @@
+cheats = 1
+
+cheat0_desc = "Always Low Time"
+cheat0_code = "1f06d5:00"
+cheat0_enable = false

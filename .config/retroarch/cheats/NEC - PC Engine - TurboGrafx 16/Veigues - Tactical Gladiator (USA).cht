@@ -1,0 +1,9 @@
+cheats = 2
+
+cheat0_desc = "Infinite VNR (Venier)"
+cheat0_code = "1f00b5:ff+1f00b6:ff"
+cheat0_enable = false
+
+cheat1_desc = "Infinite SLD (Shield/Health)"
+cheat1_code = "1f00b8:ff+1f00b9:ff"
+cheat1_enable = false

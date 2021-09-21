@@ -1,0 +1,21 @@
+cheats = 5
+
+cheat0_desc = "Infinite Lives"
+cheat0_code = "1f1ed0:02"
+cheat0_enable = false
+
+cheat1_desc = "Always Have Force Shield"
+cheat1_code = "1f0eeb:04+1f00bf:02+1f0665:10"
+cheat1_enable = false
+
+cheat2_desc = "Have Shield Type"
+cheat2_code = "1f00c1:06"
+cheat2_enable = false
+
+cheat3_desc = "Max Speed Upgrade"
+cheat3_code = "1f00c0:06"
+cheat3_enable = false
+
+cheat4_desc = "Have 4 Options"
+cheat4_code = "1f00bc:04"
+cheat4_enable = false

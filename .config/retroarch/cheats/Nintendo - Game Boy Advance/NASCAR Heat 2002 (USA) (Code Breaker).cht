@@ -1,0 +1,30 @@
+cheats = 7
+
+cheat0_desc = "Enable Code (Must Be On)"
+cheat0_code = "00007902+000A+10000490+0007"
+cheat0_enable = false
+
+cheat1_desc = "Start On Lap 10"
+cheat1_code = "7202A59C+0000+8202A59C+0109"
+cheat1_enable = false
+
+cheat2_desc = "Infinite Fuel"
+cheat2_code = "8202A5EC+B46E"
+cheat2_enable = false
+
+cheat3_desc = "Low Lap Times"
+cheat3_code = "820251FC+0000"
+cheat3_enable = false
+
+cheat4_desc = "Low Event Times (Beat The Heat)"
+cheat4_code = "8202CADC+0000"
+cheat4_enable = false
+
+cheat5_desc = "Unlock All Levels (Beat The Heat)"
+cheat5_code = "8202EF08+0101+8202EF0A+0101"
+cheat5_enable = false
+
+cheat6_desc = "Beat The Heat Complete"
+cheat6_code = "4202EF60+0101+00000008+0002"
+cheat6_enable = false
+

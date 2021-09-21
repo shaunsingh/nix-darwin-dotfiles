@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="1860"
+   height="1046"
+   viewBox="0 0 492.12499 276.75417"
+   version="1.1"
+   id="svg8"
+   inkscape:version="0.92.2 5c3e80d, 2017-08-06"
+   sodipodi:docname="landscape_analog.svg">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.39934173"
+     inkscape:cx="553.8834"
+     inkscape:cy="557.1762"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer3"
+     showgrid="true"
+     units="px"
+     inkscape:pagecheckerboard="false"
+     inkscape:window-width="1920"
+     inkscape:window-height="1025"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:measure-start="-115,-90"
+     inkscape:measure-end="125,150">
+    <sodipodi:guide
+       position="0,138.37708"
+       orientation="0,1"
+       id="guide1430"
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,0,255)" />
+    <sodipodi:guide
+       position="246.0625,0"
+       orientation="1,0"
+       id="guide1432"
+       inkscape:locked="false"
+       inkscape:label=""
+       inkscape:color="rgb(0,0,255)" />
+    <inkscape:grid
+       type="xygrid"
+       id="grid1434" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="viewport 4:3"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-20.245817)">
+    <rect
+       style="opacity:1;vector-effect:none;fill:#808080;fill-opacity:0.50196078;stroke:none;stroke-width:3.76469111;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect834"
+       width="369.09375"
+       height="276.75418"
+       x="61.515625"
+       y="20.245802" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="viewport gb">
+    <rect
+       style="opacity:1;vector-effect:none;fill:#808080;fill-opacity:0.50196078;stroke:none;stroke-width:3.43593788;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect834-3"
+       width="307.44583"
+       height="276.75421"
+       x="92.339584"
+       y="-4.5904275e-05" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="buttons">
+    <rect
+       style="opacity:1;vector-effect:none;fill:#808080;fill-opacity:0.50196078;stroke:none;stroke-width:3.76469111;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect834-36"
+       width="369.09375"
+       height="276.75421"
+       x="61.515625"
+       y="-2.2050737e-05" />
+    <rect
+       style="opacity:1;vector-effect:none;fill:#808080;fill-opacity:0.50196078;stroke:none;stroke-width:3.43593788;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect834-3-7"
+       width="307.44583"
+       height="276.75421"
+       x="92.339584"
+       y="-5.2916665e-05" />
+    <image
+       sodipodi:absref="/home/james/Dev/github/libretro/common-overlays/gamepads/neo-retropad/png/default/hotkey_fast_forward.png"
+       y="254"
+       x="35.454166"
+       id="image8883"
+       xlink:href="file:///home/james/Dev/github/libretro/common-overlays/gamepads/neo-retropad/png/default/hotkey_fast_forward.png"
+       preserveAspectRatio="none"
+       height="21.166666"
+       width="21.166666" />
+    <image
+       sodipodi:absref="/home/james/Dev/github/libretro/common-overlays/gamepads/neo-retropad/png/default/hotkey_hide.png"
+       y="254"
+       x="469.37082"
+       id="image8894"
+       xlink:href="file:///home/james/Dev/github/libretro/common-overlays/gamepads/neo-retropad/png/default/hotkey_hide.png"
+       preserveAspectRatio="none"
+       height="21.166666"
+       width="21.166666" />
+    <image
+       sodipodi:absref="/home/james/Dev/github/libretro/common-overlays/gamepads/neo-retropad/png/default/hotkey_menu.png"
+       y="254"
+       x="435.50415"
+       id="image8905"
+       xlink:href="file:///home/james/Dev/github/libretro/common-overlays/gamepads/neo-retropad/png/default/hotkey_menu.png"
+       preserveAspectRatio="none"
+       height="21.166666"
+       width="21.166666" />
+    <image
+       sodipodi:absref="/home/james/Dev/github/libretro/common-overlays/gamepads/neo-retropad/png/default/button_l3.png"
+       y="1.5875"
+       x="1.5875"
+       id="image1260"
+       xlink:href="file:///home/james/Dev/github/libretro/common-overlays/gamepads/neo-retropad/png/default/button_l3.png"
+       preserveAspectRatio="none"
+       height="25.4"
+       width="29.633333" />
+    <image
+       sodipodi:absref="/home/james/Dev/github/libretro/common-overlays/gamepads/neo-retropad/png/default/button_r3.png"
+       y="1.5875"
+       x="460.90414"
+       id="image1293"
+       xlink:href="file:///home/james/Dev/github/libretro/common-overlays/gamepads/neo-retropad/png/default/button_r3.png"
+       preserveAspectRatio="none"
+       height="25.4"
+       width="29.633333" />
+    <image
+       sodipodi:absref="/home/james/Dev/github/libretro/common-overlays/gamepads/neo-retropad/png/default/button_l1.png"
+       y="66.675003"
+       x="1.5875"
+       id="image1238"
+       xlink:href="file:///home/james/Dev/github/libretro/common-overlays/gamepads/neo-retropad/png/default/button_l1.png"
+       preserveAspectRatio="none"
+       height="25.4"
+       width="29.633333" />
+    <image
+       sodipodi:absref="/home/james/Dev/github/libretro/common-overlays/gamepads/neo-retropad/png/default/button_l2.png"
+       y="34.131256"
+       x="1.5875"
+       id="image1249"
+       xlink:href="file:///home/james/Dev/github/libretro/common-overlays/gamepads/neo-retropad/png/default/button_l2.png"
+       preserveAspectRatio="none"
+       height="25.4"
+       width="29.633333" />
+    <image
+       sodipodi:absref="/home/james/Dev/github/libretro/common-overlays/gamepads/neo-retropad/png/default/button_r1.png"
+       y="66.675003"
+       x="460.90414"
+       id="image1271"
+       xlink:href="file:///home/james/Dev/github/libretro/common-overlays/gamepads/neo-retropad/png/default/button_r1.png"
+       preserveAspectRatio="none"
+       height="25.4"
+       width="29.633333" />
+    <image
+       sodipodi:absref="/home/james/Dev/github/libretro/common-overlays/gamepads/neo-retropad/png/default/button_r2.png"
+       y="34.131248"
+       x="460.90414"
+       id="image1282"
+       xlink:href="file:///home/james/Dev/github/libretro/common-overlays/gamepads/neo-retropad/png/default/button_r2.png"
+       preserveAspectRatio="none"
+       height="25.4"
+       width="29.633333" />
+    <image
+       sodipodi:absref="/home/james/Dev/github/libretro/common-overlays/gamepads/neo-retropad/png/default/button_a.png"
+       y="137.05415"
+       x="456.67084"
+       id="image1216"
+       xlink:href="file:///home/james/Dev/github/libretro/common-overlays/gamepads/neo-retropad/png/default/button_a.png"
+       preserveAspectRatio="none"
+       height="33.866665"
+       width="33.866665" />
+    <image
+       sodipodi:absref="/home/james/Dev/github/libretro/common-overlays/gamepads/neo-retropad/png/default/button_b.png"
+       y="165.09999"
+       x="428.625"
+       id="image1227"
+       xlink:href="file:///home/james/Dev/github/libretro/common-overlays/gamepads/neo-retropad/png/default/button_b.png"
+       preserveAspectRatio="none"
+       height="33.866665"
+       width="33.866665" />
+    <image
+       sodipodi:absref="/home/james/Dev/github/libretro/common-overlays/gamepads/neo-retropad/png/default/button_x.png"
+       y="109.00831"
+       x="428.625"
+       id="image1326"
+       xlink:href="file:///home/james/Dev/github/libretro/common-overlays/gamepads/neo-retropad/png/default/button_x.png"
+       preserveAspectRatio="none"
+       height="33.866665"
+       width="33.866665" />
+    <image
+       sodipodi:absref="/home/james/Dev/github/libretro/common-overlays/gamepads/neo-retropad/png/default/button_y.png"
+       y="137.05415"
+       x="400.57916"
+       id="image1337"
+       xlink:href="file:///home/james/Dev/github/libretro/common-overlays/gamepads/neo-retropad/png/default/button_y.png"
+       preserveAspectRatio="none"
+       height="33.866665"
+       width="33.866665" />
+    <image
+       sodipodi:absref="/home/james/Dev/github/libretro/common-overlays/gamepads/neo-retropad/png/default/button_select.png"
+       y="215.89999"
+       x="1.5875"
+       id="image1824"
+       xlink:href="file:///home/james/Dev/github/libretro/common-overlays/gamepads/neo-retropad/png/default/button_select.png"
+       preserveAspectRatio="none"
+       height="21.166666"
+       width="29.633333" />
+    <image
+       sodipodi:absref="/home/james/Dev/github/libretro/common-overlays/gamepads/neo-retropad/png/default/button_start.png"
+       y="215.89999"
+       x="460.90414"
+       id="image1835"
+       xlink:href="file:///home/james/Dev/github/libretro/common-overlays/gamepads/neo-retropad/png/default/button_start.png"
+       preserveAspectRatio="none"
+       height="21.166666"
+       width="29.633333" />
+    <image
+       sodipodi:absref="/home/james/Dev/github/libretro/common-overlays/gamepads/neo-retropad/png/default/analog_bg.png"
+       y="111.125"
+       x="3.7041667"
+       id="image4042"
+       xlink:href="file:///home/james/Dev/github/libretro/common-overlays/gamepads/neo-retropad/png/default/analog_bg.png"
+       preserveAspectRatio="none"
+       height="85.724998"
+       width="85.724998" />
+    <image
+       sodipodi:absref="/home/james/Dev/github/libretro/common-overlays/gamepads/neo-retropad/png/default/analog_stick.png"
+       y="129.11667"
+       x="21.695833"
+       id="image4053"
+       xlink:href="file:///home/james/Dev/github/libretro/common-overlays/gamepads/neo-retropad/png/default/analog_stick.png"
+       preserveAspectRatio="none"
+       height="49.741665"
+       width="49.741665" />
+    <image
+       sodipodi:absref="/home/james/Dev/github/libretro/common-overlays/gamepads/neo-retropad/png/default/hotkey_digital.png"
+       y="254"
+       x="1.5875"
+       id="image4064"
+       xlink:href="file:///home/james/Dev/github/libretro/common-overlays/gamepads/neo-retropad/png/default/hotkey_digital.png"
+       preserveAspectRatio="none"
+       height="21.166666"
+       width="21.166666" />
+    <rect
+       style="opacity:1;vector-effect:none;fill:#ff8080;fill-opacity:0.50196078;stroke:none;stroke-width:1.43799198;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       id="rect7458-367"
+       width="21.166666"
+       height="21.166666"
+       x="235.47917"
+       y="1.5875" />
+  </g>
+</svg>

@@ -1,0 +1,13 @@
+cheats = 3
+
+cheat0_desc = "Infinite Time"
+cheat0_code = "1f0707:99"
+cheat0_enable = false
+
+cheat1_desc = "Max Power"
+cheat1_code = "1f0057:fb"
+cheat1_enable = false
+
+cheat2_desc = "Max Damage"
+cheat2_code = "1f0e24:64"
+cheat2_enable = false

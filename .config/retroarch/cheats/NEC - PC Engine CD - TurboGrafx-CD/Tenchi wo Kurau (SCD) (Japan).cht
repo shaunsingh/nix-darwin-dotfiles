@@ -1,0 +1,13 @@
+cheats = 3
+
+cheat0_desc = "Max Power"
+cheat0_code = "1f0071:96"
+cheat0_enable = false
+
+cheat1_desc = "Max Exp"
+cheat1_code = "1f0076:15+1f0077:15+1f0078:15"
+cheat1_enable = false
+
+cheat2_desc = "Infinite HP"
+cheat2_code = "1f1002:25"
+cheat2_enable = false

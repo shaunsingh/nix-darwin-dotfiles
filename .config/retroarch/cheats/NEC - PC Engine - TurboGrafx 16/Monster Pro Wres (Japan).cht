@@ -1,0 +1,21 @@
+cheats = 5
+
+cheat0_desc = "Infinite Energy"
+cheat0_code = "1f0cbd:55"
+cheat0_enable = false
+
+cheat1_desc = "Infinite Stat Points"
+cheat1_code = "1f0085:32"
+cheat1_enable = false
+
+cheat2_desc = "CPU/P2 No Energy"
+cheat2_code = "1f0ccd:00"
+cheat2_enable = false
+
+cheat3_desc = "CPU/P2 No Stats"
+cheat3_code = "1f0ccc:00+1f0cce:00+1f0ccf:00+1f0c37:00"
+cheat3_enable = false
+
+cheat4_desc = "P1 Max ST"
+cheat4_code = "1f0cbc:c8"
+cheat4_enable = false

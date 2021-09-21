@@ -1,0 +1,9 @@
+cheats = 2
+
+cheat0_desc = "Infinite Lives"
+cheat0_code = "1f0167:05"
+cheat0_enable = false
+
+cheat1_desc = "Infinite Time"
+cheat1_code = "1f0549:74+1f0193:09"
+cheat1_enable = false

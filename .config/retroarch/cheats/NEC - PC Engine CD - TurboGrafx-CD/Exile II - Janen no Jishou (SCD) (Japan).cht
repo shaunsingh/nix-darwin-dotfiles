@@ -1,0 +1,5 @@
+cheats = 1
+
+cheat0_desc = "Invincibility"
+cheat0_code = "1f002b:00+1f0b64:20"
+cheat0_enable = false

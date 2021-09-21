@@ -1,0 +1,5 @@
+cheats = 1
+
+cheat0_desc = "Max Jewels Collected"
+cheat0_code = "1f034b:ff+1f034c:63"
+cheat0_enable = false

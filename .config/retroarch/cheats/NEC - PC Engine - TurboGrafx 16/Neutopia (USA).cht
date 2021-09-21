@@ -1,0 +1,49 @@
+cheats = 12
+
+cheat0_desc = "Infinite Energy"
+cheat0_code = "1f14c5:40"
+cheat0_enable = false
+
+cheat1_desc = "Invincibility"
+cheat1_code = "1f1481:02"
+cheat1_enable = false
+
+cheat2_desc = "Max Gold"
+cheat2_code = "1f152f:09+1f1530:09+1f1531:09"
+cheat2_enable = false
+
+cheat3_desc = "Have Bombs"
+cheat3_code = "1f1535:00+1f1536:02"
+cheat3_enable = false
+
+cheat4_desc = "Have Medicine"
+cheat4_code = "1f0e45:02"
+cheat4_enable = false
+
+cheat5_desc = "Have Fire Staff"
+cheat5_code = "1f0e46:01"
+cheat5_enable = false
+
+cheat6_desc = "Have Bell of the Sky"
+cheat6_code = "1f0e47:01"
+cheat6_enable = false
+
+cheat7_desc = "Have Wings of Return"
+cheat7_code = "1f0e48:01"
+cheat7_enable = false
+
+cheat8_desc = "Have Magic Ring"
+cheat8_code = "1f0e4a:01"
+cheat8_enable = false
+
+cheat9_desc = "Have Bomb Upgrades"
+cheat9_code = "1f1537:04"
+cheat9_enable = false
+
+cheat10_desc = "Have Rainbow Drop"
+cheat10_code = "1f0e50:01"
+cheat10_enable = false
+
+cheat11_desc = "Have Moonbeam Moss"
+cheat11_code = "1f0e49:01"
+cheat11_enable = false

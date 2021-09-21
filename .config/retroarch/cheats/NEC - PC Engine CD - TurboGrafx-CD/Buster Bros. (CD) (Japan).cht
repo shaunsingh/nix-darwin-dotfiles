@@ -1,0 +1,13 @@
+cheats = 3
+
+cheat0_desc = "Infinite Lives"
+cheat0_code = "1f003f:05"
+cheat0_enable = false
+
+cheat1_desc = "All Bubbles Are Small"
+cheat1_code = "1f0efb:00+1f0efc:00+1f0efd:00+1f0efe:00+1f0eff:00"
+cheat1_enable = false
+
+cheat2_desc = "Enemies Are Frozen"
+cheat2_code = "1f0078:00"
+cheat2_enable = false

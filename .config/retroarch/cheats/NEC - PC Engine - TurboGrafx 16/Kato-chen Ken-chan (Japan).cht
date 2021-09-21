@@ -1,0 +1,13 @@
+cheats = 3
+
+cheat0_desc = "Infinite Lives"
+cheat0_code = "1f0a66:02"
+cheat0_enable = false
+
+cheat1_desc = "Infinite Energy"
+cheat1_code = "1f0a68:10"
+cheat1_enable = false
+
+cheat2_desc = "No Enemy Push-back"
+cheat2_code = "1f0b1d:02"
+cheat2_enable = false

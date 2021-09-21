@@ -1,0 +1,17 @@
+cheats = 4
+
+cheat0_desc = "Infinite Health"
+cheat0_code = "1f0313:32"
+cheat0_enable = false
+
+cheat1_desc = "Infinite Lives"
+cheat1_code = "1f0312:15"
+cheat1_enable = false
+
+cheat2_desc = "Infinite Gold"
+cheat2_code = "1f0316:15+1f0317:15"
+cheat2_enable = false
+
+cheat3_desc = "Infinite Jewels"
+cheat3_code = "1f0318:15"
+cheat3_enable = false

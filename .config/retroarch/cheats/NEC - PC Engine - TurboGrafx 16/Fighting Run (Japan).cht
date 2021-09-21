@@ -1,0 +1,13 @@
+cheats = 3
+
+cheat0_desc = "Infinite Energy"
+cheat0_code = "1f0d7d:00"
+cheat0_enable = false
+
+cheat1_desc = "Max Stats"
+cheat1_code = "1f14e5:04+1f14e6:04+1f14e7:04"
+cheat1_enable = false
+
+cheat2_desc = "1-Hit Kills"
+cheat2_code = "1f0ddd:01"
+cheat2_enable = false

@@ -1,0 +1,17 @@
+cheats = 4
+
+cheat0_desc = "Infinite Lives"
+cheat0_code = "1f0216:03"
+cheat0_enable = false
+
+cheat1_desc = "Infinite Credits"
+cheat1_code = "1f0219:09"
+cheat1_enable = false
+
+cheat2_desc = "Have All Food Collected"
+cheat2_code = "1f11b6:00"
+cheat2_enable = false
+
+cheat3_desc = "Have 2 Keys (Upon Pick-up)"
+cheat3_code = "1f0217:02"
+cheat3_enable = false

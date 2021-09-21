@@ -1,0 +1,17 @@
+cheats = 4
+
+cheat0_desc = "Stats Current Life"
+cheat0_code = "1f0303:15+1f0304:15"
+cheat0_enable = false
+
+cheat1_desc = "Stats Current Magic"
+cheat1_code = "1f0305:15+1f0306:15"
+cheat1_enable = false
+
+cheat2_desc = "Stats Max Life"
+cheat2_code = "1f02ff:15+1f0300:15"
+cheat2_enable = false
+
+cheat3_desc = "Stats Max Magic"
+cheat3_code = "1f0301:15+1f0302:15"
+cheat3_enable = false

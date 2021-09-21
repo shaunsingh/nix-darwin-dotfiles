@@ -1,0 +1,229 @@
+cheats = 57 
+
+cheat0_desc = "Infinite Health"
+cheat0_code = "80D041EA"
+cheat0_enable = false 
+
+cheat1_desc = "Infinite Lives"
+cheat1_code = "80CEC5BD"
+cheat1_enable = false 
+
+cheat2_desc = "Infinite Weapons"
+cheat2_code = "80ED4700"
+cheat2_enable = false 
+
+cheat3_desc = "Start on Level 02"
+cheat3_code = "8085F102"
+cheat3_enable = false 
+
+cheat4_desc = "Start on Level 03"
+cheat4_code = "8085F103"
+cheat4_enable = false 
+
+cheat5_desc = "Start on Level 04"
+cheat5_code = "8085F104"
+cheat5_enable = false 
+
+cheat6_desc = "Start on Level 05"
+cheat6_code = "8085F105"
+cheat6_enable = false 
+
+cheat7_desc = "Start on Level 06"
+cheat7_code = "8085F106"
+cheat7_enable = false 
+
+cheat8_desc = "Start on Level 07"
+cheat8_code = "8085F107"
+cheat8_enable = false 
+
+cheat9_desc = "Start on Level 08"
+cheat9_code = "8085F108"
+cheat9_enable = false 
+
+cheat10_desc = "Start on Level 09"
+cheat10_code = "8085F109"
+cheat10_enable = false 
+
+cheat11_desc = "Start on Level 10"
+cheat11_code = "8085F10A"
+cheat11_enable = false 
+
+cheat12_desc = "Start on Level 11"
+cheat12_code = "8085F10B"
+cheat12_enable = false 
+
+cheat13_desc = "Start on Level 12"
+cheat13_code = "8085F10C"
+cheat13_enable = false 
+
+cheat14_desc = "Start on Level 13"
+cheat14_code = "8085F10D"
+cheat14_enable = false 
+
+cheat15_desc = "Start on Level 14"
+cheat15_code = "8085F10E"
+cheat15_enable = false 
+
+cheat16_desc = "Start on Level 15"
+cheat16_code = "8085F10F"
+cheat16_enable = false 
+
+cheat17_desc = "Start on Level 16"
+cheat17_code = "8085F110"
+cheat17_enable = false 
+
+cheat18_desc = "Start on Level 17"
+cheat18_code = "8085F111"
+cheat18_enable = false 
+
+cheat19_desc = "Start on Level 18"
+cheat19_code = "8085F112"
+cheat19_enable = false 
+
+cheat20_desc = "Start on Level 19"
+cheat20_code = "8085F113"
+cheat20_enable = false 
+
+cheat21_desc = "Start on Level 20"
+cheat21_code = "8085F114"
+cheat21_enable = false 
+
+cheat22_desc = "Start on Level 21"
+cheat22_code = "8085F115"
+cheat22_enable = false 
+
+cheat23_desc = "Start on Level 22"
+cheat23_code = "8085F116"
+cheat23_enable = false 
+
+cheat24_desc = "Start on Level 23"
+cheat24_code = "8085F117"
+cheat24_enable = false 
+
+cheat25_desc = "Start on Level 24"
+cheat25_code = "8085F118"
+cheat25_enable = false 
+
+cheat26_desc = "Start on Level 25"
+cheat26_code = "8085F119"
+cheat26_enable = false 
+
+cheat27_desc = "Start on Level 26"
+cheat27_code = "8085F11A"
+cheat27_enable = false 
+
+cheat28_desc = "Start on Level 27"
+cheat28_code = "8085F11B"
+cheat28_enable = false 
+
+cheat29_desc = "Start on Level 28"
+cheat29_code = "8085F11C"
+cheat29_enable = false 
+
+cheat30_desc = "Start on Level 29"
+cheat30_code = "8085F11D"
+cheat30_enable = false 
+
+cheat31_desc = "Start on Level 30"
+cheat31_code = "8085F11E"
+cheat31_enable = false 
+
+cheat32_desc = "Start on Level 31"
+cheat32_code = "8085F11F"
+cheat32_enable = false 
+
+cheat33_desc = "Start on Level 32"
+cheat33_code = "8085F120"
+cheat33_enable = false 
+
+cheat34_desc = "Start on Level 33"
+cheat34_code = "8085F121"
+cheat34_enable = false 
+
+cheat35_desc = "Start on Level 34"
+cheat35_code = "8085F122"
+cheat35_enable = false 
+
+cheat36_desc = "Start on Level 35"
+cheat36_code = "8085F123"
+cheat36_enable = false 
+
+cheat37_desc = "Start on Level 36"
+cheat37_code = "8085F124"
+cheat37_enable = false 
+
+cheat38_desc = "Start on Level 37"
+cheat38_code = "8085F125"
+cheat38_enable = false 
+
+cheat39_desc = "Start on Level 38"
+cheat39_code = "8085F126"
+cheat39_enable = false 
+
+cheat40_desc = "Start on Level 39"
+cheat40_code = "8085F127"
+cheat40_enable = false 
+
+cheat41_desc = "Start on Level 40"
+cheat41_code = "8085F128"
+cheat41_enable = false 
+
+cheat42_desc = "Start on Level 41"
+cheat42_code = "8085F129"
+cheat42_enable = false 
+
+cheat43_desc = "Start on Level 42"
+cheat43_code = "8085F12A"
+cheat43_enable = false 
+
+cheat44_desc = "Start on Level 43"
+cheat44_code = "8085F12B"
+cheat44_enable = false 
+
+cheat45_desc = "Start on Level 44"
+cheat45_code = "8085F12C"
+cheat45_enable = false 
+
+cheat46_desc = "Start on Level 45"
+cheat46_code = "8085F12D"
+cheat46_enable = false 
+
+cheat47_desc = "Start on Level 46"
+cheat47_code = "8085F12E"
+cheat47_enable = false 
+
+cheat48_desc = "Start on Level 47"
+cheat48_code = "8085F12F"
+cheat48_enable = false 
+
+cheat49_desc = "Start on Level 48"
+cheat49_code = "8085F130"
+cheat49_enable = false 
+
+cheat50_desc = "Start on Credit Level"
+cheat50_code = "8085F131"
+cheat50_enable = false 
+
+cheat51_desc = "Start on Bonus Level Son of Dr. Tongue"
+cheat51_code = "8085F132"
+cheat51_enable = false 
+
+cheat52_desc = "Start on Bonus Level Day of The Tentacle"
+cheat52_code = "8085F133"
+cheat52_enable = false 
+
+cheat53_desc = "Start on Bonus Level Someplace Very Warm"
+cheat53_code = "8085F134"
+cheat53_enable = false 
+
+cheat54_desc = "Start on Bonus Level Curse of The Pharaohs"
+cheat54_code = "8085F135"
+cheat54_enable = false 
+
+cheat55_desc = "Start on Bonus Level Mushroom Men"
+cheat55_code = "8085F136"
+cheat55_enable = false 
+
+cheat56_desc = "Start on Bonus Level Cheerleaders vs Monsters"
+cheat56_code = "8085F137"
+cheat56_enable = false 

@@ -1,0 +1,5 @@
+cheats = 1
+
+cheat0_desc = "Automatically Win Pinball Minigame"
+cheat0_code = "1f0014:55+1f0011:00+1f0012:00"
+cheat0_enable = false

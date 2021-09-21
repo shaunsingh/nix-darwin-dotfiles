@@ -1,0 +1,5 @@
+cheats = 1
+
+cheat0_desc = "Always Hole-In-One"
+cheat0_code = "1f054f:01"
+cheat0_enable = false

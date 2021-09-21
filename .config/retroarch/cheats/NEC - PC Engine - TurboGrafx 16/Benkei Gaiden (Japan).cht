@@ -1,0 +1,13 @@
+cheats = 3
+
+cheat0_desc = "Infinite Gold"
+cheat0_code = "1f00b7:ff+1f00b8:ff"
+cheat0_enable = false
+
+cheat1_desc = "Stats Current Health"
+cheat1_code = "1f0201:ff"
+cheat1_enable = false
+
+cheat2_desc = "Stats Max Health"
+cheat2_code = "1f02c3:ff"
+cheat2_enable = false

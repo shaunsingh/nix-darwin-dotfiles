@@ -1,0 +1,14 @@
+cheats = 3
+
+cheat0_desc = "Enable Code (Must Be On)"
+cheat0_code = "0000C5E8+000A+10022CC0+0007"
+cheat0_enable = false
+
+cheat1_desc = "Pickup 1 Star For Max Stars"
+cheat1_code = "3200AE6F+000F"
+cheat1_enable = false
+
+cheat2_desc = "Infinite Zzz's"
+cheat2_code = "8200AF58+0404"
+cheat2_enable = false
+

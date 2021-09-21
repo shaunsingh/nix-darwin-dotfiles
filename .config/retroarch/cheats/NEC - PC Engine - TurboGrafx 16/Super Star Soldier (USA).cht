@@ -1,0 +1,9 @@
+cheats = 2
+
+cheat0_desc = "Infinite Lives"
+cheat0_code = "1f006f:09"
+cheat0_enable = false
+
+cheat1_desc = "Invincibility (Cannot Pick Up Upgrades While Active)"
+cheat1_code = "1f006c:14"
+cheat1_enable = false

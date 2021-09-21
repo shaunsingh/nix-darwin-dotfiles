@@ -1,0 +1,26 @@
+cheats = 6
+
+cheat0_desc = "Enable Code (Must Be On)"
+cheat0_code = "00001795+000A+100006C4+0007"
+cheat0_enable = false
+
+cheat1_desc = "Unlock All Games"
+cheat1_code = "32001780+0007"
+cheat1_enable = false
+
+cheat2_desc = "Have 99 Points"
+cheat2_code = "32002662+0063"
+cheat2_enable = false
+
+cheat3_desc = "Infinite Chances"
+cheat3_code = "3200171C+0006"
+cheat3_enable = false
+
+cheat4_desc = "Press Select+Up To Stop Timer On 10sec's"
+cheat4_code = "74000130+03BB+83004000+0001+73004000+0001+32002608+000A"
+cheat4_enable = false
+
+cheat5_desc = "Press Select+Down To Resume Timer"
+cheat5_code = "74000130+037B+83004000+0000"
+cheat5_enable = false
+

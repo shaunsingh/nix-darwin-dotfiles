@@ -1,0 +1,5 @@
+cheats = 1
+
+cheat0_desc = "Infinite Gold"
+cheat0_code = "1f08ae:ff+1f08af:ff"
+cheat0_enable = false

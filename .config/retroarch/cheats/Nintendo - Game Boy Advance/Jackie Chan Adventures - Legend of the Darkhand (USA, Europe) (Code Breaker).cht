@@ -1,0 +1,26 @@
+cheats = 6
+
+cheat0_desc = "Enable Code (Must Be On)"
+cheat0_code = "00002C76+000A+10004980+0007"
+cheat0_enable = false
+
+cheat1_desc = "Infinite Health"
+cheat1_code = "32006218+0064"
+cheat1_enable = false
+
+cheat2_desc = "Infinite Lives"
+cheat2_code = "320062C5+0005"
+cheat2_enable = false
+
+cheat3_desc = "Invincible"
+cheat3_code = "320062C4+0001+820062D2+00FF"
+cheat3_enable = false
+
+cheat4_desc = "Max Score"
+cheat4_code = "820062D4+423F+820062D6+000F"
+cheat4_enable = false
+
+cheat5_desc = "Press A For Moon Jump"
+cheat5_code = "D0000020+0100+82006258+0180"
+cheat5_enable = false
+

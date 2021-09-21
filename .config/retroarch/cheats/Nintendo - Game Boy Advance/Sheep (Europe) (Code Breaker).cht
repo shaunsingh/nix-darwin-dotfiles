@@ -1,0 +1,38 @@
+cheats = 9
+
+cheat0_desc = "Enable Code (Must Be On)"
+cheat0_code = "000068DA+000A+10017C8A+0007"
+cheat0_enable = false
+
+cheat1_desc = "Infinite Sweets"
+cheat1_code = "32004EBB+0009"
+cheat1_enable = false
+
+cheat2_desc = "Have Radio"
+cheat2_code = "82004EF2+0121"
+cheat2_enable = false
+
+cheat3_desc = "Have 99 Stars"
+cheat3_code = "3203DF54+0063"
+cheat3_enable = false
+
+cheat4_desc = "99 Sheep Saved"
+cheat4_code = "3203DF54+0063"
+cheat4_enable = false
+
+cheat5_desc = "No Sheep Loses"
+cheat5_code = "820041B6+0000"
+cheat5_enable = false
+
+cheat6_desc = "All Sheep Saved"
+cheat6_code = "8203DF40+000A"
+cheat6_enable = false
+
+cheat7_desc = "Press L To Complete Stage"
+cheat7_code = "D0000020+0200+830041F4+FF02+D0000020+0200+830041F6+0075+D0000020+0200+830041F8+F08C"
+cheat7_enable = false
+
+cheat8_desc = "Max Stage Score"
+cheat8_code = "73003DDA+2020+83003DD0+9680+73003DDA+2020+83003DD2+0098"
+cheat8_enable = false
+

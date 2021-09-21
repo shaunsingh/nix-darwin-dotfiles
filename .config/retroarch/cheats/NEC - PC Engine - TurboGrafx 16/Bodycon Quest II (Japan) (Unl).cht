@@ -1,0 +1,9 @@
+cheats = 2
+
+cheat0_desc = "Infinite HP"
+cheat0_code = "1f08fe:ff"
+cheat0_enable = false
+
+cheat1_desc = "Infinite Gold"
+cheat1_code = "1f08ff:ff+1f0900:ff"
+cheat1_enable = false

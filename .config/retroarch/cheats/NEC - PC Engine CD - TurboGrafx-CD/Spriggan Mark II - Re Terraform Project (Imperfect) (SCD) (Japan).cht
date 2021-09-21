@@ -1,0 +1,5 @@
+cheats = 1
+
+cheat0_desc = "Instant Energy"
+cheat0_code = "1f005c:57"
+cheat0_enable = false

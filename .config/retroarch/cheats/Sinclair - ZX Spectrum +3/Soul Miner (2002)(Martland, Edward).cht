@@ -1,0 +1,29 @@
+cheats = 7
+
+cheat0_desc = "Infinite Lives"
+cheat0_code = "Z 8 35899 0 0"
+cheat0_enable = false
+
+cheat1_desc = "Items"
+cheat1_code = "M 8 37874 0 61\nZ 8 37874 61 0"
+cheat1_enable = false
+
+cheat2_desc = "No death from fall on/off"
+cheat2_code = "Z 8 36477 1 50"
+cheat2_enable = false
+
+cheat3_desc = "Super jumps on/off"
+cheat3_code = "Z 8 36358 0 60"
+cheat3_enable = false
+
+cheat4_desc = "WRITETYPER on"
+cheat4_code = "Z 8 34275 10 0"
+cheat4_enable = false
+
+cheat5_desc = "Screen after death (0-63)"
+cheat5_code = "Z 8 33824 256 0"
+cheat5_enable = false
+
+cheat6_desc = "Screen at beginning (0-63)"
+cheat6_code = "Z 8 34795 256 0"
+cheat6_enable = false

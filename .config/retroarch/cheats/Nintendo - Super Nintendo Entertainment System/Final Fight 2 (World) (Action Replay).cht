@@ -1,0 +1,9 @@
+cheats = 2 
+
+cheat0_desc = "Freeze Timer"
+cheat0_code = "7ED86399"
+cheat0_enable = false 
+
+cheat1_desc = "Infinite Lives"
+cheat1_code = "82A5F200"
+cheat1_enable = false 

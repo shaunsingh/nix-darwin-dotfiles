@@ -1,0 +1,9 @@
+cheats = 2
+
+cheat0_desc = "CPU/P2 Never Scores"
+cheat0_code = "1f0dce:00"
+cheat0_enable = false
+
+cheat1_desc = "P1 Scores x99"
+cheat1_code = "1f0dcd:63"
+cheat1_enable = false

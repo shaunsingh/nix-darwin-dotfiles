@@ -1,0 +1,13 @@
+cheats = 3
+
+cheat0_desc = "Infinite Lives"
+cheat0_code = "1f0681:04"
+cheat0_enable = false
+
+cheat1_desc = "Have S Green Shot"
+cheat1_code = "1f0686:01"
+cheat1_enable = false
+
+cheat2_desc = "Have E Red Shot"
+cheat2_code = "1f0687:01"
+cheat2_enable = false

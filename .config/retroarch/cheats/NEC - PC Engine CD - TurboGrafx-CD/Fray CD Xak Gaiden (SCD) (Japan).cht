@@ -1,0 +1,5 @@
+cheats = 1
+
+cheat0_desc = "Autofire Charged Attack"
+cheat0_code = "1f003a:05+1f003b:05"
+cheat0_enable = false

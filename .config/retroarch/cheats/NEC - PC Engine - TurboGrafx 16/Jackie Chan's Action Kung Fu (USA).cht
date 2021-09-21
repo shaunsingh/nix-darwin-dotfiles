@@ -1,0 +1,17 @@
+cheats = 4
+
+cheat0_desc = "Infinite Energy"
+cheat0_code = "1f00d2:3f"
+cheat0_enable = false
+
+cheat1_desc = "Infinite Special"
+cheat1_code = "1f00d3:05"
+cheat1_enable = false
+
+cheat2_desc = "Infinite Continues"
+cheat2_code = "1f0100:09"
+cheat2_enable = false
+
+cheat3_desc = "Invincibility"
+cheat3_code = "1f0071:ff"
+cheat3_enable = false

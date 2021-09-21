@@ -1,0 +1,5 @@
+cheats = 1
+
+cheat0_desc = "Unlimited Health (disable if you fall into spikes/pits"
+cheat0_code = "1f0736:04"
+cheat0_enable = false

@@ -1,0 +1,9 @@
+cheats = 2
+
+cheat0_desc = "Exit Ladder Automatically Appears"
+cheat0_code = "1f09af:00"
+cheat0_enable = false
+
+cheat1_desc = "Infinite Lives"
+cheat1_code = "1f07bd:05"
+cheat1_enable = false

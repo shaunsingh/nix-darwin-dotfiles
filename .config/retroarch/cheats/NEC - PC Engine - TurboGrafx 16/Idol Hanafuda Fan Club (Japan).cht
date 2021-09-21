@@ -1,0 +1,13 @@
+cheats = 3
+
+cheat0_desc = "Infinite Time (Menu)"
+cheat0_code = "1f1236:0f"
+cheat0_enable = false
+
+cheat1_desc = "Infinite Time (In-Game Turn)"
+cheat1_code = "1f0012:05"
+cheat1_enable = false
+
+cheat2_desc = "Infinite Magic Power"
+cheat2_code = "1f1239:09+1f123a:09+1f123b:09"
+cheat2_enable = false

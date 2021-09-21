@@ -1,0 +1,9 @@
+cheats = 2
+
+cheat0_desc = "Infinite Health"
+cheat0_code = "1f0d89:15"
+cheat0_enable = false
+
+cheat1_desc = "Invincibility"
+cheat1_code = "1f0d20:59"
+cheat1_enable = false

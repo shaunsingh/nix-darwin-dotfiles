@@ -1,0 +1,30 @@
+cheats = 7
+
+cheat0_desc = "Enable Code (Must Be On)"
+cheat0_code = "0000B91B+000A+100003C0+0007"
+cheat0_enable = false
+
+cheat1_desc = "Max Money"
+cheat1_code = "82035408+869F+8203540A+0001"
+cheat1_enable = false
+
+cheat2_desc = "Always Low Time Overall"
+cheat2_code = "83000C14+0000+83000C16+0000"
+cheat2_enable = false
+
+cheat3_desc = "Idiot AI Car 1"
+cheat3_code = "8300642C+0000+8300642E+0000"
+cheat3_enable = false
+
+cheat4_desc = "Idiot AI Car 2"
+cheat4_code = "830064C4+0000+830064C6+0000"
+cheat4_enable = false
+
+cheat5_desc = "Idiot AI Car 3"
+cheat5_code = "8300655C+0000+8300655E+0000"
+cheat5_enable = false
+
+cheat6_desc = "Idiot AI Car 4"
+cheat6_code = "830065F4+0000+830065F6+0000"
+cheat6_enable = false
+

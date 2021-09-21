@@ -1,0 +1,9 @@
+cheats = 2
+
+cheat0_desc = "Infinite Time"
+cheat0_code = "1f07ac:99"
+cheat0_enable = false
+
+cheat1_desc = "Need 1 Tile to Complete Round"
+cheat1_code = "1f1110:00+1f1111:00"
+cheat1_enable = false

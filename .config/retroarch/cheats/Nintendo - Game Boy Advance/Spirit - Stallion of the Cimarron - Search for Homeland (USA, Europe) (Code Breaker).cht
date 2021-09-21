@@ -1,0 +1,14 @@
+cheats = 3
+
+cheat0_desc = "Enable Code (Must Be On)"
+cheat0_code = "000085E5+000A+10002960+0007"
+cheat0_enable = false
+
+cheat1_desc = "Easy Tame & Infinite Health (All Horses)"
+cheat1_code = "42001894+8080+00000005+002C+42001896+8080+00000005+002C"
+cheat1_enable = false
+
+cheat2_desc = "Infinite Food & Have All Items"
+cheat2_code = "82001984+0400+82001986+0404+82001988+0604+8200198A+0105+8200198C+0101+8200198E+0101+82001990+0501+82001992+0505+82001994+0505+82001996+0105+82001998+0501+8200199A+0A05"
+cheat2_enable = false
+

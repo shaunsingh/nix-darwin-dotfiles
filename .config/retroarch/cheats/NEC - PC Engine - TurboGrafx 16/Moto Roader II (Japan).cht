@@ -1,0 +1,13 @@
+cheats = 3
+
+cheat0_desc = "Infinite Energy"
+cheat0_code = "1f06f9:63"
+cheat0_enable = false
+
+cheat1_desc = "Infinite Money"
+cheat1_code = "1f07ba:99"
+cheat1_enable = false
+
+cheat2_desc = "Kill All CPUs (2-5)"
+cheat2_code = "1f06fa:99+1f06fb:99+1f06fc:99+1f06fd:99"
+cheat2_enable = false

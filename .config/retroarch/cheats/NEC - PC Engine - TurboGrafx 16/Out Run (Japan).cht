@@ -1,0 +1,9 @@
+cheats = 2
+
+cheat0_desc = "Infinite Time"
+cheat0_code = "1f002b:75"
+cheat0_enable = false
+
+cheat1_desc = "Input Test Shown on Title Screen"
+cheat1_code = "1f0091:02"
+cheat1_enable = false

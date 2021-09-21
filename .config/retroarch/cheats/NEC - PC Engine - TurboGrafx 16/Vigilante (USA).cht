@@ -1,0 +1,21 @@
+cheats = 5
+
+cheat0_desc = "Infinite Energy (turn off at end of level)"
+cheat0_code = "1f07c9:70"
+cheat0_enable = false
+
+cheat1_desc = "Infinite Lives"
+cheat1_code = "1f0755:03"
+cheat1_enable = false
+
+cheat2_desc = "Infinite Time (turn off at end of level)"
+cheat2_code = "1f070f:9a"
+cheat2_enable = false
+
+cheat3_desc = "Always Have Nunchaku"
+cheat3_code = "1f0757:01"
+cheat3_enable = false
+
+cheat4_desc = "1-Hit Boss Kill"
+cheat4_code = "1f07dc:00"
+cheat4_enable = false

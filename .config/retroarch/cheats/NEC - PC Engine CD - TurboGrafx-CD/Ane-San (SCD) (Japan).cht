@@ -1,0 +1,13 @@
+cheats = 3
+
+cheat0_desc = "Infinite Health"
+cheat0_code = "1f09ee:32"
+cheat0_enable = false
+
+cheat1_desc = "1-Hit Kill Bosses and Enemies"
+cheat1_code = "1f09f0:25+1f09f1:25+1f09f2:25"
+cheat1_enable = false
+
+cheat2_desc = "Infinite Money"
+cheat2_code = "1f06cf:15+1f06d0:15+1f06d1:15"
+cheat2_enable = false

@@ -1,0 +1,13 @@
+cheats = 3
+
+cheat0_desc = "Infinite Energy"
+cheat0_code = "1f00bf:0e"
+cheat0_enable = false
+
+cheat1_desc = "Invincibility"
+cheat1_code = "1f09d8:14"
+cheat1_enable = false
+
+cheat2_desc = "Infinite Gold"
+cheat2_code = "1f00c4:ff+1f00c5:ff"
+cheat2_enable = false

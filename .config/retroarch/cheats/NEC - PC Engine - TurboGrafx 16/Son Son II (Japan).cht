@@ -1,0 +1,13 @@
+cheats = 3
+
+cheat0_desc = "Invincibility"
+cheat0_code = "1f02c8:14"
+cheat0_enable = false
+
+cheat1_desc = "Infinite Health"
+cheat1_code = "1f02b8:0e"
+cheat1_enable = false
+
+cheat2_desc = "Infinite Zenny"
+cheat2_code = "1f020e:09+1f020f:09+1f0210:09+1f0211:09+1f0212:09"
+cheat2_enable = false

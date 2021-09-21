@@ -1,0 +1,5 @@
+cheats = 1
+
+cheat0_desc = "Instant 3 Count (Both Players)"
+cheat0_code = "1f00b7:04"
+cheat0_enable = false

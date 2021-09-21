@@ -1,0 +1,13 @@
+cheats = 3
+
+cheat0_desc = "Infinite Time"
+cheat0_code = "1f0fc8:59"
+cheat0_enable = false
+
+cheat1_desc = "Infinite Energy"
+cheat1_code = "1f1319:28"
+cheat1_enable = false
+
+cheat2_desc = "Infinite Shurikens"
+cheat2_code = "1f0e7d:30"
+cheat2_enable = false

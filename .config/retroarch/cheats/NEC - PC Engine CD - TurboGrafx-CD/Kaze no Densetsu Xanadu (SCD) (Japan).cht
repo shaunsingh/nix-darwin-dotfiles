@@ -1,0 +1,5 @@
+cheats = 1
+
+cheat0_desc = "Infinite Potions"
+cheat0_code = "1f0ad2:02"
+cheat0_enable = false

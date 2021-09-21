@@ -1,0 +1,9 @@
+cheats = 2
+
+cheat0_desc = "Invincibility"
+cheat0_code = "1f005f:00"
+cheat0_enable = false
+
+cheat1_desc = "Max Money"
+cheat1_code = "1f0303:55"
+cheat1_enable = false

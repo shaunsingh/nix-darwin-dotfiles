@@ -1,0 +1,25 @@
+cheats = 6
+
+cheat0_desc = "Max Life"
+cheat0_code = "1f0685:0e"
+cheat0_enable = false
+
+cheat1_desc = "Max Gold (Deactivate/reactivate if a shop says not enough)
+cheat1_code = "1f00b5:ff+1f00b6:ff"
+cheat1_enable = false
+
+cheat2_desc = "Max Power"
+cheat2_code = "1f0687:0e"
+cheat2_enable = false
+
+cheat3_desc = "Max Shield"
+cheat3_code = "1f0688:03"
+cheat3_enable = false
+
+cheat4_desc = "Have Elixir"
+cheat4_code = "1f0684:01"
+cheat4_enable = false
+
+cheat5_desc = "Max Time Slip (don't go above 9)"
+cheat5_code = "1f0683:09"
+cheat5_enable = false

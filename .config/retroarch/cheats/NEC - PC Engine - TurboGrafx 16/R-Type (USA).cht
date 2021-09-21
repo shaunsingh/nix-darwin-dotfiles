@@ -1,0 +1,21 @@
+cheats = 5
+
+cheat0_desc = "Infinite Credits"
+cheat0_code = "1f0143:09"
+cheat0_enable = false
+
+cheat1_desc = "Infinite Lives"
+cheat1_code = "1f0142:09"
+cheat1_enable = false
+
+cheat2_desc = "Auto Fire (Charged Shot)"
+cheat2_code = "1f016f:80"
+cheat2_enable = false
+
+cheat3_desc = "Invulnerability"
+cheat3_code = "1f0d81:7b"
+cheat3_enable = false
+
+cheat4_desc = "Invincibility versus Enemies (non-blinking)
+cheat4_code = "1f0ac4:00"
+cheat4_enable = false

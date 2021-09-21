@@ -1,0 +1,13 @@
+cheats = 3
+
+cheat0_desc = "Have Max Milk"
+cheat0_code = "1f0c28:25+1f0c29:25"
+cheat0_enable = false
+
+cheat1_desc = "Have Rattle and Unlimited Ammo"
+cheat1_code = "1f0c2a:96+1f0c2b:96"
+cheat1_enable = false
+
+cheat2_desc = "Invincibility"
+cheat2_code = "1f0c2c:25+1f0c2d:25"
+cheat2_enable = false

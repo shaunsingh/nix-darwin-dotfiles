@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="112"
+   height="80"
+   viewBox="0 0 29.633333 21.166666"
+   version="1.1"
+   id="svg868"
+   inkscape:version="0.92.2 5c3e80d, 2017-08-06"
+   sodipodi:docname="button_start.svg">
+  <defs
+     id="defs862">
+    <filter
+       inkscape:collect="always"
+       style="color-interpolation-filters:sRGB"
+       id="filter2093"
+       x="-0.036923081"
+       width="1.0738462"
+       y="-0.068571419"
+       height="1.1371428">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="0.42333337"
+         id="feGaussianBlur2095" />
+    </filter>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="5.1350445"
+     inkscape:cx="38.449033"
+     inkscape:cy="32"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     units="px"
+     inkscape:pagecheckerboard="true"
+     inkscape:window-width="1920"
+     inkscape:window-height="1025"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:object-paths="true"
+     inkscape:snap-midpoints="true" />
+  <metadata
+     id="metadata865">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="button"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-275.83334)">
+    <path
+       inkscape:connector-curvature="0"
+       style="opacity:1;vector-effect:none;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1.73071766;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;filter:url(#filter2093)"
+       d="m 1.0583333,281.125 v 1.77801 5.63033 7.40833 l 2.4971661,-0.0141 25.0856456,-5.99653 v -1.39767 -1.39769 L 3.5484344,281.13206 Z"
+       id="path1480-3"
+       sodipodi:nodetypes="cccccccccc"
+       transform="matrix(1,0,0,1.285714,0,-84.554669)" />
+    <path
+       style="opacity:1;vector-effect:none;fill:#282828;fill-opacity:1;stroke:#c0c0c0;stroke-width:1.58749997;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       d="m 1.8520833,277.68542 v 2.0955 6.63575 8.73125 h 1.5875 l 24.3416667,-7.6835 v -1.04775 -1.04775 l -24.3416667,-7.6835 z"
+       id="path1480"
+       inkscape:connector-curvature="0" />
+  </g>
+</svg>

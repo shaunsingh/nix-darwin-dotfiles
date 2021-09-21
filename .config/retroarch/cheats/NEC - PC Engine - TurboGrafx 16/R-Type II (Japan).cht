@@ -1,0 +1,13 @@
+cheats = 3
+
+cheat0_desc = "Infinite Credits"
+cheat0_code = "1f1445:09"
+cheat0_enable = false
+
+cheat1_desc = "Infinite Lives"
+cheat1_code = "1f1444:09"
+cheat1_enable = false
+
+cheat2_desc = "Auto Fire (Charged Shot)"
+cheat2_code = "1f0150:80"
+cheat2_enable = false

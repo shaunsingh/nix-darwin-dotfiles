@@ -1,0 +1,14 @@
+cheats = 3
+
+cheat0_desc = "Enable Code (Must Be On)"
+cheat0_code = "0000C736+000A+10002278+0007"
+cheat0_enable = false
+
+cheat1_desc = "Infinite Money"
+cheat1_code = "83004030+FFFF"
+cheat1_enable = false
+
+cheat2_desc = "Max Money"
+cheat2_code = "83004030+E0FF+83004032+05F5"
+cheat2_enable = false
+

@@ -1,0 +1,13 @@
+cheats = 3
+
+cheat0_desc = "Infinite Energy"
+cheat0_code = "1f0021:50"
+cheat0_enable = false
+
+cheat1_desc = "Invincibility"
+cheat1_code = "1f0832:14"
+cheat1_enable = false
+
+cheat2_desc = "1-Hit Boss Kill"
+cheat2_code = "1f0758:00"
+cheat2_enable = false

@@ -1,0 +1,13 @@
+cheats = 3
+
+cheat0_desc = "Infinite Balls"
+cheat0_code = "1f0630:0a"
+cheat0_enable = false
+
+cheat1_desc = "Move Ball Anywhere"
+cheat1_code = "1f0005:01"
+cheat1_enable = false
+
+cheat2_desc = "Ball Parameter Menu (Options Menu)"
+cheat2_code = "1f0737:0e"
+cheat2_enable = false

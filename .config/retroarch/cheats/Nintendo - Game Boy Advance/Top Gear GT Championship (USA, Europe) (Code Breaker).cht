@@ -1,0 +1,10 @@
+cheats = 2
+
+cheat0_desc = "Enable Code (Must Be On)"
+cheat0_code = "00002250+000A+1004000C+0007"
+cheat0_enable = false
+
+cheat1_desc = "Always Low Timer"
+cheat1_code = "83003A04+0000"
+cheat1_enable = false
+

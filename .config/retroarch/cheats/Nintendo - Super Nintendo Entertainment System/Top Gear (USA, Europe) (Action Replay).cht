@@ -1,0 +1,21 @@
+cheats = 5 
+
+cheat0_desc = "Race In Any Country"
+cheat0_code = "0F933780"
+cheat0_enable = false 
+
+cheat1_desc = "Infinite Fuel P1"
+cheat1_code = "7E1E63FF"
+cheat1_enable = false 
+
+cheat2_desc = "Infinite Fuel P2"
+cheat2_code = "7E1E65FF"
+cheat2_enable = false 
+
+cheat3_desc = "Infinite Nitro P1"
+cheat3_code = "7E1E6C02"
+cheat3_enable = false 
+
+cheat4_desc = "Infinite Nitro P2"
+cheat4_code = "7E1E6E02"
+cheat4_enable = false 

@@ -1,0 +1,9 @@
+cheats = 2
+
+cheat0_desc = "Infinite Time"
+cheat0_code = "1f1016:05"
+cheat0_enable = false
+
+cheat1_desc = "CPU/P2 Never Scores"
+cheat1_code = "1f0f56:00"
+cheat1_enable = false

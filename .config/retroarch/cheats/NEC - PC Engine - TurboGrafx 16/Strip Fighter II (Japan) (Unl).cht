@@ -1,0 +1,17 @@
+cheats = 4
+
+cheat0_desc = "Infinite Time"
+cheat0_code = "1f037c:63"
+cheat0_enable = false
+
+cheat1_desc = "Show Lots of Naked Chicks"
+cheat1_code = "1f1009:03"
+cheat1_enable = false
+
+cheat2_desc = "P1 Infinite Health"
+cheat2_code = "1f0f39:00+1f0f3b:00"
+cheat2_enable = false
+
+cheat3_desc = "P1 Instant Win (P2 Life Mod)"
+cheat3_code = "1f0f3a:60+1f0f3c:60"
+cheat3_enable = false

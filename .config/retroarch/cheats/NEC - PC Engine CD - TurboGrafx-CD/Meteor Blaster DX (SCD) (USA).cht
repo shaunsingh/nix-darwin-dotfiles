@@ -1,0 +1,9 @@
+cheats = 2
+
+cheat0_desc = "Invincible"
+cheat0_code = "1f09d2:18"
+cheat0_enable = false
+
+cheat1_desc = "Infinite Ships"
+cheat1_code = "1f15c1:10"
+cheat1_enable = false

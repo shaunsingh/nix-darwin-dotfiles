@@ -1,0 +1,5 @@
+cheats = 1
+
+cheat0_desc = "Instant Win"
+cheat0_code = "1f0032:01+1f0055:01"
+cheat0_enable = false

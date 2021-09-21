@@ -1,0 +1,13 @@
+cheats = 3
+
+cheat0_desc = "Unlimited Time"
+cheat0_code = "1f0060:00+1f0061:00"
+cheat0_enable = false
+
+cheat1_desc = "No Tire Damage"
+cheat1_code = "1f006e:26"
+cheat1_enable = false
+
+cheat2_desc = "No G/B Damage"
+cheat2_code = "1f006f:26"
+cheat2_enable = false

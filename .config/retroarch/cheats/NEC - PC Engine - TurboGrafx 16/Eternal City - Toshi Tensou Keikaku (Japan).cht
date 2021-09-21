@@ -1,0 +1,9 @@
+cheats = 2
+
+cheat0_desc = "Max Weapon"
+cheat0_code = "1f0532:50"
+cheat0_enable = false
+
+cheat1_desc = "Max Shield"
+cheat1_code = "1f0508:50"
+cheat1_enable = false

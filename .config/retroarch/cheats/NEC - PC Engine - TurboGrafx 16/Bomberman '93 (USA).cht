@@ -1,0 +1,13 @@
+cheats = 3
+
+cheat0_desc = "Infinite Lives"
+cheat0_code = "1f189f:02"
+cheat0_enable = false
+
+cheat1_desc = "Freeze Time"
+cheat1_code = "1f00b6:3b"
+cheat1_enable = false
+
+cheat2_desc = "Invincibility"
+cheat2_code = "1f0c01:b7+1f0c35:86"
+cheat2_enable = false

@@ -1,0 +1,9 @@
+cheats = 2
+
+cheat0_desc = "Quick Level Up"
+cheat0_code = "1f154c:55"
+cheat0_enable = false
+
+cheat1_desc = "Invincibility"
+cheat1_code = "1f0b64:10"
+cheat1_enable = false
