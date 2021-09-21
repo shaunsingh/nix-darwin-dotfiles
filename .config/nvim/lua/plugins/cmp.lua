@@ -15,11 +15,11 @@ cmp.setup {
    },
    formatting = {
       format = function(entry, vim_item)
-      vim_item.menu = ({
-            nvim_lsp = '[LSPλ]',
-            buffer   = '[BUF]',
-          })[entry.source.name]
-          vim_item.kind = ({
+         vim_item.menu = ({
+            nvim_lsp = "[LSPλ]",
+            buffer = "[BUF]",
+         })[entry.source.name]
+         vim_item.kind = ({
             Text = "",
             Method = "",
             Function = "",
@@ -45,8 +45,8 @@ cmp.setup {
             Event = "",
             Operator = "",
             TypeParameter = "",
-          })[vim_item.kind]
-        return vim_item
+         })[vim_item.kind]
+         return vim_item
       end,
    },
    mapping = {

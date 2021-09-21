@@ -38,8 +38,8 @@ true_zen.setup {
       },
    },
    integrations = {
-	galaxyline = true,
-	nvim_bufferline = true,
-	twilight = true,
+      galaxyline = true,
+      nvim_bufferline = true,
+      twilight = true,
    },
 }

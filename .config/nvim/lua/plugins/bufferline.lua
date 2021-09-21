@@ -7,21 +7,21 @@ end
 vim.cmd "function! Doom_bufferline_quitvim(a,b,c,d) \n qa \n endfunction"
 
 local colors = {
-  bg = "NONE",
-  black = "#3b4252",
-  black2 = "#2E3440",
-  white = "#ECEFF4",
-  fg = "#E5E9F0",
-  yellow = "#EBCB8B",
-  cyan = "#A3BE8C",
-  darkblue = "#81A1C1",
-  green = "#8FBCBB",
-  orange = "#D08770",
-  purple = "#B48EAD",
-  magenta = "#BF616A",
-  gray = "#616E88",
-  blue = "#5E81AC",
-  red = "#BF616A"
+   bg = "NONE",
+   black = "#3b4252",
+   black2 = "#2E3440",
+   white = "#ECEFF4",
+   fg = "#E5E9F0",
+   yellow = "#EBCB8B",
+   cyan = "#A3BE8C",
+   darkblue = "#81A1C1",
+   green = "#8FBCBB",
+   orange = "#D08770",
+   purple = "#B48EAD",
+   magenta = "#BF616A",
+   gray = "#616E88",
+   blue = "#5E81AC",
+   red = "#BF616A",
 }
 
 bufferline.setup {

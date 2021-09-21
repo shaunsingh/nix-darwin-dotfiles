@@ -26,7 +26,7 @@ telescope.setup {
             prompt_position = "top",
             preview_width = 0.55,
             results_width = 0.8,
-        },
+         },
          vertical = {
             mirror = false,
          },
@@ -68,4 +68,4 @@ pcall(function()
    for _, ext in ipairs(extensions) do
       telescope.load_extension(ext)
    end
-end) 
+end)

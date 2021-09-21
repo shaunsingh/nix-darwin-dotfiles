@@ -22,7 +22,7 @@ vim.opt.numberwidth = 2
 vim.opt.expandtab = true
 vim.opt.shiftwidth = 4
 vim.opt.smartindent = true
-vim.opt.shortmess:append("casI") --disable intro
+vim.opt.shortmess:append "casI"
 vim.opt.whichwrap:append "<>hl"
 vim.opt.guifont = "Liga SFMono Nerd Font:h11"
 
@@ -50,4 +50,3 @@ local disabled_built_ins = {
 for _, plugin in pairs(disabled_built_ins) do
    vim.g["loaded_" .. plugin] = 1
 end
-

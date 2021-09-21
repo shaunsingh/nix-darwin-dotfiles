@@ -4,19 +4,19 @@ if not present then
 end
 
 local colors = {
-  bg = "NONE",
-  white = "#ECEFF4",
-  fg = "#E5E9F0",
-  yellow = "#EBCB8B",
-  cyan = "#A3BE8C",
-  darkblue = "#81A1C1",
-  green = "#8FBCBB",
-  orange = "#D08770",
-  purple = "#B48EAD",
-  magenta = "#BF616A",
-  gray = "#616E88",
-  blue = "#5E81AC",
-  red = "#BF616A"
+   bg = "NONE",
+   white = "#ECEFF4",
+   fg = "#E5E9F0",
+   yellow = "#EBCB8B",
+   cyan = "#A3BE8C",
+   darkblue = "#81A1C1",
+   green = "#8FBCBB",
+   orange = "#D08770",
+   purple = "#B48EAD",
+   magenta = "#BF616A",
+   gray = "#616E88",
+   blue = "#5E81AC",
+   red = "#BF616A",
 }
 
 local tree_cb = tree_c.nvim_tree_callback
@@ -102,7 +102,7 @@ g.nvim_tree_bindings = {
    { key = "x", cb = tree_cb "cut" },
    { key = "c", cb = tree_cb "copy" },
    { key = "p", cb = tree_cb "paste" },
-   { key = "y",cb = tree_cb "copy_name" },
+   { key = "y", cb = tree_cb "copy_name" },
    { key = "Y", cb = tree_cb "copy_path" },
    { key = "gy", cb = tree_cb "copy_absolute_path" },
    { key = "[c", cb = tree_cb "prev_git_item" },
@@ -110,4 +110,4 @@ g.nvim_tree_bindings = {
    { key = "-", cb = tree_cb "dir_up" },
    { key = "q", cb = tree_cb "close" },
    { key = "g?", cb = tree_cb "toggle_help" },
-} 
+}
