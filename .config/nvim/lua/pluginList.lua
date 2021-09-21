@@ -69,7 +69,7 @@ return packer.startup(
 	   use {
 	      "lukas-reineke/indent-blankline.nvim",
 	      event = "BufRead",
-              setup = function()
+              config = function()
                   require("plugins.others").blankline()
               end
 	   }
@@ -231,7 +231,7 @@ return packer.startup(
 	
 	   use {'kristijanhusak/orgmode.nvim',
 	     ft = {'org'},
-             setup = function()
+             config = function()
                  require("plugins.others").orgmode()
              end
 	   }
