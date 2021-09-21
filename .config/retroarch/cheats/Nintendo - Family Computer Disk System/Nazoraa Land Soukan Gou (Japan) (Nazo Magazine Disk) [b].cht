@@ -1,5 +1,0 @@
-cheats = 1
-
-cheat0_desc = "View Ending Credits"
-cheat0_code = "00E6:09"
-cheat0_enable = false

@@ -1,5 +1,0 @@
-cheats = 1
-
-cheat0_desc = "Infinite Lives"
-cheat0_code = "Z 8 25723 0 0"
-cheat0_enable = false

@@ -1,5 +1,0 @@
-cheats = 1
-
-cheat0_desc = "Level Modifier"
-cheat0_code = "00C3-CB00"
-cheat0_enable = false

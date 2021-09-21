@@ -1,5 +1,0 @@
-cheats = 1
-
-cheat0_desc = "Instantly Beat Level"
-cheat0_code = "007B:01"
-cheat0_enable = false

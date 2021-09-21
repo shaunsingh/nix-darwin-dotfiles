@@ -1,5 +1,0 @@
-cheats = 1
-
-cheat0_desc = "Enable Crazy and Huge Tour Modes on Title Screen"
-cheat0_code = "FFDEB4:0001"
-cheat0_enable = false

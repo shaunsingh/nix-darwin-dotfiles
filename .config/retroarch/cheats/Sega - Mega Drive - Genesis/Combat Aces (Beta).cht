@@ -1,5 +1,0 @@
-cheats = 1
-
-cheat0_desc = "Removes Countdown Numbers"
-cheat0_code = "FF04C0:0000"
-cheat0_enable = false

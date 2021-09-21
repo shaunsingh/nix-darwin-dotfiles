@@ -1,5 +1,0 @@
-cheats = 1
-
-cheat0_desc = "Score Always 1 P1"
-cheat0_code = "0490:00"
-cheat0_enable = false

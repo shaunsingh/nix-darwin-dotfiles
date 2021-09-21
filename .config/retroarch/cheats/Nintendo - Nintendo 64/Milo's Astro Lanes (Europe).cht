@@ -1,5 +1,0 @@
-cheats = 1
-
-cheat0_desc = "Always a strike (1st frame)"
-cheat0_code = "800ACAD0 000A"
-cheat0_enable = false
