@@ -1,5 +1,4 @@
-local present, _ = pcall(require, "packerInit")
-local packer
+local present, packer = pcall(require, "packerInit")
 
 if present then
    packer = require "packer"
