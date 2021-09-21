@@ -231,6 +231,9 @@ return packer.startup(
 	
 	   use {'kristijanhusak/orgmode.nvim',
 	     ft = {'org'},
+             setup = function()
+                 require("plugins.others").orgmode()
+             end
 	   }
     end
 )
