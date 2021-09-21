@@ -28,6 +28,6 @@ dashboard.section.buttons.val = {
         dashboard.button( "SPC f r", "  Recents  " , ":Telescope oldfiles<CR>"),
         dashboard.button( "SPC w w", "  Find Word" , ":Telescope live_grep<CR>"),
         dashboard.button( "SPC b m", "  Bookmarks" , ":Telescope marks<CR>"),
-        dashboard.button( "ZZ     ", "  Quit     " , ":qa<CR>"),
+        dashboard.button( ":qa!   ", "  Quit     " , ":qa<CR>"),
 }
 alpha.setup(dashboard.opts)
