@@ -10,7 +10,7 @@ end
 local use = packer.use
 return packer.startup(
     function()
-	use {
+	   use {
 	      "wbthomason/packer.nvim",
               event = "VimEnter"
 	   }
@@ -18,6 +18,12 @@ return packer.startup(
 	   use {
 	      "nvim-lua/plenary.nvim",
 	   }
+
+           use {
+              "dstein64/vim-startuptime",
+              cmd = "StartupTime"
+           }
+
 	
 	   use {
 	      "shaunsingh/nord.nvim",

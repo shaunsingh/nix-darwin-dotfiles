@@ -26,8 +26,6 @@ vim.opt.shortmess:append("casI") --disable intro
 vim.opt.whichwrap:append "<>hl"
 vim.opt.guifont = "Liga SFMono Nerd Font:h11"
 
-vim.cmd[[autocmd VimEnter,VimLeave * silent !tmux set status off]]
-
 local disabled_built_ins = {
    "2html_plugin",
    "getscript",
