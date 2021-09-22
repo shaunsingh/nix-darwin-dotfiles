@@ -1,5 +1,0 @@
-cheats = 1
-
-cheat0_desc = "Character Modifier P1"
-cheat0_code = "FFFFAE:0000"
-cheat0_enable = false

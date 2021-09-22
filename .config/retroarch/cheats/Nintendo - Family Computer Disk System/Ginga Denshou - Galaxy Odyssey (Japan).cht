@@ -1,5 +1,0 @@
-cheats = 1
-
-cheat0_desc = "Invincibility"
-cheat0_code = "011B:00"
-cheat0_enable = false

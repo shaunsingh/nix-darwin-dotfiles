@@ -1,5 +1,0 @@
-cheats = 1
-
-cheat0_desc = "Freeze Time Of Day"
-cheat0_code = "71C5:FF"
-cheat0_enable = false

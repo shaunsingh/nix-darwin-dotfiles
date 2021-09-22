@@ -1,5 +1,0 @@
-cheats = 1
-
-cheat0_desc = "Infinite fuel"
-cheat0_code = "Z 8 36484 42 0"
-cheat0_enable = false

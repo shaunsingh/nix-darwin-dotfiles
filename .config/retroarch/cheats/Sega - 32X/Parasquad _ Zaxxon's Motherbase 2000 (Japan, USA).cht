@@ -1,5 +1,0 @@
-cheats = 1
-
-cheat0_desc = "Infinite Lives"
-cheat0_code = "FF78DE:0099"
-cheat0_enable = false

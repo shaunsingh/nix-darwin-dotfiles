@@ -1,5 +1,0 @@
-cheats = 1
-
-cheat0_desc = "Energy Bar Always Full,  Player 1"
-cheat0_code = "00C0-0FFF"
-cheat0_enable = false

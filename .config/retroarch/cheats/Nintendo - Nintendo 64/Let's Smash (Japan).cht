@@ -1,5 +1,0 @@
-cheats = 1
-
-cheat0_desc = "Easy Win"
-cheat0_code = "801A4047 0028"
-cheat0_enable = false
