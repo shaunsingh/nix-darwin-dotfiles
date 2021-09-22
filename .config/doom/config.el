@@ -80,8 +80,8 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 
 ;;(setq doom-theme 'doom-one-light)
 (setq doom-one-light-padded-modeline t)
-(setq doom-theme 'doom-vibrant)
-(setq doom-vibrant-padded-modeline t)
+(setq doom-theme 'doom-nord)
+(setq doom-nord-padded-modeline t)
 
 ;;(use-package! vlf-setup
   ;;:defer-incrementally vlf-tune vlf-base vlf-write vlf-search vlf-occur vlf-follow vlf-ediff vlf)
@@ -223,10 +223,8 @@ Made for `org-tab-first-hook'."
 (custom-set-faces!
   `(minimap-active-region-background :background unspecified))
 
-(set-frame-parameter nil 'internal-border-width 15)
-(setq-default left-margin-width 2
-              right-margin-width 2
-              line-spacing 0.35)
+(set-frame-parameter nil 'internal-border-width 24)
+(setq-default line-spacing 0.35)
 
 (use-package! selectric-mode
   :commands selectric-mode)
