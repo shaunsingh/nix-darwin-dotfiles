@@ -13,16 +13,16 @@
 
 ;; theme
 
-(let ((bg "#242730")
-      (fg "#bbc2cf")
-      (mlbg "#2a2e38") ; modeline bg
-      (mlfg "#51afef")
-      (ml-highlight-fg "#C57BDB")
-      (h1 "#bbc2cf")
-      (a "#C57BDB")
-      (cursor "#51afef")
-      (mb-prompt "#FCCE7B") ; minibuffer prompt
-      (mb-separator "#7bc275"))
+(let ((bg "#2E3440")
+      (fg "#D8DEE9")
+      (mlbg "#3B4252") ; modeline bg
+      (mlfg "#8FBCBB")
+      (ml-highlight-fg "#EBCB8B")
+      (h1 "#D8DEE9")
+      (a "#A3BE8C")
+      (cursor "#D8DEE9")
+      (mb-prompt "#B48EAD") ; minibuffer prompt
+      (mb-separator "#BF616A"))
 
   ;; minibuffer (bg and fg colors)
   (define-configuration prompt-buffer
@@ -49,11 +49,11 @@
 	     :background-color ,mlbg
 	     :color ,mlfg)
             (.marked
-             :background-color "#ff665c"
-             :color "#2a2e38")
+             :background-color "#B48EAD"
+             :color "#3B4252")
             (.selected
-             :background-color "#FCCE7B"
-             :color "#2a2e38")))))))
+             :background-color "#EBCB8B"
+             :color "#3B4252")))))))
 
   (defun override (color)
     (concatenate 'string color " !important"))
