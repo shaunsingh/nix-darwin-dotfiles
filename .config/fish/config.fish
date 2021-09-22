@@ -1,7 +1,33 @@
 # launch tmux if not active
 if status is-interactive
 and not set -q TMUX
-    exec tmux
+   exec tmux
+end
+
+# add nessecary vterm features
+function vterm_printf;
+    if begin; [  -n "$TMUX" ]  ; and  string match -q -r "screen|tmux" "$TERM"; end
+        # tell tmux to pass the escape sequences through
+        printf "\ePtmux;\e\e]%s\007\e\\" "$argv"
+    else if string match -q -- "screen*" "$TERM"
+        # GNU screen (screen, screen-256color, screen-256color-bce)
+        printf "\eP\e]%s\007\e\\" "$argv"
+    else
+        printf "\e]%s\e\\" "$argv"
+    end
+end
+
+if [ "$INSIDE_EMACS" = 'vterm' ]
+    function clear
+        vterm_printf "51;Evterm-clear-scrollback";
+        tput clear;
+    end
+end
+
+function fish_title
+    hostname
+    echo ":"
+    pwd
 end
 
 # remove greating
@@ -110,7 +136,7 @@ alias update 'brew update; brew upgrade; brew cleanup'
 alias cleanup "find . -type f -name '*.DS_Store' -ls -delete && rm -r ~/.config/discord && rm -r ~/.config/GIMP && rm -r ~/.config/chromium "
 
 alias battery "sudo pow bat"
-alias neovide "~/IdeaProjects/neovim/neovide/target/release/neovide --multiGrid --frameless"
+# alias neovide "~/IdeaProjects/neovim/neovide/target/release/neovide --multiGrid --frameless"
 alias clock "alacritty --config-file ~/.config/scripts/alacritty.yml --class clock --command sh -c 'tty-clock -c -b -n -C6'"
 alias top "alacritty --config-file ~/.config/scripts/alacritty.yml --class htop --command sh -c 'htop -C -M'"
 alias fetch "alacritty --config-file ~/.config/scripts/alacritty.yml --class fetch --command sh -c 'wfetch'"

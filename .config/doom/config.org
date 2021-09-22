@@ -197,12 +197,12 @@ Just in case the fonts aren't there, lets add a fallback
 #+end_src
 
 ** Themes
-Right now I'm using doom-vibrant, but I use doom-one-light sometimes
+Right now I'm using nord, but I use doom-one-light sometimes
 #+begin_src elisp
 ;;(setq doom-theme 'doom-one-light)
 (setq doom-one-light-padded-modeline t)
-(setq doom-theme 'doom-vibrant)
-(setq doom-vibrant-padded-modeline t)
+(setq doom-theme 'doom-nord)
+(setq doom-nord-padded-modeline t)
 #+end_src
 
 ** Very large files
