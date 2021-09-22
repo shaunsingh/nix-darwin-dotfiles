@@ -1,30 +1,30 @@
 /*
-    Discord Doom-Vibrant
+    Discord Nord
     https://github.com/joinemm/discord-css
 */
 
 /* define colors */
 :root {
-    --background-primary: #242730;
-    --background-secondary: #2a2e38;
-    --background-secondary-alt: #2a2e38;
-    --background-tertiary: #242730;
-    --background-accent: #242730;
-    --channeltextarea-background: #242730;
-    --text-normal: #bbc2cf;
-    --text-muted: #62686E;
-    --channels-default: #62686E;
-    --interactive-normal: #62686E;
-    --interactive-hover: #C57BDB;
-    --interactive-active: #bbc2cf;
-    --interactive-muted: #FCCE7B;
-    --header-primary: #bbc2cf;
-    --header-secondary: #51afef;
-    --background-floating: #242730;
-    --scrollbar-auto-thumb: #2a2e38;
-    --scrollbar-auto-track: #242730;
-    --text-link: #51afef;
-    --selection: #2a2e38;
+    --background-primary: #2E3440;
+    --background-secondary: #3B4252;
+    --background-secondary-alt: #3B4252;
+    --background-tertiary: #2E3440;
+    --background-accent: #2E3440;
+    --channeltextarea-background: #2E3440;
+    --text-normal: #D8DEE9;
+    --text-muted: #434C5E;
+    --channels-default: #434C5E;
+    --interactive-normal: #434C5E;
+    --interactive-hover: #8FBCBB;
+    --interactive-active: #D8DEE9;
+    --interactive-muted: #81A1C1;
+    --header-primary: #D8DEE9;
+    --header-secondary: #E8CB8B;
+    --background-floating: #2E3440;
+    --scrollbar-auto-thumb: #3B4252;
+    --scrollbar-auto-track: #2E3440;
+    --text-link: #E8CB8B;
+    --selection: #3B4252;
 }
 
 * {
@@ -188,30 +188,30 @@
 	filter: none !important;
 }
 
-/* Doom style (dark) (c) Pavel Pertsev (original style at https://github.com/morhetz/gruvbox) */
+/* Nord style (dark) */
 
 .hljs {
   display: block;
   overflow-x: auto;
   padding: 0.5em;
-  background: #242730;
+  background: #2E3440;
 }
 
 .hljs,
 .hljs-subst {
-  color: #62686E;
+  color: #434C5E;
 }
 
-/* Doom Red */
+/* Nord Red */
 .hljs-deletion,
 .hljs-formula,
 .hljs-keyword,
 .hljs-link,
 .hljs-selector-tag {
-  color: #ff665c;
+  color: #BF616A;
 }
 
-/* Doom Blue */
+/* Nord Blue */
 .hljs-built_in,
 .hljs-emphasis,
 .hljs-name,
@@ -219,35 +219,35 @@
 .hljs-strong,
 .hljs-title,
 .hljs-variable {
-  color: #51afef;
+  color: #E8CB8B;
 }
 
-/* Doom Yellow */
+/* Nord Yellow */
 .hljs-attr,
 .hljs-params,
 .hljs-template-tag,
 .hljs-type {
-  color: #FCCE7B;
+  color: #81A1C1;
 }
 
-/* Doom Purple */
+/* Nord Purple */
 .hljs-builtin-name,
 .hljs-doctag,
 .hljs-literal,
 .hljs-number {
-  color: #C57BDB;
+  color: #Bf616A;
 }
 
-/* Doom Orange */
+/* Nord Orange */
 .hljs-code,
 .hljs-meta,
 .hljs-regexp,
 .hljs-selector-id,
 .hljs-template-variable {
-  color: #e69055;
+  color: #D08770;
 }
 
-/* Doom Green */
+/* Nord Green */
 .hljs-addition,
 .hljs-meta-string,
 .hljs-section,
@@ -255,10 +255,10 @@
 .hljs-selector-class,
 .hljs-string,
 .hljs-symbol {
-  color: #7bc275;
+  color: #A3Be8C;
 }
 
-/* Doom Aqua */
+/* Nord Aqua */
 .hljs-attribute,
 .hljs-bullet,
 .hljs-class,
@@ -267,19 +267,19 @@
 .hljs-meta-keyword,
 .hljs-selector-pseudo,
 .hljs-tag {
-  color: #51afef;
+  color: #E8CB8B;
 }
 
-/* Doom Gray */
+/* Nord Gray */
 .hljs-comment {
-  color: #C57BDB;
+  color: #434C5E;
 }
 
-/* Doom Purple */
+/* Nord Purple */
 .hljs-link_label,
 .hljs-literal,
 .hljs-number {
-  color: #c57BDB;
+  color: #B48EAD;
 }
 
 .hljs-comment,

@@ -27,7 +27,7 @@ Gap = 2
 ## Of course, these settings can also be changed by setting the guifont and linespace on the Neovim side.
 ## Fontfamily is
 ## In MacOS,
-FontFamily = "SF Mono"
+FontFamily = "Liga SFMono Nerd Font"
 ## In Linux
 # FontFamily = "Consolas"
 ## In Windows
