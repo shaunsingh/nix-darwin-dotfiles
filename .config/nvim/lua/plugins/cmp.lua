@@ -16,8 +16,11 @@ cmp.setup {
    formatting = {
       format = function(entry, vim_item)
          vim_item.menu = ({
-            nvim_lsp = "[LSPλ]",
-            buffer = "[BUF]",
+	    buffer = "[Buffer]",
+	    nvim_lsp = "[LSP]",
+	    nvim_lua = "[Lua]",
+	    luasnip = "[LuaSnip]",
+	    orgmode = "[Org]",
          })[entry.source.name]
          vim_item.kind = ({
             Text = "",
