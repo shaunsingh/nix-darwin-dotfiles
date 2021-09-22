@@ -36,6 +36,7 @@ return packer.startup(function()
 
    use {
       "goolord/alpha-nvim",
+      after = "nord.nvim",
       requires = { "kyazdani42/nvim-web-devicons" },
       config = function()
          require "plugins.alpha"

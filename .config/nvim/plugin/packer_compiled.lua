@@ -89,8 +89,12 @@ _G.packer_plugins = {
   },
   ["alpha-nvim"] = {
     config = { "\27LJ\1\2-\0\0\2\0\2\0\0044\0\0\0%\1\1\0>\0\2\1G\0\1\0\18plugins.alpha\frequire\0" },
-    loaded = true,
-    path = "/home/shaunsingh0207/.local/share/nvim/site/pack/packer/start/alpha-nvim"
+    load_after = {
+      ["nord.nvim"] = true
+    },
+    loaded = false,
+    needs_bufread = false,
+    path = "/home/shaunsingh0207/.local/share/nvim/site/pack/packer/opt/alpha-nvim"
   },
   ["bufferline.nvim"] = {
     config = { "\27LJ\1\0022\0\0\2\0\2\0\0044\0\0\0%\1\1\0>\0\2\1G\0\1\0\23plugins.bufferline\frequire\0" },
@@ -181,7 +185,7 @@ _G.packer_plugins = {
     path = "/home/shaunsingh0207/.local/share/nvim/site/pack/packer/opt/lsp_signature.nvim"
   },
   ["nord.nvim"] = {
-    after = { "nvim-web-devicons" },
+    after = { "alpha-nvim", "nvim-web-devicons" },
     config = { "\27LJ\1\2Å\1\0\0\2\0\b\0\0214\0\0\0007\0\1\0)\1\1\0:\1\2\0004\0\0\0007\0\1\0)\1\1\0:\1\3\0004\0\0\0007\0\1\0)\1\2\0:\1\4\0004\0\0\0007\0\1\0)\1\1\0:\1\5\0004\0\0\0007\0\6\0%\1\a\0>\0\2\1G\0\1\0\21colorscheme nord\bcmd\28nord_disable_background nord_cursorline_transparent\18nord_contrast\17nord_borders\6g\bvim\0" },
     load_after = {
       ["packer.nvim"] = true
@@ -303,10 +307,6 @@ time([[Defining packer_plugins]], false)
 time([[Config for gitsigns.nvim]], true)
 try_loadstring("\27LJ\1\0020\0\0\2\0\2\0\0044\0\0\0%\1\1\0>\0\2\1G\0\1\0\21plugins.gitsigns\frequire\0", "config", "gitsigns.nvim")
 time([[Config for gitsigns.nvim]], false)
--- Config for: alpha-nvim
-time([[Config for alpha-nvim]], true)
-try_loadstring("\27LJ\1\2-\0\0\2\0\2\0\0044\0\0\0%\1\1\0>\0\2\1G\0\1\0\18plugins.alpha\frequire\0", "config", "alpha-nvim")
-time([[Config for alpha-nvim]], false)
 -- Load plugins in order defined by `after`
 time([[Sequenced loading]], true)
 vim.cmd [[ packadd nvim-lspconfig ]]
