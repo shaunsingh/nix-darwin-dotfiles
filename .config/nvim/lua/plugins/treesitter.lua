@@ -4,7 +4,7 @@ if not present then
 end
 
 ts_config.setup {
-   ensure_installed = "lua",
+   ensure_installed = "all",
    indent = { enable = true },
    highlight = {
       enable = true,
