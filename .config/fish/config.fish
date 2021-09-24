@@ -118,6 +118,9 @@ function fish_prompt
     _print_in_color " λ " (_prompt_color_for_status $last_status)
 end
 
+set -x EDITOR "nvim"
+set -x PATH ~/.emacs.d/bin $PATH
+set -x PATH ~/.config/scripts $PATH
 
 alias .. "cd .."
 alias ... "cd ../.."
@@ -129,20 +132,8 @@ alias ls 'exa -F --group-directories-first --icons -a'
 alias tree 'tree -a -C'
 alias cat 'bat --paging=never -p'
 
-alias nixos-rebuild-config 'sudo nixos-rebuild switch --cores 2 --upgrade --flake github:shaunsingh/vimrc-dotfiles#shaunsingh-laptop --recreate-lock-file --no-write-lock-file'
-alias nixos-rebuild-config-local 'sudo nixos-rebuild switch --cores 2 --upgrade --flake . --recreate-lock-file'
+alias nixos-rebuild-config 'sudo nixos-rebuild switch --cores 2 --upgrade --flake . --recreate-lock-file'
 
 alias update 'brew update; brew upgrade; brew cleanup'
 alias cleanup "find . -type f -name '*.DS_Store' -ls -delete && rm -r ~/.config/discord && rm -r ~/.config/GIMP && rm -r ~/.config/chromium "
 
-alias battery "sudo pow bat"
-# alias neovide "~/IdeaProjects/neovim/neovide/target/release/neovide --multiGrid --frameless"
-alias clock "alacritty --config-file ~/.config/scripts/alacritty.yml --class clock --command sh -c 'tty-clock -c -b -n -C6'"
-alias top "alacritty --config-file ~/.config/scripts/alacritty.yml --class htop --command sh -c 'htop -C -M'"
-alias fetch "alacritty --config-file ~/.config/scripts/alacritty.yml --class fetch --command sh -c 'wfetch'"
-
-set -x EDITOR "nvim"
-set -x PATH ~/.emacs.d/bin $PATH
-set -x PATH /Library/TeX/texbin/ $PATH
-set -x PATH ~/.config/scripts $PATH
-set PATH $HOME/.cargo/bin $PATH

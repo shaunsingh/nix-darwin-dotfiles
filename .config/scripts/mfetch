@@ -26,13 +26,12 @@ host=${HOSTNAME:-${host:-$(hostname)}}
 [ "$host" ] || read -r host < /etc/hostname
 
 ## wm
-  [ ! "$wm" ] && [ "$DISPLAY" ] && command -v xprop >/dev/null && {
-    id=$(xprop -root -notype _NET_SUPPORTING_WM_CHECK)
-    id=${id##* }
-    wm=$(xprop -id "$id" -notype -len 100 -f _NET_WM_NAME 8t |
-      grep '^_NET_WM_NAME' | cut -d\" -f 2)
-  }
-  wm="sway"
+[ ! "$wm" ] && [ "$DISPLAY" ] && command -v xprop >/dev/null && {
+  id=$(xprop -root -notype _NET_SUPPORTING_WM_CHECK)
+  id=${id##* }
+  wm=$(xprop -id "$id" -notype -len 100 -f _NET_WM_NAME 8t |
+    grep '^_NET_WM_NAME' | cut -d\" -f 2)
+}
 
 ## kernel
 ke=$(uname -r)
