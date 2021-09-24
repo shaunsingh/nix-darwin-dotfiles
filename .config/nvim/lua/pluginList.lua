@@ -23,7 +23,7 @@ return packer.startup(function()
    }
 
    use {
-      "shaunsingh/nord.nvim",
+      "~/.config/nvim/lua/theme/nord.nvim",
       after = "packer.nvim",
       config = function()
          vim.g.nord_borders = false
