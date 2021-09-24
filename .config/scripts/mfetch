@@ -1,6 +1,5 @@
 #!/bin/sh
 read -r host < /proc/sys/kernel/hostname
-read -r kernel < /proc/sys/kernel/osrelease
 . /etc/os-release
 
 ## rose
