@@ -48,6 +48,3 @@
 ;;fun
 (package! keycast)
 (package! selectric-mode)
-
-;;profile
-(package! benchmark-init)

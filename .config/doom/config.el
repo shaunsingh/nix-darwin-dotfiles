@@ -1,29 +1,1762 @@
-;; [[file:config.org::*Basic Configuration][Basic Configuration:2]]
+;;; config.el -*- lexical-binding: t; -*-
+
+(remove-hook 'org-mode-hook #'+literate-enable-recompile-h)
+
+(setq user-full-name "Shaurya Singh"
+      user-mail-address "shaunsingh0207@gmail.com")
+
+(setq auth-sources '("~/.authinfo.gpg")
+      auth-source-cache-expiry nil) ; default is 7200 (2h)
+
+(setq explicit-shell-file-name (executable-find "fish"))
+
+(setq +ligatures-in-modes t)
+
+;;fonts
+(setq doom-font (font-spec :family "Liga SFMono Nerd Font" :size 14)
+      doom-big-font (font-spec :family "Liga SFMono Nerd Font" :size 20)
+      doom-variable-pitch-font (font-spec :family "Overpass" :size 16)
+      doom-unicode-font (font-spec :family "Liga SFMono Nerd Font")
+      doom-serif-font (font-spec :family "Liga SFMono Nerd Font" :weight 'light))
+
+;;mixed pitch modes
+(defvar mixed-pitch-modes '(org-mode LaTeX-mode markdown-mode gfm-mode Info-mode)
+  "Modes that `mixed-pitch-mode' should be enabled in, but only after UI initialisation.")
+(defun init-mixed-pitch-h ()
+  "Hook `mixed-pitch-mode' into each mode in `mixed-pitch-modes'.
+Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
+  (when (memq major-mode mixed-pitch-modes)
+    (mixed-pitch-mode 1))
+  (dolist (hook mixed-pitch-modes)
+    (add-hook (intern (concat (symbol-name hook) "-hook")) #'mixed-pitch-mode)))
+(add-hook 'doom-init-ui-hook #'init-mixed-pitch-h)
+(add-hook! 'org-mode-hook #'+org-pretty-mode) ;enter mixed pitch mode in org mode
+
+;;set mixed pitch font
+ (after! mixed-pitch
+  (defface variable-pitch-serif
+    '((t (:family "serif")))
+    "A variable-pitch face with serifs."
+    :group 'basic-faces)
+  (setq mixed-pitch-set-height t)
+  (setq variable-pitch-serif-font (font-spec :family "Alegreya" :size 16))
+  (set-face-attribute 'variable-pitch-serif nil :font variable-pitch-serif-font)
+  (defun mixed-pitch-serif-mode (&optional arg)
+    "Change the default face of the current buffer to a serifed variable pitch, while keeping some faces fixed pitch."
+    (interactive)
+    (let ((mixed-pitch-face 'variable-pitch-serif))
+      (mixed-pitch-mode (or arg 'toggle)))))
+
+(set-char-table-range composition-function-table ?f '(["\\(?:ff?[fijlt]\\)" 0 font-shape-gstring]))
+(set-char-table-range composition-function-table ?T '(["\\(?:Th\\)" 0 font-shape-gstring]))
+
+(defvar required-fonts '("Overpass" "Liga SFMono Nerd Font" "Alegreya" ))
+(defvar available-fonts
+  (delete-dups (or (font-family-list)
+                   (split-string (shell-command-to-string "fc-list : family")
+                                 "[,\n]"))))
+(defvar missing-fonts
+  (delq nil (mapcar
+             (lambda (font)
+               (unless (delq nil (mapcar (lambda (f)
+                           (string-match-p (format "^%s$" font) f))
+                                         available-fonts))
+                                         font))
+                                         required-fonts)))
+(if missing-fonts
+    (pp-to-string
+     `(unless noninteractive
+        (add-hook! 'doom-init-ui-hook
+          (run-at-time nil nil
+                       (lambda ()
+                         (message "%s missing the following fonts: %s"
+                                  (propertize "Warning!" 'face '(bold warning))
+                                  (mapconcat (lambda (font)
+                                               (propertize font 'face 'font-lock-variable-name-face))
+                                             ',missing-fonts
+                                             ", "))
+                         (sleep-for 0.5))))))
+  ";; No missing fonts detected")
+
+;;(setq doom-theme 'doom-one-light)
+(setq doom-one-light-padded-modeline t)
+(setq doom-theme 'doom-nord)
+(setq doom-nord-padded-modeline t)
+
+;;(use-package! vlf-setup
+  ;;:defer-incrementally vlf-tune vlf-base vlf-write vlf-search vlf-occur vlf-follow vlf-ediff vlf)
+
+(after! company
+   (setq company-idle-delay 0.1
+      company-minimum-prefix-length 1
+      company-selection-wrap-around t
+      company-require-match 'never
+      company-dabbrev-downcase nil
+      company-dabbrev-ignore-case t
+      company-dabbrev-other-buffers nil
+      company-tooltip-limit 5
+      company-tooltip-minimum-width 50))
+(set-company-backend!
+  '(text-mode
+    markdown-mode
+    gfm-mode)
+  '(:seperate
+    company-yasnippet
+    company-ispell
+    company-files))
+
+;;nested snippets
+(setq yas-triggers-in-field t)
+
+(use-package! aas
+  :commands aas-mode)
+
+(use-package! laas
+  :hook (LaTeX-mode . laas-mode)
+  :config
+  (defun laas-tex-fold-maybe ()
+    (unless (equal "/" aas-transient-snippet-key)
+      (+latex-fold-last-macro-a)))
+  (add-hook 'org-mode #'laas-mode)
+  (add-hook 'aas-post-snippet-expand-hook #'laas-tex-fold-maybe))
+
+(defadvice! fixed-org-yas-expand-maybe-h ()
+  "Expand a yasnippet snippet, if trigger exists at point or region is active.
+Made for `org-tab-first-hook'."
+  :override #'+org-yas-expand-maybe-h
+  (when (and (featurep! :editor snippets)
+             (require 'yasnippet nil t)
+             (bound-and-true-p yas-minor-mode))
+    (and (let ((major-mode (cond ((org-in-src-block-p t)
+                                  (org-src-get-lang-mode (org-eldoc-get-src-lang)))
+                                 ((org-inside-LaTeX-fragment-p)
+                                  'latex-mode)
+                                 (major-mode)))
+               (org-src-tab-acts-natively nil) ; causes breakages
+               ;; Smart indentation doesn't work with yasnippet, and painfully slow
+               ;; in the few cases where it does.
+               (yas-indent-line 'fixed))
+           (cond ((and (or (not (bound-and-true-p evil-local-mode))
+                           (evil-insert-state-p)
+                           (evil-emacs-state-p))
+                       (or (and (bound-and-true-p yas--tables)
+                                (gethash major-mode yas--tables))
+                           (progn (yas-reload-all) t))
+                       (yas--templates-for-key-at-point))
+                  (yas-expand)
+                  t)
+                 ((use-region-p)
+                  (yas-insert-snippet)
+                  t)))
+         ;; HACK Yasnippet breaks org-superstar-mode because yasnippets is
+         ;;      overzealous about cleaning up overlays.
+         (when (bound-and-true-p org-superstar-mode)
+           (org-superstar-restart)))))
+
+(set-file-template! "\\.org$" :trigger "__" :mode 'org-mode)
+
+(use-package! lsp-ui
+  :hook (lsp-mode . lsp-ui-mode)
+  :config
+  (setq lsp-ui-sideline-enable nil; not anymore useful than flycheck
+        lsp-lens-enable t
+        lsp-ui-doc-enable t
+        lsp-tex-server 'digestif
+        lsp-headerline-breadcrumb-enable nil
+        lsp-ui-peek-enable t
+        lsp-ui-peek-fontify 'on-demand
+        lsp-enable-symbol-highlighting nil))
+
+(setq undo-limit 80000000                          ;I mess up too much
+      evil-want-fine-undo t                        ;By default while in insert all changes are one big blob. Be more granular
+      scroll-margin 2                              ;having a little margin is nice
+      auto-save-default t                          ;I dont like to lose work
+      display-line-numbers-type nil                ;I dislike line numbers
+      history-length 25                            ;Slight speedup
+      delete-by-moving-to-trash t                  ;delete to system trash instead
+      browse-url-browser-function 'xwidget-webkit-browse-url
+      truncate-string-ellipsis "…")                ;default ellipses suck
+
+(fringe-mode 0) ;;disable fringe
+(global-subword-mode 1) ;;navigate through Camel Case words
+
+(setq evil-vsplit-window-right t
+      evil-split-window-below t)
+
+(defadvice! prompt-for-buffer (&rest _)
+  :after '(evil-window-split evil-window-vsplit)
+  (consult-buffer))
+
+(map! :leader
+      :desc "hop to word" "w w" #'avy-goto-word-0)
+(map! :leader
+      :desc "hop to line"
+      "l" #'avy-goto-line)
+
+(after! evil
+  (map! :nmv ";" #'evil-ex))
+
+(after! evil
+  (setq evil-ex-substitute-global t     ; I like my s/../.. to by global by default
+        evil-move-cursor-back nil       ; Don't move the block cursor when toggling insert mode
+        evil-kill-on-visual-paste nil)) ; Don't put overwritten text in the kill ring
+
+(custom-set-faces!
+  `(vertical-border :background ,(doom-color 'bg) :foreground ,(doom-color 'bg)))
+
+(when (boundp 'window-divider-mode)
+  (setq window-divider-default-places nil
+        window-divider-default-bottom-width 0
+        window-divider-default-right-width 0)
+  (window-divider-mode -1))
+
+(remove-hook 'doom-first-buffer-hook #'global-hl-line-mode)
+
+(defadvice! fix-+evil-default-cursor-fn ()
+  :override #'+evil-default-cursor-fn
+  (evil-set-cursor-color (face-background 'cursor)))
+(defadvice! fix-+evil-emacs-cursor-fn ()
+  :override #'+evil-emacs-cursor-fn
+  (evil-set-cursor-color (face-foreground 'warning)))
+
+(setq minimap-highlight-line nil)
+(custom-set-faces!
+  `(minimap-active-region-background :background unspecified))
+
+(set-frame-parameter nil 'internal-border-width 24)
+(setq-default line-spacing 0.35)
+
+(use-package! selectric-mode
+  :commands selectric-mode)
+
+(after! doom-modeline
+  (doom-modeline-def-segment buffer-name
+    "Display the current buffer's name, without any other information."
+    (concat
+     (doom-modeline-spc)
+     (doom-modeline--buffer-name)))
+
+  (doom-modeline-def-segment pdf-icon
+    "PDF icon from all-the-icons."
+    (concat
+     (doom-modeline-spc)
+     (doom-modeline-icon 'octicon "file-pdf" nil nil
+                         :face (if (doom-modeline--active)
+                                   'all-the-icons-red
+                                 'mode-line-inactive)
+                         :v-adjust 0.02)))
+
+  (defun doom-modeline-update-pdf-pages ()
+    "Update PDF pages."
+    (setq doom-modeline--pdf-pages
+          (let ((current-page-str (number-to-string (eval `(pdf-view-current-page))))
+                (total-page-str (number-to-string (pdf-cache-number-of-pages))))
+            (concat
+             (propertize
+              (concat (make-string (- (length total-page-str) (length current-page-str)) ? )
+                      " P" current-page-str)
+              'face 'mode-line)
+             (propertize (concat "/" total-page-str) 'face 'doom-modeline-buffer-minor-mode)))))
+
+  (doom-modeline-def-segment pdf-pages
+    "Display PDF pages."
+    (if (doom-modeline--active) doom-modeline--pdf-pages
+      (propertize doom-modeline--pdf-pages 'face 'mode-line-inactive)))
+
+  (doom-modeline-def-modeline 'pdf
+    '(bar window-number pdf-pages pdf-icon buffer-name)
+    '(misc-info matches major-mode process vcs)))
+
+(after! doom-modeline
+  (display-time-mode 1)                              ;Enable time in the mode-line
+  (display-battery-mode 1)                           ;display the battery
+  (setq doom-modeline-major-mode-icon t              ;Show major mode name
+        doom-modeline-enable-word-count t            ;Show word count
+        doom-modeline-modal-icon t                   ;Show vim mode icon
+        inhibit-compacting-font-caches t))           ;Don't compact font caches in gc
+
+(defun doom-modeline-conditional-buffer-encoding ()
+  "We expect the encoding to be LF UTF-8, so only show the modeline when this is not the case"
+  (setq-local doom-modeline-buffer-encoding
+              (unless (and (memq (plist-get (coding-system-plist buffer-file-coding-system) :category)
+                                 '(coding-category-undecided coding-category-utf-8))
+                           (not (memq (coding-system-eol-type buffer-file-coding-system) '(1 2))))
+                t)))
+(add-hook 'after-change-major-mode-hook #'doom-modeline-conditional-buffer-encoding) ;;remove encoding
+
+(defun centaur-tabs-get-total-tab-length ()
+  (length (centaur-tabs-tabs (centaur-tabs-current-tabset))))
+
+(defun centaur-tabs-hide-on-window-change ()
+  (run-at-time nil nil
+               (lambda ()
+                 (centaur-tabs-hide-check (centaur-tabs-get-total-tab-length)))))
+
+(defun centaur-tabs-hide-check (len)
+  (shut-up
+    (cond
+     ((and (= len 1) (not (centaur-tabs-local-mode))) (call-interactively #'centaur-tabs-local-mode))
+     ((and (>= len 2) (centaur-tabs-local-mode)) (call-interactively #'centaur-tabs-local-mode)))))
+
+(after! centaur-tabs
+  (centaur-tabs-mode -1)
+  (setq centaur-tabs-height 20
+        centaur-tabs-set-icons t
+        centaur-tabs-gray-out-icons 'buffer)
+  (add-hook 'window-configuration-change-hook 'centaur-tabs-hide-on-window-change)
+  (centaur-tabs-change-fonts "Liga SFMono Nerd Font" 105))
+
+(after! marginalia
+  (setq marginalia-censor-variables nil)
+
+  (defadvice! +marginalia--anotate-local-file-colorful (cand)
+    "Just a more colourful version of `marginalia--anotate-local-file'."
+    :override #'marginalia--annotate-local-file
+    (when-let (attrs (file-attributes (substitute-in-file-name
+                                       (marginalia--full-candidate cand))
+                                      'integer))
+      (marginalia--fields
+       ((marginalia--file-owner attrs)
+        :width 12 :face 'marginalia-file-owner)
+       ((marginalia--file-modes attrs))
+       ((+marginalia-file-size-colorful (file-attribute-size attrs))
+        :width 7)
+       ((+marginalia--time-colorful (file-attribute-modification-time attrs))
+        :width 12))))
+
+  (defun +marginalia--time-colorful (time)
+    (let* ((seconds (float-time (time-subtract (current-time) time)))
+           (color (doom-blend
+                   (face-attribute 'marginalia-date :foreground nil t)
+                   (face-attribute 'marginalia-documentation :foreground nil t)
+                   (/ 1.0 (log (+ 3 (/ (+ 1 seconds) 345600.0)))))))
+      ;; 1 - log(3 + 1/(days + 1)) % grey
+      (propertize (marginalia--time time) 'face (list :foreground color))))
+
+  (defun +marginalia-file-size-colorful (size)
+    (let* ((size-index (/ (log10 (+ 1 size)) 7.0))
+           (color (if (< size-index 10000000) ; 10m
+                      (doom-blend 'orange 'green size-index)
+                    (doom-blend 'red 'orange (- size-index 1)))))
+      (propertize (file-size-human-readable size) 'face (list :foreground color)))))
+
+(setq treemacs-width 25)
+(setq doom-themes-treemacs-theme "doom-colors")
+
+(defvar emojify-disabled-emojis
+  '(;; Org
+    "◼" "☑" "☸" "⚙" "⏩" "⏪" "⬆" "⬇" "❓"
+    ;; Terminal powerline
+    "✔"
+    ;; Box drawing
+    "▶" "◀")
+  "Characters that should never be affected by `emojify-mode'.")
+
+(defadvice! emojify-delete-from-data ()
+  "Ensure `emojify-disabled-emojis' don't appear in `emojify-emojis'."
+  :after #'emojify-set-emoji-data
+  (dolist (emoji emojify-disabled-emojis)
+    (remhash emoji emojify-emojis)))
+
+(add-hook! '(mu4e-compose-mode org-msg-edit-mode) (emoticon-to-emoji 1))
+
+(defvar splash-phrase-source-folder
+  (expand-file-name "misc/splash-phrases" doom-private-dir)
+  "A folder of text files with a fun phrase on each line.")
+
+(defvar splash-phrase-sources
+  (let* ((files (directory-files splash-phrase-source-folder nil "\\.txt\\'"))
+         (sets (delete-dups (mapcar
+                             (lambda (file)
+                               (replace-regexp-in-string "\\(?:-[0-9]+-\\w+\\)?\\.txt" "" file))
+                             files))))
+    (mapcar (lambda (sset)
+              (cons sset
+                    (delq nil (mapcar
+                               (lambda (file)
+                                 (when (string-match-p (regexp-quote sset) file)
+                                   file))
+                               files))))
+            sets))
+  "A list of cons giving the phrase set name, and a list of files which contain phrase components.")
+
+(defvar splash-phrase-set
+  (nth (random (length splash-phrase-sources)) (mapcar #'car splash-phrase-sources))
+  "The default phrase set. See `splash-phrase-sources'.")
+
+(defun splase-phrase-set-random-set ()
+  "Set a new random splash phrase set."
+  (interactive)
+  (setq splash-phrase-set
+        (nth (random (1- (length splash-phrase-sources)))
+             (cl-set-difference (mapcar #'car splash-phrase-sources) (list splash-phrase-set))))
+  (+doom-dashboard-reload t))
+
+(defvar splase-phrase--cache nil)
+
+(defun splash-phrase-get-from-file (file)
+  "Fetch a random line from FILE."
+  (let ((lines (or (cdr (assoc file splase-phrase--cache))
+                   (cdar (push (cons file
+                                     (with-temp-buffer
+                                       (insert-file-contents (expand-file-name file splash-phrase-source-folder))
+                                       (split-string (string-trim (buffer-string)) "\n")))
+                               splase-phrase--cache)))))
+    (nth (random (length lines)) lines)))
+
+(defun splash-phrase (&optional set)
+  "Construct a splash phrase from SET. See `splash-phrase-sources'."
+  (mapconcat
+   #'splash-phrase-get-from-file
+   (cdr (assoc (or set splash-phrase-set) splash-phrase-sources))
+   " "))
+
+(defun doom-dashboard-phrase ()
+  "Get a splash phrase, flow it over multiple lines as needed, and make fontify it."
+  (mapconcat
+   (lambda (line)
+     (+doom-dashboard--center
+      +doom-dashboard--width
+      (with-temp-buffer
+        (insert-text-button
+         line
+         'action
+         (lambda (_) (+doom-dashboard-reload t))
+         'face 'doom-dashboard-menu-title
+         'mouse-face 'doom-dashboard-menu-title
+         'help-echo "Random phrase"
+         'follow-link t)
+        (buffer-string))))
+   (split-string
+    (with-temp-buffer
+      (insert (splash-phrase))
+      (setq fill-column (min 70 (/ (* 2 (window-width)) 3)))
+      (fill-region (point-min) (point-max))
+      (buffer-string))
+    "\n")
+   "\n"))
+
+(defadvice! doom-dashboard-widget-loaded-with-phrase ()
+  :override #'doom-dashboard-widget-loaded
+  (setq line-spacing 0.2)
+  (insert
+   "\n\n"
+   (propertize
+    (+doom-dashboard--center
+     +doom-dashboard--width
+     (doom-display-benchmark-h 'return))
+    'face 'doom-dashboard-loaded)
+   "\n"
+   (doom-dashboard-phrase)
+   "\n"))
+
+(defvar +zen-serif-p t
+  "Whether to use a serifed font with `mixed-pitch-mode'.")
+(after! writeroom-mode
+  (defvar-local +zen--original-org-indent-mode-p nil)
+  (defvar-local +zen--original-mixed-pitch-mode-p nil)
+  (defun +zen-enable-mixed-pitch-mode-h ()
+    "Enable `mixed-pitch-mode' when in `+zen-mixed-pitch-modes'."
+    (when (apply #'derived-mode-p +zen-mixed-pitch-modes)
+      (if writeroom-mode
+          (progn
+            (setq +zen--original-mixed-pitch-mode-p mixed-pitch-mode)
+            (funcall (if +zen-serif-p #'mixed-pitch-serif-mode #'mixed-pitch-mode) 1))
+        (funcall #'mixed-pitch-mode (if +zen--original-mixed-pitch-mode-p 1 -1)))))
+  (pushnew! writeroom--local-variables
+            'display-line-numbers
+            'visual-fill-column-width
+            'org-adapt-indentation
+            'org-superstar-headline-bullets-list
+            'org-superstar-remove-leading-stars)
+  (add-hook 'writeroom-mode-enable-hook
+            (defun +zen-prose-org-h ()
+              "Reformat the current Org buffer appearance for prose."
+              (when (eq major-mode 'org-mode)
+                (setq display-line-numbers nil
+                      visual-fill-column-width 60
+                      org-adapt-indentation nil)
+                (when (featurep 'org-superstar)
+                  (setq-local org-superstar-headline-bullets-list '("◉" "○" "✸" "✿" "✤" "✜" "◆" "▶")
+                              org-superstar-remove-leading-stars t)
+                  (org-superstar-restart))               (setq
+                 +zen--original-org-indent-mode-p org-indent-mode)
+                (org-indent-mode -1))))
+  (add-hook! 'writeroom-mode-hook
+    (if writeroom-mode
+        (add-hook 'post-command-hook #'recenter nil t)
+      (remove-hook 'post-command-hook #'recenter t)))
+  (add-hook 'writeroom-mode-enable-hook #'doom-disable-line-numbers-h)
+  (add-hook 'writeroom-mode-disable-hook #'doom-enable-line-numbers-h)
+  (add-hook 'writeroom-mode-disable-hook
+            (defun +zen-nonprose-org-h ()
+              "Reverse the effect of `+zen-prose-org'."
+              (when (eq major-mode 'org-mode)
+                (when (featurep 'org-superstar)
+                  (org-superstar-restart))
+                (when +zen--original-org-indent-mode-p (org-indent-mode 1))))))
+
+(setq org-ellipsis " ▾ "
+      org-hide-leading-stars t
+      org-priority-highest ?A
+      org-priority-lowest ?E
+      org-priority-faces
+      '((?A . 'all-the-icons-red)
+        (?B . 'all-the-icons-orange)
+        (?C . 'all-the-icons-yellow)
+        (?D . 'all-the-icons-green)
+        (?E . 'all-the-icons-blue)))
+
+(appendq! +ligatures-extra-symbols
+          `(:checkbox      "☐"
+            :pending       "◼"
+            :checkedbox    "☑"
+            :list_property "∷"
+            :em_dash       "—"
+            :ellipses      "…"
+            :arrow_right   "→"
+            :arrow_left    "←"
+            :property      "☸"
+            :options       "⌥"
+            :startup       "⏻"
+            :html_head     "🅷"
+            :html          "🅗"
+            :latex_class   "🄻"
+            :latex_header  "🅻"
+            :beamer_header "🅑"
+            :latex         "🅛"
+            :attr_latex    "🄛"
+            :attr_html     "🄗"
+            :attr_org      "⒪"
+            :begin_quote   "❝"
+            :end_quote     "❞"
+            :caption       "☰"
+            :header        "›"
+            :begin_export  "⏩"
+            :end_export    "⏪"
+            :properties    "⚙"
+            :end           "∎"
+            :priority_a   ,(propertize "⚑" 'face 'all-the-icons-red)
+            :priority_b   ,(propertize "⬆" 'face 'all-the-icons-orange)
+            :priority_c   ,(propertize "■" 'face 'all-the-icons-yellow)
+            :priority_d   ,(propertize "⬇" 'face 'all-the-icons-green)
+            :priority_e   ,(propertize "❓" 'face 'all-the-icons-blue)))
+(set-ligatures! 'org-mode
+  :merge t
+  :checkbox      "[ ]"
+  :pending       "[-]"
+  :checkedbox    "[X]"
+  :list_property "::"
+  :em_dash       "---"
+  :ellipsis      "..."
+  :arrow_right   "->"
+  :arrow_left    "<-"
+  :title         "#+title:"
+  :subtitle      "#+subtitle:"
+  :author        "#+author:"
+  :date          "#+date:"
+  :property      "#+property:"
+  :options       "#+options:"
+  :startup       "#+startup:"
+  :macro         "#+macro:"
+  :html_head     "#+html_head:"
+  :html          "#+html:"
+  :latex_class   "#+latex_class:"
+  :latex_header  "#+latex_header:"
+  :beamer_header "#+beamer_header:"
+  :latex         "#+latex:"
+  :attr_latex    "#+attr_latex:"
+  :attr_html     "#+attr_html:"
+  :attr_org      "#+attr_org:"
+  :begin_quote   "#+begin_quote"
+  :end_quote     "#+end_quote"
+  :caption       "#+caption:"
+  :header        "#+header:"
+  :begin_export  "#+begin_export"
+  :end_export    "#+end_export"
+  :results       "#+RESULTS:"
+  :property      ":PROPERTIES:"
+  :end           ":END:"
+  :priority_a    "[#A]"
+  :priority_b    "[#B]"
+  :priority_c    "[#C]"
+  :priority_d    "[#D]"
+  :priority_e    "[#E]")
+(plist-put +ligatures-extra-symbols :name "⁍")
+
+(defun org-syntax-convert-keyword-case-to-lower ()
+  "Convert all #+KEYWORDS to #+keywords."
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (let ((count 0)
+          (case-fold-search nil))
+      (while (re-search-forward "^[ \t]*#\\+[A-Z_]+" nil t)
+        (unless (s-matches-p "RESULTS" (match-string 0))
+          (replace-match (downcase (match-string 0)) t)
+          (setq count (1+ count))))
+      (message "Replaced %d occurances" count))))
+
+(use-package! keycast
+  :commands keycast-mode
+  :config
+  (define-minor-mode keycast-mode
+    "Show current command and its key binding in the mode line."
+    :global t
+    (if keycast-mode
+        (progn
+          (add-hook 'pre-command-hook 'keycast--update t)
+          (add-to-list 'global-mode-string '("" mode-line-keycast " ")))
+      (remove-hook 'pre-command-hook 'keycast--update)
+      (setq global-mode-string (remove '("" mode-line-keycast " ") global-mode-string))))
+  (custom-set-faces!
+    '(keycast-command :inherit doom-modeline-debug
+                      :height 1.0)
+    '(keycast-key :inherit custom-modified
+                  :height 1.0
+                  :weight bold)))
+
+(defun toggle-transparency ()
+  (interactive)
+  (let ((alpha (frame-parameter nil 'alpha)))
+    (set-frame-parameter
+     nil 'alpha
+     (if (eql (cond ((numberp alpha) alpha)
+                    ((numberp (cdr alpha)) (cdr alpha))
+                    ;; Also handle undocumented (<active> <inactive>) form.
+                    ((numberp (cadr alpha)) (cadr alpha)))
+              100)
+         '(100 . 85) '(100 . 100)))))
+(global-set-key (kbd "C-c t") 'toggle-transparency)
+
+(use-package! screenshot
+  :defer t
+  :config (setq screenshot-upload-fn "upload $s 2>/dev/null"))
+
+(map! :map elfeed-search-mode-map
+      :after elfeed-search
+      [remap kill-this-buffer] "q"
+      [remap kill-buffer] "q"
+      :n doom-leader-key nil
+      :n "q" #'+rss/quit
+      :n "e" #'elfeed-update
+      :n "r" #'elfeed-search-untag-all-unread
+      :n "u" #'elfeed-search-tag-all-unread
+      :n "s" #'elfeed-search-live-filter
+      :n "RET" #'elfeed-search-show-entry
+      :n "p" #'elfeed-show-pdf
+      :n "+" #'elfeed-search-tag-all
+      :n "-" #'elfeed-search-untag-all
+      :n "S" #'elfeed-search-set-filter
+      :n "b" #'elfeed-search-browse-url
+      :n "y" #'elfeed-search-yank)
+(map! :map elfeed-show-mode-map
+      :after elfeed-show
+      [remap kill-this-buffer] "q"
+      [remap kill-buffer] "q"
+      :n doom-leader-key nil
+      :nm "q" #'+rss/delete-pane
+      :nm "o" #'ace-link-elfeed
+      :nm "RET" #'org-ref-elfeed-add
+      :nm "n" #'elfeed-show-next
+      :nm "N" #'elfeed-show-prev
+      :nm "p" #'elfeed-show-pdf
+      :nm "+" #'elfeed-show-tag
+      :nm "-" #'elfeed-show-untag
+      :nm "s" #'elfeed-show-new-live-search
+      :nm "y" #'elfeed-show-yank)
+
+(after! elfeed-search
+  (set-evil-initial-state! 'elfeed-search-mode 'normal))
+(after! elfeed-show-mode
+  (set-evil-initial-state! 'elfeed-show-mode   'normal))
+
+(after! evil-snipe
+  (push 'elfeed-show-mode   evil-snipe-disabled-modes)
+  (push 'elfeed-search-mode evil-snipe-disabled-modes))
+
+ (after! elfeed
+
+  (elfeed-org)
+  (use-package! elfeed-link)
+
+  (setq elfeed-search-filter "@1-week-ago +unread"
+        elfeed-search-print-entry-function '+rss/elfeed-search-print-entry
+        elfeed-search-title-min-width 80
+        elfeed-show-entry-switch #'pop-to-buffer
+        elfeed-show-entry-delete #'+rss/delete-pane
+        elfeed-show-refresh-function #'+rss/elfeed-show-refresh--better-style
+        shr-max-image-proportion 0.6)
+
+  (add-hook! 'elfeed-show-mode-hook (hide-mode-line-mode 1))
+  (add-hook! 'elfeed-search-update-hook #'hide-mode-line-mode)
+
+  (defface elfeed-show-title-face '((t (:weight ultrabold :slant italic :height 1.5)))
+    "title face in elfeed show buffer"
+    :group 'elfeed)
+  (defface elfeed-show-author-face `((t (:weight light)))
+    "title face in elfeed show buffer"
+    :group 'elfeed)
+  (set-face-attribute 'elfeed-search-title-face nil
+                      :foreground 'nil
+                      :weight 'light)
+
+  (defadvice! +rss-elfeed-wrap-h-nicer ()
+    "Enhances an elfeed entry's readability by wrapping it to a width of
+`fill-column' and centering it with `visual-fill-column-mode'."
+    :override #'+rss-elfeed-wrap-h
+    (setq-local truncate-lines nil
+                shr-width 120
+                visual-fill-column-center-text t
+                default-text-properties '(line-height 1.1))
+    (let ((inhibit-read-only t)
+          (inhibit-modification-hooks t))
+      (visual-fill-column-mode)
+      ;; (setq-local shr-current-font '(:family "Merriweather" :height 1.2))
+      (set-buffer-modified-p nil)))
+
+  (defun +rss/elfeed-search-print-entry (entry)
+    "Print ENTRY to the buffer."
+    (let* ((elfeed-goodies/tag-column-width 40)
+           (elfeed-goodies/feed-source-column-width 30)
+           (title (or (elfeed-meta entry :title) (elfeed-entry-title entry) ""))
+           (title-faces (elfeed-search--faces (elfeed-entry-tags entry)))
+           (feed (elfeed-entry-feed entry))
+           (feed-title
+            (when feed
+              (or (elfeed-meta feed :title) (elfeed-feed-title feed))))
+           (tags (mapcar #'symbol-name (elfeed-entry-tags entry)))
+           (tags-str (concat (mapconcat 'identity tags ",")))
+           (title-width (- (window-width) elfeed-goodies/feed-source-column-width
+                           elfeed-goodies/tag-column-width 4))
+
+           (tag-column (elfeed-format-column
+                        tags-str (elfeed-clamp (length tags-str)
+                                               elfeed-goodies/tag-column-width
+                                               elfeed-goodies/tag-column-width)
+                        :left))
+           (feed-column (elfeed-format-column
+                         feed-title (elfeed-clamp elfeed-goodies/feed-source-column-width
+                                                  elfeed-goodies/feed-source-column-width
+                                                  elfeed-goodies/feed-source-column-width)
+                         :left)))
+
+      (insert (propertize feed-column 'face 'elfeed-search-feed-face) " ")
+      (insert (propertize tag-column 'face 'elfeed-search-tag-face) " ")
+      (insert (propertize title 'face title-faces 'kbd-help title))
+      (setq-local line-spacing 0.2)))
+
+  (defun +rss/elfeed-show-refresh--better-style ()
+    "Update the buffer to match the selected entry, using a mail-style."
+    (interactive)
+    (let* ((inhibit-read-only t)
+           (title (elfeed-entry-title elfeed-show-entry))
+           (date (seconds-to-time (elfeed-entry-date elfeed-show-entry)))
+           (author (elfeed-meta elfeed-show-entry :author))
+           (link (elfeed-entry-link elfeed-show-entry))
+           (tags (elfeed-entry-tags elfeed-show-entry))
+           (tagsstr (mapconcat #'symbol-name tags ", "))
+           (nicedate (format-time-string "%a, %e %b %Y %T %Z" date))
+           (content (elfeed-deref (elfeed-entry-content elfeed-show-entry)))
+           (type (elfeed-entry-content-type elfeed-show-entry))
+           (feed (elfeed-entry-feed elfeed-show-entry))
+           (feed-title (elfeed-feed-title feed))
+           (base (and feed (elfeed-compute-base (elfeed-feed-url feed)))))
+      (erase-buffer)
+      (insert "\n")
+      (insert (format "%s\n\n" (propertize title 'face 'elfeed-show-title-face)))
+      (insert (format "%s\t" (propertize feed-title 'face 'elfeed-search-feed-face)))
+      (when (and author elfeed-show-entry-author)
+        (insert (format "%s\n" (propertize author 'face 'elfeed-show-author-face))))
+      (insert (format "%s\n\n" (propertize nicedate 'face 'elfeed-log-date-face)))
+      (when tags
+        (insert (format "%s\n"
+                        (propertize tagsstr 'face 'elfeed-search-tag-face))))
+      ;; (insert (propertize "Link: " 'face 'message-header-name))
+      ;; (elfeed-insert-link link link)
+      ;; (insert "\n")
+      (cl-loop for enclosure in (elfeed-entry-enclosures elfeed-show-entry)
+               do (insert (propertize "Enclosure: " 'face 'message-header-name))
+               do (elfeed-insert-link (car enclosure))
+               do (insert "\n"))
+      (insert "\n")
+      (if content
+          (if (eq type 'html)
+              (elfeed-insert-html content base)
+            (insert content))
+        (insert (propertize "(empty)\n" 'face 'italic)))
+      (goto-char (point-min)))))
+
+(after! elfeed-show
+  (require 'url)
+
+  (defvar elfeed-pdf-dir
+    (expand-file-name "pdfs/"
+                      (file-name-directory (directory-file-name elfeed-enclosure-default-dir))))
+
+  (defvar elfeed-link-pdfs
+    '(("https://www.jstatsoft.org/index.php/jss/article/view/v0\\([^/]+\\)" . "https://www.jstatsoft.org/index.php/jss/article/view/v0\\1/v\\1.pdf")
+      ("http://arxiv.org/abs/\\([^/]+\\)" . "https://arxiv.org/pdf/\\1.pdf"))
+    "List of alists of the form (REGEX-FOR-LINK . FORM-FOR-PDF)")
+
+  (defun elfeed-show-pdf (entry)
+    (interactive
+     (list (or elfeed-show-entry (elfeed-search-selected :ignore-region))))
+    (let ((link (elfeed-entry-link entry))
+          (feed-name (plist-get (elfeed-feed-meta (elfeed-entry-feed entry)) :title))
+          (title (elfeed-entry-title entry))
+          (file-view-function
+           (lambda (f)
+             (when elfeed-show-entry
+               (elfeed-kill-buffer))
+             (pop-to-buffer (find-file-noselect f))))
+          pdf)
+
+      (let ((file (expand-file-name
+                   (concat (subst-char-in-string ?/ ?, title) ".pdf")
+                   (expand-file-name (subst-char-in-string ?/ ?, feed-name)
+                                     elfeed-pdf-dir))))
+        (if (file-exists-p file)
+            (funcall file-view-function file)
+          (dolist (link-pdf elfeed-link-pdfs)
+            (when (and (string-match-p (car link-pdf) link)
+                       (not pdf))
+              (setq pdf (replace-regexp-in-string (car link-pdf) (cdr link-pdf) link))))
+          (if (not pdf)
+              (message "No associated PDF for entry")
+            (message "Fetching %s" pdf)
+            (unless (file-exists-p (file-name-directory file))
+              (make-directory (file-name-directory file) t))
+            (url-copy-file pdf file)
+            (funcall file-view-function file)))))))
+
+(use-package! org-padding)
+(add-hook 'org-mode-hook #'org-padding-mode)
+(setq org-padding-block-begin-line-padding '(1.15 . 0.15))
+(setq org-padding-block-end-line-padding '(1.15 . 0.15))
+
+(defadvice! shut-up-org-problematic-hooks (orig-fn &rest args)
+  :around #'org-fancy-priorities-mode
+  :around #'org-superstar-mode
+  (ignore-errors (apply orig-fn args)))
+
+(setq org-startup-with-inline-images t)
+
+(use-package! org-pretty-table
+  :commands (org-pretty-table-mode global-org-pretty-table-mode))
+
+(setq org-directory "~/org"                      ; let's put files here
+      org-use-property-inheritance t              ; it's convenient to have properties inherited
+      org-log-done 'time                          ; having the time a item is done sounds convenient
+      org-list-allow-alphabetical t               ; have a. A. a) A) list bullets
+      org-export-in-background t                  ; run export processes in external emacs process
+      org-catch-invisible-edits 'smart)            ; try not to accidently do weird stuff in invisible regions
+
+(setq org-babel-default-header-args
+      '((:session . "none")
+        (:results . "replace")
+        (:exports . "code")
+        (:cache . "no")
+        (:noweb . "no")
+        (:hlines . "no")
+        (:tangle . "no")
+        (:comments . "link")))
+
+(add-hook 'text-mode-hook #'auto-fill-mode)
+
+(map! :map evil-org-mode-map
+      :after evil-org
+      :n "g <up>" #'org-backward-heading-same-level
+      :n "g <down>" #'org-forward-heading-same-level
+      :n "g <left>" #'org-up-element
+      :n "g <right>" #'org-down-element)
+
+(setq org-list-demote-modify-bullet '(("+" . "-") ("-" . "+") ("*" . "+") ("1." . "a.")))
+
+(add-hook 'org-mode-hook 'turn-on-flyspell)
+
+(use-package! org-ol-tree
+  :commands org-ol-tree)
+(map! :map org-mode-map
+      :after org
+      :localleader
+      :desc "Outline" "O" #'org-ol-tree)
+
+(use-package! ox-gfm
+  :after org)
+
+(after! org
+  (define-minor-mode org-fancy-html-export-mode
+  "Toggle my fabulous org export tweaks. While this mode itself does a little bit,
+the vast majority of the change in behaviour comes from switch statements in:
+ - `org-html-template-fancier'
+ - `org-html--build-meta-info-extended'
+ - `org-html-src-block-collapsable'
+ - `org-html-block-collapsable'
+ - `org-html-table-wrapped'
+ - `org-html--format-toc-headline-colapseable'
+ - `org-html--toc-text-stripped-leaves'
+ - `org-export-html-headline-anchor'"
+  :global t
+  :init-value t
+  (if org-fancy-html-export-mode
+      (setq org-html-style-default org-html-style-fancy
+            org-html-meta-tags #'org-html-meta-tags-fancy
+            org-html-checkbox-type 'html-span)
+    (setq org-html-style-default org-html-style-plain
+          org-html-meta-tags #'org-html-meta-tags-default
+          org-html-checkbox-type 'html)))
+
+(defadvice! org-html-template-fancier (orig-fn contents info)
+  "Return complete document string after HTML conversion.
+CONTENTS is the transcoded contents string.  INFO is a plist
+holding export options. Adds a few extra things to the body
+compared to the default implementation."
+  :around #'org-html-template
+  (if (or (not org-fancy-html-export-mode) (bound-and-true-p org-msg-export-in-progress))
+      (funcall orig-fn contents info)
+    (concat
+     (when (and (not (org-html-html5-p info)) (org-html-xhtml-p info))
+       (let* ((xml-declaration (plist-get info :html-xml-declaration))
+              (decl (or (and (stringp xml-declaration) xml-declaration)
+                        (cdr (assoc (plist-get info :html-extension)
+                                    xml-declaration))
+                        (cdr (assoc "html" xml-declaration))
+                        "")))
+         (when (not (or (not decl) (string= "" decl)))
+           (format "%s\n"
+                   (format decl
+                           (or (and org-html-coding-system
+                                    (fboundp 'coding-system-get)
+                                    (coding-system-get org-html-coding-system 'mime-charset))
+                               "iso-8859-1"))))))
+     (org-html-doctype info)
+     "\n"
+     (concat "<html"
+             (cond ((org-html-xhtml-p info)
+                    (format
+                     " xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"%s\" xml:lang=\"%s\""
+                     (plist-get info :language) (plist-get info :language)))
+                   ((org-html-html5-p info)
+                    (format " lang=\"%s\"" (plist-get info :language))))
+             ">\n")
+     "<head>\n"
+     (org-html--build-meta-info info)
+     (org-html--build-head info)
+     (org-html--build-mathjax-config info)
+     "</head>\n"
+     "<body>\n<input type='checkbox' id='theme-switch'><div id='page'><label id='switch-label' for='theme-switch'></label>"
+     (let ((link-up (org-trim (plist-get info :html-link-up)))
+           (link-home (org-trim (plist-get info :html-link-home))))
+       (unless (and (string= link-up "") (string= link-home ""))
+         (format (plist-get info :html-home/up-format)
+                 (or link-up link-home)
+                 (or link-home link-up))))
+     ;; Preamble.
+     (org-html--build-pre/postamble 'preamble info)
+     ;; Document contents.
+     (let ((div (assq 'content (plist-get info :html-divs))))
+       (format "<%s id=\"%s\">\n" (nth 1 div) (nth 2 div)))
+     ;; Document title.
+     (when (plist-get info :with-title)
+       (let ((title (and (plist-get info :with-title)
+                         (plist-get info :title)))
+             (subtitle (plist-get info :subtitle))
+             (html5-fancy (org-html--html5-fancy-p info)))
+         (when title
+           (format
+            (if html5-fancy
+                "<header class=\"page-header\">%s\n<h1 class=\"title\">%s</h1>\n%s</header>"
+              "<h1 class=\"title\">%s%s</h1>\n")
+            (if (or (plist-get info :with-date)
+                    (plist-get info :with-author))
+                (concat "<div class=\"page-meta\">"
+                        (when (plist-get info :with-date)
+                          (org-export-data (plist-get info :date) info))
+                        (when (and (plist-get info :with-date) (plist-get info :with-author)) ", ")
+                        (when (plist-get info :with-author)
+                          (org-export-data (plist-get info :author) info))
+                        "</div>\n")
+              "")
+            (org-export-data title info)
+            (if subtitle
+                (format
+                 (if html5-fancy
+                     "<p class=\"subtitle\" role=\"doc-subtitle\">%s</p>\n"
+                   (concat "\n" (org-html-close-tag "br" nil info) "\n"
+                           "<span class=\"subtitle\">%s</span>\n"))
+                 (org-export-data subtitle info))
+              "")))))
+     contents
+     (format "</%s>\n" (nth 1 (assq 'content (plist-get info :html-divs))))
+     ;; Postamble.
+     (org-html--build-pre/postamble 'postamble info)
+     ;; Possibly use the Klipse library live code blocks.
+     (when (plist-get info :html-klipsify-src)
+       (concat "<script>" (plist-get info :html-klipse-selection-script)
+               "</script><script src=\""
+               org-html-klipse-js
+               "\"></script><link rel=\"stylesheet\" type=\"text/css\" href=\""
+               org-html-klipse-css "\"/>"))
+     ;; Closing document.
+     "</div>\n</body>\n</html>")))
+
+(defadvice! org-html-toc-linked (depth info &optional scope)
+  "Build a table of contents.
+
+Just like `org-html-toc', except the header is a link to \"#\".
+
+DEPTH is an integer specifying the depth of the table.  INFO is
+a plist used as a communication channel.  Optional argument SCOPE
+is an element defining the scope of the table.  Return the table
+of contents as a string, or nil if it is empty."
+  :override #'org-html-toc
+  (let ((toc-entries
+         (mapcar (lambda (headline)
+                   (cons (org-html--format-toc-headline headline info)
+                         (org-export-get-relative-level headline info)))
+                 (org-export-collect-headlines info depth scope))))
+    (when toc-entries
+      (let ((toc (concat "<div id=\"text-table-of-contents\">"
+                         (org-html--toc-text toc-entries)
+                         "</div>\n")))
+        (if scope toc
+          (let ((outer-tag (if (org-html--html5-fancy-p info)
+                               "nav"
+                             "div")))
+            (concat (format "<%s id=\"table-of-contents\">\n" outer-tag)
+                    (let ((top-level (plist-get info :html-toplevel-hlevel)))
+                      (format "<h%d><a href=\"#\" style=\"color:inherit; text-decoration: none;\">%s</a></h%d>\n"
+                              top-level
+                              (org-html--translate "Table of Contents" info)
+                              top-level))
+                    toc
+                    (format "</%s>\n" outer-tag))))))))
+
+ (defvar org-html-meta-tags-opengraph-image
+  '(:image "https://tecosaur.com/resources/org/nib.png"
+    :type "image/png"
+    :width "200"
+    :height "200"
+    :alt "Green fountain pen nib")
+  "Plist of og:image:PROP properties and their value, for use in `org-html-meta-tags-fancy'.")
+
+(defun org-html-meta-tags-fancy (info)
+  "Use the INFO plist to construct the meta tags, as described in `org-html-meta-tags'."
+  (let ((title (org-html-plain-text
+                (org-element-interpret-data (plist-get info :title)) info))
+        (author (and (plist-get info :with-author)
+                     (let ((auth (plist-get info :author)))
+                       ;; Return raw Org syntax.
+                       (and auth (org-html-plain-text
+                                  (org-element-interpret-data auth) info))))))
+    (append
+     (list
+      (when (org-string-nw-p author)
+        (list "name" "author" author))
+      (when (org-string-nw-p (plist-get info :description))
+        (list "name" "description"
+              (plist-get info :description)))
+      '("name" "generator" "org mode")
+      '("name" "theme-color" "#77aa99")
+      '("property" "og:type" "article")
+      (list "property" "og:title" title)
+      (let ((subtitle (org-export-data (plist-get info :subtitle) info)))
+        (when (org-string-nw-p subtitle)
+          (list "property" "og:description" subtitle))))
+     (when org-html-meta-tags-opengraph-image
+       (list (list "property" "og:image" (plist-get org-html-meta-tags-opengraph-image :image))
+             (list "property" "og:image:type" (plist-get org-html-meta-tags-opengraph-image :type))
+             (list "property" "og:image:width" (plist-get org-html-meta-tags-opengraph-image :width))
+             (list "property" "og:image:height" (plist-get org-html-meta-tags-opengraph-image :height))
+             (list "property" "og:image:alt" (plist-get org-html-meta-tags-opengraph-image :alt))))
+     (list
+      (when (org-string-nw-p author)
+        (list "property" "og:article:author:first_name" (car (s-split-up-to " " author 2))))
+      (when (and (org-string-nw-p author) (s-contains-p " " author))
+        (list "property" "og:article:author:last_name" (cadr (s-split-up-to " " author 2))))
+      (list "property" "og:article:published_time"
+            (format-time-string
+             "%FT%T%z"
+             (or
+              (when-let ((date-str (cadar (org-collect-keywords '("DATE")))))
+                (unless (string= date-str (format-time-string "%F"))
+                  (ignore-errors (encode-time (org-parse-time-string date-str)))))
+              (if buffer-file-name
+                  (file-attribute-modification-time (file-attributes buffer-file-name))
+                (current-time)))))
+      (when buffer-file-name
+        (list "property" "og:article:modified_time"
+              (format-time-string "%FT%T%z" (file-attribute-modification-time (file-attributes buffer-file-name)))))))))
+
+(unless (functionp #'org-html-meta-tags-default)
+  (defalias 'org-html-meta-tags-default #'ignore))
+(setq org-html-meta-tags #'org-html-meta-tags-fancy)
+
+(setq org-html-style-plain org-html-style-default
+      org-html-htmlize-output-type 'css
+      org-html-doctype "html5"
+      org-html-html5-fancy t)
+
+(defun org-html-reload-fancy-style ()
+  (interactive)
+  (setq org-html-style-fancy
+        (concat (f-read-text (expand-file-name "misc/org-export-header.html" doom-private-dir))
+                "<script>\n"
+                (f-read-text (expand-file-name "misc/org-css/main.js" doom-private-dir))
+                "</script>\n<style>\n"
+                (f-read-text (expand-file-name "misc/org-css/main.min.css" doom-private-dir))
+                "</style>"))
+  (when org-fancy-html-export-mode
+    (setq org-html-style-default org-html-style-fancy)))
+(org-html-reload-fancy-style)
+
+(defvar org-html-export-collapsed nil)
+(eval '(cl-pushnew '(:collapsed "COLLAPSED" "collapsed" org-html-export-collapsed t)
+                   (org-export-backend-options (org-export-get-backend 'html))))
+(add-to-list 'org-default-properties "EXPORT_COLLAPSED")
+
+(defadvice! org-html-src-block-collapsable (orig-fn src-block contents info)
+  "Wrap the usual <pre> block in a <details>"
+  :around #'org-html-src-block
+  (if (or (not org-fancy-html-export-mode) (bound-and-true-p org-msg-export-in-progress))
+      (funcall orig-fn src-block contents info)
+    (let* ((properties (cadr src-block))
+           (lang (mode-name-to-lang-name
+                  (plist-get properties :language)))
+           (name (plist-get properties :name))
+           (ref (org-export-get-reference src-block info))
+           (collapsed-p (member (or (org-export-read-attribute :attr_html src-block :collapsed)
+                                    (plist-get info :collapsed))
+                                '("y" "yes" "t" t "true" "all"))))
+      (format
+       "<details id='%s' class='code'%s><summary%s>%s</summary>
+<div class='gutter'>
+<a href='#%s'>#</a>
+<button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button>\
+</div>
+%s
+</details>"
+       ref
+       (if collapsed-p "" " open")
+       (if name " class='named'" "")
+       (concat
+        (when name (concat "<span class=\"name\">" name "</span>"))
+        "<span class=\"lang\">" lang "</span>")
+       ref
+       (if name
+           (replace-regexp-in-string (format "<pre\\( class=\"[^\"]+\"\\)? id=\"%s\">" ref) "<pre\\1>"
+                                     (funcall orig-fn src-block contents info))
+         (funcall orig-fn src-block contents info))))))
+
+(defun mode-name-to-lang-name (mode)
+  (or (cadr (assoc mode
+                   '(("asymptote" "Asymptote")
+                     ("awk" "Awk")
+                     ("C" "C")
+                     ("clojure" "Clojure")
+                     ("css" "CSS")
+                     ("D" "D")
+                     ("ditaa" "ditaa")
+                     ("dot" "Graphviz")
+                     ("calc" "Emacs Calc")
+                     ("emacs-lisp" "Emacs Lisp")
+                     ("fortran" "Fortran")
+                     ("gnuplot" "gnuplot")
+                     ("haskell" "Haskell")
+                     ("hledger" "hledger")
+                     ("java" "Java")
+                     ("js" "Javascript")
+                     ("latex" "LaTeX")
+                     ("ledger" "Ledger")
+                     ("lisp" "Lisp")
+                     ("lilypond" "Lilypond")
+                     ("lua" "Lua")
+                     ("matlab" "MATLAB")
+                     ("mscgen" "Mscgen")
+                     ("ocaml" "Objective Caml")
+                     ("octave" "Octave")
+                     ("org" "Org mode")
+                     ("oz" "OZ")
+                     ("plantuml" "Plantuml")
+                     ("processing" "Processing.js")
+                     ("python" "Python")
+                     ("R" "R")
+                     ("ruby" "Ruby")
+                     ("sass" "Sass")
+                     ("scheme" "Scheme")
+                     ("screen" "Gnu Screen")
+                     ("sed" "Sed")
+                     ("sh" "shell")
+                     ("sql" "SQL")
+                     ("sqlite" "SQLite")
+                     ("forth" "Forth")
+                     ("io" "IO")
+                     ("J" "J")
+                     ("makefile" "Makefile")
+                     ("maxima" "Maxima")
+                     ("perl" "Perl")
+                     ("picolisp" "Pico Lisp")
+                     ("scala" "Scala")
+                     ("shell" "Shell Script")
+                     ("ebnf2ps" "ebfn2ps")
+                     ("cpp" "C++")
+                     ("abc" "ABC")
+                     ("coq" "Coq")
+                     ("groovy" "Groovy")
+                     ("bash" "bash")
+                     ("csh" "csh")
+                     ("ash" "ash")
+                     ("dash" "dash")
+                     ("ksh" "ksh")
+                     ("mksh" "mksh")
+                     ("posh" "posh")
+                     ("ada" "Ada")
+                     ("asm" "Assembler")
+                     ("caml" "Caml")
+                     ("delphi" "Delphi")
+                     ("html" "HTML")
+                     ("idl" "IDL")
+                     ("mercury" "Mercury")
+                     ("metapost" "MetaPost")
+                     ("modula-2" "Modula-2")
+                     ("pascal" "Pascal")
+                     ("ps" "PostScript")
+                     ("prolog" "Prolog")
+                     ("simula" "Simula")
+                     ("tcl" "tcl")
+                     ("tex" "LaTeX")
+                     ("plain-tex" "TeX")
+                     ("verilog" "Verilog")
+                     ("vhdl" "VHDL")
+                     ("xml" "XML")
+                     ("nxml" "XML")
+                     ("conf" "Configuration File"))))
+      mode))
+
+ (defadvice! org-html-table-wrapped (orig-fn table contents info)
+  "Wrap the usual <table> in a <div>"
+  :around #'org-html-table
+  (if (or (not org-fancy-html-export-mode) (bound-and-true-p org-msg-export-in-progress))
+      (funcall orig-fn table contents info)
+    (let* ((name (plist-get (cadr table) :name))
+           (ref (org-export-get-reference table info)))
+      (format "<div id='%s' class='table'>
+<div class='gutter'><a href='#%s'>#</a></div>
+<div class='tabular'>
+%s
+</div>\
+</div>"
+              ref ref
+              (if name
+                  (replace-regexp-in-string (format "<table id=\"%s\"" ref) "<table"
+                                            (funcall orig-fn table contents info))
+                (funcall orig-fn table contents info))))))
+
+
+(defadvice! org-html--format-toc-headline-colapseable (orig-fn headline info)
+  "Add a label and checkbox to `org-html--format-toc-headline's usual output,
+to allow the TOC to be a collapseable tree."
+  :around #'org-html--format-toc-headline
+  (if (or (not org-fancy-html-export-mode) (bound-and-true-p org-msg-export-in-progress))
+      (funcall orig-fn headline info)
+    (let ((id (or (org-element-property :CUSTOM_ID headline)
+                  (org-export-get-reference headline info))))
+      (format "<input type='checkbox' id='toc--%s'/><label for='toc--%s'>%s</label>"
+              id id (funcall orig-fn headline info)))))
+
+ (defadvice! org-html--toc-text-stripped-leaves (orig-fn toc-entries)
+  "Remove label"
+  :around #'org-html--toc-text
+  (if (or (not org-fancy-html-export-mode) (bound-and-true-p org-msg-export-in-progress))
+      (funcall orig-fn toc-entries)
+    (replace-regexp-in-string "<input [^>]+><label [^>]+>\\(.+?\\)</label></li>" "\\1</li>"
+                              (funcall orig-fn toc-entries))))
+
+(setq org-html-text-markup-alist
+      '((bold . "<b>%s</b>")
+        (code . "<code>%s</code>")
+        (italic . "<i>%s</i>")
+        (strike-through . "<del>%s</del>")
+        (underline . "<span class=\"underline\">%s</span>")
+        (verbatim . "<kbd>%s</kbd>")))
+
+(appendq! org-html-checkbox-types
+          '((html-span
+             (on . "<span class='checkbox'></span>")
+             (off . "<span class='checkbox'></span>")
+             (trans . "<span class='checkbox'></span>"))))
+(setq org-html-checkbox-type 'html-span)
+
+(pushnew! org-html-special-string-regexps
+          '("-&gt;" . "&#8594;")
+          '("&lt;-" . "&#8592;"))
+
+(defun org-export-html-headline-anchor (text backend info)
+  (when (and (org-export-derived-backend-p backend 'html)
+             (not (org-export-derived-backend-p backend 're-reveal))
+             org-fancy-html-export-mode)
+    (unless (bound-and-true-p org-msg-export-in-progress)
+      (replace-regexp-in-string
+       "<h\\([0-9]\\) id=\"\\([a-z0-9-]+\\)\">\\(.*[^ ]\\)<\\/h[0-9]>" ; this is quite restrictive, but due to `org-reference-contraction' I can do this
+       "<h\\1 id=\"\\2\">\\3<a aria-hidden=\"true\" href=\"#\\2\">#</a> </h\\1>"
+       text))))
+
+(add-to-list 'org-export-filter-headline-functions
+             'org-export-html-headline-anchor)
+
+(org-link-set-parameters "Https"
+                         :follow (lambda (url arg) (browse-url (concat "https:" url) arg))
+                         :export #'org-url-fancy-export)
+
+ (defun org-url-fancy-export (url _desc backend)
+  (let ((metadata (org-url-unfurl-metadata (concat "https:" url))))
+    (cond
+     ((org-export-derived-backend-p backend 'html)
+      (concat
+       "<div class=\"link-preview\">"
+       (format "<a href=\"%s\">" (concat "https:" url))
+       (when (plist-get metadata :image)
+         (format "<img src=\"%s\"/>" (plist-get metadata :image)))
+       "<small>"
+       (replace-regexp-in-string "//\\(?:www\\.\\)?\\([^/]+\\)/?.*" "\\1" url)
+       "</small><p>"
+       (when (plist-get metadata :title)
+         (concat "<b>" (org-html-encode-plain-text (plist-get metadata :title)) "</b></br>"))
+       (when (plist-get metadata :description)
+         (org-html-encode-plain-text (plist-get metadata :description)))
+       "</p></a></div>"))
+     (t url))))
+
+(setq org-url-unfurl-metadata--cache nil)
+(defun org-url-unfurl-metadata (url)
+  (cdr (or (assoc url org-url-unfurl-metadata--cache)
+           (car (push
+                 (cons
+                  url
+                  (let* ((head-data
+                          (-filter #'listp
+                                   (cdaddr
+                                    (with-current-buffer (progn (message "Fetching metadata from %s" url)
+                                                                (url-retrieve-synchronously url t t 5))
+                                      (goto-char (point-min))
+                                      (delete-region (point-min) (- (search-forward "<head") 6))
+                                      (delete-region (search-forward "</head>") (point-max))
+                                      (goto-char (point-min))
+                                      (while (re-search-forward "<script[^\u2800]+?</script>" nil t)
+                                        (replace-match ""))
+                                      (goto-char (point-min))
+                                      (while (re-search-forward "<style[^\u2800]+?</style>" nil t)
+                                        (replace-match ""))
+                                      (libxml-parse-html-region (point-min) (point-max))))))
+                         (meta (delq nil
+                                     (mapcar
+                                      (lambda (tag)
+                                        (when (eq 'meta (car tag))
+                                          (cons (or (cdr (assoc 'name (cadr tag)))
+                                                    (cdr (assoc 'property (cadr tag))))
+                                                (cdr (assoc 'content (cadr tag))))))
+                                      head-data))))
+                    (let ((title (or (cdr (assoc "og:title" meta))
+                                     (cdr (assoc "twitter:title" meta))
+                                     (nth 2 (assq 'title head-data))))
+                          (description (or (cdr (assoc "og:description" meta))
+                                           (cdr (assoc "twitter:description" meta))
+                                           (cdr (assoc "description" meta))))
+                          (image (or (cdr (assoc "og:image" meta))
+                                     (cdr (assoc "twitter:image" meta)))))
+                      (when image
+                        (setq image (replace-regexp-in-string
+                                     "^/" (concat "https://" (replace-regexp-in-string "//\\([^/]+\\)/?.*" "\\1" url) "/")
+                                     (replace-regexp-in-string
+                                      "^//" "https://"
+                                      image))))
+                      (list :title title :description description :image image))))
+                 org-url-unfurl-metadata--cache)))))
+
+                (setq org-html-mathjax-options
+      '((path "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" )
+        (scale "1")
+        (autonumber "ams")
+        (multlinewidth "85%")
+        (tagindent ".8em")
+        (tagside "right")))
+
+(setq org-html-mathjax-template
+      "<script>
+MathJax = {
+  chtml: {
+    scale: %SCALE
+  },
+  svg: {
+    scale: %SCALE,
+    fontCache: \"global\"
+  },
+  tex: {
+    tags: \"%AUTONUMBER\",
+    multlineWidth: \"%MULTLINEWIDTH\",
+    tagSide: \"%TAGSIDE\",
+    tagIndent: \"%TAGINDENT\"
+  }
+};
+</script>
+<script id=\"MathJax-script\" async
+        src=\"%PATH\"></script>")
+
+)
+
+(setq org-roam-directory "~/org/roam/")
+
+(use-package! websocket
+  :after org-roam)
+
+(use-package! org-roam-ui
+  :after org-roam
+  :commands org-roam-ui-open
+  :hook (org-roam . org-roam-ui-mode)
+  :config
+      (setq org-roam-ui-sync-theme t
+            org-roam-ui-follow t
+            org-roam-ui-update-on-save t
+            org-roam-ui-open-on-start t))
+
+(defadvice! doom-modeline--buffer-file-name-roam-aware-a (orig-fun)
+  :around #'doom-modeline-buffer-file-name ; takes no args
+  (if (s-contains-p org-roam-directory (or buffer-file-name ""))
+      (replace-regexp-in-string
+       "\\(?:^\\|.*/\\)\\([0-9]\\{4\\}\\)\\([0-9]\\{2\\}\\)\\([0-9]\\{2\\}\\)[0-9]*-"
+       "🢔(\\1-\\2-\\3) "
+       (subst-char-in-string ?_ ?  buffer-file-name))
+    (funcall orig-fun)))
+
+(after! org-roam
+   (setq +org-roam-open-buffer-on-find-file nil))
+
+(setq org-agenda-files (list "~/org/school.org"
+                             "~/org/todo.org"))
+
+(use-package! org-super-agenda
+  :commands (org-super-agenda-mode))
+
+(after! org-agenda
+  (org-super-agenda-mode))
+
+(setq org-agenda-skip-scheduled-if-done t
+      org-agenda-skip-deadline-if-done t
+      org-agenda-include-deadlines t
+      org-agenda-block-separator nil
+      org-agenda-tags-column 100 ;; from testing this seems to be a good value
+      org-agenda-compact-blocks t)
+
+(setq org-agenda-custom-commands
+      '(("o" "Overview"
+         ((agenda "" ((org-agenda-span 'day)
+                      (org-super-agenda-groups
+                       '((:name "Today"
+                          :time-grid t
+                          :date today
+                          :todo "TODAY"
+                          :scheduled today
+                          :order 1)))))
+          (alltodo "" ((org-agenda-overriding-header "")
+                       (org-super-agenda-groups
+                        '((:name "Next to do"
+                           :todo "NEXT"
+                           :order 1)
+                          (:name "Important"
+                           :tag "Important"
+                           :priority "A"
+                           :order 6)
+                          (:name "Due Today"
+                           :deadline today
+                           :order 2)
+                          (:name "Due Soon"
+                           :deadline future
+                           :order 8)
+                          (:name "Overdue"
+                           :deadline past
+                           :face error
+                           :order 7)
+                          (:name "Assignments"
+                           :tag "Assignment"
+                           :order 10)
+                          (:name "Issues"
+                           :tag "Issue"
+                           :order 12)
+                          (:name "Emacs"
+                           :tag "Emacs"
+                           :order 13)
+                          (:name "Projects"
+                           :tag "Project"
+                           :order 14)
+                          (:name "Research"
+                           :tag "Research"
+                           :order 15)
+                          (:name "To read"
+                           :tag "Read"
+                           :order 30)
+                          (:name "Waiting"
+                           :todo "WAITING"
+                           :order 20)
+                          (:name "University"
+                           :tag "uni"
+                           :order 32)
+                          (:name "Trivial"
+                           :priority<= "E"
+                           :tag ("Trivial" "Unimportant")
+                           :todo ("SOMEDAY" )
+                           :order 90)
+                          (:discard (:tag ("Chore" "Routine" "Daily")))))))))))
+
+(after! org-plot
+  (defun org-plot/generate-theme (_type)
+    "Use the current Doom theme colours to generate a GnuPlot preamble."
+    (format "
+fgt = \"textcolor rgb '%s'\" # foreground text
+fgat = \"textcolor rgb '%s'\" # foreground alt text
+fgl = \"linecolor rgb '%s'\" # foreground line
+fgal = \"linecolor rgb '%s'\" # foreground alt line
+
+# foreground colors
+set border lc rgb '%s'
+# change text colors of  tics
+set xtics @fgt
+set ytics @fgt
+# change text colors of labels
+set title @fgt
+set xlabel @fgt
+set ylabel @fgt
+# change a text color of key
+set key @fgt
+
+# line styles
+set linetype 1 lw 2 lc rgb '%s' # red
+set linetype 2 lw 2 lc rgb '%s' # blue
+set linetype 3 lw 2 lc rgb '%s' # green
+set linetype 4 lw 2 lc rgb '%s' # magenta
+set linetype 5 lw 2 lc rgb '%s' # orange
+set linetype 6 lw 2 lc rgb '%s' # yellow
+set linetype 7 lw 2 lc rgb '%s' # teal
+set linetype 8 lw 2 lc rgb '%s' # violet
+
+# border styles
+set tics out nomirror
+set border 3
+
+# palette
+set palette maxcolors 8
+set palette defined ( 0 '%s',\
+1 '%s',\
+2 '%s',\
+3 '%s',\
+4 '%s',\
+5 '%s',\
+6 '%s',\
+7 '%s' )
+"
+            (doom-color 'fg)
+            (doom-color 'fg-alt)
+            (doom-color 'fg)
+            (doom-color 'fg-alt)
+            (doom-color 'fg)
+            ;; colours
+            (doom-color 'red)
+            (doom-color 'blue)
+            (doom-color 'green)
+            (doom-color 'magenta)
+            (doom-color 'orange)
+            (doom-color 'yellow)
+            (doom-color 'teal)
+            (doom-color 'violet)
+            ;; duplicated
+            (doom-color 'red)
+            (doom-color 'blue)
+            (doom-color 'green)
+            (doom-color 'magenta)
+            (doom-color 'orange)
+            (doom-color 'yellow)
+            (doom-color 'teal)
+            (doom-color 'violet)
+            ))
+  (defun org-plot/gnuplot-term-properties (_type)
+    (format "background rgb '%s' size 1050,650"
+            (doom-color 'bg)))
+  (setq org-plot/gnuplot-script-preamble #'org-plot/generate-theme)
+  (setq org-plot/gnuplot-term-extra #'org-plot/gnuplot-term-properties))
+
+;;spc+v = view exported file
+(map! :map org-mode-map
+      :localleader
+      :desc "View exported file" "v" #'org-view-output-file)
+
+(defun org-view-output-file (&optional org-file-path)
+  "Visit buffer open on the first output file (if any) found, using `org-view-output-file-extensions'"
+  (interactive)
+  (let* ((org-file-path (or org-file-path (buffer-file-name) ""))
+         (dir (file-name-directory org-file-path))
+         (basename (file-name-base org-file-path))
+         (output-file nil))
+    (dolist (ext org-view-output-file-extensions)
+      (unless output-file
+        (when (file-exists-p
+               (concat dir basename "." ext))
+          (setq output-file (concat dir basename "." ext)))))
+    (if output-file
+        (if (member (file-name-extension output-file) org-view-external-file-extensions)
+            (browse-url-xdg-open output-file)
+          (pop-to-bufferpop-to-buffer (or (find-buffer-visiting output-file)
+                             (find-file-noselect output-file))))
+      (message "No exported file found"))))
+
+(defvar org-view-output-file-extensions '("pdf" "md" "rst" "txt" "tex" "html")
+  "Search for output files with these extensions, in order, viewing the first that matches")
+(defvar org-view-external-file-extensions '("html")
+  "File formats that should be opened externally.")
+
+(use-package! lexic
+  :commands lexic-search lexic-list-dictionary
+  :config
+  (map! :map lexic-mode-map
+        :n "q" #'lexic-return-from-lexic
+        :nv "RET" #'lexic-search-word-at-point
+        :n "a" #'outline-show-all
+        :n "h" (cmd! (outline-hide-sublevels 3))
+        :n "o" #'lexic-toggle-entry
+        :n "n" #'lexic-next-entry
+        :n "N" (cmd! (lexic-next-entry t))
+        :n "p" #'lexic-previous-entry
+        :n "P" (cmd! (lexic-previous-entry t))
+        :n "E" (cmd! (lexic-return-from-lexic) ; expand
+                     (switch-to-buffer (lexic-get-buffer)))
+        :n "M" (cmd! (lexic-return-from-lexic) ; minimise
+                     (lexic-goto-lexic))
+        :n "C-p" #'lexic-search-history-backwards
+        :n "C-n" #'lexic-search-history-forwards
+        :n "/" (cmd! (call-interactively #'lexic-search))))
+
+(defadvice! +lookup/dictionary-definition-lexic (identifier &optional arg)
+  "Look up the definition of the word at point (or selection) using `lexic-search'."
+  :override #'+lookup/dictionary-definition
+  (interactive
+   (list (or (doom-thing-at-point-or-region 'word)
+             (read-string "Look up in dictionary: "))
+         current-prefix-arg))
+  (lexic-search identifier nil nil t))
+
+(setq +latex-viewers '(pdf-tools evince zathura okular skim sumatrapdf))
+
+(after! org
+  (setq org-highlight-latex-and-related '(native script entities))
+  (add-to-list 'org-src-block-faces '("latex" (:inherit default :extend t))))
+
+(after! org
+  (plist-put org-format-latex-options :background "Transparent"))
+
+(after! org
+  (add-hook 'org-mode-hook 'turn-on-org-cdlatex))
+
+(defadvice! org-edit-latex-emv-after-insert ()
+  :after #'org-cdlatex-environment-indent
+  (org-edit-latex-environment))
+
+(setq org-display-inline-images t)
+(setq org-redisplay-inline-images t)
+(setq org-startup-with-inline-images "inlineimages")
+
+(setq-default org-html-with-latex `dvisvgm)
+(setq org-preview-latex-default-process 'dvisvgm)
+
+(use-package! org-fragtog
+  :hook (org-mode . org-fragtog-mode))
+
+(setq org-format-latex-header "\\documentclass{article}
+\\usepackage[usenames]{xcolor}
+
+\\usepackage[T1]{fontenc}
+
+\\usepackage{booktabs}
+
+\\pagestyle{empty}             % do not remove
+% The settings below are copied from fullpage.sty
+\\setlength{\\textwidth}{\\paperwidth}
+\\addtolength{\\textwidth}{-3cm}
+\\setlength{\\oddsidemargin}{1.5cm}
+\\addtolength{\\oddsidemargin}{-2.54cm}
+\\setlength{\\evensidemargin}{\\oddsidemargin}
+\\setlength{\\textheight}{\\paperheight}
+\\addtolength{\\textheight}{-\\headheight}
+\\addtolength{\\textheight}{-\\headsep}
+\\addtolength{\\textheight}{-\\footskip}
+\\addtolength{\\textheight}{-3cm}
+\\setlength{\\topmargin}{1.5cm}
+\\addtolength{\\topmargin}{-2.54cm}
+")
+
+(use-package pdf-view
+  :hook (pdf-tools-enabled . pdf-view-themed-minor-mode)
+  :hook (pdf-tools-enabled . hide-mode-line-mode)
+  :config
+  (setq pdf-view-resize-factor 1.1)
+  (setq-default pdf-view-display-size 'fit-page))
+
+(set-email-account! "shaunsingh0207"
+  '((mu4e-sent-folder       . "/Sent Mail")
+    (mu4e-drafts-folder     . "/Drafts")
+    (mu4e-trash-folder      . "/Trash")
+    (mu4e-refile-folder     . "/All Mail")
+    (smtpmail-smtp-user     . "shaunsingh0207@gmail.com")))
+
+;; don't need to run cleanup after indexing for gmail
+(setq mu4e-index-cleanup nil
+      mu4e-index-lazy-check t)
+
+(after! mu4e
+  (setq mu4e-headers-fields
+        '((:flags . 6)
+          (:account-stripe . 2)
+          (:from-or-to . 25)
+          (:folder . 10)
+          (:recipnum . 2)
+          (:subject . 80)
+          (:human-date . 8))
+        +mu4e-min-header-frame-width 142
+        mu4e-headers-date-format "%d/%m/%y"
+        mu4e-headers-time-format "⧖ %H:%M"
+        mu4e-headers-results-limit 1000
+        mu4e-index-cleanup t)
+
+  (add-to-list 'mu4e-bookmarks
+               '(:name "Yesterday's messages" :query "date:2d..1d" :key ?y) t)
+
+  (defvar +mu4e-header--folder-colors nil)
+  (appendq! mu4e-header-info-custom
+            '((:folder .
+               (:name "Folder" :shortname "Folder" :help "Lowest level folder" :function
+                (lambda (msg)
+                  (+mu4e-colorize-str
+                   (replace-regexp-in-string "\\`.*/" "" (mu4e-message-field msg :maildir))
+                   '+mu4e-header--folder-colors)))))))
+
+(use-package evil-collection-webkit
+   :defer t
+   :config
+   (evil-collection-xwidget-setup))
+
 (when 'native-comp-compiler-options
                  (setq native-comp-speed 3
                        native-comp-compiler-options '("-O3" "-march=native" "-mtune=native")))
-;; Basic Configuration:2 ends here
 
-;; [[file:config.org::*Always compile][Always compile:1]]
 (setq vterm-always-compile-module t)
-;; Always compile:1 ends here
 
-;; [[file:config.org::*Kill buffer][Kill buffer:1]]
 (setq vterm-kill-buffer-on-exit t)
-;; Kill buffer:1 ends here
 
-;; [[file:config.org::*Functions][Functions:1]]
 (after! vterm
   (setf (alist-get "magit-status" vterm-eval-cmds nil nil #'equal)
         '((lambda (path)
             (magit-status path)))))
-;; Functions:1 ends here
 
-;; [[file:config.org::*Fonts][Fonts:5]]
 ;; No missing fonts detected
-;; Fonts:5 ends here
 
-;; [[file:config.org::*Company][Company:4]]
 (defun +yas/org-src-header-p ()
   "Determine whether `point' is within a src-block header or header-args."
   (pcase (org-element-type (org-element-context))
@@ -36,9 +1769,7 @@
                                           (search-forward "]{")
                                           (point))))
     ('keyword (string-match-p "^header-args" (org-element-property :value (org-element-context))))))
-;; Company:4 ends here
 
-;; [[file:config.org::*Company][Company:5]]
 (defun +yas/org-prompt-header-arg (arg question values)
   "Prompt the user to set ARG header property to one of VALUES with QUESTION.
 The default value is identified and indicated. If either default is selected,
@@ -69,9 +1800,7 @@ or no selection is made: nil is returned."
       (unless (or (string-match-p "(default)$" selection)
                   (string= "" selection))
         selection))))
-;; Company:5 ends here
 
-;; [[file:config.org::*Company][Company:6]]
 (defun +yas/org-src-lang ()
   "Try to find the current language of the src/header at `point'.
 Return nil otherwise."
@@ -110,24 +1839,16 @@ Return nil otherwise."
                    (lambda (a b) (> (cdr a) (cdr b))))))
 
     (car (cl-set-difference src-langs header-langs :test #'string=))))
-;; Company:6 ends here
 
-;; [[file:config.org::*Company][Company:7]]
 (sp-local-pair
  '(org-mode)
  "<<" ">>"
  :actions '(insert))
-;; Company:7 ends here
 
-;; [[file:config.org::*Better Defaults][Better Defaults:2]]
 (add-to-list 'default-frame-alist '(inhibit-double-buffering . t))
-;; Better Defaults:2 ends here
 
-;; [[file:config.org::*Better Defaults][Better Defaults:3]]
 (setq doom-scratch-initial-major-mode 'lisp-interaction-mode)
-;; Better Defaults:3 ends here
 
-;; [[file:config.org::*Splash screen][Splash screen:1]]
 (defvar fancy-splash-image-template
   (expand-file-name "misc/splash-images/emacs-e-template.svg" doom-private-dir)
   "Default template svg used for the splash image, with substitutions from ")
@@ -219,27 +1940,17 @@ Return nil otherwise."
 
 (add-hook 'window-size-change-functions #'set-appropriate-splash)
 (add-hook 'doom-load-theme-hook #'set-appropriate-splash)
-;; Splash screen:1 ends here
 
-;; [[file:config.org::*Splash screen][Splash screen:3]]
 (remove-hook '+doom-dashboard-functions #'doom-dashboard-widget-shortmenu)
 (add-hook! '+doom-dashboard-mode-hook (hide-mode-line-mode 1) (hl-line-mode -1))
 (setq-hook! '+doom-dashboard-mode-hook evil-normal-state-cursor (list nil))
-;; Splash screen:3 ends here
 
-;; [[file:config.org::*Writeroom][Writeroom:1]]
 (setq +zen-text-scale 0.8)
-;; Writeroom:1 ends here
 
-;; [[file:config.org::*Font Display][Font Display:1]]
 (add-hook 'org-mode-hook #'+org-pretty-mode)
-;; Font Display:1 ends here
 
-;; [[file:config.org::*Font Display][Font Display:2]]
 (setq org-pretty-entities-include-sub-superscripts nil)
-;; Font Display:2 ends here
 
-;; [[file:config.org::*Font Display][Font Display:3]]
 (custom-set-faces!
   '(org-document-title :height 1.2)
   '(outline-1 :weight extra-bold :height 1.25)
@@ -250,21 +1961,15 @@ Return nil otherwise."
   '(outline-6 :weight semi-bold :height 1.03)
   '(outline-8 :weight semi-bold)
   '(outline-9 :weight semi-bold))
-;; Font Display:3 ends here
 
-;; [[file:config.org::*Font Display][Font Display:4]]
 (setq org-agenda-deadline-faces
       '((1.0 . error)
         (1.0 . org-warning)
         (0.5 . org-upcoming-deadline)
         (0.0 . org-upcoming-distant-deadline)))
-;; Font Display:4 ends here
 
-;; [[file:config.org::*Font Display][Font Display:5]]
 (setq org-fontify-quote-and-verse-blocks t)
-;; Font Display:5 ends here
 
-;; [[file:config.org::*Font Display][Font Display:6]]
 (use-package! org-appear
   :hook (org-mode . org-appear-mode)
   :config
@@ -272,9 +1977,7 @@ Return nil otherwise."
         org-appear-autosubmarkers t
         org-appear-autolinks nil)
   (run-at-time nil nil #'org-appear--set-elements))
-;; Font Display:6 ends here
 
-;; [[file:config.org::*Font Display][Font Display:7]]
 (defun locally-defer-font-lock ()
   "Set jit-lock defer and stealth, when buffer is over a certain size."
   (when (> (buffer-size) 50000)
@@ -287,9 +1990,7 @@ Return nil otherwise."
 (custom-set-faces!
   `(org-block-end-line :background ,(doom-color 'base2))
   `(org-block-begin-line :background ,(doom-color 'base2)))
-;; Font Display:7 ends here
 
-;; [[file:config.org::*Fontifying inline src blocks][Fontifying inline src blocks:1]]
 (defvar org-prettify-inline-results t
   "Whether to use (ab)use prettify-symbols-mode on {{{results(...)}}}.
 Either t or a cons cell of strings which are used as substitutions
@@ -368,27 +2069,19 @@ Must be run as part of `org-font-lock-set-keywords-hook'."
         (append org-font-lock-extra-keywords '((org-fontify-inline-src-blocks)))))
 
 (add-hook 'org-font-lock-set-keywords-hook #'org-fontify-inline-src-blocks-enable)
-;; Fontifying inline src blocks:1 ends here
 
-;; [[file:config.org::*Symbols][Symbols:1]]
 ;;make bullets look better
 (after! org-superstar
   (setq org-superstar-headline-bullets-list '("◉" "○" "✸" "✿" "✤" "✜" "◆" "▶")
         org-superstar-prettify-item-bullets t ))
-;; Symbols:1 ends here
 
-;; [[file:config.org::*Org-Mode][Org-Mode:5]]
 (use-package! org-pandoc-import
   :after org)
-;; Org-Mode:5 ends here
 
-;; [[file:config.org::*HTML][HTML:3]]
 (after! ox-html
   
 )
-;; HTML:3 ends here
 
-;; [[file:config.org::Example, fixed width, and property blocks][Example, fixed width, and property blocks]]
 (defun org-html-block-collapsable (orig-fn block contents info)
   "Wrap the usual block in a <details>"
   (if (or (not org-fancy-html-export-mode) (bound-and-true-p org-msg-export-in-progress))
@@ -422,14 +2115,10 @@ Must be run as part of `org-font-lock-set-keywords-hook'."
 (advice-add 'org-html-example-block   :around #'org-html-block-collapsable)
 (advice-add 'org-html-fixed-width     :around #'org-html-block-collapsable)
 (advice-add 'org-html-property-drawer :around #'org-html-block-collapsable)
-;; Example, fixed width, and property blocks ends here
 
-;; [[file:config.org::*Org-Capture][Org-Capture:1]]
 (use-package! doct
   :commands (doct))
-;; Org-Capture:1 ends here
 
-;; [[file:config.org::*Prettify][Prettify:1]]
 (defun org-capture-select-template-prettier (&optional keys)
   "Select a capture template, in a prettier way than default
 Lisp programs can force the template by setting KEYS to a string."
@@ -537,9 +2226,7 @@ is selected, only the bare key is returned."
                    (t (error "No entry available")))))))
         (when buffer (kill-buffer buffer))))))
 (advice-add 'org-mks :override #'org-mks-pretty)
-;; Prettify:1 ends here
 
-;; [[file:config.org::*Prettify][Prettify:2]]
 (setf (alist-get 'height +org-capture-frame-parameters) 15)
 ;; (alist-get 'name +org-capture-frame-parameters) "❖ Capture") ;; ATM hardcoded in other places, so changing breaks stuff
 (setq +org-capture-fn
@@ -547,9 +2234,7 @@ is selected, only the bare key is returned."
         (interactive)
         (set-window-parameter nil 'mode-line-format 'none)
         (org-capture)))
-;; Prettify:2 ends here
 
-;; [[file:config.org::*Prettify][Prettify:3]]
 (defun +doct-icon-declaration-to-icon (declaration)
   "Convert :icon declaration to icon"
   (let ((name (pop declaration))
@@ -571,9 +2256,7 @@ is selected, only the bare key is returned."
                                  templates))))
 
 (setq doct-after-conversion-functions '(+doct-iconify-capture-templates))
-;; Prettify:3 ends here
 
-;; [[file:config.org::*Templates][Templates:1]]
 (setq org-capture-templates
       (doct `(("Home" :keys "h"
                :icon ("home" :set "octicon" :color "cyan")
@@ -615,9 +2298,7 @@ is selected, only the bare key is returned."
                            :keyword "%U"
                            :file +org-capture-project-notes-file)))
               )))
-;; Templates:1 ends here
 
-;; [[file:config.org::*Conditional features][Conditional features:1]]
 (defvar org-latex-italic-quotes t
   "Make \"quote\" environments italic.")
 (defvar org-latex-par-sep t
@@ -657,9 +2338,7 @@ The car can also be a
 If the symbol, function, or list produces a string: that is used as a regex
 search in the buffer. Otherwise any non-nil return value will indicate the
 existance of the feature.")
-;; Conditional features:1 ends here
 
-;; [[file:config.org::*Conditional features][Conditional features:2]]
 (defvar org-latex-caption-preamble "
 \\usepackage{subcaption}
 \\usepackage[hypcap=true]{caption}
@@ -694,9 +2373,7 @@ existance of the feature.")
 }
 "
   "Preamble that provides a macro for custom boxes.")
-;; Conditional features:2 ends here
 
-;; [[file:config.org::*Conditional features][Conditional features:3]]
 (defvar org-latex-feature-implementations
   '((image         :snippet "\\usepackage{graphicx}" :order 2)
     (svg           :snippet "\\usepackage{svg}" :order 2)
@@ -739,9 +2416,7 @@ following keys:
     The default is 0.
 
 Features that start with ! will be eagerly loaded, i.e. without being detected.")
-;; Conditional features:3 ends here
 
-;; [[file:config.org::*Conditional features][Conditional features:4]]
 (defun org-latex-detect-features (&optional buffer info)
   "List features from `org-latex-conditional-features' detected in BUFFER."
   (let ((case-fold-search nil))
@@ -761,9 +2436,7 @@ Features that start with ! will be eagerly loaded, i.e. without being detected."
                            out))
                    (if (listp (cdr construct-feature)) (cdr construct-feature) (list (cdr construct-feature)))))
                org-latex-conditional-features)))))
-;; Conditional features:4 ends here
 
-;; [[file:config.org::*Conditional features][Conditional features:5]]
 (defun org-latex-expand-features (features)
   "For each feature in FEATURES process :requires, :when, and :prevents keywords and sort according to :order."
   (dolist (feature features)
@@ -795,9 +2468,7 @@ Features that start with ! will be eagerly loaded, i.e. without being detected."
           (if (< (or (plist-get (cdr (assoc feat1 org-latex-feature-implementations)) :order) 1)
                  (or (plist-get (cdr (assoc feat2 org-latex-feature-implementations)) :order) 1))
               t nil))))
-;; Conditional features:5 ends here
 
-;; [[file:config.org::*Conditional features][Conditional features:6]]
 (defun org-latex-generate-features-preamble (features)
   "Generate the LaTeX preamble content required to provide FEATURES.
 This is done according to `org-latex-feature-implementations'"
@@ -817,9 +2488,7 @@ This is done according to `org-latex-feature-implementations'"
                 expanded-features
                 "")
      "% end features\n")))
-;; Conditional features:6 ends here
 
-;; [[file:config.org::*Conditional features][Conditional features:7]]
 (defvar info--tmp nil)
 
 (defadvice! org-latex-save-info (info &optional t_ s_)
@@ -834,13 +2503,9 @@ This is done according to `org-latex-feature-implementations'"
       (concat header
               (org-latex-generate-features-preamble (org-latex-detect-features nil info--tmp))
               "\n"))))
-;; Conditional features:7 ends here
 
-;; [[file:config.org::*Tectonic][Tectonic:1]]
 (setq org-latex-pdf-process '("tectonic -X compile --print --outdir=%o -Z shell-escape %f"))
-;; Tectonic:1 ends here
 
-;; [[file:config.org::*Tectonic][Tectonic:2]]
 (setq org-preview-latex-process-alist
 '((dvipng :programs
                   ("tectonic" "dvipng")
@@ -867,9 +2532,7 @@ This is done according to `org-latex-feature-implementations'"
                        ("tectonic --outdir %o %f")
                        :image-converter
                        ("convert -density %D -trim -antialias %f -quality 100 %O"))))
-;; Tectonic:2 ends here
 
-;; [[file:config.org::*Classes][Classes:1]]
 (after! ox-latex
   (add-to-list 'org-latex-classes
                '("cb-doc" "\\documentclass{scrartcl}"
@@ -878,9 +2541,7 @@ This is done according to `org-latex-feature-implementations'"
                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
-;; Classes:1 ends here
 
-;; [[file:config.org::*Classes][Classes:2]]
 (after! ox-latex
   (setq org-latex-default-class "cb-doc"
         org-latex-tables-booktabs t
@@ -903,9 +2564,7 @@ This is done according to `org-latex-feature-implementations'"
 \\urlstyle{same}
 "
         org-latex-reference-command "\\cref{%s}"))
-;; Classes:2 ends here
 
-;; [[file:config.org::*Packages][Packages:1]]
 (setq org-latex-default-packages-alist
       `(("AUTO" "inputenc" t
          ("pdflatex"))
@@ -927,16 +2586,12 @@ This is done according to `org-latex-feature-implementations'"
     ("" "indentfirst" nil)
     "\\setmainfont[Ligatures=TeX]{Alegreya}"
     "\\setmonofont[Ligatures=TeX]{Liga SFMono Nerd Font}"))
-;; Packages:1 ends here
 
-;; [[file:config.org::*Pretty code blocks][Pretty code blocks:1]]
 (use-package! engrave-faces-latex
   :after ox-latex
   :config
   (setq org-latex-listings 'engraved))
-;; Pretty code blocks:1 ends here
 
-;; [[file:config.org::*Pretty code blocks][Pretty code blocks:2]]
 (defadvice! org-latex-src-block-engraved (orig-fn src-block contents info)
   "Like `org-latex-src-block', but supporting an engraved backend"
   :around #'org-latex-src-block
@@ -1094,39 +2749,25 @@ This is done according to `org-latex-feature-implementations'"
     (if (eq 'engraved (plist-get info :latex-listings))
         (format "\\begin{Code}[alt]\n%s\n\\end{Code}" output-block)
       output-block)))
-;; Pretty code blocks:2 ends here
 
-;; [[file:config.org::*ox-chameleon][ox-chameleon:1]]
 (use-package! ox-chameleon
   :after ox)
-;; ox-chameleon:1 ends here
 
-;; [[file:config.org::*Async][Async:1]]
 (setq org-export-in-background t)
-;; Async:1 ends here
 
-;; [[file:config.org::*(sub|super)script characters][(sub|super)script characters:1]]
 (setq org-export-with-sub-superscripts '{})
-;; (sub|super)script characters:1 ends here
 
-;; [[file:config.org::*Mu4e][Mu4e:1]]
 (setq mu4e-update-interval 300)
-;; Mu4e:1 ends here
 
-;; [[file:config.org::*Mu4e][Mu4e:3]]
 (after! mu4e
   (setq sendmail-program "~/.nix-profile/bin/msmtp"
         send-mail-function #'smtpmail-send-it
         message-sendmail-f-is-evil t
         message-sendmail-extra-arguments '("--read-envelope-from")
         message-send-mail-function #'message-send-mail-with-sendmail))
-;; Mu4e:3 ends here
 
-;; [[file:config.org::*Mu4e][Mu4e:4]]
 ;;(setq alert-default-style 'osx-notifier)
-;; Mu4e:4 ends here
 
-;; [[file:config.org::*Webkit][Webkit:1]]
 ;;(use-package org
 ;;  :demand t)
 
@@ -1149,9 +2790,7 @@ This is done according to `org-latex-feature-implementations'"
               ""
             (format "%s%.0f%%  " (all-the-icons-faicon "spinner") progress)))
     (force-mode-line-update)))
-;; Webkit:1 ends here
 
-;; [[file:config.org::*IRC][IRC:2]]
 (after! circe
   (setq-default circe-use-tls t)
   (setq circe-notifications-alert-icon "/usr/share/icons/breeze/actions/24/network-connect.svg"
@@ -1380,9 +3019,7 @@ This is done according to `org-latex-feature-implementations'"
                       accounts))))
 
 (add-transient-hook! #'=irc (register-irc-auths))
-;; IRC:2 ends here
 
-;; [[file:config.org::org-emph-to-irc][org-emph-to-irc]]
 (defun lui-org-to-irc ()
   "Examine a buffer with simple org-mode formatting, and converts the empasis:
 *bold*, /italic/, and _underline_ to IRC semi-standard escape codes.
@@ -1399,382 +3036,3 @@ This is done according to `org-latex-feature-implementations'"
              "") nil nil)))
 
 (add-hook 'lui-pre-input-hook #'lui-org-to-irc)
-;; org-emph-to-irc ends here
-
-;; [[file:config.org::*Nyxt][Nyxt:1]]
-(defcustom cl-ide 'sly
-  "What IDE to use to evaluate Common Lisp.
-Defaults to Sly because it has better integration with Nyxt."
-  :options (list 'sly 'slime))
-
-(defvar emacs-with-nyxt-delay
-  0.1
-  "Delay to wait for `cl-ide' commands to reach Nyxt.")
-
-(setq slime-protocol-version 'ignore)
-
-(defun emacs-with-nyxt-connected-p ()
-  "Is `cl-ide' connected to nyxt."
-  (cond
-   ((eq cl-ide 'slime) (slime-connected-p))
-   ((eq cl-ide 'sly) (sly-connected-p)))) ;; TODO this should check it
-                                          ;; is connected to Nyxt and
-                                          ;; not just to cl-ide
-                                          ;; session
-
-(defun emacs-with-nyxt--connect (host port)
-  "Connect `cl-ide' to HOST and PORT."
-  (cond
-   ((eq cl-ide 'slime) (slime-connect host port))
-   ((eq cl-ide 'sly) (sly-connect host port))))
-
-(defun emacs-with-nyxt-connect (host port)
-  "Connect `cl-ide' to HOST and PORT ignoring version mismatches."
-  (emacs-with-nyxt--connect host port)
-  (while (not (emacs-with-nyxt-connected-p))
-    (message "Starting %s connection..." cl-ide)
-    (sleep-for emacs-with-nyxt-delay)))
-
-(defun emacs-with-nyxt-eval (string)
-  "Send STRING to `cl-ide'."
-  (cond
-   ((eq cl-ide 'slime) (slime-repl-eval-string string))
-   ((eq cl-ide 'sly) (sly-eval `(slynk:interactive-eval-region ,string)))))
-
-(defun emacs-with-nyxt-send-sexps (&rest s-exps)
-  "Evaluate S-EXPS with Nyxt `cl-ide' session."
-  (let ((s-exps-string (s-join "" (--map (prin1-to-string it) s-exps))))
-    (defun true (&rest args) 't)
-    (if (emacs-with-nyxt-connected-p)
-        (emacs-with-nyxt-eval s-exps-string)
-      (error (format "%s is not connected to Nyxt. Run `emacs-with-nyxt-start-and-connect-to-nyxt' first" cl-ide)))))
-
-(add-to-list
- 'org-capture-templates
- `("wN" "Web link" entry (file+headline ,(car org-agenda-files) "Links to read later")
-   "* TODO %?%a :readings: \nSCHEDULED: %(org-insert-time-stamp (org-read-date nil t \"Fri\"))\n"
-   :immediate-finish t :empty-lines 2))
-
-(defun on/slug-string (title)  (let ((slug-trim-chars '(;; Combining Diacritical Marks https://www.unicode.org/charts/PDF/U0300.pdf
-                                                        768 ; U+0300 COMBINING GRAVE ACCENT
-                                                        769 ; U+0301 COMBINING ACUTE ACCENT
-                                                        770 ; U+0302 COMBINING CIRCUMFLEX ACCENT
-                                                        771 ; U+0303 COMBINING TILDE
-                                                        772 ; U+0304 COMBINING MACRON
-                                                        774 ; U+0306 COMBINING BREVE
-                                                        775 ; U+0307 COMBINING DOT ABOVE
-                                                        776 ; U+0308 COMBINING DIAERESIS
-                                                        777 ; U+0309 COMBINING HOOK ABOVE
-                                                        778 ; U+030A COMBINING RING ABOVE
-                                                        780 ; U+030C COMBINING CARON
-                                                        795 ; U+031B COMBINING HORN
-                                                        803 ; U+0323 COMBINING DOT BELOW
-                                                        804 ; U+0324 COMBINING DIAERESIS BELOW
-                                                        805 ; U+0325 COMBINING RING BELOW
-                                                        807 ; U+0327 COMBINING CEDILLA
-                                                        813 ; U+032D COMBINING CIRCUMFLEX ACCENT BELOW
-                                                        814 ; U+032E COMBINING BREVE BELOW
-                                                        816 ; U+0330 COMBINING TILDE BELOW
-                                                        817 ; U+0331 COMBINING MACRON BELOW
-                                                        )))
-                                 (cl-flet* ((nonspacing-mark-p (char)
-                                                               (memq char slug-trim-chars))
-                                            (strip-nonspacing-marks (s)
-                                                                    (ucs-normalize-NFC-string
-                                                                     (apply #'string (seq-remove #'nonspacing-mark-p
-                                                                                                 (ucs-normalize-NFD-string s)))))
-                                            (cl-replace (title pair)
-                                                        (replace-regexp-in-string (car pair) (cdr pair) title)))
-                                   (let* ((pairs `(("[^[:alnum:][:digit:]]" . "_") ;; convert anything not alphanumeric
-                                                   ("__*" . "_") ;; remove sequential underscores
-                                                   ("^_" . "") ;; remove starting underscore
-                                                   ("_$" . ""))) ;; remove ending underscore
-                                          (slug (-reduce-from #'cl-replace (strip-nonspacing-marks title) pairs)))
-                                     (downcase slug)))))
-
-(defun on/make-filepath (title now &optional zone)
-  "Make filename from note TITLE and NOW time (assumed in the current time ZONE)."
-  (concat
-   org-roam-directory
-   (format-time-string "%Y%m%d%H%M%S_" now (or zone (current-time-zone)))
-   (s-truncate 70 (on/slug-string title) "")
-   ".org"))
-
-(defun on/insert-org-roam-file (file-path title &optional links sources text quote)
-  "Insert org roam file in FILE-PATH with TITLE, LINKS, SOURCES, TEXT, QUOTE."
-  (with-temp-file file-path
-    (insert
-     "* " title "\n"
-     "\n"
-     "- tags :: " (--reduce (concat acc ", " it) links) "\n"
-     (if sources (concat "- source :: " (--reduce (concat acc ", " it) sources) "\n") "")
-     "\n"
-     (if text text "")
-     "\n"
-     "\n"
-     (if quote
-         (concat "#+begin_src text \n"
-                 quote "\n"
-                 "#+end_src")
-       "")))
-  (with-file file-path
-             (org-id-get-create)
-             (save-buffer)))
-
-(defun emacs-with-nyxt-current-package ()
-  "Return current package set for `cl-ide'."
-  (cond
-   ((eq cl-ide 'slime) (slime-current-package))
-   ((eq cl-ide 'sly) (with-current-buffer (sly-mrepl--find-buffer) (sly-current-package)))))
-
-(defun emacs-with-nyxt-start-and-connect-to-nyxt (&optional no-maximize)
-  "Start Nyxt with swank capabilities. Optionally skip window maximization with NO-MAXIMIZE."
-  (interactive)
-  (async-shell-command (format "nyxt -e \"(nyxt-user::start-swank)\""))
-  (while (not (ignore-errors (not (emacs-with-nyxt-connect "localhost" "4006"))))
-    (message "Starting Swank connection...")
-    (sleep-for emacs-with-nyxt-delay))
-  (while (not (ignore-errors (string= "NYXT-USER" (upcase (emacs-with-nyxt-current-package)))))
-    (progn (message "Setting %s package to NYXT-USER..." cl-ide)
-           (sleep-for emacs-with-nyxt-delay)))
-  (emacs-with-nyxt-send-sexps
-   `(load "~/quicklisp/setup.lisp")
-   `(defun replace-all (string part replacement &key (test #'char=))
-      "Return a new string in which all the occurences of the part is replaced with replacement."
-      (with-output-to-string (out)
-                             (loop with part-length = (length part)
-                                   for old-pos = 0 then (+ pos part-length)
-                                   for pos = (search part string
-                                                     :start2 old-pos
-                                                     :test test)
-                                   do (write-string string out
-                                                    :start old-pos
-                                                    :end (or pos (length string)))
-                                   when pos do (write-string replacement out)
-                                   while pos)))
-
-   `(defun eval-in-emacs (&rest s-exps)
-      "Evaluate S-EXPS with emacsclient."
-      (let ((s-exps-string (replace-all
-                            (write-to-string
-                             `(progn ,@s-exps) :case :downcase)
-                            ;; Discard the package prefix.
-                            "nyxt::" "")))
-        (format *error-output* "Sending to Emacs:~%~a~%" s-exps-string)
-        (uiop:run-program
-         (list "emacsclient" "--eval" s-exps-string))))
-   `(ql:quickload "cl-qrencode")
-   `(define-command-global my/make-current-url-qr-code () ; this is going to be redundant: https://nyxt.atlas.engineer/article/qr-url.org
-      "Something else."
-      (when (equal (mode-name (current-buffer)) 'web-buffer))
-      (progn
-        (cl-qrencode:encode-png (quri:render-uri (url (current-buffer))) :fpath "/tmp/qrcode.png")
-        (uiop:run-program (list "nyxt" "/tmp/qrcode.png"))))
-   '(define-command-global my/open-html-in-emacs ()
-      "Open buffer html in Emacs."
-      (when (equal (mode-name (current-buffer)) 'web-buffer))
-      (with-open-file
-       (file "/tmp/temp-nyxt.html" :direction :output
-             :if-exists :supersede
-             :if-does-not-exist :create)
-       (write-string (ffi-buffer-get-document (current-buffer)) file))
-      (eval-in-emacs
-       `(progn (switch-to-buffer
-                (get-buffer-create ,(render-url (url (current-buffer)))))
-               (erase-buffer)
-               (insert-file-contents-literally "/tmp/temp-nyxt.html")
-               (html-mode)
-               (indent-region (point-min) (point-max))))
-      (delete-file "/tmp/temp-nyxt.html"))
-
-   `(define-command-global eval-expression ()
-      "Prompt for the expression and evaluate it, echoing result to the `message-area'."
-      (let ((expression-string
-             ;; Read an arbitrary expression. No error checking, though.
-             (first (prompt :prompt "Expression to evaluate"
-                            :sources (list (make-instance 'prompter:raw-source))))))
-        ;; Message the thing to the message-area down below.
-        (echo "~S" (eval (read-from-string expression-string)))))
-
-   `(define-configuration nyxt/web-mode:web-mode
-      ;; Bind eval-expression to M-:, but only in emacs-mode.
-      ((keymap-scheme (let ((scheme %slot-default%))
-                        (keymap:define-key (gethash scheme:emacs scheme)
-                                           "M-:" 'eval-expression)
-                        scheme))))
-   `(define-command-global org-capture ()
-      "Org-capture current page."
-      (eval-in-emacs
-       `(let ((org-link-parameters
-               (list (list "nyxt"
-                           :store
-                           (lambda ()
-                             (org-store-link-props
-                              :type "nyxt"
-                              :link ,(quri:render-uri (url (current-buffer)))
-                              :description ,(title (current-buffer))))))))
-          (org-capture nil "wN"))
-       (echo "Note stored!")))
-   `(define-command-global org-roam-capture ()
-      "Org-capture current page."
-      (let ((quote (%copy))
-            (title (prompt
-                    :input (title (current-buffer))
-                    :prompt "Title of note:"
-                    :sources (list (make-instance 'prompter:raw-source))))
-            (text (prompt
-                   :input ""
-                   :prompt "Note to take:"
-                   :sources (list (make-instance 'prompter:raw-source)))))
-        (eval-in-emacs
-         `(let ((file (on/make-filepath ,(car title) (current-time))))
-            (on/insert-org-roam-file
-             file
-             ,(car title)
-             nil
-             (list ,(render-url (url (current-buffer))))
-             ,(car text)
-             ,quote)
-            (find-file file)
-            (org-id-get-create)))
-        (echo "Org Roam Note stored!")))
-   `(define-configuration nyxt/web-mode:web-mode
-      ;; Bind org-capture to C-o-c, but only in emacs-mode.
-      ((keymap-scheme (let ((scheme %slot-default%))
-                        (keymap:define-key (gethash scheme:emacs scheme)
-                                           "C-c o c" 'org-capture)
-                        scheme))))
-   `(define-configuration nyxt/web-mode:web-mode
-      ;; Bind org-roam-capture to C-c n f, but only in emacs-mode.
-      ((keymap-scheme (let ((scheme %slot-default%))
-                        (keymap:define-key (gethash scheme:emacs scheme)
-                                           "C-c n f" 'org-roam-capture)
-                        scheme))))
-   )
-  (unless no-maximize
-    (emacs-with-nyxt-send-sexps
-     '(toggle-fullscreen))))
-
-(defun emacs-with-nyxt-browse-url-nyxt (url &optional buffer-title)
-  "Open URL with Nyxt and optionally define BUFFER-TITLE."
-  (interactive "sURL: ")
-  (emacs-with-nyxt-send-sexps
-   (cl-concatenate
-    'list
-    (list
-     'buffer-load
-     url)
-    (if buffer-title
-        `(:buffer (make-buffer :title ,buffer-title))
-      nil))))
-
-(defun emacs-with-nyxt-close-nyxt-connection ()
-  "Close Nyxt connection."
-  (interactive)
-  (emacs-with-nyxt-send-sexps '(quit)))
-
-(defun browse-url-nyxt (url &optional new-window)
-  "Browse URL with Nyxt. NEW-WINDOW is ignored."
-  (interactive "sURL: ")
-  (unless (emacs-with-nyxt-connected-p) (emacs-with-nyxt-start-and-connect-to-nyxt))
-  (emacs-with-nyxt-browse-url-nyxt url url))
-
-(defun emacs-with-nyxt-search-first-in-nyxt-current-buffer (string)
-  "Search current Nyxt buffer for STRING."
-  (interactive "sString to search: ")
-  (unless (emacs-with-nyxt-connected-p) (emacs-with-nyxt-start-and-connect-to-nyxt))
-  (emacs-with-nyxt-send-sexps
-   `(nyxt/web-mode::highlight-selected-hint
-     :link-hint
-     (car (nyxt/web-mode::matches-from-json
-           (nyxt/web-mode::query-buffer :query ,string)))
-     :scroll 't)))
-
-(defun emacs-with-nyxt-make-qr-code-of-current-url ()
-  "Open QR code of current url."
-  (interactive)
-  (if (file-exists-p "~/quicklisp/setup.lisp")
-      (progn
-        (unless (emacs-with-nyxt-connected-p) (emacs-with-nyxt-start-and-connect-to-nyxt))
-        (emacs-with-nyxt-send-sexps
-         '(ql:quickload "cl-qrencode")
-         '(cl-qrencode:encode-png (quri:render-uri (url (current-buffer))) :fpath "/tmp/qrcode.png"))
-        (find-file "/tmp/qrcode.png")
-        (auto-revert-mode))
-    (error "You cannot use this until you have Quicklisp installed! Check how to do that at: https://www.quicklisp.org/beta/#installation")))
-
-(defun emacs-with-nyxt-get-nyxt-buffers ()
-  "Return nyxt buffers."
-  (when (emacs-with-nyxt-connected-p)
-    (read
-     (emacs-with-nyxt-send-sexps
-      '(map 'list (lambda (el) (slot-value el 'title)) (buffer-list))))))
-
-(defun emacs-with-nyxt-nyxt-switch-buffer (&optional title)
-  "Interactively switch nyxt buffers.  If argument is provided switch to buffer with TITLE."
-  (interactive)
-  (if (emacs-with-nyxt-connected-p)
-      (let ((title (or title (completing-read "Title: " (emacs-with-nyxt-get-nyxt-buffers)))))
-        (emacs-with-nyxt-send-sexps
-         `(switch-buffer :id (slot-value (find-if #'(lambda (el) (equal (slot-value el 'title) ,title)) (buffer-list)) 'id))))
-    (error (format "%s is not connected to Nyxt. Run `emacs-with-nyxt-start-and-connect-to-nyxt' first" cl-ide))))
-
-(defun emacs-with-nyxt-get-nyxt-commands ()
-  "Return nyxt commands."
-  (when (emacs-with-nyxt-connected-p)
-    (read
-     (emacs-with-nyxt-send-sexps
-      `(let ((commands (make-instance 'command-source)))
-         (map 'list (lambda (el) (slot-value el 'name)) (funcall (slot-value commands 'prompter:CONSTRUCTOR) commands)))))))
-
-(defun emacs-with-nyxt-nyxt-run-command (&optional command)
-  "Interactively run nyxt COMMAND."
-  (interactive)
-  (if (emacs-with-nyxt-connected-p)
-      (let ((command (or command (completing-read "Execute command: " (emacs-with-nyxt-get-nyxt-commands)))))
-        (emacs-with-nyxt-send-sexps `(nyxt::run-async ',(read command))))
-    (error (format "%s is not connected to Nyxt. Run `emacs-with-nyxt-start-and-connect-to-nyxt' first" cl-ide))))
-
-(defun emacs-with-nyxt-nyxt-take-over-prompt ()
-  "Take over the nyxt prompt and let Emacs handle completions."
-  (interactive)
-  (emacs-with-nyxt-send-sexps
-   `(progn
-      (defun flatten (structure)
-        (cond ((null structure) nil)
-              ((atom structure) (list structure))
-              (t (mapcan #'flatten structure))))
-
-      (defun prompt (&REST args)
-        (flet ((ensure-sources (specifiers)
-                               (mapcar (lambda (source-specifier)
-                                         (cond
-                                          ((and (symbolp source-specifier)
-                                                (c2cl:subclassp source-specifier 'source))
-                                           (make-instance source-specifier))
-                                          (t source-specifier)))
-                                       (uiop:ensure-list specifiers))))
-              (sleep 0.1)
-              (let* ((promptstring (list (getf args :prompt)))
-                     (sources (ensure-sources (getf args :sources)))
-                     (names (mapcar (lambda (ol) (slot-value ol 'prompter:attributes)) (flatten (mapcar (lambda (el) (slot-value el 'PROMPTER::INITIAL-SUGGESTIONS)) sources))))
-                     (testing (progn
-                                (setq my-names names)
-                                (setq my-prompt promptstring)))
-                     (completed (read-from-string (eval-in-emacs `(emacs-with-nyxt-nyxt-complete ',promptstring ',names))))
-                     (suggestion
-                      (find-if (lambda (el) (equal completed (slot-value el 'PROMPTER::ATTRIBUTES))) (flatten (mapcar (lambda (el) (slot-value el 'PROMPTER::INITIAL-SUGGESTIONS)) sources))))
-                     (selected-class (find-if (lambda (el) (find suggestion (slot-value el 'PROMPTER::INITIAL-SUGGESTIONS))) sources)))
-                (if selected-class
-                    (funcall (car (slot-value selected-class 'PROMPTER::ACTIONS)) (list (slot-value suggestion 'PROMPTER:VALUE)))
-                  (funcall (car (slot-value (car sources) 'PROMPTER::ACTIONS)) (list completed)))))))))
-
-(defun emacs-with-nyxt-nyxt-complete (prompt names)
-  "Completion function for nyxt completion."
-  (let* ((completions (--map (s-join "\t" (--map (s-join ": " it) it)) names))
-         (completed-string (completing-read (s-append ": " (car prompt)) completions))
-         (completed-index (-elem-index  completed-string completions)))
-    (if (numberp completed-index)
-        (nth completed-index names)
-      completed-string)))
-;; Nyxt:1 ends here
