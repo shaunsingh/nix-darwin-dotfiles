@@ -2299,55 +2299,6 @@ is selected, only the bare key is returned."
                            :file +org-capture-project-notes-file)))
               )))
 
-(use-package! calctex
-  :commands calctex-mode
-  :init
-  (add-hook 'calc-mode-hook #'calctex-mode)
-  :config
-  (setq calctex-additional-latex-packages "
-\\usepackage[usenames]{xcolor}
-\\usepackage{soul}
-\\usepackage{adjustbox}
-\\usepackage{amsmath}
-\\usepackage{amssymb}
-\\usepackage{siunitx}
-\\usepackage{cancel}
-\\usepackage{mathtools}
-\\usepackage{mathalpha}
-\\usepackage{xparse}
-\\usepackage{arevmath}"
-        calctex-additional-latex-macros
-        (concat calctex-additional-latex-macros
-                "\n\\let\\evalto\\Rightarrow"))
-  (defadvice! no-messaging-a (orig-fn &rest args)
-    :around #'calctex-default-dispatching-render-process
-    (let ((inhibit-message t) message-log-max)
-      (apply orig-fn args)))
-  ;; Fix hardcoded dvichop path (whyyyyyyy)
-  (let ((vendor-folder (concat (file-truename doom-local-dir)
-                               "straight/"
-                               (format "build-%s" emacs-version)
-                               "/calctex/vendor/")))
-    (setq calctex-dvichop-sty (concat vendor-folder "texd/dvichop")
-          calctex-dvichop-bin (concat vendor-folder "texd/dvichop")))
-  (unless (file-exists-p calctex-dvichop-bin)
-    (message "CalcTeX: Building dvichop binary")
-    (let ((default-directory (file-name-directory calctex-dvichop-bin)))
-      (call-process "make" nil nil nil))))
-
-(map! :map calc-mode-map
-      :after calc
-      :leader
-      :desc "Embedded calc (toggle)" "e" #'calc-embedded)
-(map! :map org-mode-map
-      :after org
-      :leader
-      :desc "Embedded calc (toggle)" "E" #'calc-embedded)
-(map! :map latex-mode-map
-      :after latex
-      :leader
-      :desc "Embedded calc (toggle)" "e" #'calc-embedded)
-
 (defvar org-latex-italic-quotes t
   "Make \"quote\" environments italic.")
 (defvar org-latex-par-sep t
