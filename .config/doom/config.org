@@ -38,6 +38,21 @@ I wanted everything, in one place. Hence why I (mostly) switched to Emacs.
 This was enough for me to install Emacs, but there are
 [[https://github.com/remacs/remacs#why-emacs][many other reasons]] to keep using it.
 
+Tecosaur has a great comparison of each editor:
+#+plot: transpose:yes type:radar min:0 max:4 ticks:4 file:"misc/editor-comparison.svg"
+| Editor      | Extensibility | Ecosystem | Ease of Use | Comfort | Completion | Performance |
+|-------------+---------------+-----------+-------------+---------+------------+-------------|
+| IDLE        |             1 |         1 |           3 |       1 |          1 |           2 |
+| VSCode      |             3 |         3 |           4 |     3.5 |          4 |           3 |
+| Brackets    |           2.5 |         2 |           3 |       3 |        2.5 |           2 |
+| Emacs       |             4 |         4 |           2 |       4 |        3.5 |           3 |
+| Komodo Edit |             2 |         1 |           3 |       2 |          2 |           2 |
+
+#+attr_html: :class invertible :alt Radar chart comparing my thoughts on a few editors.
+#+attr_latex: :options inkscapelatex=false
+[[file:./misc/editor-comparison.svg]]
+
+
 * Basic Configuration
 Make this file run (slightly) faster with lexical binding
 #+begin_src elisp
