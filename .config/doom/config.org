@@ -27,6 +27,8 @@ computer to do. @@latex:\mbox{@@--- Donald Knuth@@latex:}@@
 #+end_quote
 
 * Intro
+[[file:./misc/xkcd/real_programmers.png]]
+
 Customizing an editor can be very rewarding ... until you have to leave it.
 For years I have been looking for ways to avoid this pain.
 Then I discovered [[https://github.com/cknadler/vim-anywhere][vim-anywhere]]. The issue is
@@ -40,13 +42,17 @@ I wanted everything, in one place. Hence why I (mostly) switched to Emacs.
 This was enough for me to install Emacs, but there are
 [[https://github.com/remacs/remacs#why-emacs][many other reasons]] to keep using it.
 
+Thats not to say using Emacs doesn't have its pitfalls. The performance leaves
+something to be desired, but the benefits far outweigh the drawbacks. Its
+unrivaled in extensibility.
+
 #+plot: transpose:yes type:radar min:0 max:5 ticks:5 file:"misc/editor-comparison.jpeg"
-| Editor      | Extensibility | Ecosystem | Ease of Use | Comfort | Completion | Performance |
-|-------------+---------------+-----------+-------------+---------+------------+-------------|
-| IDLE        |             1 |         1 |           3 |       1 |          1 |           2 |
-| VSCode      |             3 |         3 |           4 |     3.5 |          4 |           3 |
-| Emacs       |             5 |         4 |           2 |       4 |        3.5 |           3 |
-| (Neo)Vim    |             4 |         3 |         2.5 |     3.5 |          4 |           5 |
+| Editor   | Extensibility | Ecosystem | Ease of Use | Comfort | Completion | Performance |
+|----------+---------------+-----------+-------------+---------+------------+-------------|
+| IDLE     |             1 |         1 |           3 |       1 |          1 |           2 |
+| VSCode   |             3 |         3 |           4 |     3.5 |          4 |           3 |
+| Emacs    |             5 |         4 |           2 |       4 |        3.5 |           3 |
+| (Neo)Vim |             4 |         3 |         2.5 |     3.5 |          4 |           5 |
 
 #+attr_html: :class invertible :alt Radar chart comparing my thoughts on a few editors.
 [[file:./misc/editor-comparison.jpeg]]
