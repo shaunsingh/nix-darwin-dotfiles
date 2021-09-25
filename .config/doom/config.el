@@ -1,7 +1,5 @@
 ;;; config.el -*- lexical-binding: t; -*-
 
-(remove-hook 'org-mode-hook #'+literate-enable-recompile-h)
-
 (setq user-full-name "Shaurya Singh"
       user-mail-address "shaunsingh0207@gmail.com")
 
@@ -1743,8 +1741,7 @@ set palette defined ( 0 '%s',\
    (evil-collection-xwidget-setup))
 
 (when 'native-comp-compiler-options
-                 (setq native-comp-speed 3
-                       native-comp-compiler-options '("-O3" "-march=native" "-mtune=native")))
+                 (setq native-comp-compiler-options '("-O3" "-march=native" "-mtune=native")))
 
 (setq vterm-always-compile-module t)
 

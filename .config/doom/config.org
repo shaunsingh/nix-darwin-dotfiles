@@ -67,13 +67,7 @@ I want to run emacs28's new native-compiler with both -O3 and processor specific
 optimizations, if possible
 #+begin_src emacs-lisp
 (when 'native-comp-compiler-options
-                 (setq native-comp-speed 3
-                       native-comp-compiler-options '("-O3" "-march=native" "-mtune=native")))
-#+end_src
-
-I also don't want to compile my org config every time I make a change. Lets fix that
-#+begin_src elisp
-(remove-hook 'org-mode-hook #'+literate-enable-recompile-h)
+                 (setq native-comp-compiler-options '("-O3" "-march=native" "-mtune=native")))
 #+end_src
 
 ** Personal information
@@ -98,7 +92,7 @@ I use the fish shell. If you use zsh/bash, be sure to change this
 #+end_src
 
 *** Vterm
-    Vterm is my terminal emulator of choice. We can tell it to use ligatures, and also tell it to compile automatically
+Vterm is my terminal emulator of choice. We can tell it to use ligatures, and also tell it to compile automatically
 Vterm clearly wins the terminal war. Also doesn't need much configuration out of
 the box, although the shell integration does. You can find that in =~/.config/fish/config.fish=
 **** Always compile
