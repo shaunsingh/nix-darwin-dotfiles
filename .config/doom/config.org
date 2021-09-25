@@ -4,7 +4,11 @@
 #+macro: timezone (eval (substring (shell-command-to-string "date +%Z") 0 -1))
 #+macro: git-rev (eval (format "@@html:<a href=\"https://github.com/shaunsingh/vimrc-dotfiles/commit/%1$s\" style=\"text-decoration: none\"><code style=\"padding: 0; color: var(--text-light); font-size: inherit; opacity: 0.7\">%1$s</code></a>@@@@latex:\\href{https://github.com/shaunsingh/vimrc-dotfiles/commit/%1$s}{\\normalsize\\texttt{%1$s}}@@" (substring (shell-command-to-string "git rev-parse --short HEAD") 0 -1)))
 #+html_head: <link rel='shortcut icon' type='image/png' href='https://www.gnu.org/software/emacs/favicon.png'>
+#+latex_header: \let\textls\relax
 #+latex_class: chameleon
+#+property: header-args:emacs-lisp :tangle yes :comments link
+#+property: header-args:elisp :exports code
+#+property: header-args :tangle no :results silent :eval no-export
 #+startup: fold
 
 #+begin_export html
@@ -38,20 +42,16 @@ I wanted everything, in one place. Hence why I (mostly) switched to Emacs.
 This was enough for me to install Emacs, but there are
 [[https://github.com/remacs/remacs#why-emacs][many other reasons]] to keep using it.
 
-Tecosaur has a great comparison of each editor:
-#+plot: transpose:yes type:radar min:0 max:4 ticks:4 file:"misc/editor-comparison.svg"
+#+plot: transpose:yes type:radar min:0 max:5 ticks:5 file:"misc/editor-comparison.jpeg"
 | Editor      | Extensibility | Ecosystem | Ease of Use | Comfort | Completion | Performance |
 |-------------+---------------+-----------+-------------+---------+------------+-------------|
 | IDLE        |             1 |         1 |           3 |       1 |          1 |           2 |
 | VSCode      |             3 |         3 |           4 |     3.5 |          4 |           3 |
-| Brackets    |           2.5 |         2 |           3 |       3 |        2.5 |           2 |
-| Emacs       |             4 |         4 |           2 |       4 |        3.5 |           3 |
-| Komodo Edit |             2 |         1 |           3 |       2 |          2 |           2 |
+| Emacs       |             5 |         4 |           2 |       4 |        3.5 |           3 |
+| (Neo)Vim    |             4 |         3 |         2.5 |     3.5 |          4 |           5 |
 
 #+attr_html: :class invertible :alt Radar chart comparing my thoughts on a few editors.
-#+attr_latex: :options inkscapelatex=false
-[[file:./misc/editor-comparison.svg]]
-
+[[file:./misc/editor-comparison.jpeg]]
 
 * Basic Configuration
 Make this file run (slightly) faster with lexical binding
@@ -2973,7 +2973,7 @@ Tectonic is the hot new thing, which also means I can get rid of my tex
 installation. Dependencies are nice and auto-installed, and I don't need to
 bother with ascii stuff
 #+begin_src emacs-lisp
-(setq org-latex-pdf-process '("tectonic -X compile --print --outdir=%o %f"))
+(setq org-latex-pdf-process '("tectonic -X compile --print --outdir=%o -Z shell-escape %f"))
 #+end_src
 
 Now, previews won't work anymore. For that we need to set emacs to use Tectonic
