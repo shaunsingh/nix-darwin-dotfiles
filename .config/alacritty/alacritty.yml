@@ -32,35 +32,35 @@ font:
 mouse:
   hide_when_typing: true
 
-# Colors (Doom-Vibrant)
+# Colors (Nord)
 colors:
-   # Default colors
-   primary:
-     background: '#242730'
-     foreground: '#bbc2cf'
+  # Default colors
+  primary:
+    background: '0x2E3440'
+    foreground: '0xD8DEE9'
 
-   # Normal colors
-   normal:
-     black:   '#2a2e38'
-     red:     '#ff665c'
-     green:   '#7bc275'
-     yellow:  '#FCCE7B'
-     blue:    '#5cEfFF'
-     magenta: '#C57BDB'
-     cyan:    '#51afef'
-     white:   '#bbc2cf'
+  # Normal colors
+  normal:
+    black:   '0x3B4252'
+    red:     '0xBF616A'
+    green:   '0xA3BE8C'
+    yellow:  '0xEBCB8B'
+    blue:    '0x81A1C1'
+    magenta: '0xB48EAD'
+    cyan:    '0x88C0D0'
+    white:   '0xE5E9F0'
 
-   # Bright colors
-   bright:
-     black:   '#484854'
-     red:     '#ff665c'
-     green:   '#7bc275'
-     yellow:  '#fcce7b'
-     blue:    '#5cefff'
-     magenta: '#c57bdb'
-     cyan:    '#51afef'
-     white:   '#bbc2cf'
- 
+  # Bright colors
+  bright:
+    black:   '0x4C566A'
+    red:     '0xBF616A'
+    green:   '0xA3BE8C'
+    yellow:  '0xEBCB8B'
+    blue:    '0x81A1C1'
+    magenta: '0xB48EAD'
+    cyan:    '0x8FBCBB'
+    white:   '0xECEFF4'
+
 # cursor:
   # Cursor style
   # style:
