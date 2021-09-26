@@ -46,5 +46,6 @@
 (unpin! lsp-mode)
 
 ;;fun
+(package! xkcd)
 (package! keycast)
 (package! selectric-mode)

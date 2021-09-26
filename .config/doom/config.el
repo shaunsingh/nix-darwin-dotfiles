@@ -1,22 +1,55 @@
+;; [[file:config.org::*Basic Configuration][Basic Configuration:1]]
 ;;; config.el -*- lexical-binding: t; -*-
+;; Basic Configuration:1 ends here
 
+;; [[file:config.org::*Basic Configuration][Basic Configuration:2]]
+(when 'native-comp-compiler-options
+                 (setq native-comp-compiler-options '("-O3" "-march=native" "-mtune=native")))
+;; Basic Configuration:2 ends here
+
+;; [[file:config.org::*Personal information][Personal information:1]]
 (setq user-full-name "Shaurya Singh"
       user-mail-address "shaunsingh0207@gmail.com")
+;; Personal information:1 ends here
 
+;; [[file:config.org::*Authinfo][Authinfo:1]]
 (setq auth-sources '("~/.authinfo.gpg")
       auth-source-cache-expiry nil) ; default is 7200 (2h)
+;; Authinfo:1 ends here
 
+;; [[file:config.org::*Shell][Shell:1]]
 (setq explicit-shell-file-name (executable-find "fish"))
+;; Shell:1 ends here
 
+;; [[file:config.org::*Always compile][Always compile:1]]
+(setq vterm-always-compile-module t)
+;; Always compile:1 ends here
+
+;; [[file:config.org::*Kill buffer][Kill buffer:1]]
+(setq vterm-kill-buffer-on-exit t)
+;; Kill buffer:1 ends here
+
+;; [[file:config.org::*Functions][Functions:1]]
+(after! vterm
+  (setf (alist-get "magit-status" vterm-eval-cmds nil nil #'equal)
+        '((lambda (path)
+            (magit-status path)))))
+;; Functions:1 ends here
+
+;; [[file:config.org::*Ligatures][Ligatures:1]]
 (setq +ligatures-in-modes t)
+;; Ligatures:1 ends here
 
+;; [[file:config.org::*Fonts][Fonts:1]]
 ;;fonts
 (setq doom-font (font-spec :family "Liga SFMono Nerd Font" :size 14)
       doom-big-font (font-spec :family "Liga SFMono Nerd Font" :size 20)
       doom-variable-pitch-font (font-spec :family "Overpass" :size 16)
       doom-unicode-font (font-spec :family "Liga SFMono Nerd Font")
       doom-serif-font (font-spec :family "Liga SFMono Nerd Font" :weight 'light))
+;; Fonts:1 ends here
 
+;; [[file:config.org::*Fonts][Fonts:2]]
 ;;mixed pitch modes
 (defvar mixed-pitch-modes '(org-mode LaTeX-mode markdown-mode gfm-mode Info-mode)
   "Modes that `mixed-pitch-mode' should be enabled in, but only after UI initialisation.")
@@ -44,10 +77,14 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
     (interactive)
     (let ((mixed-pitch-face 'variable-pitch-serif))
       (mixed-pitch-mode (or arg 'toggle)))))
+;; Fonts:2 ends here
 
+;; [[file:config.org::*Fonts][Fonts:3]]
 (set-char-table-range composition-function-table ?f '(["\\(?:ff?[fijlt]\\)" 0 font-shape-gstring]))
 (set-char-table-range composition-function-table ?T '(["\\(?:Th\\)" 0 font-shape-gstring]))
+;; Fonts:3 ends here
 
+;; [[file:config.org::detect-missing-fonts][detect-missing-fonts]]
 (defvar required-fonts '("Overpass" "Liga SFMono Nerd Font" "Alegreya" ))
 (defvar available-fonts
   (delete-dups (or (font-family-list)
@@ -75,15 +112,25 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
                                              ", "))
                          (sleep-for 0.5))))))
   ";; No missing fonts detected")
+;; detect-missing-fonts ends here
 
+;; [[file:config.org::*Fonts][Fonts:5]]
+;; No missing fonts detected
+;; Fonts:5 ends here
+
+;; [[file:config.org::*Themes][Themes:1]]
 ;;(setq doom-theme 'doom-one-light)
 (setq doom-one-light-padded-modeline t)
 (setq doom-theme 'doom-nord)
 (setq doom-nord-padded-modeline t)
+;; Themes:1 ends here
 
+;; [[file:config.org::*Very large files][Very large files:1]]
 ;;(use-package! vlf-setup
   ;;:defer-incrementally vlf-tune vlf-base vlf-write vlf-search vlf-occur vlf-follow vlf-ediff vlf)
+;; Very large files:1 ends here
 
+;; [[file:config.org::*Company][Company:1]]
 (after! company
    (setq company-idle-delay 0.1
       company-minimum-prefix-length 1
@@ -105,7 +152,9 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 
 ;;nested snippets
 (setq yas-triggers-in-field t)
+;; Company:1 ends here
 
+;; [[file:config.org::*Company][Company:2]]
 (use-package! aas
   :commands aas-mode)
 
@@ -117,7 +166,9 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
       (+latex-fold-last-macro-a)))
   (add-hook 'org-mode #'laas-mode)
   (add-hook 'aas-post-snippet-expand-hook #'laas-tex-fold-maybe))
+;; Company:2 ends here
 
+;; [[file:config.org::*Company][Company:3]]
 (defadvice! fixed-org-yas-expand-maybe-h ()
   "Expand a yasnippet snippet, if trigger exists at point or region is active.
 Made for `org-tab-first-hook'."
@@ -150,9 +201,109 @@ Made for `org-tab-first-hook'."
          ;;      overzealous about cleaning up overlays.
          (when (bound-and-true-p org-superstar-mode)
            (org-superstar-restart)))))
+;; Company:3 ends here
 
+;; [[file:config.org::*Company][Company:4]]
+(defun +yas/org-src-header-p ()
+  "Determine whether `point' is within a src-block header or header-args."
+  (pcase (org-element-type (org-element-context))
+    ('src-block (< (point) ; before code part of the src-block
+                   (save-excursion (goto-char (org-element-property :begin (org-element-context)))
+                                   (forward-line 1)
+                                   (point))))
+    ('inline-src-block (< (point) ; before code part of the inline-src-block
+                          (save-excursion (goto-char (org-element-property :begin (org-element-context)))
+                                          (search-forward "]{")
+                                          (point))))
+    ('keyword (string-match-p "^header-args" (org-element-property :value (org-element-context))))))
+;; Company:4 ends here
+
+;; [[file:config.org::*Company][Company:5]]
+(defun +yas/org-prompt-header-arg (arg question values)
+  "Prompt the user to set ARG header property to one of VALUES with QUESTION.
+The default value is identified and indicated. If either default is selected,
+or no selection is made: nil is returned."
+  (let* ((src-block-p (not (looking-back "^#\\+property:[ \t]+header-args:.*" (line-beginning-position))))
+         (default
+           (or
+            (cdr (assoc arg
+                        (if src-block-p
+                            (nth 2 (org-babel-get-src-block-info t))
+                          (org-babel-merge-params
+                           org-babel-default-header-args
+                           (let ((lang-headers
+                                  (intern (concat "org-babel-default-header-args:"
+                                                  (+yas/org-src-lang)))))
+                             (when (boundp lang-headers) (eval lang-headers t)))))))
+            ""))
+         default-value)
+    (setq values (mapcar
+                  (lambda (value)
+                    (if (string-match-p (regexp-quote value) default)
+                        (setq default-value
+                              (concat value " "
+                                      (propertize "(default)" 'face 'font-lock-doc-face)))
+                      value))
+                  values))
+    (let ((selection (consult--read question values :default default-value)))
+      (unless (or (string-match-p "(default)$" selection)
+                  (string= "" selection))
+        selection))))
+;; Company:5 ends here
+
+;; [[file:config.org::*Company][Company:6]]
+(defun +yas/org-src-lang ()
+  "Try to find the current language of the src/header at `point'.
+Return nil otherwise."
+  (let ((context (org-element-context)))
+    (pcase (org-element-type context)
+      ('src-block (org-element-property :language context))
+      ('inline-src-block (org-element-property :language context))
+      ('keyword (when (string-match "^header-args:\\([^ ]+\\)" (org-element-property :value context))
+                  (match-string 1 (org-element-property :value context)))))))
+
+(defun +yas/org-last-src-lang ()
+  "Return the language of the last src-block, if it exists."
+  (save-excursion
+    (beginning-of-line)
+    (when (re-search-backward "^[ \t]*#\\+begin_src" nil t)
+      (org-element-property :language (org-element-context)))))
+
+(defun +yas/org-most-common-no-property-lang ()
+  "Find the lang with the most source blocks that has no global header-args, else nil."
+  (let (src-langs header-langs)
+    (save-excursion
+      (goto-char (point-min))
+      (while (re-search-forward "^[ \t]*#\\+begin_src" nil t)
+        (push (+yas/org-src-lang) src-langs))
+      (goto-char (point-min))
+      (while (re-search-forward "^[ \t]*#\\+property: +header-args" nil t)
+        (push (+yas/org-src-lang) header-langs)))
+
+    (setq src-langs
+          (mapcar #'car
+                  ;; sort alist by frequency (desc.)
+                  (sort
+                   ;; generate alist with form (value . frequency)
+                   (cl-loop for (n . m) in (seq-group-by #'identity src-langs)
+                            collect (cons n (length m)))
+                   (lambda (a b) (> (cdr a) (cdr b))))))
+
+    (car (cl-set-difference src-langs header-langs :test #'string=))))
+;; Company:6 ends here
+
+;; [[file:config.org::*Company][Company:7]]
+(sp-local-pair
+ '(org-mode)
+ "<<" ">>"
+ :actions '(insert))
+;; Company:7 ends here
+
+;; [[file:config.org::*Company][Company:8]]
 (set-file-template! "\\.org$" :trigger "__" :mode 'org-mode)
+;; Company:8 ends here
 
+;; [[file:config.org::*LSP][LSP:1]]
 (use-package! lsp-ui
   :hook (lsp-mode . lsp-ui-mode)
   :config
@@ -164,7 +315,9 @@ Made for `org-tab-first-hook'."
         lsp-ui-peek-enable t
         lsp-ui-peek-fontify 'on-demand
         lsp-enable-symbol-highlighting nil))
+;; LSP:1 ends here
 
+;; [[file:config.org::*Better Defaults][Better Defaults:1]]
 (setq undo-limit 80000000                          ;I mess up too much
       evil-want-fine-undo t                        ;By default while in insert all changes are one big blob. Be more granular
       scroll-margin 2                              ;having a little margin is nice
@@ -177,28 +330,48 @@ Made for `org-tab-first-hook'."
 
 (fringe-mode 0) ;;disable fringe
 (global-subword-mode 1) ;;navigate through Camel Case words
+;; Better Defaults:1 ends here
 
+;; [[file:config.org::*Better Defaults][Better Defaults:2]]
+(add-to-list 'default-frame-alist '(inhibit-double-buffering . t))
+;; Better Defaults:2 ends here
+
+;; [[file:config.org::*Better Defaults][Better Defaults:3]]
+(setq doom-scratch-initial-major-mode 'lisp-interaction-mode)
+;; Better Defaults:3 ends here
+
+;; [[file:config.org::*Better Defaults][Better Defaults:4]]
 (setq evil-vsplit-window-right t
       evil-split-window-below t)
+;; Better Defaults:4 ends here
 
+;; [[file:config.org::*Better Defaults][Better Defaults:5]]
 (defadvice! prompt-for-buffer (&rest _)
   :after '(evil-window-split evil-window-vsplit)
   (consult-buffer))
+;; Better Defaults:5 ends here
 
+;; [[file:config.org::*Better Defaults][Better Defaults:6]]
 (map! :leader
       :desc "hop to word" "w w" #'avy-goto-word-0)
 (map! :leader
       :desc "hop to line"
       "l" #'avy-goto-line)
+;; Better Defaults:6 ends here
 
+;; [[file:config.org::*Better Defaults][Better Defaults:7]]
 (after! evil
   (map! :nmv ";" #'evil-ex))
+;; Better Defaults:7 ends here
 
+;; [[file:config.org::*Better Defaults][Better Defaults:8]]
 (after! evil
   (setq evil-ex-substitute-global t     ; I like my s/../.. to by global by default
         evil-move-cursor-back nil       ; Don't move the block cursor when toggling insert mode
         evil-kill-on-visual-paste nil)) ; Don't put overwritten text in the kill ring
+;; Better Defaults:8 ends here
 
+;; [[file:config.org::*Better Defaults][Better Defaults:9]]
 (custom-set-faces!
   `(vertical-border :background ,(doom-color 'bg) :foreground ,(doom-color 'bg)))
 
@@ -207,26 +380,38 @@ Made for `org-tab-first-hook'."
         window-divider-default-bottom-width 0
         window-divider-default-right-width 0)
   (window-divider-mode -1))
+;; Better Defaults:9 ends here
 
+;; [[file:config.org::*Better Defaults][Better Defaults:10]]
 (remove-hook 'doom-first-buffer-hook #'global-hl-line-mode)
+;; Better Defaults:10 ends here
 
+;; [[file:config.org::*Better Defaults][Better Defaults:11]]
 (defadvice! fix-+evil-default-cursor-fn ()
   :override #'+evil-default-cursor-fn
   (evil-set-cursor-color (face-background 'cursor)))
 (defadvice! fix-+evil-emacs-cursor-fn ()
   :override #'+evil-emacs-cursor-fn
   (evil-set-cursor-color (face-foreground 'warning)))
+;; Better Defaults:11 ends here
 
+;; [[file:config.org::*Better Defaults][Better Defaults:12]]
 (setq minimap-highlight-line nil)
 (custom-set-faces!
   `(minimap-active-region-background :background unspecified))
+;; Better Defaults:12 ends here
 
+;; [[file:config.org::*Better Defaults][Better Defaults:13]]
 (set-frame-parameter nil 'internal-border-width 24)
 (setq-default line-spacing 0.35)
+;; Better Defaults:13 ends here
 
+;; [[file:config.org::*Selectric mode][Selectric mode:1]]
 (use-package! selectric-mode
   :commands selectric-mode)
+;; Selectric mode:1 ends here
 
+;; [[file:config.org::*Modeline][Modeline:1]]
 (after! doom-modeline
   (doom-modeline-def-segment buffer-name
     "Display the current buffer's name, without any other information."
@@ -264,7 +449,9 @@ Made for `org-tab-first-hook'."
   (doom-modeline-def-modeline 'pdf
     '(bar window-number pdf-pages pdf-icon buffer-name)
     '(misc-info matches major-mode process vcs)))
+;; Modeline:1 ends here
 
+;; [[file:config.org::*Modeline][Modeline:2]]
 (after! doom-modeline
   (display-time-mode 1)                              ;Enable time in the mode-line
   (display-battery-mode 1)                           ;display the battery
@@ -272,7 +459,9 @@ Made for `org-tab-first-hook'."
         doom-modeline-enable-word-count t            ;Show word count
         doom-modeline-modal-icon t                   ;Show vim mode icon
         inhibit-compacting-font-caches t))           ;Don't compact font caches in gc
+;; Modeline:2 ends here
 
+;; [[file:config.org::*Modeline][Modeline:3]]
 (defun doom-modeline-conditional-buffer-encoding ()
   "We expect the encoding to be LF UTF-8, so only show the modeline when this is not the case"
   (setq-local doom-modeline-buffer-encoding
@@ -281,7 +470,9 @@ Made for `org-tab-first-hook'."
                            (not (memq (coding-system-eol-type buffer-file-coding-system) '(1 2))))
                 t)))
 (add-hook 'after-change-major-mode-hook #'doom-modeline-conditional-buffer-encoding) ;;remove encoding
+;; Modeline:3 ends here
 
+;; [[file:config.org::*Centaur tabs][Centaur tabs:1]]
 (defun centaur-tabs-get-total-tab-length ()
   (length (centaur-tabs-tabs (centaur-tabs-current-tabset))))
 
@@ -295,7 +486,9 @@ Made for `org-tab-first-hook'."
     (cond
      ((and (= len 1) (not (centaur-tabs-local-mode))) (call-interactively #'centaur-tabs-local-mode))
      ((and (>= len 2) (centaur-tabs-local-mode)) (call-interactively #'centaur-tabs-local-mode)))))
+;; Centaur tabs:1 ends here
 
+;; [[file:config.org::*Centaur tabs][Centaur tabs:2]]
 (after! centaur-tabs
   (centaur-tabs-mode -1)
   (setq centaur-tabs-height 20
@@ -303,7 +496,9 @@ Made for `org-tab-first-hook'."
         centaur-tabs-gray-out-icons 'buffer)
   (add-hook 'window-configuration-change-hook 'centaur-tabs-hide-on-window-change)
   (centaur-tabs-change-fonts "Liga SFMono Nerd Font" 105))
+;; Centaur tabs:2 ends here
 
+;; [[file:config.org::*Vertico][Vertico:1]]
 (after! marginalia
   (setq marginalia-censor-variables nil)
 
@@ -337,10 +532,14 @@ Made for `org-tab-first-hook'."
                       (doom-blend 'orange 'green size-index)
                     (doom-blend 'red 'orange (- size-index 1)))))
       (propertize (file-size-human-readable size) 'face (list :foreground color)))))
+;; Vertico:1 ends here
 
+;; [[file:config.org::*Treemacs][Treemacs:1]]
 (setq treemacs-width 25)
 (setq doom-themes-treemacs-theme "doom-colors")
+;; Treemacs:1 ends here
 
+;; [[file:config.org::*Emojis][Emojis:1]]
 (defvar emojify-disabled-emojis
   '(;; Org
     "◼" "☑" "☸" "⚙" "⏩" "⏪" "⬆" "⬇" "❓"
@@ -357,7 +556,103 @@ Made for `org-tab-first-hook'."
     (remhash emoji emojify-emojis)))
 
 (add-hook! '(mu4e-compose-mode org-msg-edit-mode) (emoticon-to-emoji 1))
+;; Emojis:1 ends here
 
+;; [[file:config.org::*Splash screen][Splash screen:1]]
+(defvar fancy-splash-image-template
+  (expand-file-name "misc/splash-images/emacs-e-template.svg" doom-private-dir)
+  "Default template svg used for the splash image, with substitutions from ")
+
+(defvar fancy-splash-sizes
+  `((:height 300 :min-height 50 :padding (0 . 2))
+    (:height 250 :min-height 42 :padding (2 . 4))
+    (:height 200 :min-height 35 :padding (3 . 3))
+    (:height 150 :min-height 28 :padding (3 . 3))
+    (:height 100 :min-height 20 :padding (2 . 2))
+    (:height 75  :min-height 15 :padding (2 . 1))
+    (:height 50  :min-height 10 :padding (1 . 0))
+    (:height 1   :min-height 0  :padding (0 . 0)))
+  "list of plists with the following properties
+  :height the height of the image
+  :min-height minimum `frame-height' for image
+  :padding `+doom-dashboard-banner-padding' (top . bottom) to apply
+  :template non-default template file
+  :file file to use instead of template")
+
+(defvar fancy-splash-template-colours
+  '(("$colour1" . keywords) ("$colour2" . type) ("$colour3" . base5) ("$colour4" . base8))
+  "list of colour-replacement alists of the form (\"$placeholder\" . 'theme-colour) which applied the template")
+
+(unless (file-exists-p (expand-file-name "theme-splashes" doom-cache-dir))
+  (make-directory (expand-file-name "theme-splashes" doom-cache-dir) t))
+
+(defun fancy-splash-filename (theme-name height)
+  (expand-file-name (concat (file-name-as-directory "theme-splashes")
+                            theme-name
+                            "-" (number-to-string height) ".svg")
+                    doom-cache-dir))
+
+(defun fancy-splash-clear-cache ()
+  "Delete all cached fancy splash images"
+  (interactive)
+  (delete-directory (expand-file-name "theme-splashes" doom-cache-dir) t)
+  (message "Cache cleared!"))
+
+(defun fancy-splash-generate-image (template height)
+  "Read TEMPLATE and create an image if HEIGHT with colour substitutions as
+   described by `fancy-splash-template-colours' for the current theme"
+  (with-temp-buffer
+    (insert-file-contents template)
+    (re-search-forward "$height" nil t)
+    (replace-match (number-to-string height) nil nil)
+    (dolist (substitution fancy-splash-template-colours)
+      (goto-char (point-min))
+      (while (re-search-forward (car substitution) nil t)
+        (replace-match (doom-color (cdr substitution)) nil nil)))
+    (write-region nil nil
+                  (fancy-splash-filename (symbol-name doom-theme) height) nil nil)))
+
+(defun fancy-splash-generate-images ()
+  "Perform `fancy-splash-generate-image' in bulk"
+  (dolist (size fancy-splash-sizes)
+    (unless (plist-get size :file)
+      (fancy-splash-generate-image (or (plist-get size :template)
+                                       fancy-splash-image-template)
+                                   (plist-get size :height)))))
+
+(defun ensure-theme-splash-images-exist (&optional height)
+  (unless (file-exists-p (fancy-splash-filename
+                          (symbol-name doom-theme)
+                          (or height
+                              (plist-get (car fancy-splash-sizes) :height))))
+    (fancy-splash-generate-images)))
+
+(defun get-appropriate-splash ()
+  (let ((height (frame-height)))
+    (cl-some (lambda (size) (when (>= height (plist-get size :min-height)) size))
+             fancy-splash-sizes)))
+
+(setq fancy-splash-last-size nil)
+(setq fancy-splash-last-theme nil)
+(defun set-appropriate-splash (&rest _)
+  (let ((appropriate-image (get-appropriate-splash)))
+    (unless (and (equal appropriate-image fancy-splash-last-size)
+                 (equal doom-theme fancy-splash-last-theme)))
+    (unless (plist-get appropriate-image :file)
+      (ensure-theme-splash-images-exist (plist-get appropriate-image :height)))
+    (setq fancy-splash-image
+          (or (plist-get appropriate-image :file)
+              (fancy-splash-filename (symbol-name doom-theme) (plist-get appropriate-image :height))))
+    (setq +doom-dashboard-banner-padding (plist-get appropriate-image :padding))
+    (setq fancy-splash-last-size appropriate-image)
+    (setq fancy-splash-last-theme doom-theme)
+    (+doom-dashboard-reload)))
+
+(add-hook 'window-size-change-functions #'set-appropriate-splash)
+(add-hook 'doom-load-theme-hook #'set-appropriate-splash)
+;; Splash screen:1 ends here
+
+;; [[file:config.org::*Splash screen][Splash screen:2]]
 (defvar splash-phrase-source-folder
   (expand-file-name "misc/splash-phrases" doom-private-dir)
   "A folder of text files with a fun phrase on each line.")
@@ -447,7 +742,19 @@ Made for `org-tab-first-hook'."
    "\n"
    (doom-dashboard-phrase)
    "\n"))
+;; Splash screen:2 ends here
 
+;; [[file:config.org::*Splash screen][Splash screen:3]]
+(remove-hook '+doom-dashboard-functions #'doom-dashboard-widget-shortmenu)
+(add-hook! '+doom-dashboard-mode-hook (hide-mode-line-mode 1) (hl-line-mode -1))
+(setq-hook! '+doom-dashboard-mode-hook evil-normal-state-cursor (list nil))
+;; Splash screen:3 ends here
+
+;; [[file:config.org::*Writeroom][Writeroom:1]]
+(setq +zen-text-scale 0.8)
+;; Writeroom:1 ends here
+
+;; [[file:config.org::*Writeroom][Writeroom:2]]
 (defvar +zen-serif-p t
   "Whether to use a serifed font with `mixed-pitch-mode'.")
 (after! writeroom-mode
@@ -493,7 +800,155 @@ Made for `org-tab-first-hook'."
                 (when (featurep 'org-superstar)
                   (org-superstar-restart))
                 (when +zen--original-org-indent-mode-p (org-indent-mode 1))))))
+;; Writeroom:2 ends here
 
+;; [[file:config.org::*Font Display][Font Display:1]]
+(add-hook 'org-mode-hook #'+org-pretty-mode)
+;; Font Display:1 ends here
+
+;; [[file:config.org::*Font Display][Font Display:2]]
+(setq org-pretty-entities-include-sub-superscripts nil)
+;; Font Display:2 ends here
+
+;; [[file:config.org::*Font Display][Font Display:3]]
+(custom-set-faces!
+  '(org-document-title :height 1.2)
+  '(outline-1 :weight extra-bold :height 1.25)
+  '(outline-2 :weight bold :height 1.15)
+  '(outline-3 :weight bold :height 1.12)
+  '(outline-4 :weight semi-bold :height 1.09)
+  '(outline-5 :weight semi-bold :height 1.06)
+  '(outline-6 :weight semi-bold :height 1.03)
+  '(outline-8 :weight semi-bold)
+  '(outline-9 :weight semi-bold))
+;; Font Display:3 ends here
+
+;; [[file:config.org::*Font Display][Font Display:4]]
+(setq org-agenda-deadline-faces
+      '((1.0 . error)
+        (1.0 . org-warning)
+        (0.5 . org-upcoming-deadline)
+        (0.0 . org-upcoming-distant-deadline)))
+;; Font Display:4 ends here
+
+;; [[file:config.org::*Font Display][Font Display:5]]
+(setq org-fontify-quote-and-verse-blocks t)
+;; Font Display:5 ends here
+
+;; [[file:config.org::*Font Display][Font Display:6]]
+(use-package! org-appear
+  :hook (org-mode . org-appear-mode)
+  :config
+  (setq org-appear-autoemphasis t
+        org-appear-autosubmarkers t
+        org-appear-autolinks nil)
+  (run-at-time nil nil #'org-appear--set-elements))
+;; Font Display:6 ends here
+
+;; [[file:config.org::*Font Display][Font Display:7]]
+(defun locally-defer-font-lock ()
+  "Set jit-lock defer and stealth, when buffer is over a certain size."
+  (when (> (buffer-size) 50000)
+    (setq-local jit-lock-defer-time 0.05
+                jit-lock-stealth-time 1)))
+
+(add-hook 'org-mode-hook #'locally-defer-font-lock)
+
+
+(custom-set-faces!
+  `(org-block-end-line :background ,(doom-color 'base2))
+  `(org-block-begin-line :background ,(doom-color 'base2)))
+;; Font Display:7 ends here
+
+;; [[file:config.org::*Fontifying inline src blocks][Fontifying inline src blocks:1]]
+(defvar org-prettify-inline-results t
+  "Whether to use (ab)use prettify-symbols-mode on {{{results(...)}}}.
+Either t or a cons cell of strings which are used as substitutions
+for the start and end of inline results, respectively.")
+
+(defvar org-fontify-inline-src-blocks-max-length 200
+  "Maximum content length of an inline src block that will be fontified.")
+
+(defun org-fontify-inline-src-blocks (limit)
+  "Try to apply `org-fontify-inline-src-blocks-1'."
+  (condition-case nil
+      (org-fontify-inline-src-blocks-1 limit)
+    (error (message "Org mode fontification error in %S at %d"
+                    (current-buffer)
+                    (line-number-at-pos)))))
+
+(defun org-fontify-inline-src-blocks-1 (limit)
+  "Fontify inline src_LANG blocks, from `point' up to LIMIT."
+  (let ((case-fold-search t)
+        (initial-point (point)))
+    (while (re-search-forward "\\_<src_\\([^ \t\n[{]+\\)[{[]?" limit t) ; stolen from `org-element-inline-src-block-parser'
+      (let ((beg (match-beginning 0))
+            pt
+            (lang-beg (match-beginning 1))
+            (lang-end (match-end 1)))
+        (remove-text-properties beg lang-end '(face nil))
+        (font-lock-append-text-property lang-beg lang-end 'face 'org-meta-line)
+        (font-lock-append-text-property beg lang-beg 'face 'shadow)
+        (font-lock-append-text-property beg lang-end 'face 'org-block)
+        (setq pt (goto-char lang-end))
+        ;; `org-element--parse-paired-brackets' doesn't take a limit, so to
+        ;; prevent it searching the entire rest of the buffer we temporarily
+        ;; narrow the active region.
+        (save-restriction
+          (narrow-to-region beg (min (point-max) limit (+ lang-end org-fontify-inline-src-blocks-max-length)))
+          (when (ignore-errors (org-element--parse-paired-brackets ?\[))
+            (remove-text-properties pt (point) '(face nil))
+            (font-lock-append-text-property pt (point) 'face 'org-block)
+            (setq pt (point)))
+          (when (ignore-errors (org-element--parse-paired-brackets ?\{))
+            (remove-text-properties pt (point) '(face nil))
+            (font-lock-append-text-property pt (1+ pt) 'face '(org-block shadow))
+            (unless (= (1+ pt) (1- (point)))
+              (if org-src-fontify-natively
+                  (org-src-font-lock-fontify-block (buffer-substring-no-properties lang-beg lang-end) (1+ pt) (1- (point)))
+                (font-lock-append-text-property (1+ pt) (1- (point)) 'face 'org-block)))
+            (font-lock-append-text-property (1- (point)) (point) 'face '(org-block shadow))
+            (setq pt (point))))
+        (when (and org-prettify-inline-results (re-search-forward "\\= {{{results(" limit t))
+          (font-lock-append-text-property pt (1+ pt) 'face 'org-block)
+          (goto-char pt))))
+    (when org-prettify-inline-results
+      (goto-char initial-point)
+      (org-fontify-inline-src-results limit))))
+
+(defun org-fontify-inline-src-results (limit)
+  (while (re-search-forward "{{{results(\\(.+?\\))}}}" limit t)
+    (remove-list-of-text-properties (match-beginning 0) (point)
+                                    '(composition
+                                      prettify-symbols-start
+                                      prettify-symbols-end))
+    (font-lock-append-text-property (match-beginning 0) (match-end 0) 'face 'org-block)
+    (let ((start (match-beginning 0)) (end (match-beginning 1)))
+      (with-silent-modifications
+        (compose-region start end (if (eq org-prettify-inline-results t) "⟨" (car org-prettify-inline-results)))
+        (add-text-properties start end `(prettify-symbols-start ,start prettify-symbols-end ,end))))
+    (let ((start (match-end 1)) (end (point)))
+      (with-silent-modifications
+        (compose-region start end (if (eq org-prettify-inline-results t) "⟩" (cdr org-prettify-inline-results)))
+        (add-text-properties start end `(prettify-symbols-start ,start prettify-symbols-end ,end))))))
+
+(defun org-fontify-inline-src-blocks-enable ()
+  "Add inline src fontification to font-lock in Org.
+Must be run as part of `org-font-lock-set-keywords-hook'."
+  (setq org-font-lock-extra-keywords
+        (append org-font-lock-extra-keywords '((org-fontify-inline-src-blocks)))))
+
+(add-hook 'org-font-lock-set-keywords-hook #'org-fontify-inline-src-blocks-enable)
+;; Fontifying inline src blocks:1 ends here
+
+;; [[file:config.org::*Symbols][Symbols:1]]
+;;make bullets look better
+(after! org-superstar
+  (setq org-superstar-headline-bullets-list '("◉" "○" "✸" "✿" "✤" "✜" "◆" "▶")
+        org-superstar-prettify-item-bullets t ))
+;; Symbols:1 ends here
+
+;; [[file:config.org::*Symbols][Symbols:2]]
 (setq org-ellipsis " ▾ "
       org-hide-leading-stars t
       org-priority-highest ?A
@@ -504,7 +959,9 @@ Made for `org-tab-first-hook'."
         (?C . 'all-the-icons-yellow)
         (?D . 'all-the-icons-green)
         (?E . 'all-the-icons-blue)))
+;; Symbols:2 ends here
 
+;; [[file:config.org::*Symbols][Symbols:3]]
 (appendq! +ligatures-extra-symbols
           `(:checkbox      "☐"
             :pending       "◼"
@@ -581,7 +1038,9 @@ Made for `org-tab-first-hook'."
   :priority_d    "[#D]"
   :priority_e    "[#E]")
 (plist-put +ligatures-extra-symbols :name "⁍")
+;; Symbols:3 ends here
 
+;; [[file:config.org::*Symbols][Symbols:4]]
 (defun org-syntax-convert-keyword-case-to-lower ()
   "Convert all #+KEYWORDS to #+keywords."
   (interactive)
@@ -594,7 +1053,9 @@ Made for `org-tab-first-hook'."
           (replace-match (downcase (match-string 0)) t)
           (setq count (1+ count))))
       (message "Replaced %d occurances" count))))
+;; Symbols:4 ends here
 
+;; [[file:config.org::*Keycast][Keycast:1]]
 (use-package! keycast
   :commands keycast-mode
   :config
@@ -613,24 +1074,30 @@ Made for `org-tab-first-hook'."
     '(keycast-key :inherit custom-modified
                   :height 1.0
                   :weight bold)))
+;; Keycast:1 ends here
 
-(defun toggle-transparency ()
-  (interactive)
-  (let ((alpha (frame-parameter nil 'alpha)))
-    (set-frame-parameter
-     nil 'alpha
-     (if (eql (cond ((numberp alpha) alpha)
-                    ((numberp (cdr alpha)) (cdr alpha))
-                    ;; Also handle undocumented (<active> <inactive>) form.
-                    ((numberp (cadr alpha)) (cadr alpha)))
-              100)
-         '(100 . 85) '(100 . 100)))))
-(global-set-key (kbd "C-c t") 'toggle-transparency)
+;; [[file:config.org::*Transparency][Transparency:1]]
+ (defun toggle-transparency ()
+   (interactive)
+   (let ((alpha (frame-parameter nil 'alpha)))
+     (set-frame-parameter
+      nil 'alpha
+      (if (eql (cond ((numberp alpha) alpha)
+                     ((numberp (cdr alpha)) (cdr alpha))
+                     ;; Also handle undocumented (<active> <inactive>) form.
+                     ((numberp (cadr alpha)) (cadr alpha)))
+               100)
+          '(100 . 85) '(100 . 100)))))
+ (global-set-key (kbd "C-c t") 'toggle-transparency)
+;; Transparency:1 ends here
 
+;; [[file:config.org::*Screenshots][Screenshots:1]]
 (use-package! screenshot
   :defer t
   :config (setq screenshot-upload-fn "upload $s 2>/dev/null"))
+;; Screenshots:1 ends here
 
+;; [[file:config.org::*RSS][RSS:1]]
 (map! :map elfeed-search-mode-map
       :after elfeed-search
       [remap kill-this-buffer] "q"
@@ -827,29 +1294,46 @@ Made for `org-tab-first-hook'."
               (make-directory (file-name-directory file) t))
             (url-copy-file pdf file)
             (funcall file-view-function file)))))))
+;; RSS:1 ends here
 
+;; [[file:config.org::*Org-Mode][Org-Mode:1]]
 (use-package! org-padding)
 (add-hook 'org-mode-hook #'org-padding-mode)
 (setq org-padding-block-begin-line-padding '(1.15 . 0.15))
 (setq org-padding-block-end-line-padding '(1.15 . 0.15))
+;; Org-Mode:1 ends here
 
+;; [[file:config.org::*Org-Mode][Org-Mode:2]]
 (defadvice! shut-up-org-problematic-hooks (orig-fn &rest args)
   :around #'org-fancy-priorities-mode
   :around #'org-superstar-mode
   (ignore-errors (apply orig-fn args)))
+;; Org-Mode:2 ends here
 
+;; [[file:config.org::*Org-Mode][Org-Mode:3]]
 (setq org-startup-with-inline-images t)
+;; Org-Mode:3 ends here
 
+;; [[file:config.org::*Org-Mode][Org-Mode:4]]
 (use-package! org-pretty-table
   :commands (org-pretty-table-mode global-org-pretty-table-mode))
+;; Org-Mode:4 ends here
 
+;; [[file:config.org::*Org-Mode][Org-Mode:5]]
+(use-package! org-pandoc-import
+  :after org)
+;; Org-Mode:5 ends here
+
+;; [[file:config.org::*Org-Mode][Org-Mode:6]]
 (setq org-directory "~/org"                      ; let's put files here
       org-use-property-inheritance t              ; it's convenient to have properties inherited
       org-log-done 'time                          ; having the time a item is done sounds convenient
       org-list-allow-alphabetical t               ; have a. A. a) A) list bullets
       org-export-in-background t                  ; run export processes in external emacs process
       org-catch-invisible-edits 'smart)            ; try not to accidently do weird stuff in invisible regions
+;; Org-Mode:6 ends here
 
+;; [[file:config.org::*Org-Mode][Org-Mode:7]]
 (setq org-babel-default-header-args
       '((:session . "none")
         (:results . "replace")
@@ -859,30 +1343,44 @@ Made for `org-tab-first-hook'."
         (:hlines . "no")
         (:tangle . "no")
         (:comments . "link")))
+;; Org-Mode:7 ends here
 
+;; [[file:config.org::*Org-Mode][Org-Mode:8]]
 (add-hook 'text-mode-hook #'auto-fill-mode)
+;; Org-Mode:8 ends here
 
+;; [[file:config.org::*Org-Mode][Org-Mode:9]]
 (map! :map evil-org-mode-map
       :after evil-org
       :n "g <up>" #'org-backward-heading-same-level
       :n "g <down>" #'org-forward-heading-same-level
       :n "g <left>" #'org-up-element
       :n "g <right>" #'org-down-element)
+;; Org-Mode:9 ends here
 
+;; [[file:config.org::*Org-Mode][Org-Mode:10]]
 (setq org-list-demote-modify-bullet '(("+" . "-") ("-" . "+") ("*" . "+") ("1." . "a.")))
+;; Org-Mode:10 ends here
 
+;; [[file:config.org::*Org-Mode][Org-Mode:11]]
 (add-hook 'org-mode-hook 'turn-on-flyspell)
+;; Org-Mode:11 ends here
 
+;; [[file:config.org::*Org-Mode][Org-Mode:12]]
 (use-package! org-ol-tree
   :commands org-ol-tree)
 (map! :map org-mode-map
       :after org
       :localleader
       :desc "Outline" "O" #'org-ol-tree)
+;; Org-Mode:12 ends here
 
+;; [[file:config.org::*HTML][HTML:1]]
 (use-package! ox-gfm
   :after org)
+;; HTML:1 ends here
 
+;; [[file:config.org::*HTML][HTML:2]]
 (after! org
   (define-minor-mode org-fancy-html-export-mode
   "Toggle my fabulous org export tweaks. While this mode itself does a little bit,
@@ -1402,9 +1900,55 @@ MathJax = {
         src=\"%PATH\"></script>")
 
 )
+;; HTML:2 ends here
 
+;; [[file:config.org::*HTML][HTML:3]]
+(after! ox-html
+  
+)
+;; HTML:3 ends here
+
+;; [[file:config.org::Example, fixed width, and property blocks][Example, fixed width, and property blocks]]
+(defun org-html-block-collapsable (orig-fn block contents info)
+  "Wrap the usual block in a <details>"
+  (if (or (not org-fancy-html-export-mode) (bound-and-true-p org-msg-export-in-progress))
+      (funcall orig-fn block contents info)
+    (let ((ref (org-export-get-reference block info))
+          (type (pcase (car block)
+                  ('property-drawer "Properties")))
+          (collapsed-default (pcase (car block)
+                               ('property-drawer t)
+                               (_ nil)))
+          (collapsed-value (org-export-read-attribute :attr_html block :collapsed))
+          (collapsed-p (or (member (org-export-read-attribute :attr_html block :collapsed)
+                                   '("y" "yes" "t" t "true"))
+                           (member (plist-get info :collapsed) '("all")))))
+      (format
+       "<details id='%s' class='code'%s>
+<summary%s>%s</summary>
+<div class='gutter'>\
+<a href='#%s'>#</a>
+<button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button>\
+</div>
+%s\n
+</details>"
+       ref
+       (if (or collapsed-p collapsed-default) "" " open")
+       (if type " class='named'" "")
+       (if type (format "<span class='type'>%s</span>" type) "")
+       ref
+       (funcall orig-fn block contents info)))))
+
+(advice-add 'org-html-example-block   :around #'org-html-block-collapsable)
+(advice-add 'org-html-fixed-width     :around #'org-html-block-collapsable)
+(advice-add 'org-html-property-drawer :around #'org-html-block-collapsable)
+;; Example, fixed width, and property blocks ends here
+
+;; [[file:config.org::*Org-Roam][Org-Roam:1]]
 (setq org-roam-directory "~/org/roam/")
+;; Org-Roam:1 ends here
 
+;; [[file:config.org::*Org-Roam][Org-Roam:2]]
 (use-package! websocket
   :after org-roam)
 
@@ -1417,7 +1961,9 @@ MathJax = {
             org-roam-ui-follow t
             org-roam-ui-update-on-save t
             org-roam-ui-open-on-start t))
+;; Org-Roam:2 ends here
 
+;; [[file:config.org::*Org-Roam][Org-Roam:3]]
 (defadvice! doom-modeline--buffer-file-name-roam-aware-a (orig-fun)
   :around #'doom-modeline-buffer-file-name ; takes no args
   (if (s-contains-p org-roam-directory (or buffer-file-name ""))
@@ -1426,13 +1972,19 @@ MathJax = {
        "🢔(\\1-\\2-\\3) "
        (subst-char-in-string ?_ ?  buffer-file-name))
     (funcall orig-fun)))
+;; Org-Roam:3 ends here
 
+;; [[file:config.org::*Org-Roam][Org-Roam:4]]
 (after! org-roam
    (setq +org-roam-open-buffer-on-find-file nil))
+;; Org-Roam:4 ends here
 
+;; [[file:config.org::*Org-Agenda][Org-Agenda:1]]
 (setq org-agenda-files (list "~/org/school.org"
                              "~/org/todo.org"))
+;; Org-Agenda:1 ends here
 
+;; [[file:config.org::*Org-Agenda][Org-Agenda:2]]
 (use-package! org-super-agenda
   :commands (org-super-agenda-mode))
 
@@ -1505,617 +2057,14 @@ MathJax = {
                            :todo ("SOMEDAY" )
                            :order 90)
                           (:discard (:tag ("Chore" "Routine" "Daily")))))))))))
+;; Org-Agenda:2 ends here
 
-(after! org-plot
-  (defun org-plot/generate-theme (_type)
-    "Use the current Doom theme colours to generate a GnuPlot preamble."
-    (format "
-fgt = \"textcolor rgb '%s'\" # foreground text
-fgat = \"textcolor rgb '%s'\" # foreground alt text
-fgl = \"linecolor rgb '%s'\" # foreground line
-fgal = \"linecolor rgb '%s'\" # foreground alt line
-
-# foreground colors
-set border lc rgb '%s'
-# change text colors of  tics
-set xtics @fgt
-set ytics @fgt
-# change text colors of labels
-set title @fgt
-set xlabel @fgt
-set ylabel @fgt
-# change a text color of key
-set key @fgt
-
-# line styles
-set linetype 1 lw 2 lc rgb '%s' # red
-set linetype 2 lw 2 lc rgb '%s' # blue
-set linetype 3 lw 2 lc rgb '%s' # green
-set linetype 4 lw 2 lc rgb '%s' # magenta
-set linetype 5 lw 2 lc rgb '%s' # orange
-set linetype 6 lw 2 lc rgb '%s' # yellow
-set linetype 7 lw 2 lc rgb '%s' # teal
-set linetype 8 lw 2 lc rgb '%s' # violet
-
-# border styles
-set tics out nomirror
-set border 3
-
-# palette
-set palette maxcolors 8
-set palette defined ( 0 '%s',\
-1 '%s',\
-2 '%s',\
-3 '%s',\
-4 '%s',\
-5 '%s',\
-6 '%s',\
-7 '%s' )
-"
-            (doom-color 'fg)
-            (doom-color 'fg-alt)
-            (doom-color 'fg)
-            (doom-color 'fg-alt)
-            (doom-color 'fg)
-            ;; colours
-            (doom-color 'red)
-            (doom-color 'blue)
-            (doom-color 'green)
-            (doom-color 'magenta)
-            (doom-color 'orange)
-            (doom-color 'yellow)
-            (doom-color 'teal)
-            (doom-color 'violet)
-            ;; duplicated
-            (doom-color 'red)
-            (doom-color 'blue)
-            (doom-color 'green)
-            (doom-color 'magenta)
-            (doom-color 'orange)
-            (doom-color 'yellow)
-            (doom-color 'teal)
-            (doom-color 'violet)
-            ))
-  (defun org-plot/gnuplot-term-properties (_type)
-    (format "background rgb '%s' size 1050,650"
-            (doom-color 'bg)))
-  (setq org-plot/gnuplot-script-preamble #'org-plot/generate-theme)
-  (setq org-plot/gnuplot-term-extra #'org-plot/gnuplot-term-properties))
-
-;;spc+v = view exported file
-(map! :map org-mode-map
-      :localleader
-      :desc "View exported file" "v" #'org-view-output-file)
-
-(defun org-view-output-file (&optional org-file-path)
-  "Visit buffer open on the first output file (if any) found, using `org-view-output-file-extensions'"
-  (interactive)
-  (let* ((org-file-path (or org-file-path (buffer-file-name) ""))
-         (dir (file-name-directory org-file-path))
-         (basename (file-name-base org-file-path))
-         (output-file nil))
-    (dolist (ext org-view-output-file-extensions)
-      (unless output-file
-        (when (file-exists-p
-               (concat dir basename "." ext))
-          (setq output-file (concat dir basename "." ext)))))
-    (if output-file
-        (if (member (file-name-extension output-file) org-view-external-file-extensions)
-            (browse-url-xdg-open output-file)
-          (pop-to-bufferpop-to-buffer (or (find-buffer-visiting output-file)
-                             (find-file-noselect output-file))))
-      (message "No exported file found"))))
-
-(defvar org-view-output-file-extensions '("pdf" "md" "rst" "txt" "tex" "html")
-  "Search for output files with these extensions, in order, viewing the first that matches")
-(defvar org-view-external-file-extensions '("html")
-  "File formats that should be opened externally.")
-
-(use-package! lexic
-  :commands lexic-search lexic-list-dictionary
-  :config
-  (map! :map lexic-mode-map
-        :n "q" #'lexic-return-from-lexic
-        :nv "RET" #'lexic-search-word-at-point
-        :n "a" #'outline-show-all
-        :n "h" (cmd! (outline-hide-sublevels 3))
-        :n "o" #'lexic-toggle-entry
-        :n "n" #'lexic-next-entry
-        :n "N" (cmd! (lexic-next-entry t))
-        :n "p" #'lexic-previous-entry
-        :n "P" (cmd! (lexic-previous-entry t))
-        :n "E" (cmd! (lexic-return-from-lexic) ; expand
-                     (switch-to-buffer (lexic-get-buffer)))
-        :n "M" (cmd! (lexic-return-from-lexic) ; minimise
-                     (lexic-goto-lexic))
-        :n "C-p" #'lexic-search-history-backwards
-        :n "C-n" #'lexic-search-history-forwards
-        :n "/" (cmd! (call-interactively #'lexic-search))))
-
-(defadvice! +lookup/dictionary-definition-lexic (identifier &optional arg)
-  "Look up the definition of the word at point (or selection) using `lexic-search'."
-  :override #'+lookup/dictionary-definition
-  (interactive
-   (list (or (doom-thing-at-point-or-region 'word)
-             (read-string "Look up in dictionary: "))
-         current-prefix-arg))
-  (lexic-search identifier nil nil t))
-
-(setq +latex-viewers '(pdf-tools evince zathura okular skim sumatrapdf))
-
-(after! org
-  (setq org-highlight-latex-and-related '(native script entities))
-  (add-to-list 'org-src-block-faces '("latex" (:inherit default :extend t))))
-
-(after! org
-  (plist-put org-format-latex-options :background "Transparent"))
-
-(after! org
-  (add-hook 'org-mode-hook 'turn-on-org-cdlatex))
-
-(defadvice! org-edit-latex-emv-after-insert ()
-  :after #'org-cdlatex-environment-indent
-  (org-edit-latex-environment))
-
-(setq org-display-inline-images t)
-(setq org-redisplay-inline-images t)
-(setq org-startup-with-inline-images "inlineimages")
-
-(setq-default org-html-with-latex `dvisvgm)
-(setq org-preview-latex-default-process 'dvisvgm)
-
-(use-package! org-fragtog
-  :hook (org-mode . org-fragtog-mode))
-
-(setq org-format-latex-header "\\documentclass{article}
-\\usepackage[usenames]{xcolor}
-
-\\usepackage[T1]{fontenc}
-
-\\usepackage{booktabs}
-
-\\pagestyle{empty}             % do not remove
-% The settings below are copied from fullpage.sty
-\\setlength{\\textwidth}{\\paperwidth}
-\\addtolength{\\textwidth}{-3cm}
-\\setlength{\\oddsidemargin}{1.5cm}
-\\addtolength{\\oddsidemargin}{-2.54cm}
-\\setlength{\\evensidemargin}{\\oddsidemargin}
-\\setlength{\\textheight}{\\paperheight}
-\\addtolength{\\textheight}{-\\headheight}
-\\addtolength{\\textheight}{-\\headsep}
-\\addtolength{\\textheight}{-\\footskip}
-\\addtolength{\\textheight}{-3cm}
-\\setlength{\\topmargin}{1.5cm}
-\\addtolength{\\topmargin}{-2.54cm}
-")
-
-(use-package pdf-view
-  :hook (pdf-tools-enabled . pdf-view-themed-minor-mode)
-  :hook (pdf-tools-enabled . hide-mode-line-mode)
-  :config
-  (setq pdf-view-resize-factor 1.1)
-  (setq-default pdf-view-display-size 'fit-page))
-
-(set-email-account! "shaunsingh0207"
-  '((mu4e-sent-folder       . "/Sent Mail")
-    (mu4e-drafts-folder     . "/Drafts")
-    (mu4e-trash-folder      . "/Trash")
-    (mu4e-refile-folder     . "/All Mail")
-    (smtpmail-smtp-user     . "shaunsingh0207@gmail.com")))
-
-;; don't need to run cleanup after indexing for gmail
-(setq mu4e-index-cleanup nil
-      mu4e-index-lazy-check t)
-
-(after! mu4e
-  (setq mu4e-headers-fields
-        '((:flags . 6)
-          (:account-stripe . 2)
-          (:from-or-to . 25)
-          (:folder . 10)
-          (:recipnum . 2)
-          (:subject . 80)
-          (:human-date . 8))
-        +mu4e-min-header-frame-width 142
-        mu4e-headers-date-format "%d/%m/%y"
-        mu4e-headers-time-format "⧖ %H:%M"
-        mu4e-headers-results-limit 1000
-        mu4e-index-cleanup t)
-
-  (add-to-list 'mu4e-bookmarks
-               '(:name "Yesterday's messages" :query "date:2d..1d" :key ?y) t)
-
-  (defvar +mu4e-header--folder-colors nil)
-  (appendq! mu4e-header-info-custom
-            '((:folder .
-               (:name "Folder" :shortname "Folder" :help "Lowest level folder" :function
-                (lambda (msg)
-                  (+mu4e-colorize-str
-                   (replace-regexp-in-string "\\`.*/" "" (mu4e-message-field msg :maildir))
-                   '+mu4e-header--folder-colors)))))))
-
-(use-package evil-collection-webkit
-   :defer t
-   :config
-   (evil-collection-xwidget-setup))
-
-(when 'native-comp-compiler-options
-                 (setq native-comp-compiler-options '("-O3" "-march=native" "-mtune=native")))
-
-(setq vterm-always-compile-module t)
-
-(setq vterm-kill-buffer-on-exit t)
-
-(after! vterm
-  (setf (alist-get "magit-status" vterm-eval-cmds nil nil #'equal)
-        '((lambda (path)
-            (magit-status path)))))
-
-;; No missing fonts detected
-
-(defun +yas/org-src-header-p ()
-  "Determine whether `point' is within a src-block header or header-args."
-  (pcase (org-element-type (org-element-context))
-    ('src-block (< (point) ; before code part of the src-block
-                   (save-excursion (goto-char (org-element-property :begin (org-element-context)))
-                                   (forward-line 1)
-                                   (point))))
-    ('inline-src-block (< (point) ; before code part of the inline-src-block
-                          (save-excursion (goto-char (org-element-property :begin (org-element-context)))
-                                          (search-forward "]{")
-                                          (point))))
-    ('keyword (string-match-p "^header-args" (org-element-property :value (org-element-context))))))
-
-(defun +yas/org-prompt-header-arg (arg question values)
-  "Prompt the user to set ARG header property to one of VALUES with QUESTION.
-The default value is identified and indicated. If either default is selected,
-or no selection is made: nil is returned."
-  (let* ((src-block-p (not (looking-back "^#\\+property:[ \t]+header-args:.*" (line-beginning-position))))
-         (default
-           (or
-            (cdr (assoc arg
-                        (if src-block-p
-                            (nth 2 (org-babel-get-src-block-info t))
-                          (org-babel-merge-params
-                           org-babel-default-header-args
-                           (let ((lang-headers
-                                  (intern (concat "org-babel-default-header-args:"
-                                                  (+yas/org-src-lang)))))
-                             (when (boundp lang-headers) (eval lang-headers t)))))))
-            ""))
-         default-value)
-    (setq values (mapcar
-                  (lambda (value)
-                    (if (string-match-p (regexp-quote value) default)
-                        (setq default-value
-                              (concat value " "
-                                      (propertize "(default)" 'face 'font-lock-doc-face)))
-                      value))
-                  values))
-    (let ((selection (consult--read question values :default default-value)))
-      (unless (or (string-match-p "(default)$" selection)
-                  (string= "" selection))
-        selection))))
-
-(defun +yas/org-src-lang ()
-  "Try to find the current language of the src/header at `point'.
-Return nil otherwise."
-  (let ((context (org-element-context)))
-    (pcase (org-element-type context)
-      ('src-block (org-element-property :language context))
-      ('inline-src-block (org-element-property :language context))
-      ('keyword (when (string-match "^header-args:\\([^ ]+\\)" (org-element-property :value context))
-                  (match-string 1 (org-element-property :value context)))))))
-
-(defun +yas/org-last-src-lang ()
-  "Return the language of the last src-block, if it exists."
-  (save-excursion
-    (beginning-of-line)
-    (when (re-search-backward "^[ \t]*#\\+begin_src" nil t)
-      (org-element-property :language (org-element-context)))))
-
-(defun +yas/org-most-common-no-property-lang ()
-  "Find the lang with the most source blocks that has no global header-args, else nil."
-  (let (src-langs header-langs)
-    (save-excursion
-      (goto-char (point-min))
-      (while (re-search-forward "^[ \t]*#\\+begin_src" nil t)
-        (push (+yas/org-src-lang) src-langs))
-      (goto-char (point-min))
-      (while (re-search-forward "^[ \t]*#\\+property: +header-args" nil t)
-        (push (+yas/org-src-lang) header-langs)))
-
-    (setq src-langs
-          (mapcar #'car
-                  ;; sort alist by frequency (desc.)
-                  (sort
-                   ;; generate alist with form (value . frequency)
-                   (cl-loop for (n . m) in (seq-group-by #'identity src-langs)
-                            collect (cons n (length m)))
-                   (lambda (a b) (> (cdr a) (cdr b))))))
-
-    (car (cl-set-difference src-langs header-langs :test #'string=))))
-
-(sp-local-pair
- '(org-mode)
- "<<" ">>"
- :actions '(insert))
-
-(add-to-list 'default-frame-alist '(inhibit-double-buffering . t))
-
-(setq doom-scratch-initial-major-mode 'lisp-interaction-mode)
-
-(defvar fancy-splash-image-template
-  (expand-file-name "misc/splash-images/emacs-e-template.svg" doom-private-dir)
-  "Default template svg used for the splash image, with substitutions from ")
-
-(defvar fancy-splash-sizes
-  `((:height 300 :min-height 50 :padding (0 . 2))
-    (:height 250 :min-height 42 :padding (2 . 4))
-    (:height 200 :min-height 35 :padding (3 . 3))
-    (:height 150 :min-height 28 :padding (3 . 3))
-    (:height 100 :min-height 20 :padding (2 . 2))
-    (:height 75  :min-height 15 :padding (2 . 1))
-    (:height 50  :min-height 10 :padding (1 . 0))
-    (:height 1   :min-height 0  :padding (0 . 0)))
-  "list of plists with the following properties
-  :height the height of the image
-  :min-height minimum `frame-height' for image
-  :padding `+doom-dashboard-banner-padding' (top . bottom) to apply
-  :template non-default template file
-  :file file to use instead of template")
-
-(defvar fancy-splash-template-colours
-  '(("$colour1" . keywords) ("$colour2" . type) ("$colour3" . base5) ("$colour4" . base8))
-  "list of colour-replacement alists of the form (\"$placeholder\" . 'theme-colour) which applied the template")
-
-(unless (file-exists-p (expand-file-name "theme-splashes" doom-cache-dir))
-  (make-directory (expand-file-name "theme-splashes" doom-cache-dir) t))
-
-(defun fancy-splash-filename (theme-name height)
-  (expand-file-name (concat (file-name-as-directory "theme-splashes")
-                            theme-name
-                            "-" (number-to-string height) ".svg")
-                    doom-cache-dir))
-
-(defun fancy-splash-clear-cache ()
-  "Delete all cached fancy splash images"
-  (interactive)
-  (delete-directory (expand-file-name "theme-splashes" doom-cache-dir) t)
-  (message "Cache cleared!"))
-
-(defun fancy-splash-generate-image (template height)
-  "Read TEMPLATE and create an image if HEIGHT with colour substitutions as
-   described by `fancy-splash-template-colours' for the current theme"
-  (with-temp-buffer
-    (insert-file-contents template)
-    (re-search-forward "$height" nil t)
-    (replace-match (number-to-string height) nil nil)
-    (dolist (substitution fancy-splash-template-colours)
-      (goto-char (point-min))
-      (while (re-search-forward (car substitution) nil t)
-        (replace-match (doom-color (cdr substitution)) nil nil)))
-    (write-region nil nil
-                  (fancy-splash-filename (symbol-name doom-theme) height) nil nil)))
-
-(defun fancy-splash-generate-images ()
-  "Perform `fancy-splash-generate-image' in bulk"
-  (dolist (size fancy-splash-sizes)
-    (unless (plist-get size :file)
-      (fancy-splash-generate-image (or (plist-get size :template)
-                                       fancy-splash-image-template)
-                                   (plist-get size :height)))))
-
-(defun ensure-theme-splash-images-exist (&optional height)
-  (unless (file-exists-p (fancy-splash-filename
-                          (symbol-name doom-theme)
-                          (or height
-                              (plist-get (car fancy-splash-sizes) :height))))
-    (fancy-splash-generate-images)))
-
-(defun get-appropriate-splash ()
-  (let ((height (frame-height)))
-    (cl-some (lambda (size) (when (>= height (plist-get size :min-height)) size))
-             fancy-splash-sizes)))
-
-(setq fancy-splash-last-size nil)
-(setq fancy-splash-last-theme nil)
-(defun set-appropriate-splash (&rest _)
-  (let ((appropriate-image (get-appropriate-splash)))
-    (unless (and (equal appropriate-image fancy-splash-last-size)
-                 (equal doom-theme fancy-splash-last-theme)))
-    (unless (plist-get appropriate-image :file)
-      (ensure-theme-splash-images-exist (plist-get appropriate-image :height)))
-    (setq fancy-splash-image
-          (or (plist-get appropriate-image :file)
-              (fancy-splash-filename (symbol-name doom-theme) (plist-get appropriate-image :height))))
-    (setq +doom-dashboard-banner-padding (plist-get appropriate-image :padding))
-    (setq fancy-splash-last-size appropriate-image)
-    (setq fancy-splash-last-theme doom-theme)
-    (+doom-dashboard-reload)))
-
-(add-hook 'window-size-change-functions #'set-appropriate-splash)
-(add-hook 'doom-load-theme-hook #'set-appropriate-splash)
-
-(remove-hook '+doom-dashboard-functions #'doom-dashboard-widget-shortmenu)
-(add-hook! '+doom-dashboard-mode-hook (hide-mode-line-mode 1) (hl-line-mode -1))
-(setq-hook! '+doom-dashboard-mode-hook evil-normal-state-cursor (list nil))
-
-(setq +zen-text-scale 0.8)
-
-(add-hook 'org-mode-hook #'+org-pretty-mode)
-
-(setq org-pretty-entities-include-sub-superscripts nil)
-
-(custom-set-faces!
-  '(org-document-title :height 1.2)
-  '(outline-1 :weight extra-bold :height 1.25)
-  '(outline-2 :weight bold :height 1.15)
-  '(outline-3 :weight bold :height 1.12)
-  '(outline-4 :weight semi-bold :height 1.09)
-  '(outline-5 :weight semi-bold :height 1.06)
-  '(outline-6 :weight semi-bold :height 1.03)
-  '(outline-8 :weight semi-bold)
-  '(outline-9 :weight semi-bold))
-
-(setq org-agenda-deadline-faces
-      '((1.0 . error)
-        (1.0 . org-warning)
-        (0.5 . org-upcoming-deadline)
-        (0.0 . org-upcoming-distant-deadline)))
-
-(setq org-fontify-quote-and-verse-blocks t)
-
-(use-package! org-appear
-  :hook (org-mode . org-appear-mode)
-  :config
-  (setq org-appear-autoemphasis t
-        org-appear-autosubmarkers t
-        org-appear-autolinks nil)
-  (run-at-time nil nil #'org-appear--set-elements))
-
-(defun locally-defer-font-lock ()
-  "Set jit-lock defer and stealth, when buffer is over a certain size."
-  (when (> (buffer-size) 50000)
-    (setq-local jit-lock-defer-time 0.05
-                jit-lock-stealth-time 1)))
-
-(add-hook 'org-mode-hook #'locally-defer-font-lock)
-
-
-(custom-set-faces!
-  `(org-block-end-line :background ,(doom-color 'base2))
-  `(org-block-begin-line :background ,(doom-color 'base2)))
-
-(defvar org-prettify-inline-results t
-  "Whether to use (ab)use prettify-symbols-mode on {{{results(...)}}}.
-Either t or a cons cell of strings which are used as substitutions
-for the start and end of inline results, respectively.")
-
-(defvar org-fontify-inline-src-blocks-max-length 200
-  "Maximum content length of an inline src block that will be fontified.")
-
-(defun org-fontify-inline-src-blocks (limit)
-  "Try to apply `org-fontify-inline-src-blocks-1'."
-  (condition-case nil
-      (org-fontify-inline-src-blocks-1 limit)
-    (error (message "Org mode fontification error in %S at %d"
-                    (current-buffer)
-                    (line-number-at-pos)))))
-
-(defun org-fontify-inline-src-blocks-1 (limit)
-  "Fontify inline src_LANG blocks, from `point' up to LIMIT."
-  (let ((case-fold-search t)
-        (initial-point (point)))
-    (while (re-search-forward "\\_<src_\\([^ \t\n[{]+\\)[{[]?" limit t) ; stolen from `org-element-inline-src-block-parser'
-      (let ((beg (match-beginning 0))
-            pt
-            (lang-beg (match-beginning 1))
-            (lang-end (match-end 1)))
-        (remove-text-properties beg lang-end '(face nil))
-        (font-lock-append-text-property lang-beg lang-end 'face 'org-meta-line)
-        (font-lock-append-text-property beg lang-beg 'face 'shadow)
-        (font-lock-append-text-property beg lang-end 'face 'org-block)
-        (setq pt (goto-char lang-end))
-        ;; `org-element--parse-paired-brackets' doesn't take a limit, so to
-        ;; prevent it searching the entire rest of the buffer we temporarily
-        ;; narrow the active region.
-        (save-restriction
-          (narrow-to-region beg (min (point-max) limit (+ lang-end org-fontify-inline-src-blocks-max-length)))
-          (when (ignore-errors (org-element--parse-paired-brackets ?\[))
-            (remove-text-properties pt (point) '(face nil))
-            (font-lock-append-text-property pt (point) 'face 'org-block)
-            (setq pt (point)))
-          (when (ignore-errors (org-element--parse-paired-brackets ?\{))
-            (remove-text-properties pt (point) '(face nil))
-            (font-lock-append-text-property pt (1+ pt) 'face '(org-block shadow))
-            (unless (= (1+ pt) (1- (point)))
-              (if org-src-fontify-natively
-                  (org-src-font-lock-fontify-block (buffer-substring-no-properties lang-beg lang-end) (1+ pt) (1- (point)))
-                (font-lock-append-text-property (1+ pt) (1- (point)) 'face 'org-block)))
-            (font-lock-append-text-property (1- (point)) (point) 'face '(org-block shadow))
-            (setq pt (point))))
-        (when (and org-prettify-inline-results (re-search-forward "\\= {{{results(" limit t))
-          (font-lock-append-text-property pt (1+ pt) 'face 'org-block)
-          (goto-char pt))))
-    (when org-prettify-inline-results
-      (goto-char initial-point)
-      (org-fontify-inline-src-results limit))))
-
-(defun org-fontify-inline-src-results (limit)
-  (while (re-search-forward "{{{results(\\(.+?\\))}}}" limit t)
-    (remove-list-of-text-properties (match-beginning 0) (point)
-                                    '(composition
-                                      prettify-symbols-start
-                                      prettify-symbols-end))
-    (font-lock-append-text-property (match-beginning 0) (match-end 0) 'face 'org-block)
-    (let ((start (match-beginning 0)) (end (match-beginning 1)))
-      (with-silent-modifications
-        (compose-region start end (if (eq org-prettify-inline-results t) "⟨" (car org-prettify-inline-results)))
-        (add-text-properties start end `(prettify-symbols-start ,start prettify-symbols-end ,end))))
-    (let ((start (match-end 1)) (end (point)))
-      (with-silent-modifications
-        (compose-region start end (if (eq org-prettify-inline-results t) "⟩" (cdr org-prettify-inline-results)))
-        (add-text-properties start end `(prettify-symbols-start ,start prettify-symbols-end ,end))))))
-
-(defun org-fontify-inline-src-blocks-enable ()
-  "Add inline src fontification to font-lock in Org.
-Must be run as part of `org-font-lock-set-keywords-hook'."
-  (setq org-font-lock-extra-keywords
-        (append org-font-lock-extra-keywords '((org-fontify-inline-src-blocks)))))
-
-(add-hook 'org-font-lock-set-keywords-hook #'org-fontify-inline-src-blocks-enable)
-
-;;make bullets look better
-(after! org-superstar
-  (setq org-superstar-headline-bullets-list '("◉" "○" "✸" "✿" "✤" "✜" "◆" "▶")
-        org-superstar-prettify-item-bullets t ))
-
-(use-package! org-pandoc-import
-  :after org)
-
-(after! ox-html
-  
-)
-
-(defun org-html-block-collapsable (orig-fn block contents info)
-  "Wrap the usual block in a <details>"
-  (if (or (not org-fancy-html-export-mode) (bound-and-true-p org-msg-export-in-progress))
-      (funcall orig-fn block contents info)
-    (let ((ref (org-export-get-reference block info))
-          (type (pcase (car block)
-                  ('property-drawer "Properties")))
-          (collapsed-default (pcase (car block)
-                               ('property-drawer t)
-                               (_ nil)))
-          (collapsed-value (org-export-read-attribute :attr_html block :collapsed))
-          (collapsed-p (or (member (org-export-read-attribute :attr_html block :collapsed)
-                                   '("y" "yes" "t" t "true"))
-                           (member (plist-get info :collapsed) '("all")))))
-      (format
-       "<details id='%s' class='code'%s>
-<summary%s>%s</summary>
-<div class='gutter'>\
-<a href='#%s'>#</a>
-<button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button>\
-</div>
-%s\n
-</details>"
-       ref
-       (if (or collapsed-p collapsed-default) "" " open")
-       (if type " class='named'" "")
-       (if type (format "<span class='type'>%s</span>" type) "")
-       ref
-       (funcall orig-fn block contents info)))))
-
-(advice-add 'org-html-example-block   :around #'org-html-block-collapsable)
-(advice-add 'org-html-fixed-width     :around #'org-html-block-collapsable)
-(advice-add 'org-html-property-drawer :around #'org-html-block-collapsable)
-
+;; [[file:config.org::*Org-Capture][Org-Capture:1]]
 (use-package! doct
   :commands (doct))
+;; Org-Capture:1 ends here
 
+;; [[file:config.org::*Prettify][Prettify:1]]
 (defun org-capture-select-template-prettier (&optional keys)
   "Select a capture template, in a prettier way than default
 Lisp programs can force the template by setting KEYS to a string."
@@ -2223,7 +2172,9 @@ is selected, only the bare key is returned."
                    (t (error "No entry available")))))))
         (when buffer (kill-buffer buffer))))))
 (advice-add 'org-mks :override #'org-mks-pretty)
+;; Prettify:1 ends here
 
+;; [[file:config.org::*Prettify][Prettify:2]]
 (setf (alist-get 'height +org-capture-frame-parameters) 15)
 ;; (alist-get 'name +org-capture-frame-parameters) "❖ Capture") ;; ATM hardcoded in other places, so changing breaks stuff
 (setq +org-capture-fn
@@ -2231,7 +2182,9 @@ is selected, only the bare key is returned."
         (interactive)
         (set-window-parameter nil 'mode-line-format 'none)
         (org-capture)))
+;; Prettify:2 ends here
 
+;; [[file:config.org::*Prettify][Prettify:3]]
 (defun +doct-icon-declaration-to-icon (declaration)
   "Convert :icon declaration to icon"
   (let ((name (pop declaration))
@@ -2253,7 +2206,9 @@ is selected, only the bare key is returned."
                                  templates))))
 
 (setq doct-after-conversion-functions '(+doct-iconify-capture-templates))
+;; Prettify:3 ends here
 
+;; [[file:config.org::*Templates][Templates:1]]
 (setq org-capture-templates
       (doct `(("Home" :keys "h"
                :icon ("home" :set "octicon" :color "cyan")
@@ -2295,7 +2250,547 @@ is selected, only the bare key is returned."
                            :keyword "%U"
                            :file +org-capture-project-notes-file)))
               )))
+;; Templates:1 ends here
 
+;; [[file:config.org::*ORG Plot][ORG Plot:1]]
+(after! org-plot
+  (defun org-plot/generate-theme (_type)
+    "Use the current Doom theme colours to generate a GnuPlot preamble."
+    (format "
+fgt = \"textcolor rgb '%s'\" # foreground text
+fgat = \"textcolor rgb '%s'\" # foreground alt text
+fgl = \"linecolor rgb '%s'\" # foreground line
+fgal = \"linecolor rgb '%s'\" # foreground alt line
+
+# foreground colors
+set border lc rgb '%s'
+# change text colors of  tics
+set xtics @fgt
+set ytics @fgt
+# change text colors of labels
+set title @fgt
+set xlabel @fgt
+set ylabel @fgt
+# change a text color of key
+set key @fgt
+
+# line styles
+set linetype 1 lw 2 lc rgb '%s' # red
+set linetype 2 lw 2 lc rgb '%s' # blue
+set linetype 3 lw 2 lc rgb '%s' # green
+set linetype 4 lw 2 lc rgb '%s' # magenta
+set linetype 5 lw 2 lc rgb '%s' # orange
+set linetype 6 lw 2 lc rgb '%s' # yellow
+set linetype 7 lw 2 lc rgb '%s' # teal
+set linetype 8 lw 2 lc rgb '%s' # violet
+
+# border styles
+set tics out nomirror
+set border 3
+
+# palette
+set palette maxcolors 8
+set palette defined ( 0 '%s',\
+1 '%s',\
+2 '%s',\
+3 '%s',\
+4 '%s',\
+5 '%s',\
+6 '%s',\
+7 '%s' )
+"
+            (doom-color 'fg)
+            (doom-color 'fg-alt)
+            (doom-color 'fg)
+            (doom-color 'fg-alt)
+            (doom-color 'fg)
+            ;; colours
+            (doom-color 'red)
+            (doom-color 'blue)
+            (doom-color 'green)
+            (doom-color 'magenta)
+            (doom-color 'orange)
+            (doom-color 'yellow)
+            (doom-color 'teal)
+            (doom-color 'violet)
+            ;; duplicated
+            (doom-color 'red)
+            (doom-color 'blue)
+            (doom-color 'green)
+            (doom-color 'magenta)
+            (doom-color 'orange)
+            (doom-color 'yellow)
+            (doom-color 'teal)
+            (doom-color 'violet)
+            ))
+  (defun org-plot/gnuplot-term-properties (_type)
+    (format "background rgb '%s' size 1050,650"
+            (doom-color 'bg)))
+  (setq org-plot/gnuplot-script-preamble #'org-plot/generate-theme)
+  (setq org-plot/gnuplot-term-extra #'org-plot/gnuplot-term-properties))
+;; ORG Plot:1 ends here
+
+;; [[file:config.org::*XKCD][XKCD:1]]
+(use-package! xkcd
+  :commands (xkcd-get-json
+             xkcd-download xkcd-get
+             ;; now for funcs from my extension of this pkg
+             +xkcd-find-and-copy +xkcd-find-and-view
+             +xkcd-fetch-info +xkcd-select)
+  :config
+  (setq xkcd-cache-dir (expand-file-name "xkcd/" doom-cache-dir)
+        xkcd-cache-latest (concat xkcd-cache-dir "latest"))
+  (unless (file-exists-p xkcd-cache-dir)
+    (make-directory xkcd-cache-dir))
+  (after! evil-snipe
+    (add-to-list 'evil-snipe-disabled-modes 'xkcd-mode))
+  :general (:states 'normal
+            :keymaps 'xkcd-mode-map
+            "<right>" #'xkcd-next
+            "n"       #'xkcd-next ; evil-ish
+            "<left>"  #'xkcd-prev
+            "N"       #'xkcd-prev ; evil-ish
+            "r"       #'xkcd-rand
+            "a"       #'xkcd-rand ; because image-rotate can interfere
+            "t"       #'xkcd-alt-text
+            "q"       #'xkcd-kill-buffer
+            "o"       #'xkcd-open-browser
+            "e"       #'xkcd-open-explanation-browser
+            ;; extras
+            "s"       #'+xkcd-find-and-view
+            "/"       #'+xkcd-find-and-view
+            "y"       #'+xkcd-copy))
+;; XKCD:1 ends here
+
+;; [[file:config.org::*XKCD][XKCD:2]]
+(after! xkcd
+  (require 'emacsql-sqlite)
+
+  (defun +xkcd-select ()
+    "Prompt the user for an xkcd using `completing-read' and `+xkcd-select-format'. Return the xkcd number or nil"
+    (let* (prompt-lines
+           (-dummy (maphash (lambda (key xkcd-info)
+                              (push (+xkcd-select-format xkcd-info) prompt-lines))
+                            +xkcd-stored-info))
+           (num (completing-read (format "xkcd (%s): " xkcd-latest) prompt-lines)))
+      (if (equal "" num) xkcd-latest
+        (string-to-number (replace-regexp-in-string "\\([0-9]+\\).*" "\\1" num)))))
+
+  (defun +xkcd-select-format (xkcd-info)
+    "Creates each completing-read line from an xkcd info plist. Must start with the xkcd number"
+    (format "%-4s  %-30s %s"
+            (propertize (number-to-string (plist-get xkcd-info :num))
+                        'face 'counsel-key-binding)
+            (plist-get xkcd-info :title)
+            (propertize (plist-get xkcd-info :alt)
+                        'face '(variable-pitch font-lock-comment-face))))
+
+  (defun +xkcd-fetch-info (&optional num)
+    "Fetch the parsed json info for comic NUM. Fetches latest when omitted or 0"
+    (require 'xkcd)
+    (when (or (not num) (= num 0))
+      (+xkcd-check-latest)
+      (setq num xkcd-latest))
+    (let ((res (or (gethash num +xkcd-stored-info)
+                   (puthash num (+xkcd-db-read num) +xkcd-stored-info))))
+      (unless res
+        (+xkcd-db-write
+         (let* ((url (format "https://xkcd.com/%d/info.0.json" num))
+                (json-assoc
+                 (if (gethash num +xkcd-stored-info)
+                     (gethash num +xkcd-stored-info)
+                   (json-read-from-string (xkcd-get-json url num)))))
+           json-assoc))
+        (setq res (+xkcd-db-read num)))
+      res))
+
+  ;; since we've done this, we may as well go one little step further
+  (defun +xkcd-find-and-copy ()
+    "Prompt for an xkcd using `+xkcd-select' and copy url to clipboard"
+    (interactive)
+    (+xkcd-copy (+xkcd-select)))
+
+  (defun +xkcd-copy (&optional num)
+    "Copy a url to xkcd NUM to the clipboard"
+    (interactive "i")
+    (let ((num (or num xkcd-cur)))
+      (gui-select-text (format "https://xkcd.com/%d" num))
+      (message "xkcd.com/%d copied to clipboard" num)))
+
+  (defun +xkcd-find-and-view ()
+    "Prompt for an xkcd using `+xkcd-select' and view it"
+    (interactive)
+    (xkcd-get (+xkcd-select))
+    (switch-to-buffer "*xkcd*"))
+
+  (defvar +xkcd-latest-max-age (* 60 60) ; 1 hour
+    "Time after which xkcd-latest should be refreshed, in seconds")
+
+  ;; initialise `xkcd-latest' and `+xkcd-stored-info' with latest xkcd
+  (add-transient-hook! '+xkcd-select
+    (require 'xkcd)
+    (+xkcd-fetch-info xkcd-latest)
+    (setq +xkcd-stored-info (+xkcd-db-read-all)))
+
+  (add-transient-hook! '+xkcd-fetch-info
+    (xkcd-update-latest))
+
+  (defun +xkcd-check-latest ()
+    "Use value in `xkcd-cache-latest' as long as it isn't older thabn `+xkcd-latest-max-age'"
+    (unless (and (file-exists-p xkcd-cache-latest)
+                 (< (- (time-to-seconds (current-time))
+                       (time-to-seconds (file-attribute-modification-time (file-attributes xkcd-cache-latest))))
+                    +xkcd-latest-max-age))
+      (let* ((out (xkcd-get-json "http://xkcd.com/info.0.json" 0))
+             (json-assoc (json-read-from-string out))
+             (latest (cdr (assoc 'num json-assoc))))
+        (when (/= xkcd-latest latest)
+          (+xkcd-db-write json-assoc)
+          (with-current-buffer (find-file xkcd-cache-latest)
+            (setq xkcd-latest latest)
+            (erase-buffer)
+            (insert (number-to-string latest))
+            (save-buffer)
+            (kill-buffer (current-buffer)))))
+      (shell-command (format "touch %s" xkcd-cache-latest))))
+
+  (defvar +xkcd-stored-info (make-hash-table :test 'eql)
+    "Basic info on downloaded xkcds, in the form of a hashtable")
+
+  (defadvice! xkcd-get-json--and-cache (url &optional num)
+    "Fetch the Json coming from URL.
+If the file NUM.json exists, use it instead.
+If NUM is 0, always download from URL.
+The return value is a string."
+    :override #'xkcd-get-json
+    (let* ((file (format "%s%d.json" xkcd-cache-dir num))
+           (cached (and (file-exists-p file) (not (eq num 0))))
+           (out (with-current-buffer (if cached
+                                         (find-file file)
+                                       (url-retrieve-synchronously url))
+                  (goto-char (point-min))
+                  (unless cached (re-search-forward "^$"))
+                  (prog1
+                      (buffer-substring-no-properties (point) (point-max))
+                    (kill-buffer (current-buffer))))))
+      (unless (or cached (eq num 0))
+        (xkcd-cache-json num out))
+      out))
+
+  (defadvice! +xkcd-get (num)
+    "Get the xkcd number NUM."
+    :override 'xkcd-get
+    (interactive "nEnter comic number: ")
+    (xkcd-update-latest)
+    (get-buffer-create "*xkcd*")
+    (switch-to-buffer "*xkcd*")
+    (xkcd-mode)
+    (let (buffer-read-only)
+      (erase-buffer)
+      (setq xkcd-cur num)
+      (let* ((xkcd-data (+xkcd-fetch-info num))
+             (num (plist-get xkcd-data :num))
+             (img (plist-get xkcd-data :img))
+             (safe-title (plist-get xkcd-data :safe-title))
+             (alt (plist-get xkcd-data :alt))
+             title file)
+        (message "Getting comic...")
+        (setq file (xkcd-download img num))
+        (setq title (format "%d: %s" num safe-title))
+        (insert (propertize title
+                            'face 'outline-1))
+        (center-line)
+        (insert "\n")
+        (xkcd-insert-image file num)
+        (if (eq xkcd-cur 0)
+            (setq xkcd-cur num))
+        (setq xkcd-alt alt)
+        (message "%s" title))))
+
+  (defconst +xkcd-db--sqlite-available-p
+    (with-demoted-errors "+org-xkcd initialization: %S"
+      (emacsql-sqlite-ensure-binary)
+      t))
+
+  (defvar +xkcd-db--connection (make-hash-table :test #'equal)
+    "Database connection to +org-xkcd database.")
+
+  (defun +xkcd-db--get ()
+    "Return the sqlite db file."
+    (expand-file-name "xkcd.db" xkcd-cache-dir))
+
+  (defun +xkcd-db--get-connection ()
+    "Return the database connection, if any."
+    (gethash (file-truename xkcd-cache-dir)
+             +xkcd-db--connection))
+
+  (defconst +xkcd-db--table-schema
+    '((xkcds
+       [(num integer :unique :primary-key)
+        (year        :not-null)
+        (month       :not-null)
+        (link        :not-null)
+        (news        :not-null)
+        (safe_title  :not-null)
+        (title       :not-null)
+        (transcript  :not-null)
+        (alt         :not-null)
+        (img         :not-null)])))
+
+  (defun +xkcd-db--init (db)
+    "Initialize database DB with the correct schema and user version."
+    (emacsql-with-transaction db
+      (pcase-dolist (`(,table . ,schema) +xkcd-db--table-schema)
+        (emacsql db [:create-table $i1 $S2] table schema))))
+
+  (defun +xkcd-db ()
+    "Entrypoint to the +org-xkcd sqlite database.
+Initializes and stores the database, and the database connection.
+Performs a database upgrade when required."
+    (unless (and (+xkcd-db--get-connection)
+                 (emacsql-live-p (+xkcd-db--get-connection)))
+      (let* ((db-file (+xkcd-db--get))
+             (init-db (not (file-exists-p db-file))))
+        (make-directory (file-name-directory db-file) t)
+        (let ((conn (emacsql-sqlite db-file)))
+          (set-process-query-on-exit-flag (emacsql-process conn) nil)
+          (puthash (file-truename xkcd-cache-dir)
+                   conn
+                   +xkcd-db--connection)
+          (when init-db
+            (+xkcd-db--init conn)))))
+    (+xkcd-db--get-connection))
+
+  (defun +xkcd-db-query (sql &rest args)
+    "Run SQL query on +org-xkcd database with ARGS.
+SQL can be either the emacsql vector representation, or a string."
+    (if  (stringp sql)
+        (emacsql (+xkcd-db) (apply #'format sql args))
+      (apply #'emacsql (+xkcd-db) sql args)))
+
+  (defun +xkcd-db-read (num)
+    (when-let ((res
+                (car (+xkcd-db-query [:select * :from xkcds
+                                      :where (= num $s1)]
+                                     num
+                                     :limit 1))))
+      (+xkcd-db-list-to-plist res)))
+
+  (defun +xkcd-db-read-all ()
+    (let ((xkcd-table (make-hash-table :test 'eql :size 4000)))
+      (mapcar (lambda (xkcd-info-list)
+                (puthash (car xkcd-info-list) (+xkcd-db-list-to-plist xkcd-info-list) xkcd-table))
+              (+xkcd-db-query [:select * :from xkcds]))
+      xkcd-table))
+
+  (defun +xkcd-db-list-to-plist (xkcd-datalist)
+    `(:num ,(nth 0 xkcd-datalist)
+      :year ,(nth 1 xkcd-datalist)
+      :month ,(nth 2 xkcd-datalist)
+      :link ,(nth 3 xkcd-datalist)
+      :news ,(nth 4 xkcd-datalist)
+      :safe-title ,(nth 5 xkcd-datalist)
+      :title ,(nth 6 xkcd-datalist)
+      :transcript ,(nth 7 xkcd-datalist)
+      :alt ,(nth 8 xkcd-datalist)
+      :img ,(nth 9 xkcd-datalist)))
+
+  (defun +xkcd-db-write (data)
+    (+xkcd-db-query [:insert-into xkcds
+                     :values $v1]
+                    (list (vector
+                           (cdr (assoc 'num        data))
+                           (cdr (assoc 'year       data))
+                           (cdr (assoc 'month      data))
+                           (cdr (assoc 'link       data))
+                           (cdr (assoc 'news       data))
+                           (cdr (assoc 'safe_title data))
+                           (cdr (assoc 'title      data))
+                           (cdr (assoc 'transcript data))
+                           (cdr (assoc 'alt        data))
+                           (cdr (assoc 'img        data))
+                           )))))
+;; XKCD:2 ends here
+
+;; [[file:config.org::*XKCD][XKCD:3]]
+(org-link-set-parameters "xkcd"
+                         :image-data-fun #'+org-xkcd-image-fn
+                         :follow #'+org-xkcd-open-fn
+                         :export #'+org-xkcd-export
+                         :complete #'+org-xkcd-complete)
+
+(defun +org-xkcd-open-fn (link)
+  (+org-xkcd-image-fn nil link nil))
+
+(defun +org-xkcd-image-fn (protocol link description)
+  "Get image data for xkcd num LINK"
+  (let* ((xkcd-info (+xkcd-fetch-info (string-to-number link)))
+         (img (plist-get xkcd-info :img))
+         (alt (plist-get xkcd-info :alt)))
+    (message alt)
+    (+org-image-file-data-fn protocol (xkcd-download img (string-to-number link)) description)))
+
+(defun +org-xkcd-export (num desc backend _com)
+  "Convert xkcd to html/LaTeX form"
+  (let* ((xkcd-info (+xkcd-fetch-info (string-to-number num)))
+         (img (plist-get xkcd-info :img))
+         (alt (plist-get xkcd-info :alt))
+         (title (plist-get xkcd-info :title))
+         (file (xkcd-download img (string-to-number num))))
+    (cond ((org-export-derived-backend-p backend 'html)
+           (format "<img class='invertible' src='%s' title=\"%s\" alt='%s'>" img (subst-char-in-string ?\" ?“ alt) title))
+          ((org-export-derived-backend-p backend 'latex)
+           (format "\\begin{figure}[!htb]
+  \\centering
+  \\includegraphics[scale=0.4]{%s}%s
+\\end{figure}" file (if (equal desc (format "xkcd:%s" num)) ""
+                      (format "\n  \\caption*{\\label{xkcd:%s} %s}"
+                              num
+                              (or desc
+                                  (format "\\textbf{%s} %s" title alt))))))
+          (t (format "https://xkcd.com/%s" num)))))
+
+(defun +org-xkcd-complete (&optional arg)
+  "Complete xkcd using `+xkcd-stored-info'"
+  (format "xkcd:%d" (+xkcd-select)))
+;; XKCD:3 ends here
+
+;; [[file:config.org::*View Exported File][View Exported File:1]]
+;;spc+v = view exported file
+(map! :map org-mode-map
+      :localleader
+      :desc "View exported file" "v" #'org-view-output-file)
+
+(defun org-view-output-file (&optional org-file-path)
+  "Visit buffer open on the first output file (if any) found, using `org-view-output-file-extensions'"
+  (interactive)
+  (let* ((org-file-path (or org-file-path (buffer-file-name) ""))
+         (dir (file-name-directory org-file-path))
+         (basename (file-name-base org-file-path))
+         (output-file nil))
+    (dolist (ext org-view-output-file-extensions)
+      (unless output-file
+        (when (file-exists-p
+               (concat dir basename "." ext))
+          (setq output-file (concat dir basename "." ext)))))
+    (if output-file
+        (if (member (file-name-extension output-file) org-view-external-file-extensions)
+            (browse-url-xdg-open output-file)
+          (pop-to-bufferpop-to-buffer (or (find-buffer-visiting output-file)
+                             (find-file-noselect output-file))))
+      (message "No exported file found"))))
+
+(defvar org-view-output-file-extensions '("pdf" "md" "rst" "txt" "tex" "html")
+  "Search for output files with these extensions, in order, viewing the first that matches")
+(defvar org-view-external-file-extensions '("html")
+  "File formats that should be opened externally.")
+;; View Exported File:1 ends here
+
+;; [[file:config.org::*Dictionaries][Dictionaries:1]]
+(use-package! lexic
+  :commands lexic-search lexic-list-dictionary
+  :config
+  (map! :map lexic-mode-map
+        :n "q" #'lexic-return-from-lexic
+        :nv "RET" #'lexic-search-word-at-point
+        :n "a" #'outline-show-all
+        :n "h" (cmd! (outline-hide-sublevels 3))
+        :n "o" #'lexic-toggle-entry
+        :n "n" #'lexic-next-entry
+        :n "N" (cmd! (lexic-next-entry t))
+        :n "p" #'lexic-previous-entry
+        :n "P" (cmd! (lexic-previous-entry t))
+        :n "E" (cmd! (lexic-return-from-lexic) ; expand
+                     (switch-to-buffer (lexic-get-buffer)))
+        :n "M" (cmd! (lexic-return-from-lexic) ; minimise
+                     (lexic-goto-lexic))
+        :n "C-p" #'lexic-search-history-backwards
+        :n "C-n" #'lexic-search-history-forwards
+        :n "/" (cmd! (call-interactively #'lexic-search))))
+
+(defadvice! +lookup/dictionary-definition-lexic (identifier &optional arg)
+  "Look up the definition of the word at point (or selection) using `lexic-search'."
+  :override #'+lookup/dictionary-definition
+  (interactive
+   (list (or (doom-thing-at-point-or-region 'word)
+             (read-string "Look up in dictionary: "))
+         current-prefix-arg))
+  (lexic-search identifier nil nil t))
+;; Dictionaries:1 ends here
+
+;; [[file:config.org::*Basic configuration][Basic configuration:1]]
+(setq +latex-viewers '(pdf-tools evince zathura okular skim sumatrapdf))
+;; Basic configuration:1 ends here
+
+;; [[file:config.org::*Basic configuration][Basic configuration:2]]
+(after! org
+  (setq org-highlight-latex-and-related '(native script entities))
+  (add-to-list 'org-src-block-faces '("latex" (:inherit default :extend t))))
+
+(after! org
+  (plist-put org-format-latex-options :background "Transparent"))
+;; Basic configuration:2 ends here
+
+;; [[file:config.org::*Basic configuration][Basic configuration:3]]
+(after! org
+  (add-hook 'org-mode-hook 'turn-on-org-cdlatex))
+
+(defadvice! org-edit-latex-emv-after-insert ()
+  :after #'org-cdlatex-environment-indent
+  (org-edit-latex-environment))
+;; Basic configuration:3 ends here
+
+;; [[file:config.org::*Basic configuration][Basic configuration:4]]
+(setq org-display-inline-images t)
+(setq org-redisplay-inline-images t)
+(setq org-startup-with-inline-images "inlineimages")
+;; Basic configuration:4 ends here
+
+;; [[file:config.org::*Basic configuration][Basic configuration:5]]
+(setq-default org-html-with-latex `dvisvgm)
+(setq org-preview-latex-default-process 'dvisvgm)
+;; Basic configuration:5 ends here
+
+;; [[file:config.org::*Basic configuration][Basic configuration:6]]
+(use-package! org-fragtog
+  :hook (org-mode . org-fragtog-mode))
+;; Basic configuration:6 ends here
+
+;; [[file:config.org::*Basic configuration][Basic configuration:7]]
+(setq org-format-latex-header "\\documentclass{article}
+\\usepackage[usenames]{xcolor}
+
+\\usepackage[T1]{fontenc}
+
+\\usepackage{booktabs}
+
+\\pagestyle{empty}             % do not remove
+% The settings below are copied from fullpage.sty
+\\setlength{\\textwidth}{\\paperwidth}
+\\addtolength{\\textwidth}{-3cm}
+\\setlength{\\oddsidemargin}{1.5cm}
+\\addtolength{\\oddsidemargin}{-2.54cm}
+\\setlength{\\evensidemargin}{\\oddsidemargin}
+\\setlength{\\textheight}{\\paperheight}
+\\addtolength{\\textheight}{-\\headheight}
+\\addtolength{\\textheight}{-\\headsep}
+\\addtolength{\\textheight}{-\\footskip}
+\\addtolength{\\textheight}{-3cm}
+\\setlength{\\topmargin}{1.5cm}
+\\addtolength{\\topmargin}{-2.54cm}
+")
+;; Basic configuration:7 ends here
+
+;; [[file:config.org::*PDF-Tools][PDF-Tools:1]]
+(use-package pdf-view
+  :hook (pdf-tools-enabled . pdf-view-themed-minor-mode)
+  :hook (pdf-tools-enabled . hide-mode-line-mode)
+  :config
+  (setq pdf-view-resize-factor 1.1)
+  (setq-default pdf-view-display-size 'fit-page))
+;; PDF-Tools:1 ends here
+
+;; [[file:config.org::*Conditional features][Conditional features:1]]
 (defvar org-latex-italic-quotes t
   "Make \"quote\" environments italic.")
 (defvar org-latex-par-sep t
@@ -2335,7 +2830,9 @@ The car can also be a
 If the symbol, function, or list produces a string: that is used as a regex
 search in the buffer. Otherwise any non-nil return value will indicate the
 existance of the feature.")
+;; Conditional features:1 ends here
 
+;; [[file:config.org::*Conditional features][Conditional features:2]]
 (defvar org-latex-caption-preamble "
 \\usepackage{subcaption}
 \\usepackage[hypcap=true]{caption}
@@ -2370,7 +2867,9 @@ existance of the feature.")
 }
 "
   "Preamble that provides a macro for custom boxes.")
+;; Conditional features:2 ends here
 
+;; [[file:config.org::*Conditional features][Conditional features:3]]
 (defvar org-latex-feature-implementations
   '((image         :snippet "\\usepackage{graphicx}" :order 2)
     (svg           :snippet "\\usepackage{svg}" :order 2)
@@ -2413,7 +2912,9 @@ following keys:
     The default is 0.
 
 Features that start with ! will be eagerly loaded, i.e. without being detected.")
+;; Conditional features:3 ends here
 
+;; [[file:config.org::*Conditional features][Conditional features:4]]
 (defun org-latex-detect-features (&optional buffer info)
   "List features from `org-latex-conditional-features' detected in BUFFER."
   (let ((case-fold-search nil))
@@ -2433,7 +2934,9 @@ Features that start with ! will be eagerly loaded, i.e. without being detected."
                            out))
                    (if (listp (cdr construct-feature)) (cdr construct-feature) (list (cdr construct-feature)))))
                org-latex-conditional-features)))))
+;; Conditional features:4 ends here
 
+;; [[file:config.org::*Conditional features][Conditional features:5]]
 (defun org-latex-expand-features (features)
   "For each feature in FEATURES process :requires, :when, and :prevents keywords and sort according to :order."
   (dolist (feature features)
@@ -2465,7 +2968,9 @@ Features that start with ! will be eagerly loaded, i.e. without being detected."
           (if (< (or (plist-get (cdr (assoc feat1 org-latex-feature-implementations)) :order) 1)
                  (or (plist-get (cdr (assoc feat2 org-latex-feature-implementations)) :order) 1))
               t nil))))
+;; Conditional features:5 ends here
 
+;; [[file:config.org::*Conditional features][Conditional features:6]]
 (defun org-latex-generate-features-preamble (features)
   "Generate the LaTeX preamble content required to provide FEATURES.
 This is done according to `org-latex-feature-implementations'"
@@ -2485,7 +2990,9 @@ This is done according to `org-latex-feature-implementations'"
                 expanded-features
                 "")
      "% end features\n")))
+;; Conditional features:6 ends here
 
+;; [[file:config.org::*Conditional features][Conditional features:7]]
 (defvar info--tmp nil)
 
 (defadvice! org-latex-save-info (info &optional t_ s_)
@@ -2500,9 +3007,13 @@ This is done according to `org-latex-feature-implementations'"
       (concat header
               (org-latex-generate-features-preamble (org-latex-detect-features nil info--tmp))
               "\n"))))
+;; Conditional features:7 ends here
 
+;; [[file:config.org::*Tectonic][Tectonic:1]]
 (setq org-latex-pdf-process '("tectonic -X compile --print --outdir=%o -Z shell-escape %f"))
+;; Tectonic:1 ends here
 
+;; [[file:config.org::*Tectonic][Tectonic:2]]
 (setq org-preview-latex-process-alist
 '((dvipng :programs
                   ("tectonic" "dvipng")
@@ -2529,7 +3040,9 @@ This is done according to `org-latex-feature-implementations'"
                        ("tectonic --outdir %o %f")
                        :image-converter
                        ("convert -density %D -trim -antialias %f -quality 100 %O"))))
+;; Tectonic:2 ends here
 
+;; [[file:config.org::*Classes][Classes:1]]
 (after! ox-latex
   (add-to-list 'org-latex-classes
                '("cb-doc" "\\documentclass{scrartcl}"
@@ -2538,7 +3051,9 @@ This is done according to `org-latex-feature-implementations'"
                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
+;; Classes:1 ends here
 
+;; [[file:config.org::*Classes][Classes:2]]
 (after! ox-latex
   (setq org-latex-default-class "cb-doc"
         org-latex-tables-booktabs t
@@ -2561,7 +3076,9 @@ This is done according to `org-latex-feature-implementations'"
 \\urlstyle{same}
 "
         org-latex-reference-command "\\cref{%s}"))
+;; Classes:2 ends here
 
+;; [[file:config.org::*Packages][Packages:1]]
 (setq org-latex-default-packages-alist
       `(("AUTO" "inputenc" t
          ("pdflatex"))
@@ -2583,12 +3100,16 @@ This is done according to `org-latex-feature-implementations'"
     ("" "indentfirst" nil)
     "\\setmainfont[Ligatures=TeX]{Alegreya}"
     "\\setmonofont[Ligatures=TeX]{Liga SFMono Nerd Font}"))
+;; Packages:1 ends here
 
+;; [[file:config.org::*Pretty code blocks][Pretty code blocks:1]]
 (use-package! engrave-faces-latex
   :after ox-latex
   :config
   (setq org-latex-listings 'engraved))
+;; Pretty code blocks:1 ends here
 
+;; [[file:config.org::*Pretty code blocks][Pretty code blocks:2]]
 (defadvice! org-latex-src-block-engraved (orig-fn src-block contents info)
   "Like `org-latex-src-block', but supporting an engraved backend"
   :around #'org-latex-src-block
@@ -2746,25 +3267,79 @@ This is done according to `org-latex-feature-implementations'"
     (if (eq 'engraved (plist-get info :latex-listings))
         (format "\\begin{Code}[alt]\n%s\n\\end{Code}" output-block)
       output-block)))
+;; Pretty code blocks:2 ends here
 
+;; [[file:config.org::*ox-chameleon][ox-chameleon:1]]
 (use-package! ox-chameleon
   :after ox)
+;; ox-chameleon:1 ends here
 
+;; [[file:config.org::*Async][Async:1]]
 (setq org-export-in-background t)
+;; Async:1 ends here
 
+;; [[file:config.org::*(sub|super)script characters][(sub|super)script characters:1]]
 (setq org-export-with-sub-superscripts '{})
+;; (sub|super)script characters:1 ends here
 
+;; [[file:config.org::*Mu4e][Mu4e:1]]
 (setq mu4e-update-interval 300)
+;; Mu4e:1 ends here
 
+;; [[file:config.org::*Mu4e][Mu4e:2]]
+(set-email-account! "shaunsingh0207"
+  '((mu4e-sent-folder       . "/Sent Mail")
+    (mu4e-drafts-folder     . "/Drafts")
+    (mu4e-trash-folder      . "/Trash")
+    (mu4e-refile-folder     . "/All Mail")
+    (smtpmail-smtp-user     . "shaunsingh0207@gmail.com")))
+
+;; don't need to run cleanup after indexing for gmail
+(setq mu4e-index-cleanup nil
+      mu4e-index-lazy-check t)
+
+(after! mu4e
+  (setq mu4e-headers-fields
+        '((:flags . 6)
+          (:account-stripe . 2)
+          (:from-or-to . 25)
+          (:folder . 10)
+          (:recipnum . 2)
+          (:subject . 80)
+          (:human-date . 8))
+        +mu4e-min-header-frame-width 142
+        mu4e-headers-date-format "%d/%m/%y"
+        mu4e-headers-time-format "⧖ %H:%M"
+        mu4e-headers-results-limit 1000
+        mu4e-index-cleanup t)
+
+  (add-to-list 'mu4e-bookmarks
+               '(:name "Yesterday's messages" :query "date:2d..1d" :key ?y) t)
+
+  (defvar +mu4e-header--folder-colors nil)
+  (appendq! mu4e-header-info-custom
+            '((:folder .
+               (:name "Folder" :shortname "Folder" :help "Lowest level folder" :function
+                (lambda (msg)
+                  (+mu4e-colorize-str
+                   (replace-regexp-in-string "\\`.*/" "" (mu4e-message-field msg :maildir))
+                   '+mu4e-header--folder-colors)))))))
+;; Mu4e:2 ends here
+
+;; [[file:config.org::*Mu4e][Mu4e:3]]
 (after! mu4e
   (setq sendmail-program "~/.nix-profile/bin/msmtp"
         send-mail-function #'smtpmail-send-it
         message-sendmail-f-is-evil t
         message-sendmail-extra-arguments '("--read-envelope-from")
         message-send-mail-function #'message-send-mail-with-sendmail))
+;; Mu4e:3 ends here
 
+;; [[file:config.org::*Mu4e][Mu4e:4]]
 ;;(setq alert-default-style 'osx-notifier)
+;; Mu4e:4 ends here
 
+;; [[file:config.org::*Webkit][Webkit:1]]
 ;;(use-package org
 ;;  :demand t)
 
@@ -2787,7 +3362,16 @@ This is done according to `org-latex-feature-implementations'"
               ""
             (format "%s%.0f%%  " (all-the-icons-faicon "spinner") progress)))
     (force-mode-line-update)))
+;; Webkit:1 ends here
 
+;; [[file:config.org::*Webkit][Webkit:2]]
+(use-package evil-collection-webkit
+   :defer t
+   :config
+   (evil-collection-xwidget-setup))
+;; Webkit:2 ends here
+
+;; [[file:config.org::*IRC][IRC:2]]
 (after! circe
   (setq-default circe-use-tls t)
   (setq circe-notifications-alert-icon "/usr/share/icons/breeze/actions/24/network-connect.svg"
@@ -3016,7 +3600,9 @@ This is done according to `org-latex-feature-implementations'"
                       accounts))))
 
 (add-transient-hook! #'=irc (register-irc-auths))
+;; IRC:2 ends here
 
+;; [[file:config.org::org-emph-to-irc][org-emph-to-irc]]
 (defun lui-org-to-irc ()
   "Examine a buffer with simple org-mode formatting, and converts the empasis:
 *bold*, /italic/, and _underline_ to IRC semi-standard escape codes.
@@ -3033,3 +3619,4 @@ This is done according to `org-latex-feature-implementations'"
              "") nil nil)))
 
 (add-hook 'lui-pre-input-hook #'lui-org-to-irc)
+;; org-emph-to-irc ends here
