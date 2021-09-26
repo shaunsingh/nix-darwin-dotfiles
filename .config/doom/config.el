@@ -1079,6 +1079,36 @@ This is done according to `org-latex-feature-implementations'"
               (org-latex-generate-features-preamble (org-latex-detect-features nil info--tmp))
               "\n"))))
 
+(defadvice! +org-latex-link (orig-fn link desc info)
+  "Acts as `org-latex-link', but supports remote images."
+  :around #'org-latex-link
+  (setq o-link link
+        o-desc desc
+        o-info info)
+  (if (and (member (plist-get (cadr link) :type) '("http" "https"))
+           (member (file-name-extension (plist-get (cadr link) :path))
+                   '("png" "jpg" "jpeg" "pdf" "svg")))
+      (org-latex-link--remote link desc info)
+    (funcall orig-fn link desc info)))
+
+(defun org-latex-link--remote (link _desc info)
+  (let* ((url (plist-get (cadr link) :raw-link))
+         (ext (file-name-extension url))
+         (target (format "%s%s.%s"
+                         (temporary-file-directory)
+                         (replace-regexp-in-string "[./]" "-"
+                                                   (file-name-sans-extension (substring (plist-get (cadr link) :path) 2)))
+                         ext)))
+    (unless (file-exists-p target)
+      (url-copy-file url target))
+    (setcdr link (--> (cadr link)
+                   (plist-put it :type "file")
+                   (plist-put it :path target)
+                   (plist-put it :raw-link (concat "file:" target))
+                   (list it)))
+    (concat "% fetched from " url "\n"
+            (org-latex--inline-image link info))))
+
 (setq org-latex-pdf-process '("tectonic -X compile --print --outdir=%o -Z shell-escape %f"))
 
 (setq org-preview-latex-process-alist
