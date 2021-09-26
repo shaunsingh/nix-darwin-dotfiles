@@ -442,6 +442,123 @@ irc                          ; how neckbeards socialize
 ;;twitter                    ; twitter client https://twitter.com/vnought
 #+end_src
 
+*** Packages
+:PROPERTIES:
+:header-args:emacs-lisp: :tangle no
+:END:
+Unlike most literate configurations I +am lazy+ like to keep all my packages in
+one place
+#+name: packages.el
+#+attr_html: :collapsed t
+#+begin_src emacs-lisp :tangle "packages.el" :noweb no-export :comments no
+;; -*- no-byte-compile: t; -*-
+;;; $DOOMDIR/packages.el
+
+;;org
+<<org>>
+
+;;latex
+<<latex>>
+
+;;markdown and html
+<<web>>
+
+;;looks
+<<looks>>
+
+;;emacs additions
+<<emacs>>
+
+;;lsp
+<<lsp>>
+
+;;fun
+<<fun>>
+#+end_src
+
+**** Org:
+The majority of my work in emacs is done in org mode, even this configuration
+was written in org! It makes sense that the majority of my packages are for
+tweaking org then
+#+name: org
+#+begin_src emacs-lisp
+(package! org-appear)
+(package! org-super-agenda)
+(package! doct :recipe (:host github :repo "progfolio/doct"))
+(package! org-padding :recipe (:host github :repo "TonCherAmi/org-padding" ))
+(package! org-ol-tree :recipe (:host github :repo "Townk/org-ol-tree"))
+(package! org-pretty-table :recipe (:host github :repo "Fuco1/org-pretty-table"))
+(package! org-roam-ui :recipe (:host github :repo "org-roam/org-roam-ui" :files ("*.el" "out")))
+(package! org-pandoc-import
+  :recipe (:host github
+           :repo "tecosaur/org-pandoc-import"
+           :files ("*.el" "filters" "preprocessors")))
+#+end_src
+
+**** \LaTeX:
+When I'm not working in org, I'm probably exporting it to latex. Lets adjust
+that a bit too
+#+name: latex
+#+begin_src emacs-lisp
+(package! org-fragtog)
+(package! aas :recipe (:host github :repo "ymarco/auto-activating-snippets"))
+(package! laas :recipe (:host github :repo "tecosaur/LaTeX-auto-activating-snippets"))
+(package! engrave-faces :recipe (:host github :repo "tecosaur/engrave-faces"))
+#+end_src
+
+**** Web:
+Sometimes I need to use markdown too. *Note:* emacs-webkit is temporarily disabled
+because of its refusal to work without requiring org
+#+name: web
+#+begin_src emacs-lisp
+(package! ox-gfm)
+(package! websocket)
+;;(package! webkit
+;;          :recipe (:host github
+;;                   :repo "akirakyle/emacs-webkit"
+;;                   :branch "main"
+;;                   :files (:defaults "*.js" "*.css" "*.so" "*.nix")
+;;                   :pre-build (("nix-shell" "shell.nix" "--command make"))))
+#+end_src
+
+**** Looks:
+Making emacs look good is first priority, actually working in it is second
+#+name: looks
+#+begin_src emacs-lisp
+(unpin! doom-themes)
+(unpin! doom-modeline)
+(package! solaire-mode :disable t)
+(package! ox-chameleon :recipe (:host github :repo "tecosaur/ox-chameleon"))
+#+end_src
+
+**** Emacs Tweaks:
+Emacs is missing just a few packages that I need to make it my OS. Specifically,
+screenshot capabilities are nice, and using the same dictionaries accross
++operating systems+ bootloaders would be nice too!
+#+name: emacs
+#+begin_src emacs-lisp
+;;(package! vlf :recipe (:host github :repo "m00natic/vlfi" :files ("*.el")))
+(package! screenshot :recipe (:host github :repo "tecosaur/screenshot"))
+(package! lexic :recipe (:host github :repo "tecosaur/lexic"))
+#+end_src
+
+**** LSP:
+I like to live life on the edge
+#+name: lsp
+#+begin_src emacs-lisp
+(unpin! lsp-ui)
+(unpin! lsp-mode)
+#+end_src
+
+**** Fun:
+We do a little trolling
+#+name: fun
+#+begin_src emacs-lisp
+(package! xkcd)
+(package! keycast)
+(package! selectric-mode)
+#+end_src
+
 * Basic Configuration
 Make this file run (slightly) faster with lexical binding
 #+begin_src elisp
@@ -560,7 +677,44 @@ lets add those back in with the help of composition-function-table
 (set-char-table-range composition-function-table ?T '(["\\(?:Th\\)" 0 font-shape-gstring]))
 #+end_src
 
-Just in case the fonts aren't there, lets add a fallback
+When we're using Alegreya we can apply a lovely little tweak to =tabular= which
+(locally) changes the figures used to lining fixed-width.
+
+#+begin_src emacs-lisp
+(after! org
+	(add-to-list 'org-latex-feature-implementations '(alegreya-typeface) t)
+	(add-to-list 'org-latex-feature-implementations'(.alegreya-tabular-figures :eager t :when (alegreya-typeface table) :order 0.5 :snippet "
+	\\makeatletter
+	% tabular lining figures in tables
+	\\renewcommand{\\tabular}{\\AlegreyaTLF\\let\\@halignto\\@empty\\@tabular}
+	\\makeatother\n") t))
+#+end_src
+
+Due to the Alegreya's metrics, the =\LaTeX= symbol doesn't quite look right. We
+can correct for this by redefining it with subtlety shifted kerning.
+
+#+begin_src emacs-lisp
+(after! org
+	(add-to-list 'org-latex-conditional-features '("LaTeX" . latex-symbol))
+	(add-to-list 'org-latex-feature-implementations '(latex-symbol :when alegreya-typeface :order 0.5 :snippet "
+	\\makeatletter
+	% Kerning around the A needs adjusting
+	\\DeclareRobustCommand{\\LaTeX}{L\\kern-.24em%
+	        {\\sbox\\z@ T%
+	         \\vbox to\\ht\\z@{\\hbox{\\check@mathfonts
+	                              \\fontsize\\sf@size\\z@
+	                              \\math@fontsfalse\\selectfont
+	                              A}%
+	                        \\vss}%
+	        }%
+	        \\kern-.10em%
+	        \\TeX}
+	\\makeatother\n") t))
+#+end_src
+
+Just in case the fonts aren't there, lets add check to notify the user of the
+issue. Seems like I forget ot install fonts every time I switch between +distros+
+emacs bootloaders
 #+name: detect-missing-fonts
 #+begin_src elisp
 (defvar required-fonts '("Overpass" "Liga SFMono Nerd Font" "Alegreya" ))
@@ -2904,6 +3058,7 @@ Sprinkle in some =doct= utility functions
 #+end_src
 
 ** ORG Plot
+
 [[xkcd:523]]
 
 You can't ever have too many graphs! Lets make it look prettier, and tell it to use the doom theme colors

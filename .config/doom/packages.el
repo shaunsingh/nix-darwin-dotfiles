@@ -22,6 +22,7 @@
 
 ;;markdown and html
 (package! ox-gfm)
+(package! websocket)
 ;;(package! webkit
 ;;          :recipe (:host github
 ;;                   :repo "akirakyle/emacs-webkit"
@@ -37,7 +38,6 @@
 
 ;;emacs additions
 ;;(package! vlf :recipe (:host github :repo "m00natic/vlfi" :files ("*.el")))
-(package! websocket)
 (package! screenshot :recipe (:host github :repo "tecosaur/screenshot"))
 (package! lexic :recipe (:host github :repo "tecosaur/lexic"))
 
