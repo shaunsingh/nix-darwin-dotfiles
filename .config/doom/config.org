@@ -27,7 +27,7 @@ computer to do. @@latex:\mbox{@@--- Donald Knuth@@latex:}@@
 #+end_quote
 
 * Intro
-[[file:./misc/xkcd/real_programmers.png]]
+[[xkcd:378]]
 
 Customizing an editor can be very rewarding ... until you have to leave it.
 For years I have been looking for ways to avoid this pain.
@@ -55,7 +55,7 @@ Now I've discovered the wonders of literate programming, and am becoming more
 settled by the day. This is both my config, and a cautionary tale (just replace
 "Linux" with "Emacs" in the comic below).
 
-[[file:./misc/xkcd/cautionary.png]]
+[[xkcd:456]]
 
 Thats not to say using Emacs doesn't have its pitfalls. The performance leaves
 something to be desired, but the benefits far outweigh the drawbacks. Its
@@ -508,6 +508,8 @@ Use ligatures from within vterm (and eshell), we do this by redefining the varia
 #+end_src
 
 ** Fonts
+[[xkcd:590]]
+
 I like the apple fonts for programming, so I'll go with Liga SFMono Nerd Font. I
 prefer a rounder font for plain text, so I'll go with Overpass for that. I have a retina display as well, so lets keep the fonts light.
 #+begin_src elisp
@@ -2902,7 +2904,9 @@ Sprinkle in some =doct= utility functions
 #+end_src
 
 ** ORG Plot
-Tell it to use the doom theme colors
+[[xkcd:523]]
+
+You can't ever have too many graphs! Lets make it look prettier, and tell it to use the doom theme colors
 #+begin_src elisp
 (after! org-plot
   (defun org-plot/generate-theme (_type)
@@ -2982,6 +2986,12 @@ set palette defined ( 0 '%s',\
 #+end_src
 
 ** XKCD
+[[xkcd:446]]
+
+#+begin_quote
+Relevent XKCD:
+#+end_quote
+
 I link to xkcd's so much that its better to just have a configuration for them
 We want to set this up so it loads nicely in org.
 #+begin_src emacs-lisp
@@ -3378,6 +3388,11 @@ Lets use lexic instead of the default dictionary
   (lexic-search identifier nil nil t))
 #+end_src
 * Latex
+[[xkcd:1301]]
+I have a love-hate relationship with latex. Its extremely powerful, but at the
+same time its hard to write, hard to understand, and very slow. The solution:
+write everything in org and then export it to tex. Best of both worlds!
+
 ** Basic configuration
 First of all, lets use pdf-tools to preview pdfs by defaults
 #+begin_src elisp
@@ -3977,6 +3992,7 @@ Annoying having to gate these, so let's fix that
 #+end_src
 
 * Mu4e
+[[xkcd:1796]]
 I'm trying out emails in emacs, should be nice. Related, check .mbsyncrc to
 setup your emails first
 
@@ -4049,36 +4065,38 @@ alternative, but is quite buggy right now. Once its stable, I'll fix this config
 ;;(use-package org
 ;;  :demand t)
 
-(use-package webkit
-  :defer t
-  :commands webkit
-  :init
-  (setq webkit-search-prefix "https://google.com/search?q="
-        webkit-history-file nil
-        webkit-cookie-file nil
-        browse-url-browser-function 'webkit-browse-url
-        webkit-browse-url-force-new t
-        webkit-download-action-alist '(("\\.pdf\\'" . webkit-download-open)
-                                       ("\\.png\\'" . webkit-download-save)
-                                       (".*" . webkit-download-default)))
+;; (use-package webkit
+;;   :defer t
+;;   :commands webkit
+;;   :init
+;;   (setq webkit-search-prefix "https://google.com/search?q="
+;;         webkit-history-file nil
+;;         webkit-cookie-file nil
+;;         browse-url-browser-function 'webkit-browse-url
+;;         webkit-browse-url-force-new t
+;;         webkit-download-action-alist '(("\\.pdf\\'" . webkit-download-open)
+;;                                        ("\\.png\\'" . webkit-download-save)
+;;                                        (".*" . webkit-download-default)))
 
-  (defun webkit--display-progress (progress)
-    (setq webkit--progress-formatted
-          (if (equal progress 100.0)
-              ""
-            (format "%s%.0f%%  " (all-the-icons-faicon "spinner") progress)))
-    (force-mode-line-update)))
+;;   (defun webkit--display-progress (progress)
+;;     (setq webkit--progress-formatted
+;;           (if (equal progress 100.0)
+;;               ""
+;;             (format "%s%.0f%%  " (all-the-icons-faicon "spinner") progress)))
+;;    (force-mode-line-update)))
 #+end_src
 
 I also want to use evil bindings with this. It's not upstreamed yet, so I'll steal the ones from the repo
 #+begin_src elisp
-(use-package evil-collection-webkit
-   :defer t
-   :config
-   (evil-collection-xwidget-setup))
+;; (use-package evil-collection-webkit
+;;    :defer t
+;;    :config
+;;    (evil-collection-xwidget-setup))
 #+end_src
 
 ** IRC
+[[xkcd:1782]]
+
 I'm trying to move everything to emacs, and discord is the one electron app I
 need to ditch. With bitlbee and circe it should be possible
 
