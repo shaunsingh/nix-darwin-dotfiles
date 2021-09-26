@@ -832,47 +832,46 @@ SQL can be either the emacsql vector representation, or a string."
                            (cdr (assoc 'img        data))
                            )))))
 
-(after! org
-	(org-link-set-parameters "xkcd"
-	                         :image-data-fun #'+org-xkcd-image-fn
-	                         :follow #'+org-xkcd-open-fn
-	                         :export #'+org-xkcd-export
-	                         :complete #'+org-xkcd-complete)
-	
-	(defun +org-xkcd-open-fn (link)
-	  (+org-xkcd-image-fn nil link nil))
-	
-	(defun +org-xkcd-image-fn (protocol link description)
-	  "Get image data for xkcd num LINK"
-	  (let* ((xkcd-info (+xkcd-fetch-info (string-to-number link)))
-	         (img (plist-get xkcd-info :img))
-	         (alt (plist-get xkcd-info :alt)))
-	    (message alt)
-	    (+org-image-file-data-fn protocol (xkcd-download img (string-to-number link)) description)))
-	
-	(defun +org-xkcd-export (num desc backend _com)
-	  "Convert xkcd to html/LaTeX form"
-	  (let* ((xkcd-info (+xkcd-fetch-info (string-to-number num)))
-	         (img (plist-get xkcd-info :img))
-	         (alt (plist-get xkcd-info :alt))
-	         (title (plist-get xkcd-info :title))
-	         (file (xkcd-download img (string-to-number num))))
-	    (cond ((org-export-derived-backend-p backend 'html)
-	           (format "<img class='invertible' src='%s' title=\"%s\" alt='%s'>" img (subst-char-in-string ?\" ?“ alt) title))
-	          ((org-export-derived-backend-p backend 'latex)
-	           (format "\\begin{figure}[!htb]
-	  \\centering
-	  \\includegraphics[scale=0.4]{%s}%s
-	\\end{figure}" file (if (equal desc (format "xkcd:%s" num)) ""
-	                      (format "\n  \\caption*{\\label{xkcd:%s} %s}"
-	                              num
-	                              (or desc
-	                                  (format "\\textbf{%s} %s" title alt))))))
-	          (t (format "https://xkcd.com/%s" num)))))
-	
-	(defun +org-xkcd-complete (&optional arg)
-	  "Complete xkcd using `+xkcd-stored-info'"
-	  (format "xkcd:%d" (+xkcd-select))))
+(org-link-set-parameters "xkcd"
+                         :image-data-fun #'+org-xkcd-image-fn
+                         :follow #'+org-xkcd-open-fn
+                         :export #'+org-xkcd-export
+                         :complete #'+org-xkcd-complete)
+
+(defun +org-xkcd-open-fn (link)
+  (+org-xkcd-image-fn nil link nil))
+
+(defun +org-xkcd-image-fn (protocol link description)
+  "Get image data for xkcd num LINK"
+  (let* ((xkcd-info (+xkcd-fetch-info (string-to-number link)))
+         (img (plist-get xkcd-info :img))
+         (alt (plist-get xkcd-info :alt)))
+    (message alt)
+    (+org-image-file-data-fn protocol (xkcd-download img (string-to-number link)) description)))
+
+(defun +org-xkcd-export (num desc backend _com)
+  "Convert xkcd to html/LaTeX form"
+  (let* ((xkcd-info (+xkcd-fetch-info (string-to-number num)))
+         (img (plist-get xkcd-info :img))
+         (alt (plist-get xkcd-info :alt))
+         (title (plist-get xkcd-info :title))
+         (file (xkcd-download img (string-to-number num))))
+    (cond ((org-export-derived-backend-p backend 'html)
+           (format "<img class='invertible' src='%s' title=\"%s\" alt='%s'>" img (subst-char-in-string ?\" ?“ alt) title))
+          ((org-export-derived-backend-p backend 'latex)
+           (format "\\begin{figure}[!htb]
+  \\centering
+  \\includegraphics[scale=0.4]{%s}%s
+\\end{figure}" file (if (equal desc (format "xkcd:%s" num)) ""
+                      (format "\n  \\caption*{\\label{xkcd:%s} %s}"
+                              num
+                              (or desc
+                                  (format "\\textbf{%s} %s" title alt))))))
+          (t (format "https://xkcd.com/%s" num)))))
+
+(defun +org-xkcd-complete (&optional arg)
+  "Complete xkcd using `+xkcd-stored-info'"
+  (format "xkcd:%d" (+xkcd-select)))
 
 (defvar org-latex-italic-quotes t
   "Make \"quote\" environments italic.")
@@ -1160,7 +1159,7 @@ This is done according to `org-latex-feature-implementations'"
         ("colorlinks=true, linkcolor=Blue, citecolor=BrickRed, urlcolor=PineGreen" "hyperref" nil)
     ("" "indentfirst" nil)
     "\\setmainfont[Ligatures=TeX]{Alegreya}"
-    "\\setmonofont[Ligatures=TeX]{Liga SFMono Nerd Font}"))
+    "\\setmonofont[Ligatures=TeX, SizeFeatures={Size=11}]{Liga SFMono Nerd Font}"))
 
 (use-package! engrave-faces-latex
   :after ox-latex
