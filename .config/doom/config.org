@@ -26,6 +26,16 @@ let us concentrate rather on explaining to human beings what we want a
 computer to do. @@latex:\mbox{@@--- Donald Knuth@@latex:}@@
 #+end_quote
 
+* *Note:* If you want a proper Emacs Config, look here:
+https://tecosaur.github.io/emacs-config/config.html, this is just a compilation
+of different parts of his (and other's) configs, as well as a few parts I wrote
+by my own
+
+** Credit:
+- Tecosaur - For all his help and the excellent config
+- Dr. Elken - For his EXWM Module and help on the DOOM Server
+- Henrik - For making Doom Emacs in the first place
+
 * Intro
 [[xkcd:378]]
 
