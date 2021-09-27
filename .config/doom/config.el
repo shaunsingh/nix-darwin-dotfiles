@@ -84,35 +84,6 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 (set-char-table-range composition-function-table ?T '(["\\(?:Th\\)" 0 font-shape-gstring]))
 ;; Fonts:3 ends here
 
-;; [[file:config.org::*Fonts][Fonts:4]]
-(after! org
-	(add-to-list 'org-latex-feature-implementations '(alegreya-typeface) t)
-	(add-to-list 'org-latex-feature-implementations'(.alegreya-tabular-figures :eager t :when (alegreya-typeface table) :order 0.5 :snippet "
-	\\makeatletter
-	% tabular lining figures in tables
-	\\renewcommand{\\tabular}{\\AlegreyaTLF\\let\\@halignto\\@empty\\@tabular}
-	\\makeatother\n") t))
-;; Fonts:4 ends here
-
-;; [[file:config.org::*Fonts][Fonts:5]]
-(after! org
-	(add-to-list 'org-latex-conditional-features '("LaTeX" . latex-symbol))
-	(add-to-list 'org-latex-feature-implementations '(latex-symbol :when alegreya-typeface :order 0.5 :snippet "
-	\\makeatletter
-	% Kerning around the A needs adjusting
-	\\DeclareRobustCommand{\\LaTeX}{L\\kern-.24em%
-	        {\\sbox\\z@ T%
-	         \\vbox to\\ht\\z@{\\hbox{\\check@mathfonts
-	                              \\fontsize\\sf@size\\z@
-	                              \\math@fontsfalse\\selectfont
-	                              A}%
-	                        \\vss}%
-	        }%
-	        \\kern-.10em%
-	        \\TeX}
-	\\makeatother\n") t))
-;; Fonts:5 ends here
-
 ;; [[file:config.org::detect-missing-fonts][detect-missing-fonts]]
 (defvar required-fonts '("Overpass" "Liga SFMono Nerd Font" "Alegreya" ))
 (defvar available-fonts
@@ -143,15 +114,15 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
   ";; No missing fonts detected")
 ;; detect-missing-fonts ends here
 
-;; [[file:config.org::*Fonts][Fonts:7]]
+;; [[file:config.org::*Fonts][Fonts:5]]
 ;; No missing fonts detected
-;; Fonts:7 ends here
+;; Fonts:5 ends here
 
 ;; [[file:config.org::*Themes][Themes:1]]
-;;(setq doom-theme 'doom-one-light)
+(setq doom-theme 'doom-one-light)
 (setq doom-one-light-padded-modeline t)
-(setq doom-theme 'doom-nord)
-(setq doom-nord-padded-modeline t)
+;;(setq doom-theme 'doom-nord)
+;;(setq doom-nord-padded-modeline t)
 ;; Themes:1 ends here
 
 ;; [[file:config.org::*Very large files][Very large files:1]]

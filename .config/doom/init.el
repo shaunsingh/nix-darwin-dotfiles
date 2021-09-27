@@ -26,7 +26,7 @@
        (ligatures +extra)           ; ligatures and symbols to make your code pretty again
        minimap                    ; show a map of the code on the side
        modeline                     ; snazzy, Atom-inspired modeline, plus API
-       nav-flash                    ; blink the current line after jumping
+       ;;nav-flash                    ; blink the current line after jumping
        ;;neotree                    ; a project drawer, like NERDTree for vim
        ophints                      ; highlight the region an operation acts on
        (popup                       ; tame sudden yet inevitable temporary windows
@@ -35,6 +35,7 @@
        ;;(tabs                      ; an tab bar for Emacs
        ;;  +centaur-tabs)           ; ... with prettier tabs
        treemacs                     ; a project drawer, like neotree but cooler
+       tree-sitter                  ; ... sitting in a tree
        ;;unicode                    ; extended unicode support for various languages
        vc-gutter                    ; vcs diff in the fringe
        ;;vi-tilde-fringe              ; fringe tildes to mark beyond EOB
@@ -64,7 +65,7 @@
        vc                           ; version-control and Emacs, sitting in a tree
 
        :term
-       eshell                     ; the elisp shell that works everywhere
+       ;;eshell                     ; the elisp shell that works everywhere
        ;;shell                      ; simple shell REPL for Emacs
        ;;term                       ; basic terminal emulator for Emacs
        vterm                        ; the best terminal emulation in Emacs
@@ -72,7 +73,7 @@
        :checkers
        syntax                       ; tasing you for every semicolon you forget
        (:if (executable-find "aspell") spell) ; tasing you for misspelling mispelling
-       grammar                      ; tasing grammar mistake every you make
+       ;;grammar                    ; tasing grammar mistake every you make
 
        :tools
        ;;ansible                      ; a crucible for infrastructure as code

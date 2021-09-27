@@ -36,6 +36,15 @@ by my own
 - Dr. Elken - For his EXWM Module and help on the DOOM Server
 - Henrik - For making Doom Emacs in the first place
 
+#+begin_quote
+Includes (snippets) of other software related under the MIT license:
+- Doom Emacs Config, 2021 Tecosaur. https://tecosaur.github.io/emacs-config/config.html
+- .doom.d, 2021 Elken. https://github.com/elken/.doom.d/blob/master/config.org
+
+Includes (snippets) of other software related under the GPLv3 license:
+- .dotfiles, 2021 Daviwil. https://github.com/daviwil/dotfiles
+#+end_quote
+
 * Intro
 [[xkcd:378]]
 
@@ -45,7 +54,7 @@ Then I discovered [[https://github.com/cknadler/vim-anywhere][vim-anywhere]]. Th
 
 1. I use neovim (and neovide), not vim (and gvim)
 2. Firenvim is only for browsers
-3. Even if I found a neovim alternative, you can't do everything.
+3. Even if I found a neovim alternative, you can't do everything in neovim
 
 I wanted everything, in one place. Hence why I (mostly) switched to Emacs.
 
@@ -61,8 +70,8 @@ This was enough for me to install Emacs, but there are
 I tried out the =spacemacs= distribution a bit, but it wasn't quite to my liking.
 Then I heard about =doom emacs= and thought I may as well give that a try.
 
-Now I've discovered the wonders of literate programming, and am becoming more
-settled by the day. This is both my config, and a cautionary tale (just replace
+With Org, I've discovered the wonders of literate programming, and with the help
+of others I've switched more and more to just using Emacs (just replace
 "Linux" with "Emacs" in the comic below).
 
 [[xkcd:456]]
@@ -82,7 +91,6 @@ unrivaled in extensibility.
 #+attr_html: :class invertible :alt Radar chart comparing my thoughts on a few editors.
 [[file:./misc/editor-comparison.jpeg]]
 ** Why Emacs?
-
 Emacs is [[https://www.eigenbahn.com/2020/01/12/emacs-is-no-editor][not a text editor]], this is a common misnomer. It is far more apt to
 describe Emacs as /a Lisp machine providing a generic user-centric text
 manipulation environment/. That's quite a mouthful.
@@ -154,8 +162,15 @@ few extras.
     by /Highway Gothic/.
   - It's slightly quirky. Look at the diagonal cut on stems for example.
     Helvetica is a masterful design, but I like a bit more pizzazz now and then.
+  - *Note:* Alegreya is used for my latex export and writeroom mode configurations
++ I use my [[https://github.com/shaunsingh/SFMono-Nerd-Font-Ligaturized][patched SFMono]] font as a go-to monospace.
+ I have chosen it because it possesses a few characteristics I consider
+ desirable, namely:
+  - Elegent characters, and good ligatures/unicode support
+  - It fits will with the rest of my system
 + A few LSP servers. Take a look at [[file:init.el][init.el]]' to see which modules have the ~+lsp~
   flag.
++ Gnuplot, used for =org-plot=.
 + A build of emacs with modules and xwidgets support. I also recommend the
   native-comp flag with emacs28.
 
@@ -258,7 +273,7 @@ hl-todo                      ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
 (ligatures +extra)           ; ligatures and symbols to make your code pretty again
 minimap                    ; show a map of the code on the side
 modeline                     ; snazzy, Atom-inspired modeline, plus API
-nav-flash                    ; blink the current line after jumping
+;;nav-flash                    ; blink the current line after jumping
 ;;neotree                    ; a project drawer, like NERDTree for vim
 ophints                      ; highlight the region an operation acts on
 (popup                       ; tame sudden yet inevitable temporary windows
@@ -267,6 +282,7 @@ ophints                      ; highlight the region an operation acts on
 ;;(tabs                      ; an tab bar for Emacs
 ;;  +centaur-tabs)           ; ... with prettier tabs
 treemacs                     ; a project drawer, like neotree but cooler
+tree-sitter                  ; ... sitting in a tree
 ;;unicode                    ; extended unicode support for various languages
 vc-gutter                    ; vcs diff in the fringe
 ;;vi-tilde-fringe              ; fringe tildes to mark beyond EOB
@@ -302,7 +318,7 @@ vc                           ; version-control and Emacs, sitting in a tree
 
 #+name: doom-term
 #+begin_src emacs-lisp
-eshell                     ; the elisp shell that works everywhere
+;;eshell                     ; the elisp shell that works everywhere
 ;;shell                      ; simple shell REPL for Emacs
 ;;term                       ; basic terminal emulator for Emacs
 vterm                        ; the best terminal emulation in Emacs
@@ -312,7 +328,7 @@ vterm                        ; the best terminal emulation in Emacs
 #+begin_src emacs-lisp
 syntax                       ; tasing you for every semicolon you forget
 (:if (executable-find "aspell") spell) ; tasing you for misspelling mispelling
-grammar                      ; tasing grammar mistake every you make
+;;grammar                    ; tasing grammar mistake every you make
 #+end_src
 
 #+name: doom-tools
@@ -687,41 +703,6 @@ lets add those back in with the help of composition-function-table
 (set-char-table-range composition-function-table ?T '(["\\(?:Th\\)" 0 font-shape-gstring]))
 #+end_src
 
-When we're using Alegreya we can apply a lovely little tweak to =tabular= which
-(locally) changes the figures used to lining fixed-width.
-
-#+begin_src emacs-lisp
-(after! org
-	(add-to-list 'org-latex-feature-implementations '(alegreya-typeface) t)
-	(add-to-list 'org-latex-feature-implementations'(.alegreya-tabular-figures :eager t :when (alegreya-typeface table) :order 0.5 :snippet "
-	\\makeatletter
-	% tabular lining figures in tables
-	\\renewcommand{\\tabular}{\\AlegreyaTLF\\let\\@halignto\\@empty\\@tabular}
-	\\makeatother\n") t))
-#+end_src
-
-Due to the Alegreya's metrics, the =\LaTeX= symbol doesn't quite look right. We
-can correct for this by redefining it with subtlety shifted kerning.
-
-#+begin_src emacs-lisp
-(after! org
-	(add-to-list 'org-latex-conditional-features '("LaTeX" . latex-symbol))
-	(add-to-list 'org-latex-feature-implementations '(latex-symbol :when alegreya-typeface :order 0.5 :snippet "
-	\\makeatletter
-	% Kerning around the A needs adjusting
-	\\DeclareRobustCommand{\\LaTeX}{L\\kern-.24em%
-	        {\\sbox\\z@ T%
-	         \\vbox to\\ht\\z@{\\hbox{\\check@mathfonts
-	                              \\fontsize\\sf@size\\z@
-	                              \\math@fontsfalse\\selectfont
-	                              A}%
-	                        \\vss}%
-	        }%
-	        \\kern-.10em%
-	        \\TeX}
-	\\makeatother\n") t))
-#+end_src
-
 Just in case the fonts aren't there, lets add check to notify the user of the
 issue. Seems like I forget ot install fonts every time I switch between +distros+
 emacs bootloaders
@@ -763,10 +744,10 @@ emacs bootloaders
 ** Themes
 Right now I'm using nord, but I use doom-one-light sometimes
 #+begin_src elisp
-;;(setq doom-theme 'doom-one-light)
+(setq doom-theme 'doom-one-light)
 (setq doom-one-light-padded-modeline t)
-(setq doom-theme 'doom-nord)
-(setq doom-nord-padded-modeline t)
+;;(setq doom-theme 'doom-nord)
+;;(setq doom-nord-padded-modeline t)
 #+end_src
 
 ** Very large files
@@ -4572,6 +4553,3 @@ Now, some actual emojis to use.
     (":|"   . "neutral")
     (":-|"  . "expressionless")))
 #+end_src
-
-#+RESULTS: circe-emoji-alists
-: lui-emoticons-alist
