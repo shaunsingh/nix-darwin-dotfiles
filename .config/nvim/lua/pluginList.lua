@@ -234,4 +234,20 @@ return packer.startup(function()
          require("plugins.others").orgmode()
       end,
    }
+
+   use {
+      "TimUntersberger/neogit",
+      cmd = {
+         "Neogit",
+         "Neogit commit",
+      },
+      requires = { 
+         "nvim-lua/plenary.nvim",
+         "sindrets/diffview.nvim",
+      },
+      config = function()
+         require "plugins.neogit"
+      end,
+   }
+
 end)
