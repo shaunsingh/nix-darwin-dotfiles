@@ -17,6 +17,26 @@
       auth-source-cache-expiry nil) ; default is 7200 (2h)
 ;; Authinfo:1 ends here
 
+;; [[file:config.org::*Emacsclient][Emacsclient:1]]
+(defun greedily-do-daemon-setup ()
+  (require 'org)
+  (when (require 'mu4e nil t)
+    (setq mu4e-confirm-quit t)
+    (setq +mu4e-lock-greedy t)
+    (setq +mu4e-lock-relaxed t)
+    (+mu4e-lock-add-watcher)
+    (when (+mu4e-lock-available t)
+      (mu4e~start)))
+  (when (require 'elfeed nil t)
+    (run-at-time nil (* 8 60 60) #'elfeed-update)))
+
+(when (daemonp)
+  (add-hook 'emacs-startup-hook #'greedily-do-daemon-setup))
+  ;;(add-hook! 'server-after-make-frame-hook
+    ;;(unless (string-match-p "\\*draft" (buffer-name))
+      ;;(switch-to-buffer +doom-dashboard-name))))
+;; Emacsclient:1 ends here
+
 ;; [[file:config.org::*Shell][Shell:1]]
 (setq explicit-shell-file-name (executable-find "fish"))
 ;; Shell:1 ends here
@@ -402,7 +422,8 @@ Return nil otherwise."
 ;; Better Defaults:12 ends here
 
 ;; [[file:config.org::*Better Defaults][Better Defaults:13]]
-(set-frame-parameter nil 'internal-border-width 24)
+;;(set-frame-parameter nil 'internal-border-width 24)
+(add-to-list 'default-frame-alist '(internal-border-width . 24))
 (setq-default line-spacing 0.35)
 ;; Better Defaults:13 ends here
 
