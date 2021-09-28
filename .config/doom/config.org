@@ -625,15 +625,11 @@ solution? Use tecosaurs greedy daemon startup
     (setq +mu4e-lock-relaxed t)
     (+mu4e-lock-add-watcher)
     (when (+mu4e-lock-available t)
-      (mu4e~start)))
-  (when (require 'elfeed nil t)
-    (run-at-time nil (* 8 60 60) #'elfeed-update)))
+      (mu4e~start))))
 
 (when (daemonp)
-  (add-hook 'emacs-startup-hook #'greedily-do-daemon-setup))
-  ;;(add-hook! 'server-after-make-frame-hook
-    ;;(unless (string-match-p "\\*draft" (buffer-name))
-      ;;(switch-to-buffer +doom-dashboard-name))))
+  (add-hook 'emacs-startup-hook #'greedily-do-daemon-setup)
+  (add-hook 'emacs-startup-hook #'init-mixed-pitch-h))
 #+end_src
 
 ** Shell
