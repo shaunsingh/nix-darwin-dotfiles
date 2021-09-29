@@ -8,8 +8,8 @@ vim.cmd "function! Doom_bufferline_quitvim(a,b,c,d) \n qa \n endfunction"
 
 local colors = {
    bg = "NONE",
-   black = "#3b4252",
-   black2 = "#2E3440",
+   black = "#2E3440",
+   black2 = "#3b4252",
    white = "#ECEFF4",
    fg = "#E5E9F0",
    yellow = "#EBCB8B",
@@ -29,7 +29,7 @@ bufferline.setup {
       offsets = { { filetype = "NvimTree", text = "", padding = 1 } },
       buffer_close_icon = "",
       modified_icon = "",
-      close_icon = "",
+      close_icon = "λ",
       show_close_icon = true,
       left_trunc_marker = "",
       right_trunc_marker = "",
@@ -122,7 +122,7 @@ bufferline.setup {
          guibg = colors.black2,
       },
       modified_selected = {
-         guifg = colors.gree,
+         guifg = colors.green,
          guibg = colors.black,
       },
 
@@ -141,12 +141,12 @@ bufferline.setup {
       },
       -- tabs
       tab = {
-         guifg = colors.fg,
-         guibg = colors.gray,
+         guifg = colors.gray,
+         guibg = colors.black2,
       },
       tab_selected = {
          guifg = colors.black2,
-         guibg = colors.fg,
+         guibg = colors.darkblue,
       },
       tab_close = {
          guifg = colors.red,

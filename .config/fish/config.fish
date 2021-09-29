@@ -118,10 +118,11 @@ function fish_prompt
     _print_in_color " λ " (_prompt_color_for_status $last_status)
 end
 
-set -x EDITOR "nvim"
+set -x EDITOR "emacsclient -c --alternate-editor=COMMAND"
 set -x PATH ~/.emacs.d/bin $PATH
 set -x PATH ~/.config/scripts $PATH
 
+alias vi "emacsclient -c --alternate-editor=COMMAND"
 alias .. "cd .."
 alias ... "cd ../.."
 alias .... "cd ../../.."

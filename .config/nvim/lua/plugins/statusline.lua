@@ -8,7 +8,6 @@ gl.short_line_list = { "NvimTree", "packer" }
 local colors = {
    bg = "#3B4252",
    fg = "#E5E9F0",
-   filebg = "#3B4252",
    section_bg = "#434C5E",
    section_bg2 = "#4C566A",
    yellow = "#EBCB8B",
@@ -136,14 +135,14 @@ gls.left[9] = {
       provider = function()
          return " "
       end,
-      highlight = { colors.filebg, colors.section_bg },
+      highlight = { colors.bg, colors.section_bg },
    },
 }
 gls.left[10] = {
    DiagnosticError = {
       provider = "DiagnosticError",
       icon = "  ",
-      highlight = { colors.red, colors.filebg },
+      highlight = { colors.red, colors.bg },
    },
 }
 gls.left[11] = {
@@ -151,21 +150,21 @@ gls.left[11] = {
       provider = function()
          return " "
       end,
-      highlight = { colors.section_bg, colors.filebg },
+      highlight = { colors.section_bg, colors.bg },
    },
 }
 gls.left[12] = {
    DiagnosticWarn = {
       provider = "DiagnosticWarn",
       icon = "  ",
-      highlight = { colors.orange, colors.filebg },
+      highlight = { colors.orange, colors.bg },
    },
 }
 gls.left[13] = {
    DiagnosticHint = {
       provider = "DiagnosticHint",
       icon = "  ",
-      highlight = { colors.fg, colors.filebg },
+      highlight = { colors.fg, colors.bg },
    },
 }
 gls.left[14] = {
@@ -173,16 +172,16 @@ gls.left[14] = {
       provider = function()
          return " "
       end,
-      highlight = { colors.filebg, colors.filebg },
+      highlight = { colors.bg, colors.bg },
    },
 }
 gls.left[15] = {
    DiagnosticInfo = {
       provider = "DiagnosticInfo",
       icon = "  ",
-      highlight = { colors.blue, colors.filebg },
+      highlight = { colors.blue, colors.bg },
       separator = " ",
-      separator_highlight = { colors.filebg, colors.bg },
+      separator_highlight = { colors.bg, colors.bg },
    },
 }
 
@@ -192,9 +191,9 @@ gls.right[1] = {
       provider = function()
          return vim.bo.filetype
       end,
-      highlight = { colors.fg, colors.filebg },
+      highlight = { colors.fg, colors.bg },
       separator = " ",
-      separator_highlight = { colors.filebg, colors.bg },
+      separator_highlight = { colors.bg, colors.bg },
    },
 }
 gls.right[2] = {
@@ -202,7 +201,7 @@ gls.right[2] = {
       provider = "LineColumn",
       highlight = { colors.fg, colors.section_bg },
       separator = "  ",
-      separator_highlight = { colors.section_bg, colors.filebg },
+      separator_highlight = { colors.section_bg, colors.bg },
    },
 }
 gls.right[3] = {
@@ -217,31 +216,12 @@ gls.right[3] = {
 }
 
 -- Short status line
-gls.short_line_left[1] = {
-   BufferType = {
-      provider = "FileTypeName",
-      highlight = { colors.fg, colors.section_bg },
-      separator = " ",
-      separator_highlight = { colors.section_bg, colors.bg },
-   },
-}
-
 gls.short_line_right[1] = {
    FileFormat = {
       provider = function()
          return vim.bo.filetype
       end,
-      highlight = { colors.bg, colors.filebg },
-      separator = " ",
-      separator_highlight = { colors.filebg, colors.bg },
-   },
-}
-gls.short_line_right[2] = {
-   LineInfo = {
-      provider = "LineColumn",
-      highlight = { colors.bg, colors.section_bg },
-      separator = "  ",
-      separator_highlight = { colors.section_bg, colors.filebg },
+      highlight = { colors.bg, colors.bg },
    },
 }
 
