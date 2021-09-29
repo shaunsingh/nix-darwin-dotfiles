@@ -113,6 +113,11 @@ return packer.startup(function()
    }
 
    use {
+      "weilbith/nvim-code-action-menu",
+      cmd = 'CodeActionMenu',
+   }
+
+   use {
       "ray-x/lsp_signature.nvim",
       after = "nvim-lspconfig",
       config = function()
