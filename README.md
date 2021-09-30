@@ -17,6 +17,23 @@ git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
 ~/.emacs.d/bin/doom install
 ```
 
+**Personal Note:** this is my configuration for emacs-ng
+```        
+./configure \
+     --with-webrender \
+     --with-imagemagick \
+     --with-cairo \
+     --with-modules \
+     --with-xml2 \
+     --with-gnutls \
+     --with-json \
+     --with-rsvg \
+     --with-native-compilation \
+     --without-javascript \
+     --without-dbus \
+     --with-xwidgets
+```
+
 ### MacOS
 
 Install homebrew
