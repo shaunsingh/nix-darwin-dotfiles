@@ -23,7 +23,7 @@ git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
             --prefix=/usr/local/ \
             --with-json --with-modules --with-harfbuzz --with-compress-install \
             --with-threads --with-included-regex --with-zlib --with-cairo --with-libsystemd \
-            --with-rsvg --with-native-compilation ${@:2} --with-webrender --without-javascript \
+            --with-rsvg --with-native-compilation ${@:3} --with-webrender --without-javascript \
             --without-sound --without-imagemagick --without-makeinfo --without-gpm --without-dbus \
             --without-pop --without-toolkit-scroll-bars --without-mailutils --without-gsettings \
             --with-all   
