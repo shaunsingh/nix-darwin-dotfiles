@@ -18,20 +18,15 @@ git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
 ```
 
 **Personal Note:** this is my configuration for emacs-ng
-```        
-./configure \
-     --with-webrender \
-     --with-imagemagick \
-     --with-cairo \
-     --with-modules \
-     --with-xml2 \
-     --with-gnutls \
-     --with-json \
-     --with-rsvg \
-     --with-mailutils \
-     --with-native-compilation \
-     --without-javascript \
-     --without-dbus \
+```     
+./configure CFLAGS="-Wl,-rpath,shared,--disable-new-dtags -g -O3 -mtune=native -march=native -fomit-frame-pointer" \
+            --prefix=/usr/local/ \
+            --with-json --with-modules --with-harfbuzz --with-compress-install \
+            --with-threads --with-included-regex --with-zlib --with-cairo --with-libsystemd \
+            --with-rsvg --with-native-compilation ${@:2} --with-webrender --without-javascript \
+            --without-sound --without-imagemagick --without-makeinfo --without-gpm --without-dbus \
+            --without-pop --without-toolkit-scroll-bars --without-mailutils --without-gsettings \
+            --with-all   
 ```
 
 ### MacOS
