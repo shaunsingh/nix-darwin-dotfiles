@@ -19,6 +19,9 @@ git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
 
 **Personal Note:** this is my configuration for emacs-ng
 ```     
+git clone --depth 1 https://github.com/emacs-ng/emacs-ng.git
+cd emacs-ng
+./autogen.sh
 ./configure CFLAGS="-Wl,-rpath,shared,--disable-new-dtags -g -O3 -mtune=native -march=native -fomit-frame-pointer" \
             --prefix=/usr/local/ \
             --with-json --with-modules --with-harfbuzz --with-compress-install \
@@ -26,7 +29,9 @@ git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
             --with-rsvg --with-native-compilation ${@:3} --with-webrender --without-javascript \
             --without-sound --without-imagemagick --without-makeinfo --without-gpm --without-dbus \
             --without-pop --without-toolkit-scroll-bars --without-mailutils --without-gsettings \
-            --with-all   
+            --with-all 
+make -j$(($(nproc) * 2)) NATIVE_FULL_AOT=1
+make install-strip
 ```
 
 ### MacOS
