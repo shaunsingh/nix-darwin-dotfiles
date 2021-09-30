@@ -1,9 +1,11 @@
-width=500
-height=300
+style=~/.config/wofi/nord.css
+show=drun
+width=400
+height=400
 always_parse_args=true
 show_all=true
 print_command=true
 layer=overlay
 insensitive=true
-content_halign=center
 prompt=
+content_halign=center
