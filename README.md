@@ -32,7 +32,8 @@ git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
      --with-native-compilation \
      --without-javascript \
      --without-dbus \
-     --with-xwidgets
+     --with-xwidgets \
+     --with-x-toolkit=gtk3
 ```
 
 ### MacOS
