@@ -2,11 +2,11 @@ swaylock --screenshots --clock --indicator-idle-visible \
 	--indicator-radius 100 \
 	--indicator-thickness 7 \
 	--ignore-empty-password \
-	--ring-color 2a2e38 \
-	--key-hl-color 51afef \
-	--text-color bbc2cf \
-	--line-color 2a2e38 \
-	--inside-color 242730 \
+	--ring-color 2E3440 \
+	--key-hl-color 8FBCBB \
+	--text-color D8DEE9 \
+	--line-color 2E3440 \
+	--inside-color 3B4252 \
 	--separator-color 00000000 \
 	--fade-in 0.1 \
 	--effect-scale 0.5 --effect-blur 7x3 --effect-scale 2 \
