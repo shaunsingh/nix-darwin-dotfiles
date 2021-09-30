@@ -28,6 +28,7 @@ git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
      --with-gnutls \
      --with-json \
      --with-rsvg \
+     --with-mailutils \
      --with-native-compilation \
      --without-javascript \
      --without-dbus \
