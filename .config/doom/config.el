@@ -421,7 +421,6 @@ Return nil otherwise."
 ;; Better Defaults:12 ends here
 
 ;; [[file:config.org::*Better Defaults][Better Defaults:13]]
-;;(set-frame-parameter nil 'internal-border-width 24)
 (add-to-list 'default-frame-alist '(internal-border-width . 24))
 (setq-default line-spacing 0.35)
 ;; Better Defaults:13 ends here

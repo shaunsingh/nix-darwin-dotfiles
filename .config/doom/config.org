@@ -1087,7 +1087,6 @@ I like using the minimap, even if its slow. Looks cool in my opinion, lets make 
 
 I like a bit of padding on the left hand side, and lets make the line spacing comfier
 #+begin_src elisp
-;;(set-frame-parameter nil 'internal-border-width 24)
 (add-to-list 'default-frame-alist '(internal-border-width . 24))
 (setq-default line-spacing 0.35)
 #+end_src
