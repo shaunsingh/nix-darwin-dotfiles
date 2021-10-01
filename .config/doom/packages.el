@@ -3,9 +3,8 @@
 
 ;;org
 (package! org-appear)
-(package! org-super-agenda)
 (package! doct :recipe (:host github :repo "progfolio/doct"))
-(package! org-padding :recipe (:host github :repo "TonCherAmi/org-padding" ))
+(package! org-padding :recipe (:host github :repo "TonCherAmi/org-padding"))
 (package! org-ol-tree :recipe (:host github :repo "Townk/org-ol-tree"))
 (package! org-pretty-table :recipe (:host github :repo "Fuco1/org-pretty-table"))
 (package! org-roam-ui :recipe (:host github :repo "org-roam/org-roam-ui" :files ("*.el" "out")))

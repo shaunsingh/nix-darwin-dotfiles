@@ -23,7 +23,7 @@
        hl-todo                      ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
        ;;hydra                      ; quick documentation for related commands
        ;;indent-guides              ; highlighted indent columns, notoriously slow
-       ligatures                    ; ligatures and symbols to make your code pretty again
+       (ligatures +extra)           ; ligatures and symbols to make your code pretty again
        ;;minimap                    ; show a map of the code on the side
        (modeline                    ; snazzy, Atom-inspired modeline, plus API
         +light)                     ; the doom modeline is a bit much, the default is a bit little
@@ -162,7 +162,7 @@
        ;;php                        ; perl's insecure younger brother
        ;;plantuml                   ; diagrams for confusing people more
        ;;purescript                 ; javascript, but functional
-       (python +lsp +pyright)       ; beautiful is better than ugly
+       ;;(python +lsp +pyright)     ; beautiful is better than ugly
        ;;qt                         ; the 'cutest' gui framework ever
        ;;racket                     ; a DSL for DSLs
        ;;raku                       ; the artist formerly known as perl6

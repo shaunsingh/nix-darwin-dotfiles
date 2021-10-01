@@ -270,7 +270,7 @@ doom-quit                    ; DOOM quit-message prompts when you quit Emacs
 hl-todo                      ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
 ;;hydra                      ; quick documentation for related commands
 ;;indent-guides              ; highlighted indent columns, notoriously slow
-ligatures                    ; ligatures and symbols to make your code pretty again
+(ligatures +extra)           ; ligatures and symbols to make your code pretty again
 ;;minimap                    ; show a map of the code on the side
 (modeline                    ; snazzy, Atom-inspired modeline, plus API
  +light)                     ; the doom modeline is a bit much, the default is a bit little
@@ -428,7 +428,7 @@ emacs-lisp                   ; drown in parentheses
 ;;php                        ; perl's insecure younger brother
 ;;plantuml                   ; diagrams for confusing people more
 ;;purescript                 ; javascript, but functional
-(python +lsp +pyright)       ; beautiful is better than ugly
+;;(python +lsp +pyright)     ; beautiful is better than ugly
 ;;qt                         ; the 'cutest' gui framework ever
 ;;racket                     ; a DSL for DSLs
 ;;raku                       ; the artist formerly known as perl6
@@ -451,7 +451,6 @@ emacs-lisp                   ; drown in parentheses
 **** Everything in Emacs
 It's just too convenient being able to have everything in Emacs.
 I couldn't resist the Email and Feed modules.
-
 #+name: doom-email
 #+begin_src emacs-lisp
 (:if (executable-find "mu") (mu4e +org +gmail))
@@ -510,9 +509,8 @@ tweaking org then
 #+name: org
 #+begin_src emacs-lisp
 (package! org-appear)
-(package! org-super-agenda)
 (package! doct :recipe (:host github :repo "progfolio/doct"))
-(package! org-padding :recipe (:host github :repo "TonCherAmi/org-padding" ))
+(package! org-padding :recipe (:host github :repo "TonCherAmi/org-padding"))
 (package! org-ol-tree :recipe (:host github :repo "Townk/org-ol-tree"))
 (package! org-pretty-table :recipe (:host github :repo "Fuco1/org-pretty-table"))
 (package! org-roam-ui :recipe (:host github :repo "org-roam/org-roam-ui" :files ("*.el" "out")))
@@ -2792,82 +2790,6 @@ Set the directory
 #+begin_src elisp
 (setq org-agenda-files (list "~/org/school.org"
                              "~/org/todo.org"))
-#+end_src
-
-Org-super-agenda!
-#+begin_src elisp
-(use-package! org-super-agenda
-  :commands (org-super-agenda-mode))
-
-(after! org-agenda
-  (org-super-agenda-mode))
-
-(setq org-agenda-skip-scheduled-if-done t
-      org-agenda-skip-deadline-if-done t
-      org-agenda-include-deadlines t
-      org-agenda-block-separator nil
-      org-agenda-tags-column 100 ;; from testing this seems to be a good value
-      org-agenda-compact-blocks t)
-
-(setq org-agenda-custom-commands
-      '(("o" "Overview"
-         ((agenda "" ((org-agenda-span 'day)
-                      (org-super-agenda-groups
-                       '((:name "Today"
-                          :time-grid t
-                          :date today
-                          :todo "TODAY"
-                          :scheduled today
-                          :order 1)))))
-          (alltodo "" ((org-agenda-overriding-header "")
-                       (org-super-agenda-groups
-                        '((:name "Next to do"
-                           :todo "NEXT"
-                           :order 1)
-                          (:name "Important"
-                           :tag "Important"
-                           :priority "A"
-                           :order 6)
-                          (:name "Due Today"
-                           :deadline today
-                           :order 2)
-                          (:name "Due Soon"
-                           :deadline future
-                           :order 8)
-                          (:name "Overdue"
-                           :deadline past
-                           :face error
-                           :order 7)
-                          (:name "Assignments"
-                           :tag "Assignment"
-                           :order 10)
-                          (:name "Issues"
-                           :tag "Issue"
-                           :order 12)
-                          (:name "Emacs"
-                           :tag "Emacs"
-                           :order 13)
-                          (:name "Projects"
-                           :tag "Project"
-                           :order 14)
-                          (:name "Research"
-                           :tag "Research"
-                           :order 15)
-                          (:name "To read"
-                           :tag "Read"
-                           :order 30)
-                          (:name "Waiting"
-                           :todo "WAITING"
-                           :order 20)
-                          (:name "University"
-                           :tag "uni"
-                           :order 32)
-                          (:name "Trivial"
-                           :priority<= "E"
-                           :tag ("Trivial" "Unimportant")
-                           :todo ("SOMEDAY" )
-                           :order 90)
-                          (:discard (:tag ("Chore" "Routine" "Daily")))))))))))
 #+end_src
 
 ** Org-Capture
