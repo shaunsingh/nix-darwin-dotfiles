@@ -24,8 +24,8 @@ cd emacs-ng
 ./autogen.sh
 ./configure CFLAGS="-Wl,-rpath,shared,--disable-new-dtags -g -O3 -mtune=native -march=native -fomit-frame-pointer" \
             --prefix=/usr/local/ \
-            --with-json --with-modules --with-harfbuzz --with-compress-install \
-            --with-threads --with-included-regex --with-zlib --with-cairo --with-libsystemd \
+            --with-json --with-modules --with-compress-install \
+            --with-threads --with-included-regex --with-zlib --with-libsystemd \
             --with-rsvg --with-native-compilation --with-webrender --without-javascript \
             --without-sound --without-imagemagick --without-makeinfo --without-gpm --without-dbus \
             --without-pop --without-toolkit-scroll-bars --without-mailutils --without-gsettings \
