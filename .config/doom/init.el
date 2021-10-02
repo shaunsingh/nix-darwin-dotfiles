@@ -25,8 +25,8 @@
        ;;indent-guides              ; highlighted indent columns, notoriously slow
        (ligatures +extra)           ; ligatures and symbols to make your code pretty again
        ;;minimap                    ; show a map of the code on the side
-       (modeline                    ; snazzy, Atom-inspired modeline, plus API
-        +light)                     ; the doom modeline is a bit much, the default is a bit little
+       modeline                     ; snazzy, Atom-inspired modeline, plus API
+        ;;+light)                   ; the doom modeline is a bit much, the default is a bit little
        ;;nav-flash                  ; blink the current line after jumping
        ;;neotree                    ; a project drawer, like NERDTree for vim
        ophints                      ; highlight the region an operation acts on
@@ -36,9 +36,9 @@
        ;;(tabs                      ; an tab bar for Emacs
        ;;  +centaur-tabs)           ; ... with prettier tabs
        treemacs                     ; a project drawer, like neotree but cooler
-       tree-sitter                  ; ... sitting in a tree
+       ;;tree-sitter                ; ... sitting in a tree
        ;;unicode                    ; extended unicode support for various languages
-       ;;vc-gutter                  ; vcs diff in the fringe
+       vc-gutter                    ; vcs diff in the fringe
        ;;vi-tilde-fringe            ; fringe tildes to mark beyond EOB
        ;;(window-select +numbers)   ; visually switch windows
        workspaces                   ; tab emulation, persistence & separate workspaces
@@ -47,8 +47,8 @@
        :editor
        (evil +everywhere)           ; come to the dark side, we have cookies
        file-templates               ; auto-snippets for empty files
-       ;;fold                       ; (nigh) universal code folding
-       ;;format                     ; automated prettiness
+       fold                         ; (nigh) universal code folding
+       format                       ; automated prettiness
        ;;god                        ; run Emacs commands without modifier keys
        ;;lispy                      ; vim for lisp, for people who don't like vim
        ;;multiple-cursors           ; editing in many places at once
@@ -66,10 +66,10 @@
        vc                           ; version-control and Emacs, sitting in a tree
 
        :term
-       eshell                       ; the elisp shell that works everywhere
+       ;;eshell                     ; the elisp shell that works everywhere
        ;;shell                      ; simple shell REPL for Emacs
        ;;term                       ; basic terminal emulator for Emacs
-       ;;vterm                      ; the best terminal emulation in Emacs
+       vterm                        ; the best terminal emulation in Emacs
 
        :checkers
        syntax                       ; tasing you for every semicolon you forget
@@ -162,7 +162,7 @@
        ;;php                        ; perl's insecure younger brother
        ;;plantuml                   ; diagrams for confusing people more
        ;;purescript                 ; javascript, but functional
-       ;;(python +lsp +pyright)     ; beautiful is better than ugly
+       (python +lsp +pyright)       ; beautiful is better than ugly
        ;;qt                         ; the 'cutest' gui framework ever
        ;;racket                     ; a DSL for DSLs
        ;;raku                       ; the artist formerly known as perl6

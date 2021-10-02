@@ -272,8 +272,8 @@ hl-todo                      ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
 ;;indent-guides              ; highlighted indent columns, notoriously slow
 (ligatures +extra)           ; ligatures and symbols to make your code pretty again
 ;;minimap                    ; show a map of the code on the side
-(modeline                    ; snazzy, Atom-inspired modeline, plus API
- +light)                     ; the doom modeline is a bit much, the default is a bit little
+modeline                     ; snazzy, Atom-inspired modeline, plus API
+ ;;+light)                   ; the doom modeline is a bit much, the default is a bit little
 ;;nav-flash                  ; blink the current line after jumping
 ;;neotree                    ; a project drawer, like NERDTree for vim
 ophints                      ; highlight the region an operation acts on
@@ -283,9 +283,9 @@ ophints                      ; highlight the region an operation acts on
 ;;(tabs                      ; an tab bar for Emacs
 ;;  +centaur-tabs)           ; ... with prettier tabs
 treemacs                     ; a project drawer, like neotree but cooler
-tree-sitter                  ; ... sitting in a tree
+;;tree-sitter                ; ... sitting in a tree
 ;;unicode                    ; extended unicode support for various languages
-;;vc-gutter                  ; vcs diff in the fringe
+vc-gutter                    ; vcs diff in the fringe
 ;;vi-tilde-fringe            ; fringe tildes to mark beyond EOB
 ;;(window-select +numbers)   ; visually switch windows
 workspaces                   ; tab emulation, persistence & separate workspaces
@@ -296,8 +296,8 @@ zen                          ; distraction-free coding or writing
 #+begin_src emacs-lisp
 (evil +everywhere)           ; come to the dark side, we have cookies
 file-templates               ; auto-snippets for empty files
-;;fold                       ; (nigh) universal code folding
-;;format                     ; automated prettiness
+fold                         ; (nigh) universal code folding
+format                       ; automated prettiness
 ;;god                        ; run Emacs commands without modifier keys
 ;;lispy                      ; vim for lisp, for people who don't like vim
 ;;multiple-cursors           ; editing in many places at once
@@ -319,10 +319,10 @@ vc                           ; version-control and Emacs, sitting in a tree
 
 #+name: doom-term
 #+begin_src emacs-lisp
-eshell                       ; the elisp shell that works everywhere
+;;eshell                     ; the elisp shell that works everywhere
 ;;shell                      ; simple shell REPL for Emacs
 ;;term                       ; basic terminal emulator for Emacs
-;;vterm                      ; the best terminal emulation in Emacs
+vterm                        ; the best terminal emulation in Emacs
 #+end_src
 
 #+name: doom-checkers
@@ -428,7 +428,7 @@ emacs-lisp                   ; drown in parentheses
 ;;php                        ; perl's insecure younger brother
 ;;plantuml                   ; diagrams for confusing people more
 ;;purescript                 ; javascript, but functional
-;;(python +lsp +pyright)     ; beautiful is better than ugly
+(python +lsp +pyright)       ; beautiful is better than ugly
 ;;qt                         ; the 'cutest' gui framework ever
 ;;racket                     ; a DSL for DSLs
 ;;raku                       ; the artist formerly known as perl6
@@ -591,8 +591,7 @@ Make this file run (slightly) faster with lexical binding
 ;;; config.el -*- lexical-binding: t; -*-
 #+end_src
 
-I want to run emacs28's new native-compiler with both -O3 and processor specific
-optimizations, if possible
+I want to run emacs28's new native-compiler with -O3, if available
 #+begin_src emacs-lisp
 (when 'native-comp-compiler-options
                  (setq native-comp-compiler-options '("-O3")))
@@ -3830,37 +3829,6 @@ installation. Dependencies are nice and auto-installed, and I don't need to
 bother with ascii stuff
 #+begin_src emacs-lisp
 (setq org-latex-pdf-process '("tectonic -X compile --print --outdir=%o -Z shell-escape %f"))
-#+end_src
-
-Now, previews won't work anymore. For that we need to set emacs to use Tectonic
-instead of Pdflatex
-#+begin_src emacs-lisp
-;; (setq org-preview-latex-process-alist
-;; '((dvipng :programs
-;;                   ("tectonic" "dvipng")
-;;                   :description "dvi > png" :message "you need to install the programs: tectonic and dvipng." :image-input-type "dvi" :image-output-type "png" :image-size-adjust
-;;                   (1.0 . 1.0)
-;;                   :latex-compiler
-;;                   ;; tectonic doesn't have a non interactive mode
-;;                   ("tectonic --outdir %o %f")
-;;                   :image-converter
-;;                   ("dvipng -D %D -T tight -bg Transparent -o %O %f"))
-;;           (dvisvgm :programs
-;;                    ("tectonic" "dvisvgm")
-;;                    :description "dvi > svg" :message "you need to install the programs: tectonic and dvisvgm." :image-input-type "dvi" :image-output-type "svg" :image-size-adjust
-;;                    (1.7 . 1.5)
-;;                    :latex-compiler
-;;                    ("tectonic --outdir %o %f")
-;;                    :image-converter
-;;                    ("dvisvgm %f -n -b min -c %S -o %O"))
-;;           (imagemagick :programs
-;;                        ("latex" "convert")
-;;                        :description "pdf > png" :message "you need to install the programs: latex and imagemagick." :image-input-type "pdf" :image-output-type "png" :image-size-adjust
-;;                        (1.0 . 1.0)
-;;                        :latex-compiler
-;;                        ("tectonic --outdir %o %f")
-;;                        :image-converter
-;;                        ("convert -density %D -trim -antialias %f -quality 100 %O"))))
 #+end_src
 
 *** Classes
