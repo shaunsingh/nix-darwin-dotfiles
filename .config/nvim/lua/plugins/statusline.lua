@@ -187,16 +187,6 @@ gls.left[15] = {
 
 -- Right side
 gls.right[1] = {
-   FileFormat = {
-      provider = function()
-         return vim.bo.filetype
-      end,
-      highlight = { colors.fg, colors.bg },
-      separator = " ",
-      separator_highlight = { colors.bg, colors.bg },
-   },
-}
-gls.right[2] = {
    LineInfo = {
       provider = "LineColumn",
       highlight = { colors.fg, colors.section_bg },
@@ -204,7 +194,7 @@ gls.right[2] = {
       separator_highlight = { colors.section_bg, colors.bg },
    },
 }
-gls.right[3] = {
+gls.right[2] = {
    Logo = {
       provider = function()
          return "  "
