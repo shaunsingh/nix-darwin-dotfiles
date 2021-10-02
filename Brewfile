@@ -7,13 +7,11 @@ tap "d12frosted/emacs-plus"
 # tap "koekeishiya/formulae"
 
 brew "bat"
-brew "git"
 brew "fd"
 brew "tree"
+brew "git-lfs"
 brew "exa"
-brew "wget"
 brew "yadm"
-brew "uutils-coreutils"
 # brew "koekeishiya/formulae/skhd"
 # brew "koekeishiya/formulae/yabai"
 brew "aspell"
@@ -26,6 +24,8 @@ brew "neovim", args: ["HEAD"]
 brew "ripgrep"
 brew "tmux"
 brew "tectonic"
+brew "spacebar"
+brew "uutils-coreutils"
 brew "d12frosted/emacs-plus/emacs-plus@28", args: ["with-elrumo2-icon", "with-native-comp", "with-xwidgets", "without-imagemagick"]
 
 cask "font-alegreya"
