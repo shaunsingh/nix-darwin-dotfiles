@@ -595,7 +595,7 @@ I want to run emacs28's new native-compiler with both -O3 and processor specific
 optimizations, if possible
 #+begin_src emacs-lisp
 (when 'native-comp-compiler-options
-                 (setq native-comp-compiler-options '("-O3" "-march=native" "-mtune=native")))
+                 (setq native-comp-compiler-options '("-O3")))
 #+end_src
 
 ** Personal information

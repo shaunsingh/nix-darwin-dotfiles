@@ -1,5 +1,32 @@
+;;; config.el -*- lexical-binding: t; -*-
+
 (when 'native-comp-compiler-options
-                 (setq native-comp-compiler-options '("-O3" "-march=native" "-mtune=native")))
+                 (setq native-comp-compiler-options '("-O3")))
+
+(setq user-full-name "Shaurya Singh"
+      user-mail-address "shaunsingh0207@gmail.com")
+
+(setq auth-sources '("~/.authinfo.gpg")
+      auth-source-cache-expiry nil) ; default is 7200 (2h)
+
+(defun greedily-do-daemon-setup ()
+  (require 'org)
+  (require 'vertico)
+  (require 'consult)
+  (require 'marginalia)
+  (when (require 'mu4e nil t)
+    (setq mu4e-confirm-quit t)
+    (setq +mu4e-lock-greedy t)
+    (setq +mu4e-lock-relaxed t)
+    (+mu4e-lock-add-watcher)
+    (when (+mu4e-lock-available t)
+      (mu4e~start))))
+
+(when (daemonp)
+  (add-hook 'emacs-startup-hook #'greedily-do-daemon-setup)
+  (add-hook 'emacs-startup-hook #'init-mixed-pitch-h))
+
+(setq explicit-shell-file-name (executable-find "fish"))
 
 (setq vterm-always-compile-module t)
 
@@ -10,7 +37,150 @@
         '((lambda (path)
             (magit-status path)))))
 
+(setq +ligatures-in-modes t)
+
+;;fonts
+(setq doom-font (font-spec :family "Liga SFMono Nerd Font" :size 14)
+      doom-big-font (font-spec :family "Liga SFMono Nerd Font" :size 20)
+      doom-variable-pitch-font (font-spec :family "Overpass" :size 16)
+      doom-unicode-font (font-spec :family "Liga SFMono Nerd Font")
+      doom-serif-font (font-spec :family "Liga SFMono Nerd Font" :weight 'light))
+
+;;mixed pitch modes
+(defvar mixed-pitch-modes '(org-mode LaTeX-mode markdown-mode gfm-mode Info-mode)
+  "Modes that `mixed-pitch-mode' should be enabled in, but only after UI initialisation.")
+(defun init-mixed-pitch-h ()
+  "Hook `mixed-pitch-mode' into each mode in `mixed-pitch-modes'.
+Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
+  (when (memq major-mode mixed-pitch-modes)
+    (mixed-pitch-mode 1))
+  (dolist (hook mixed-pitch-modes)
+    (add-hook (intern (concat (symbol-name hook) "-hook")) #'mixed-pitch-mode)))
+(add-hook 'doom-init-ui-hook #'init-mixed-pitch-h)
+(add-hook! 'org-mode-hook #'+org-pretty-mode) ;enter mixed pitch mode in org mode
+
+;;set mixed pitch font
+ (after! mixed-pitch
+  (defface variable-pitch-serif
+    '((t (:family "serif")))
+    "A variable-pitch face with serifs."
+    :group 'basic-faces)
+  (setq mixed-pitch-set-height t)
+  (setq variable-pitch-serif-font (font-spec :family "Alegreya" :size 16))
+  (set-face-attribute 'variable-pitch-serif nil :font variable-pitch-serif-font)
+  (defun mixed-pitch-serif-mode (&optional arg)
+    "Change the default face of the current buffer to a serifed variable pitch, while keeping some faces fixed pitch."
+    (interactive)
+    (let ((mixed-pitch-face 'variable-pitch-serif))
+      (mixed-pitch-mode (or arg 'toggle)))))
+
+(set-char-table-range composition-function-table ?f '(["\\(?:ff?[fijlt]\\)" 0 font-shape-gstring]))
+(set-char-table-range composition-function-table ?T '(["\\(?:Th\\)" 0 font-shape-gstring]))
+
+(defvar required-fonts '("Overpass" "Liga SFMono Nerd Font" "Alegreya" ))
+(defvar available-fonts
+  (delete-dups (or (font-family-list)
+                   (split-string (shell-command-to-string "fc-list : family")
+                                 "[,\n]"))))
+(defvar missing-fonts
+  (delq nil (mapcar
+             (lambda (font)
+               (unless (delq nil (mapcar (lambda (f)
+                           (string-match-p (format "^%s$" font) f))
+                                         available-fonts))
+                                         font))
+                                         required-fonts)))
+(if missing-fonts
+    (pp-to-string
+     `(unless noninteractive
+        (add-hook! 'doom-init-ui-hook
+          (run-at-time nil nil
+                       (lambda ()
+                         (message "%s missing the following fonts: %s"
+                                  (propertize "Warning!" 'face '(bold warning))
+                                  (mapconcat (lambda (font)
+                                               (propertize font 'face 'font-lock-variable-name-face))
+                                             ',missing-fonts
+                                             ", "))
+                         (sleep-for 0.5))))))
+  ";; No missing fonts detected")
+
 ;; No missing fonts detected
+
+(setq doom-theme 'doom-one-light)
+(setq doom-one-light-padded-modeline t)
+;;(setq doom-theme 'doom-nord)
+;;(setq doom-nord-padded-modeline t)
+
+;;(use-package! vlf-setup
+  ;;:defer-incrementally vlf-tune vlf-base vlf-write vlf-search vlf-occur vlf-follow vlf-ediff vlf)
+
+(after! company
+   (setq company-idle-delay 0.1
+      company-minimum-prefix-length 1
+      company-selection-wrap-around t
+      company-require-match 'never
+      company-dabbrev-downcase nil
+      company-dabbrev-ignore-case t
+      company-dabbrev-other-buffers nil
+      company-tooltip-limit 5
+      company-tooltip-minimum-width 50))
+(set-company-backend!
+  '(text-mode
+    markdown-mode
+    gfm-mode)
+  '(:seperate
+    company-yasnippet
+    company-ispell
+    company-files))
+
+;;nested snippets
+(setq yas-triggers-in-field t)
+
+(use-package! aas
+  :commands aas-mode)
+
+(use-package! laas
+  :hook (LaTeX-mode . laas-mode)
+  :config
+  (defun laas-tex-fold-maybe ()
+    (unless (equal "/" aas-transient-snippet-key)
+      (+latex-fold-last-macro-a)))
+  (add-hook 'org-mode #'laas-mode)
+  (add-hook 'aas-post-snippet-expand-hook #'laas-tex-fold-maybe))
+
+(defadvice! fixed-org-yas-expand-maybe-h ()
+  "Expand a yasnippet snippet, if trigger exists at point or region is active.
+Made for `org-tab-first-hook'."
+  :override #'+org-yas-expand-maybe-h
+  (when (and (featurep! :editor snippets)
+             (require 'yasnippet nil t)
+             (bound-and-true-p yas-minor-mode))
+    (and (let ((major-mode (cond ((org-in-src-block-p t)
+                                  (org-src-get-lang-mode (org-eldoc-get-src-lang)))
+                                 ((org-inside-LaTeX-fragment-p)
+                                  'latex-mode)
+                                 (major-mode)))
+               (org-src-tab-acts-natively nil) ; causes breakages
+               ;; Smart indentation doesn't work with yasnippet, and painfully slow
+               ;; in the few cases where it does.
+               (yas-indent-line 'fixed))
+           (cond ((and (or (not (bound-and-true-p evil-local-mode))
+                           (evil-insert-state-p)
+                           (evil-emacs-state-p))
+                       (or (and (bound-and-true-p yas--tables)
+                                (gethash major-mode yas--tables))
+                           (progn (yas-reload-all) t))
+                       (yas--templates-for-key-at-point))
+                  (yas-expand)
+                  t)
+                 ((use-region-p)
+                  (yas-insert-snippet)
+                  t)))
+         ;; HACK Yasnippet breaks org-superstar-mode because yasnippets is
+         ;;      overzealous about cleaning up overlays.
+         (when (bound-and-true-p org-superstar-mode)
+           (org-superstar-restart)))))
 
 (defun +yas/org-src-header-p ()
   "Determine whether `point' is within a src-block header or header-args."
@@ -100,1718 +270,6 @@ Return nil otherwise."
  "<<" ">>"
  :actions '(insert))
 
-(add-to-list 'default-frame-alist '(inhibit-double-buffering . t))
-
-(setq doom-scratch-initial-major-mode 'lisp-interaction-mode)
-
-(defvar fancy-splash-image-template
-  (expand-file-name "misc/splash-images/emacs-e-template.svg" doom-private-dir)
-  "Default template svg used for the splash image, with substitutions from ")
-
-(defvar fancy-splash-sizes
-  `((:height 300 :min-height 50 :padding (0 . 2))
-    (:height 250 :min-height 42 :padding (2 . 4))
-    (:height 200 :min-height 35 :padding (3 . 3))
-    (:height 150 :min-height 28 :padding (3 . 3))
-    (:height 100 :min-height 20 :padding (2 . 2))
-    (:height 75  :min-height 15 :padding (2 . 1))
-    (:height 50  :min-height 10 :padding (1 . 0))
-    (:height 1   :min-height 0  :padding (0 . 0)))
-  "list of plists with the following properties
-  :height the height of the image
-  :min-height minimum `frame-height' for image
-  :padding `+doom-dashboard-banner-padding' (top . bottom) to apply
-  :template non-default template file
-  :file file to use instead of template")
-
-(defvar fancy-splash-template-colours
-  '(("$colour1" . keywords) ("$colour2" . type) ("$colour3" . base5) ("$colour4" . base8))
-  "list of colour-replacement alists of the form (\"$placeholder\" . 'theme-colour) which applied the template")
-
-(unless (file-exists-p (expand-file-name "theme-splashes" doom-cache-dir))
-  (make-directory (expand-file-name "theme-splashes" doom-cache-dir) t))
-
-(defun fancy-splash-filename (theme-name height)
-  (expand-file-name (concat (file-name-as-directory "theme-splashes")
-                            theme-name
-                            "-" (number-to-string height) ".svg")
-                    doom-cache-dir))
-
-(defun fancy-splash-clear-cache ()
-  "Delete all cached fancy splash images"
-  (interactive)
-  (delete-directory (expand-file-name "theme-splashes" doom-cache-dir) t)
-  (message "Cache cleared!"))
-
-(defun fancy-splash-generate-image (template height)
-  "Read TEMPLATE and create an image if HEIGHT with colour substitutions as
-   described by `fancy-splash-template-colours' for the current theme"
-  (with-temp-buffer
-    (insert-file-contents template)
-    (re-search-forward "$height" nil t)
-    (replace-match (number-to-string height) nil nil)
-    (dolist (substitution fancy-splash-template-colours)
-      (goto-char (point-min))
-      (while (re-search-forward (car substitution) nil t)
-        (replace-match (doom-color (cdr substitution)) nil nil)))
-    (write-region nil nil
-                  (fancy-splash-filename (symbol-name doom-theme) height) nil nil)))
-
-(defun fancy-splash-generate-images ()
-  "Perform `fancy-splash-generate-image' in bulk"
-  (dolist (size fancy-splash-sizes)
-    (unless (plist-get size :file)
-      (fancy-splash-generate-image (or (plist-get size :template)
-                                       fancy-splash-image-template)
-                                   (plist-get size :height)))))
-
-(defun ensure-theme-splash-images-exist (&optional height)
-  (unless (file-exists-p (fancy-splash-filename
-                          (symbol-name doom-theme)
-                          (or height
-                              (plist-get (car fancy-splash-sizes) :height))))
-    (fancy-splash-generate-images)))
-
-(defun get-appropriate-splash ()
-  (let ((height (frame-height)))
-    (cl-some (lambda (size) (when (>= height (plist-get size :min-height)) size))
-             fancy-splash-sizes)))
-
-(setq fancy-splash-last-size nil)
-(setq fancy-splash-last-theme nil)
-(defun set-appropriate-splash (&rest _)
-  (let ((appropriate-image (get-appropriate-splash)))
-    (unless (and (equal appropriate-image fancy-splash-last-size)
-                 (equal doom-theme fancy-splash-last-theme)))
-    (unless (plist-get appropriate-image :file)
-      (ensure-theme-splash-images-exist (plist-get appropriate-image :height)))
-    (setq fancy-splash-image
-          (or (plist-get appropriate-image :file)
-              (fancy-splash-filename (symbol-name doom-theme) (plist-get appropriate-image :height))))
-    (setq +doom-dashboard-banner-padding (plist-get appropriate-image :padding))
-    (setq fancy-splash-last-size appropriate-image)
-    (setq fancy-splash-last-theme doom-theme)
-    (+doom-dashboard-reload)))
-
-(add-hook 'window-size-change-functions #'set-appropriate-splash)
-(add-hook 'doom-load-theme-hook #'set-appropriate-splash)
-
-(remove-hook '+doom-dashboard-functions #'doom-dashboard-widget-shortmenu)
-(add-hook! '+doom-dashboard-mode-hook (hide-mode-line-mode 1) (hl-line-mode -1))
-(setq-hook! '+doom-dashboard-mode-hook evil-normal-state-cursor (list nil))
-
-(setq +zen-text-scale 0.8)
-
-(add-hook 'org-mode-hook #'+org-pretty-mode)
-
-(setq org-pretty-entities-include-sub-superscripts nil)
-
-(custom-set-faces!
-  '(org-document-title :height 1.2)
-  '(outline-1 :weight extra-bold :height 1.25)
-  '(outline-2 :weight bold :height 1.15)
-  '(outline-3 :weight bold :height 1.12)
-  '(outline-4 :weight semi-bold :height 1.09)
-  '(outline-5 :weight semi-bold :height 1.06)
-  '(outline-6 :weight semi-bold :height 1.03)
-  '(outline-8 :weight semi-bold)
-  '(outline-9 :weight semi-bold))
-
-(setq org-agenda-deadline-faces
-      '((1.0 . error)
-        (1.0 . org-warning)
-        (0.5 . org-upcoming-deadline)
-        (0.0 . org-upcoming-distant-deadline)))
-
-(setq org-fontify-quote-and-verse-blocks t)
-
-(use-package! org-appear
-  :hook (org-mode . org-appear-mode)
-  :config
-  (setq org-appear-autoemphasis t
-        org-appear-autosubmarkers t
-        org-appear-autolinks nil)
-  (run-at-time nil nil #'org-appear--set-elements))
-
-(defun locally-defer-font-lock ()
-  "Set jit-lock defer and stealth, when buffer is over a certain size."
-  (when (> (buffer-size) 50000)
-    (setq-local jit-lock-defer-time 0.05
-                jit-lock-stealth-time 1)))
-
-(add-hook 'org-mode-hook #'locally-defer-font-lock)
-
-
-(custom-set-faces!
-  `(org-block-end-line :background ,(doom-color 'base2))
-  `(org-block-begin-line :background ,(doom-color 'base2)))
-
-(defvar org-prettify-inline-results t
-  "Whether to use (ab)use prettify-symbols-mode on {{{results(...)}}}.
-Either t or a cons cell of strings which are used as substitutions
-for the start and end of inline results, respectively.")
-
-(defvar org-fontify-inline-src-blocks-max-length 200
-  "Maximum content length of an inline src block that will be fontified.")
-
-(defun org-fontify-inline-src-blocks (limit)
-  "Try to apply `org-fontify-inline-src-blocks-1'."
-  (condition-case nil
-      (org-fontify-inline-src-blocks-1 limit)
-    (error (message "Org mode fontification error in %S at %d"
-                    (current-buffer)
-                    (line-number-at-pos)))))
-
-(defun org-fontify-inline-src-blocks-1 (limit)
-  "Fontify inline src_LANG blocks, from `point' up to LIMIT."
-  (let ((case-fold-search t)
-        (initial-point (point)))
-    (while (re-search-forward "\\_<src_\\([^ \t\n[{]+\\)[{[]?" limit t) ; stolen from `org-element-inline-src-block-parser'
-      (let ((beg (match-beginning 0))
-            pt
-            (lang-beg (match-beginning 1))
-            (lang-end (match-end 1)))
-        (remove-text-properties beg lang-end '(face nil))
-        (font-lock-append-text-property lang-beg lang-end 'face 'org-meta-line)
-        (font-lock-append-text-property beg lang-beg 'face 'shadow)
-        (font-lock-append-text-property beg lang-end 'face 'org-block)
-        (setq pt (goto-char lang-end))
-        ;; `org-element--parse-paired-brackets' doesn't take a limit, so to
-        ;; prevent it searching the entire rest of the buffer we temporarily
-        ;; narrow the active region.
-        (save-restriction
-          (narrow-to-region beg (min (point-max) limit (+ lang-end org-fontify-inline-src-blocks-max-length)))
-          (when (ignore-errors (org-element--parse-paired-brackets ?\[))
-            (remove-text-properties pt (point) '(face nil))
-            (font-lock-append-text-property pt (point) 'face 'org-block)
-            (setq pt (point)))
-          (when (ignore-errors (org-element--parse-paired-brackets ?\{))
-            (remove-text-properties pt (point) '(face nil))
-            (font-lock-append-text-property pt (1+ pt) 'face '(org-block shadow))
-            (unless (= (1+ pt) (1- (point)))
-              (if org-src-fontify-natively
-                  (org-src-font-lock-fontify-block (buffer-substring-no-properties lang-beg lang-end) (1+ pt) (1- (point)))
-                (font-lock-append-text-property (1+ pt) (1- (point)) 'face 'org-block)))
-            (font-lock-append-text-property (1- (point)) (point) 'face '(org-block shadow))
-            (setq pt (point))))
-        (when (and org-prettify-inline-results (re-search-forward "\\= {{{results(" limit t))
-          (font-lock-append-text-property pt (1+ pt) 'face 'org-block)
-          (goto-char pt))))
-    (when org-prettify-inline-results
-      (goto-char initial-point)
-      (org-fontify-inline-src-results limit))))
-
-(defun org-fontify-inline-src-results (limit)
-  (while (re-search-forward "{{{results(\\(.+?\\))}}}" limit t)
-    (remove-list-of-text-properties (match-beginning 0) (point)
-                                    '(composition
-                                      prettify-symbols-start
-                                      prettify-symbols-end))
-    (font-lock-append-text-property (match-beginning 0) (match-end 0) 'face 'org-block)
-    (let ((start (match-beginning 0)) (end (match-beginning 1)))
-      (with-silent-modifications
-        (compose-region start end (if (eq org-prettify-inline-results t) "⟨" (car org-prettify-inline-results)))
-        (add-text-properties start end `(prettify-symbols-start ,start prettify-symbols-end ,end))))
-    (let ((start (match-end 1)) (end (point)))
-      (with-silent-modifications
-        (compose-region start end (if (eq org-prettify-inline-results t) "⟩" (cdr org-prettify-inline-results)))
-        (add-text-properties start end `(prettify-symbols-start ,start prettify-symbols-end ,end))))))
-
-(defun org-fontify-inline-src-blocks-enable ()
-  "Add inline src fontification to font-lock in Org.
-Must be run as part of `org-font-lock-set-keywords-hook'."
-  (setq org-font-lock-extra-keywords
-        (append org-font-lock-extra-keywords '((org-fontify-inline-src-blocks)))))
-
-(add-hook 'org-font-lock-set-keywords-hook #'org-fontify-inline-src-blocks-enable)
-
-;;make bullets look better
-(after! org-superstar
-  (setq org-superstar-headline-bullets-list '("◉" "○" "✸" "✿" "✤" "✜" "◆" "▶")
-        org-superstar-prettify-item-bullets t ))
-
-(use-package! org-pandoc-import
-  :after org)
-
-(after! ox-html
-  
-)
-
-(defun org-html-block-collapsable (orig-fn block contents info)
-  "Wrap the usual block in a <details>"
-  (if (or (not org-fancy-html-export-mode) (bound-and-true-p org-msg-export-in-progress))
-      (funcall orig-fn block contents info)
-    (let ((ref (org-export-get-reference block info))
-          (type (pcase (car block)
-                  ('property-drawer "Properties")))
-          (collapsed-default (pcase (car block)
-                               ('property-drawer t)
-                               (_ nil)))
-          (collapsed-value (org-export-read-attribute :attr_html block :collapsed))
-          (collapsed-p (or (member (org-export-read-attribute :attr_html block :collapsed)
-                                   '("y" "yes" "t" t "true"))
-                           (member (plist-get info :collapsed) '("all")))))
-      (format
-       "<details id='%s' class='code'%s>
-<summary%s>%s</summary>
-<div class='gutter'>\
-<a href='#%s'>#</a>
-<button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button>\
-</div>
-%s\n
-</details>"
-       ref
-       (if (or collapsed-p collapsed-default) "" " open")
-       (if type " class='named'" "")
-       (if type (format "<span class='type'>%s</span>" type) "")
-       ref
-       (funcall orig-fn block contents info)))))
-
-(advice-add 'org-html-example-block   :around #'org-html-block-collapsable)
-(advice-add 'org-html-fixed-width     :around #'org-html-block-collapsable)
-(advice-add 'org-html-property-drawer :around #'org-html-block-collapsable)
-
-(use-package! doct
-  :commands (doct))
-
-(defun org-capture-select-template-prettier (&optional keys)
-  "Select a capture template, in a prettier way than default
-Lisp programs can force the template by setting KEYS to a string."
-  (let ((org-capture-templates
-         (or (org-contextualize-keys
-              (org-capture-upgrade-templates org-capture-templates)
-              org-capture-templates-contexts)
-             '(("t" "Task" entry (file+headline "" "Tasks")
-                "* TODO %?\n  %u\n  %a")))))
-    (if keys
-        (or (assoc keys org-capture-templates)
-            (error "No capture template referred to by \"%s\" keys" keys))
-      (org-mks org-capture-templates
-               "Select a capture template\n━━━━━━━━━━━━━━━━━━━━━━━━━"
-               "Template key: "
-               `(("q" ,(concat (all-the-icons-octicon "stop" :face 'all-the-icons-red :v-adjust 0.01) "\tAbort")))))))
-(advice-add 'org-capture-select-template :override #'org-capture-select-template-prettier)
-
-(defun org-mks-pretty (table title &optional prompt specials)
-  "Select a member of an alist with multiple keys. Prettified.
-
-TABLE is the alist which should contain entries where the car is a string.
-There should be two types of entries.
-
-1. prefix descriptions like (\"a\" \"Description\")
-   This indicates that `a' is a prefix key for multi-letter selection, and
-   that there are entries following with keys like \"ab\", \"ax\"…
-
-2. Select-able members must have more than two elements, with the first
-   being the string of keys that lead to selecting it, and the second a
-   short description string of the item.
-
-The command will then make a temporary buffer listing all entries
-that can be selected with a single key, and all the single key
-prefixes.  When you press the key for a single-letter entry, it is selected.
-When you press a prefix key, the commands (and maybe further prefixes)
-under this key will be shown and offered for selection.
-
-TITLE will be placed over the selection in the temporary buffer,
-PROMPT will be used when prompting for a key.  SPECIALS is an
-alist with (\"key\" \"description\") entries.  When one of these
-is selected, only the bare key is returned."
-  (save-window-excursion
-    (let ((inhibit-quit t)
-          (buffer (org-switch-to-buffer-other-window "*Org Select*"))
-          (prompt (or prompt "Select: "))
-          case-fold-search
-          current)
-      (unwind-protect
-          (catch 'exit
-            (while t
-              (setq-local evil-normal-state-cursor (list nil))
-              (erase-buffer)
-              (insert title "\n\n")
-              (let ((des-keys nil)
-                    (allowed-keys '("\C-g"))
-                    (tab-alternatives '("\s" "\t" "\r"))
-                    (cursor-type nil))
-                ;; Populate allowed keys and descriptions keys
-                ;; available with CURRENT selector.
-                (let ((re (format "\\`%s\\(.\\)\\'"
-                                  (if current (regexp-quote current) "")))
-                      (prefix (if current (concat current " ") "")))
-                  (dolist (entry table)
-                    (pcase entry
-                      ;; Description.
-                      (`(,(and key (pred (string-match re))) ,desc)
-                       (let ((k (match-string 1 key)))
-                         (push k des-keys)
-                         ;; Keys ending in tab, space or RET are equivalent.
-                         (if (member k tab-alternatives)
-                             (push "\t" allowed-keys)
-                           (push k allowed-keys))
-                         (insert (propertize prefix 'face 'font-lock-comment-face) (propertize k 'face 'bold) (propertize "›" 'face 'font-lock-comment-face) "  " desc "…" "\n")))
-                      ;; Usable entry.
-                      (`(,(and key (pred (string-match re))) ,desc . ,_)
-                       (let ((k (match-string 1 key)))
-                         (insert (propertize prefix 'face 'font-lock-comment-face) (propertize k 'face 'bold) "   " desc "\n")
-                         (push k allowed-keys)))
-                      (_ nil))))
-                ;; Insert special entries, if any.
-                (when specials
-                  (insert "─────────────────────────\n")
-                  (pcase-dolist (`(,key ,description) specials)
-                    (insert (format "%s   %s\n" (propertize key 'face '(bold all-the-icons-red)) description))
-                    (push key allowed-keys)))
-                ;; Display UI and let user select an entry or
-                ;; a sub-level prefix.
-                (goto-char (point-min))
-                (unless (pos-visible-in-window-p (point-max))
-                  (org-fit-window-to-buffer))
-                (let ((pressed (org--mks-read-key allowed-keys prompt nil)))
-                  (setq current (concat current pressed))
-                  (cond
-                   ((equal pressed "\C-g") (user-error "Abort"))
-                   ((equal pressed "ESC") (user-error "Abort"))
-                   ;; Selection is a prefix: open a new menu.
-                   ((member pressed des-keys))
-                   ;; Selection matches an association: return it.
-                   ((let ((entry (assoc current table)))
-                      (and entry (throw 'exit entry))))
-                   ;; Selection matches a special entry: return the
-                   ;; selection prefix.
-                   ((assoc current specials) (throw 'exit current))
-                   (t (error "No entry available")))))))
-        (when buffer (kill-buffer buffer))))))
-(advice-add 'org-mks :override #'org-mks-pretty)
-
-(setf (alist-get 'height +org-capture-frame-parameters) 15)
-;; (alist-get 'name +org-capture-frame-parameters) "❖ Capture") ;; ATM hardcoded in other places, so changing breaks stuff
-(setq +org-capture-fn
-      (lambda ()
-        (interactive)
-        (set-window-parameter nil 'mode-line-format 'none)
-        (org-capture)))
-
-(defun +doct-icon-declaration-to-icon (declaration)
-  "Convert :icon declaration to icon"
-  (let ((name (pop declaration))
-        (set  (intern (concat "all-the-icons-" (plist-get declaration :set))))
-        (face (intern (concat "all-the-icons-" (plist-get declaration :color))))
-        (v-adjust (or (plist-get declaration :v-adjust) 0.01)))
-    (apply set `(,name :face ,face :v-adjust ,v-adjust))))
-
-(defun +doct-iconify-capture-templates (groups)
-  "Add declaration's :icon to each template group in GROUPS."
-  (let ((templates (doct-flatten-lists-in groups)))
-    (setq doct-templates (mapcar (lambda (template)
-                                   (when-let* ((props (nthcdr (if (= (length template) 4) 2 5) template))
-                                               (spec (plist-get (plist-get props :doct) :icon)))
-                                     (setf (nth 1 template) (concat (+doct-icon-declaration-to-icon spec)
-                                                                    "\t"
-                                                                    (nth 1 template))))
-                                   template)
-                                 templates))))
-
-(setq doct-after-conversion-functions '(+doct-iconify-capture-templates))
-
-(setq org-capture-templates
-      (doct `(("Home" :keys "h"
-               :icon ("home" :set "octicon" :color "cyan")
-               :file "Home.org"
-               :prepend t
-               :headline "Inbox"
-               :template ("* TODO %?"
-                          "%i %a"))
-              ("Work" :keys "w"
-               :icon ("business" :set "material" :color "yellow")
-               :file "Work.org"
-               :prepend t
-               :headline "Inbox"
-               :template ("* TODO %?"
-                          "SCHEDULED: %^{Schedule:}t"
-                          "DEADLINE: %^{Deadline:}t"
-                          "%i %a"))
-              ("Note" :keys "n"
-               :icon ("sticky-note" :set "faicon" :color "yellow")
-               :file "Notes.org"
-               :template ("* *?"
-                          "%i %a"))
-              ("Project" :keys "p"
-               :icon ("repo" :set "octicon" :color "silver")
-               :prepend t
-               :type entry
-               :headline "Inbox"
-               :template ("* %{keyword} %?"
-                          "%i"
-                          "%a")
-               :file ""
-               :custom (:keyword "")
-               :children (("Task" :keys "t"
-                           :icon ("checklist" :set "octicon" :color "green")
-                           :keyword "TODO"
-                           :file +org-capture-project-todo-file)
-                          ("Note" :keys "n"
-                           :icon ("sticky-note" :set "faicon" :color "yellow")
-                           :keyword "%U"
-                           :file +org-capture-project-notes-file)))
-              )))
-
-(use-package! xkcd
-  :commands (xkcd-get-json
-             xkcd-download xkcd-get
-             ;; now for funcs from my extension of this pkg
-             +xkcd-find-and-copy +xkcd-find-and-view
-             +xkcd-fetch-info +xkcd-select)
-  :config
-  (setq xkcd-cache-dir (expand-file-name "xkcd/" doom-cache-dir)
-        xkcd-cache-latest (concat xkcd-cache-dir "latest"))
-  (unless (file-exists-p xkcd-cache-dir)
-    (make-directory xkcd-cache-dir))
-  (after! evil-snipe
-    (add-to-list 'evil-snipe-disabled-modes 'xkcd-mode))
-  :general (:states 'normal
-            :keymaps 'xkcd-mode-map
-            "<right>" #'xkcd-next
-            "n"       #'xkcd-next ; evil-ish
-            "<left>"  #'xkcd-prev
-            "N"       #'xkcd-prev ; evil-ish
-            "r"       #'xkcd-rand
-            "a"       #'xkcd-rand ; because image-rotate can interfere
-            "t"       #'xkcd-alt-text
-            "q"       #'xkcd-kill-buffer
-            "o"       #'xkcd-open-browser
-            "e"       #'xkcd-open-explanation-browser
-            ;; extras
-            "s"       #'+xkcd-find-and-view
-            "/"       #'+xkcd-find-and-view
-            "y"       #'+xkcd-copy))
-
-(after! xkcd
-  (require 'emacsql-sqlite)
-
-  (defun +xkcd-select ()
-    "Prompt the user for an xkcd using `completing-read' and `+xkcd-select-format'. Return the xkcd number or nil"
-    (let* (prompt-lines
-           (-dummy (maphash (lambda (key xkcd-info)
-                              (push (+xkcd-select-format xkcd-info) prompt-lines))
-                            +xkcd-stored-info))
-           (num (completing-read (format "xkcd (%s): " xkcd-latest) prompt-lines)))
-      (if (equal "" num) xkcd-latest
-        (string-to-number (replace-regexp-in-string "\\([0-9]+\\).*" "\\1" num)))))
-
-  (defun +xkcd-select-format (xkcd-info)
-    "Creates each completing-read line from an xkcd info plist. Must start with the xkcd number"
-    (format "%-4s  %-30s %s"
-            (propertize (number-to-string (plist-get xkcd-info :num))
-                        'face 'counsel-key-binding)
-            (plist-get xkcd-info :title)
-            (propertize (plist-get xkcd-info :alt)
-                        'face '(variable-pitch font-lock-comment-face))))
-
-  (defun +xkcd-fetch-info (&optional num)
-    "Fetch the parsed json info for comic NUM. Fetches latest when omitted or 0"
-    (require 'xkcd)
-    (when (or (not num) (= num 0))
-      (+xkcd-check-latest)
-      (setq num xkcd-latest))
-    (let ((res (or (gethash num +xkcd-stored-info)
-                   (puthash num (+xkcd-db-read num) +xkcd-stored-info))))
-      (unless res
-        (+xkcd-db-write
-         (let* ((url (format "https://xkcd.com/%d/info.0.json" num))
-                (json-assoc
-                 (if (gethash num +xkcd-stored-info)
-                     (gethash num +xkcd-stored-info)
-                   (json-read-from-string (xkcd-get-json url num)))))
-           json-assoc))
-        (setq res (+xkcd-db-read num)))
-      res))
-
-  ;; since we've done this, we may as well go one little step further
-  (defun +xkcd-find-and-copy ()
-    "Prompt for an xkcd using `+xkcd-select' and copy url to clipboard"
-    (interactive)
-    (+xkcd-copy (+xkcd-select)))
-
-  (defun +xkcd-copy (&optional num)
-    "Copy a url to xkcd NUM to the clipboard"
-    (interactive "i")
-    (let ((num (or num xkcd-cur)))
-      (gui-select-text (format "https://xkcd.com/%d" num))
-      (message "xkcd.com/%d copied to clipboard" num)))
-
-  (defun +xkcd-find-and-view ()
-    "Prompt for an xkcd using `+xkcd-select' and view it"
-    (interactive)
-    (xkcd-get (+xkcd-select))
-    (switch-to-buffer "*xkcd*"))
-
-  (defvar +xkcd-latest-max-age (* 60 60) ; 1 hour
-    "Time after which xkcd-latest should be refreshed, in seconds")
-
-  ;; initialise `xkcd-latest' and `+xkcd-stored-info' with latest xkcd
-  (add-transient-hook! '+xkcd-select
-    (require 'xkcd)
-    (+xkcd-fetch-info xkcd-latest)
-    (setq +xkcd-stored-info (+xkcd-db-read-all)))
-
-  (add-transient-hook! '+xkcd-fetch-info
-    (xkcd-update-latest))
-
-  (defun +xkcd-check-latest ()
-    "Use value in `xkcd-cache-latest' as long as it isn't older thabn `+xkcd-latest-max-age'"
-    (unless (and (file-exists-p xkcd-cache-latest)
-                 (< (- (time-to-seconds (current-time))
-                       (time-to-seconds (file-attribute-modification-time (file-attributes xkcd-cache-latest))))
-                    +xkcd-latest-max-age))
-      (let* ((out (xkcd-get-json "http://xkcd.com/info.0.json" 0))
-             (json-assoc (json-read-from-string out))
-             (latest (cdr (assoc 'num json-assoc))))
-        (when (/= xkcd-latest latest)
-          (+xkcd-db-write json-assoc)
-          (with-current-buffer (find-file xkcd-cache-latest)
-            (setq xkcd-latest latest)
-            (erase-buffer)
-            (insert (number-to-string latest))
-            (save-buffer)
-            (kill-buffer (current-buffer)))))
-      (shell-command (format "touch %s" xkcd-cache-latest))))
-
-  (defvar +xkcd-stored-info (make-hash-table :test 'eql)
-    "Basic info on downloaded xkcds, in the form of a hashtable")
-
-  (defadvice! xkcd-get-json--and-cache (url &optional num)
-    "Fetch the Json coming from URL.
-If the file NUM.json exists, use it instead.
-If NUM is 0, always download from URL.
-The return value is a string."
-    :override #'xkcd-get-json
-    (let* ((file (format "%s%d.json" xkcd-cache-dir num))
-           (cached (and (file-exists-p file) (not (eq num 0))))
-           (out (with-current-buffer (if cached
-                                         (find-file file)
-                                       (url-retrieve-synchronously url))
-                  (goto-char (point-min))
-                  (unless cached (re-search-forward "^$"))
-                  (prog1
-                      (buffer-substring-no-properties (point) (point-max))
-                    (kill-buffer (current-buffer))))))
-      (unless (or cached (eq num 0))
-        (xkcd-cache-json num out))
-      out))
-
-  (defadvice! +xkcd-get (num)
-    "Get the xkcd number NUM."
-    :override 'xkcd-get
-    (interactive "nEnter comic number: ")
-    (xkcd-update-latest)
-    (get-buffer-create "*xkcd*")
-    (switch-to-buffer "*xkcd*")
-    (xkcd-mode)
-    (let (buffer-read-only)
-      (erase-buffer)
-      (setq xkcd-cur num)
-      (let* ((xkcd-data (+xkcd-fetch-info num))
-             (num (plist-get xkcd-data :num))
-             (img (plist-get xkcd-data :img))
-             (safe-title (plist-get xkcd-data :safe-title))
-             (alt (plist-get xkcd-data :alt))
-             title file)
-        (message "Getting comic...")
-        (setq file (xkcd-download img num))
-        (setq title (format "%d: %s" num safe-title))
-        (insert (propertize title
-                            'face 'outline-1))
-        (center-line)
-        (insert "\n")
-        (xkcd-insert-image file num)
-        (if (eq xkcd-cur 0)
-            (setq xkcd-cur num))
-        (setq xkcd-alt alt)
-        (message "%s" title))))
-
-  (defconst +xkcd-db--sqlite-available-p
-    (with-demoted-errors "+org-xkcd initialization: %S"
-      (emacsql-sqlite-ensure-binary)
-      t))
-
-  (defvar +xkcd-db--connection (make-hash-table :test #'equal)
-    "Database connection to +org-xkcd database.")
-
-  (defun +xkcd-db--get ()
-    "Return the sqlite db file."
-    (expand-file-name "xkcd.db" xkcd-cache-dir))
-
-  (defun +xkcd-db--get-connection ()
-    "Return the database connection, if any."
-    (gethash (file-truename xkcd-cache-dir)
-             +xkcd-db--connection))
-
-  (defconst +xkcd-db--table-schema
-    '((xkcds
-       [(num integer :unique :primary-key)
-        (year        :not-null)
-        (month       :not-null)
-        (link        :not-null)
-        (news        :not-null)
-        (safe_title  :not-null)
-        (title       :not-null)
-        (transcript  :not-null)
-        (alt         :not-null)
-        (img         :not-null)])))
-
-  (defun +xkcd-db--init (db)
-    "Initialize database DB with the correct schema and user version."
-    (emacsql-with-transaction db
-      (pcase-dolist (`(,table . ,schema) +xkcd-db--table-schema)
-        (emacsql db [:create-table $i1 $S2] table schema))))
-
-  (defun +xkcd-db ()
-    "Entrypoint to the +org-xkcd sqlite database.
-Initializes and stores the database, and the database connection.
-Performs a database upgrade when required."
-    (unless (and (+xkcd-db--get-connection)
-                 (emacsql-live-p (+xkcd-db--get-connection)))
-      (let* ((db-file (+xkcd-db--get))
-             (init-db (not (file-exists-p db-file))))
-        (make-directory (file-name-directory db-file) t)
-        (let ((conn (emacsql-sqlite db-file)))
-          (set-process-query-on-exit-flag (emacsql-process conn) nil)
-          (puthash (file-truename xkcd-cache-dir)
-                   conn
-                   +xkcd-db--connection)
-          (when init-db
-            (+xkcd-db--init conn)))))
-    (+xkcd-db--get-connection))
-
-  (defun +xkcd-db-query (sql &rest args)
-    "Run SQL query on +org-xkcd database with ARGS.
-SQL can be either the emacsql vector representation, or a string."
-    (if  (stringp sql)
-        (emacsql (+xkcd-db) (apply #'format sql args))
-      (apply #'emacsql (+xkcd-db) sql args)))
-
-  (defun +xkcd-db-read (num)
-    (when-let ((res
-                (car (+xkcd-db-query [:select * :from xkcds
-                                      :where (= num $s1)]
-                                     num
-                                     :limit 1))))
-      (+xkcd-db-list-to-plist res)))
-
-  (defun +xkcd-db-read-all ()
-    (let ((xkcd-table (make-hash-table :test 'eql :size 4000)))
-      (mapcar (lambda (xkcd-info-list)
-                (puthash (car xkcd-info-list) (+xkcd-db-list-to-plist xkcd-info-list) xkcd-table))
-              (+xkcd-db-query [:select * :from xkcds]))
-      xkcd-table))
-
-  (defun +xkcd-db-list-to-plist (xkcd-datalist)
-    `(:num ,(nth 0 xkcd-datalist)
-      :year ,(nth 1 xkcd-datalist)
-      :month ,(nth 2 xkcd-datalist)
-      :link ,(nth 3 xkcd-datalist)
-      :news ,(nth 4 xkcd-datalist)
-      :safe-title ,(nth 5 xkcd-datalist)
-      :title ,(nth 6 xkcd-datalist)
-      :transcript ,(nth 7 xkcd-datalist)
-      :alt ,(nth 8 xkcd-datalist)
-      :img ,(nth 9 xkcd-datalist)))
-
-  (defun +xkcd-db-write (data)
-    (+xkcd-db-query [:insert-into xkcds
-                     :values $v1]
-                    (list (vector
-                           (cdr (assoc 'num        data))
-                           (cdr (assoc 'year       data))
-                           (cdr (assoc 'month      data))
-                           (cdr (assoc 'link       data))
-                           (cdr (assoc 'news       data))
-                           (cdr (assoc 'safe_title data))
-                           (cdr (assoc 'title      data))
-                           (cdr (assoc 'transcript data))
-                           (cdr (assoc 'alt        data))
-                           (cdr (assoc 'img        data))
-                           )))))
-
-(after! org
-	(org-link-set-parameters "xkcd"
-	                         :image-data-fun #'+org-xkcd-image-fn
-	                         :follow #'+org-xkcd-open-fn
-	                         :export #'+org-xkcd-export
-	                         :complete #'+org-xkcd-complete)
-	
-	(defun +org-xkcd-open-fn (link)
-	  (+org-xkcd-image-fn nil link nil))
-	
-	(defun +org-xkcd-image-fn (protocol link description)
-	  "Get image data for xkcd num LINK"
-	  (let* ((xkcd-info (+xkcd-fetch-info (string-to-number link)))
-	         (img (plist-get xkcd-info :img))
-	         (alt (plist-get xkcd-info :alt)))
-	    (message alt)
-	    (+org-image-file-data-fn protocol (xkcd-download img (string-to-number link)) description)))
-	
-	(defun +org-xkcd-export (num desc backend _com)
-	  "Convert xkcd to html/LaTeX form"
-	  (let* ((xkcd-info (+xkcd-fetch-info (string-to-number num)))
-	         (img (plist-get xkcd-info :img))
-	         (alt (plist-get xkcd-info :alt))
-	         (title (plist-get xkcd-info :title))
-	         (file (xkcd-download img (string-to-number num))))
-	    (cond ((org-export-derived-backend-p backend 'html)
-	           (format "<img class='invertible' src='%s' title=\"%s\" alt='%s'>" img (subst-char-in-string ?\" ?“ alt) title))
-	          ((org-export-derived-backend-p backend 'latex)
-	           (format "\\begin{figure}[!htb]
-	  \\centering
-	  \\includegraphics[scale=0.4]{%s}%s
-	\\end{figure}" file (if (equal desc (format "xkcd:%s" num)) ""
-	                      (format "\n  \\caption*{\\label{xkcd:%s} %s}"
-	                              num
-	                              (or desc
-	                                  (format "\\textbf{%s} %s" title alt))))))
-	          (t (format "https://xkcd.com/%s" num)))))
-	
-	(defun +org-xkcd-complete (&optional arg)
-	  "Complete xkcd using `+xkcd-stored-info'"
-	  (format "xkcd:%d" (+xkcd-select))))
-
-(defvar org-latex-italic-quotes t
-  "Make \"quote\" environments italic.")
-(defvar org-latex-par-sep t
-  "Vertically seperate paragraphs, and remove indentation.")
-
-(defvar org-latex-conditional-features
-  '(("\\[\\[\\(?:file\\|https?\\):\\(?:[^]]\\|\\\\\\]\\)+?\\.\\(?:eps\\|pdf\\|png\\|jpeg\\|jpg\\|jbig2\\)\\]\\]" . image)
-    ("\\[\\[\\(?:file\\|https?\\):\\(?:[^]]+?\\|\\\\\\]\\)\\.svg\\]\\]" . svg)
-    ("^[ \t]*|" . table)
-    ("cref:\\|\\cref{\\|\\[\\[[^\\]]+\\]\\]" . cleveref)
-    ("[;\\\\]?\\b[A-Z][A-Z]+s?[^A-Za-z]" . acronym)
-    ("\\+[^ ].*[^ ]\\+\\|_[^ ].*[^ ]_\\|\\\\uu?line\\|\\\\uwave\\|\\\\sout\\|\\\\xout\\|\\\\dashuline\\|\\dotuline\\|\\markoverwith" . underline)
-    (":float wrap" . float-wrap)
-    (":float sideways" . rotate)
-    ("^[ \t]*#\\+caption:\\|\\\\caption" . caption)
-    ("\\[\\[xkcd:" . (image caption))
-    ((and org-latex-italic-quotes "^[ \t]*#\\+begin_quote\\|\\\\begin{quote}") . italic-quotes)
-    (org-latex-par-sep . par-sep)
-    ("^[ \t]*\\(?:[-+*]\\|[0-9]+[.)]\\|[A-Za-z]+[.)]\\) \\[[ -X]\\]" . checkbox)
-    ("^[ \t]*#\\+begin_warning\\|\\\\begin{warning}" . box-warning)
-    ("^[ \t]*#\\+begin_info\\|\\\\begin{info}"       . box-info)
-    ("^[ \t]*#\\+begin_success\\|\\\\begin{success}" . box-success)
-    ("^[ \t]*#\\+begin_error\\|\\\\begin{error}"     . box-error))
-  "Org feature tests and associated LaTeX feature flags.
-
-Alist where the car is a test for the presense of the feature,
-and the cdr is either a single feature symbol or list of feature symbols.
-
-When a string, it is used as a regex search in the buffer.
-The feature is registered as present when there is a match.
-
-The car can also be a
-- symbol, the value of which is fetched
-- function, which is called with info as an argument
-- list, which is `eval'uated
-
-If the symbol, function, or list produces a string: that is used as a regex
-search in the buffer. Otherwise any non-nil return value will indicate the
-existance of the feature.")
-
-(defvar org-latex-caption-preamble "
-\\usepackage{subcaption}
-\\usepackage[hypcap=true]{caption}
-\\setkomafont{caption}{\\sffamily\\small}
-\\setkomafont{captionlabel}{\\upshape\\bfseries}
-\\captionsetup{justification=raggedright,singlelinecheck=true}
-\\usepackage{capt-of} % required by Org
-"
-  "Preamble that improves captions.")
-
-(defvar org-latex-checkbox-preamble "
-\\newcommand{\\checkboxUnchecked}{$\\square$}
-\\newcommand{\\checkboxTransitive}{\\rlap{\\raisebox{-0.1ex}{\\hspace{0.35ex}\\Large\\textbf -}}$\\square$}
-\\newcommand{\\checkboxChecked}{\\rlap{\\raisebox{0.2ex}{\\hspace{0.35ex}\\scriptsize \\ding{52}}}$\\square$}
-"
-  "Preamble that improves checkboxes.")
-
-(defvar org-latex-box-preamble "
-% args = #1 Name, #2 Colour, #3 Ding, #4 Label
-\\newcommand{\\defsimplebox}[4]{%
-  \\definecolor{#1}{HTML}{#2}
-  \\newenvironment{#1}[1][]
-  {%
-    \\par\\vspace{-0.7\\baselineskip}%
-    \\textcolor{#1}{#3} \\textcolor{#1}{\\textbf{\\def\\temp{##1}\\ifx\\temp\\empty#4\\else##1\\fi}}%
-    \\vspace{-0.8\\baselineskip}
-    \\begin{addmargin}[1em]{1em}
-  }{%
-    \\end{addmargin}
-    \\vspace{-0.5\\baselineskip}
-  }%
-}
-"
-  "Preamble that provides a macro for custom boxes.")
-
-(defvar org-latex-feature-implementations
-  '((image         :snippet "\\usepackage{graphicx}" :order 2)
-    (svg           :snippet "\\usepackage{svg}" :order 2)
-    (table         :snippet "\\usepackage{longtable}\n\\usepackage{booktabs}" :order 2)
-    (cleveref      :snippet "\\usepackage[capitalize]{cleveref}" :order 1)
-    (underline     :snippet "\\usepackage[normalem]{ulem}" :order 0.5)
-    (float-wrap    :snippet "\\usepackage{wrapfig}" :order 2)
-    (rotate        :snippet "\\usepackage{rotating}" :order 2)
-    (caption       :snippet org-latex-caption-preamble :order 2.1)
-    (acronym       :snippet "\\newcommand{\\acr}[1]{\\protect\\textls*[110]{\\scshape #1}}\n\\newcommand{\\acrs}{\\protect\\scalebox{.91}[.84]\\hspace{0.15ex}s}" :order 0.4)
-    (italic-quotes :snippet "\\renewcommand{\\quote}{\\list{}{\\rightmargin\\leftmargin}\\item\\relax\\em}\n" :order 0.5)
-    (par-sep       :snippet "\\setlength{\\parskip}{\\baselineskip}\n\\setlength{\\parindent}{0pt}\n" :order 0.5)
-    (.pifont       :snippet "\\usepackage{pifont}")
-    (checkbox      :requires .pifont :order 3
-                   :snippet (concat (unless (memq 'maths features)
-                                      "\\usepackage{amssymb} % provides \\square")
-                                    org-latex-checkbox-preamble))
-    (.fancy-box    :requires .pifont    :snippet org-latex-box-preamble :order 3.9)
-    (box-warning   :requires .fancy-box :snippet "\\defsimplebox{warning}{e66100}{\\ding{68}}{Warning}" :order 4)
-    (box-info      :requires .fancy-box :snippet "\\defsimplebox{info}{3584e4}{\\ding{68}}{Information}" :order 4)
-    (box-success   :requires .fancy-box :snippet "\\defsimplebox{success}{26a269}{\\ding{68}}{\\vspace{-\\baselineskip}}" :order 4)
-    (box-error     :requires .fancy-box :snippet "\\defsimplebox{error}{c01c28}{\\ding{68}}{Important}" :order 4))
-  "LaTeX features and details required to implement them.
-
-List where the car is the feature symbol, and the rest forms a plist with the
-following keys:
-- :snippet, which may be either
-  - a string which should be included in the preamble
-  - a symbol, the value of which is included in the preamble
-  - a function, which is evaluated with the list of feature flags as its
-    single argument. The result of which is included in the preamble
-  - a list, which is passed to `eval', with a list of feature flags available
-    as \"features\"
-
-- :requires, a feature or list of features that must be available
-- :when, a feature or list of features that when all available should cause this
-    to be automatically enabled.
-- :prevents, a feature or list of features that should be masked
-- :order, for when ordering is important. Lower values appear first.
-    The default is 0.
-
-Features that start with ! will be eagerly loaded, i.e. without being detected.")
-
-(defun org-latex-detect-features (&optional buffer info)
-  "List features from `org-latex-conditional-features' detected in BUFFER."
-  (let ((case-fold-search nil))
-    (with-current-buffer (or buffer (current-buffer))
-      (delete-dups
-       (mapcan (lambda (construct-feature)
-                 (when (let ((out (pcase (car construct-feature)
-                                    ((pred stringp) (car construct-feature))
-                                    ((pred functionp) (funcall (car construct-feature) info))
-                                    ((pred listp) (eval (car construct-feature)))
-                                    ((pred symbolp) (symbol-value (car construct-feature)))
-                                    (_ (user-error "org-latex-conditional-features key %s unable to be used" (car construct-feature))))))
-                         (if (stringp out)
-                             (save-excursion
-                               (goto-char (point-min))
-                               (re-search-forward out nil t))
-                           out))
-                   (if (listp (cdr construct-feature)) (cdr construct-feature) (list (cdr construct-feature)))))
-               org-latex-conditional-features)))))
-
-(defun org-latex-expand-features (features)
-  "For each feature in FEATURES process :requires, :when, and :prevents keywords and sort according to :order."
-  (dolist (feature features)
-    (unless (assoc feature org-latex-feature-implementations)
-      (error "Feature %s not provided in org-latex-feature-implementations" feature)))
-  (setq current features)
-  (while current
-    (when-let ((requirements (plist-get (cdr (assq (car current) org-latex-feature-implementations)) :requires)))
-      (setcdr current (if (listp requirements)
-                          (append requirements (cdr current))
-                        (cons requirements (cdr current)))))
-    (setq current (cdr current)))
-  (dolist (potential-feature
-           (append features (delq nil (mapcar (lambda (feat)
-                                                (when (plist-get (cdr feat) :eager)
-                                                  (car feat)))
-                                              org-latex-feature-implementations))))
-    (when-let ((prerequisites (plist-get (cdr (assoc potential-feature org-latex-feature-implementations)) :when)))
-      (setf features (if (if (listp prerequisites)
-                             (cl-every (lambda (preq) (memq preq features)) prerequisites)
-                           (memq prerequisites features))
-                         (append (list potential-feature) features)
-                       (delq potential-feature features)))))
-  (dolist (feature features)
-    (when-let ((prevents (plist-get (cdr (assoc feature org-latex-feature-implementations)) :prevents)))
-      (setf features (cl-set-difference features (if (listp prevents) prevents (list prevents))))))
-  (sort (delete-dups features)
-        (lambda (feat1 feat2)
-          (if (< (or (plist-get (cdr (assoc feat1 org-latex-feature-implementations)) :order) 1)
-                 (or (plist-get (cdr (assoc feat2 org-latex-feature-implementations)) :order) 1))
-              t nil))))
-
-(defun org-latex-generate-features-preamble (features)
-  "Generate the LaTeX preamble content required to provide FEATURES.
-This is done according to `org-latex-feature-implementations'"
-  (let ((expanded-features (org-latex-expand-features features)))
-    (concat
-     (format "\n%% features: %s\n" expanded-features)
-     (mapconcat (lambda (feature)
-                  (when-let ((snippet (plist-get (cdr (assoc feature org-latex-feature-implementations)) :snippet)))
-                    (concat
-                     (pcase snippet
-                       ((pred stringp) snippet)
-                       ((pred functionp) (funcall snippet features))
-                       ((pred listp) (eval `(let ((features ',features)) (,@snippet))))
-                       ((pred symbolp) (symbol-value snippet))
-                       (_ (user-error "org-latex-feature-implementations :snippet value %s unable to be used" snippet)))
-                     "\n")))
-                expanded-features
-                "")
-     "% end features\n")))
-
-(defvar info--tmp nil)
-
-(defadvice! org-latex-save-info (info &optional t_ s_)
-  :before #'org-latex-make-preamble
-  (setq info--tmp info))
-
-(defadvice! org-splice-latex-header-and-generated-preamble-a (orig-fn tpl def-pkg pkg snippets-p &optional extra)
-  "Dynamically insert preamble content based on `org-latex-conditional-preambles'."
-  :around #'org-splice-latex-header
-  (let ((header (funcall orig-fn tpl def-pkg pkg snippets-p extra)))
-    (if snippets-p header
-      (concat header
-              (org-latex-generate-features-preamble (org-latex-detect-features nil info--tmp))
-              "\n"))))
-
-(defadvice! +org-latex-link (orig-fn link desc info)
-  "Acts as `org-latex-link', but supports remote images."
-  :around #'org-latex-link
-  (setq o-link link
-        o-desc desc
-        o-info info)
-  (if (and (member (plist-get (cadr link) :type) '("http" "https"))
-           (member (file-name-extension (plist-get (cadr link) :path))
-                   '("png" "jpg" "jpeg" "pdf" "svg")))
-      (org-latex-link--remote link desc info)
-    (funcall orig-fn link desc info)))
-
-(defun org-latex-link--remote (link _desc info)
-  (let* ((url (plist-get (cadr link) :raw-link))
-         (ext (file-name-extension url))
-         (target (format "%s%s.%s"
-                         (temporary-file-directory)
-                         (replace-regexp-in-string "[./]" "-"
-                                                   (file-name-sans-extension (substring (plist-get (cadr link) :path) 2)))
-                         ext)))
-    (unless (file-exists-p target)
-      (url-copy-file url target))
-    (setcdr link (--> (cadr link)
-                   (plist-put it :type "file")
-                   (plist-put it :path target)
-                   (plist-put it :raw-link (concat "file:" target))
-                   (list it)))
-    (concat "% fetched from " url "\n"
-            (org-latex--inline-image link info))))
-
-(setq org-latex-pdf-process '("tectonic -X compile --print --outdir=%o -Z shell-escape %f"))
-
-;; (setq org-preview-latex-process-alist
-;; '((dvipng :programs
-;;                   ("tectonic" "dvipng")
-;;                   :description "dvi > png" :message "you need to install the programs: tectonic and dvipng." :image-input-type "dvi" :image-output-type "png" :image-size-adjust
-;;                   (1.0 . 1.0)
-;;                   :latex-compiler
-;;                   ;; tectonic doesn't have a non interactive mode
-;;                   ("tectonic --outdir %o %f")
-;;                   :image-converter
-;;                   ("dvipng -D %D -T tight -bg Transparent -o %O %f"))
-;;           (dvisvgm :programs
-;;                    ("tectonic" "dvisvgm")
-;;                    :description "dvi > svg" :message "you need to install the programs: tectonic and dvisvgm." :image-input-type "dvi" :image-output-type "svg" :image-size-adjust
-;;                    (1.7 . 1.5)
-;;                    :latex-compiler
-;;                    ("tectonic --outdir %o %f")
-;;                    :image-converter
-;;                    ("dvisvgm %f -n -b min -c %S -o %O"))
-;;           (imagemagick :programs
-;;                        ("latex" "convert")
-;;                        :description "pdf > png" :message "you need to install the programs: latex and imagemagick." :image-input-type "pdf" :image-output-type "png" :image-size-adjust
-;;                        (1.0 . 1.0)
-;;                        :latex-compiler
-;;                        ("tectonic --outdir %o %f")
-;;                        :image-converter
-;;                        ("convert -density %D -trim -antialias %f -quality 100 %O"))))
-
-(after! ox-latex
-  (add-to-list 'org-latex-classes
-               '("cb-doc" "\\documentclass{scrartcl}"
-                 ("\\section{%s}" . "\\section*{%s}")
-                 ("\\subsection{%s}" . "\\subsection*{%s}")
-                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
-
-(after! ox-latex
-  (setq org-latex-default-class "cb-doc"
-        org-latex-tables-booktabs t
-        org-latex-hyperref-template "\\colorlet{greenyblue}{blue!70!green}
-\\colorlet{blueygreen}{blue!40!green}
-\\providecolor{link}{named}{greenyblue}
-\\providecolor{cite}{named}{blueygreen}
-\\hypersetup{
-  pdfauthor={%a},
-  pdftitle={%t},
-  pdfkeywords={%k},
-  pdfsubject={%d},
-  pdfcreator={%c},
-  pdflang={%L},
-  breaklinks=true,
-  colorlinks=true,
-  linkcolor=,
-  urlcolor=link,
-  citecolor=cite\n}
-\\urlstyle{same}
-"
-        org-latex-reference-command "\\cref{%s}"))
-
-(setq org-latex-default-packages-alist
-      `(("AUTO" "inputenc" t
-         ("pdflatex"))
-        ("T1" "fontenc" t
-         ("pdflatex"))
-        ("" "fontspec" t)
-        ("" "graphicx" t)
-        ("" "grffile" t)
-        ("" "longtable" nil)
-        ("" "wrapfig" nil)
-        ("" "rotating" nil)
-        ("normalem" "ulem" t)
-        ("" "amsmath" t)
-        ("" "textcomp" t)
-        ("" "amssymb" t)
-        ("" "capt-of" nil)
-        ("dvipsnames" "xcolor" nil)
-        ("colorlinks=true, linkcolor=Blue, citecolor=BrickRed, urlcolor=PineGreen" "hyperref" nil)
-    ("" "indentfirst" nil)
-    "\\setmainfont[Ligatures=TeX]{Alegreya}"
-    "\\setmonofont[Ligatures=TeX]{Liga SFMono Nerd Font}"))
-
-(use-package! engrave-faces-latex
-  :after ox-latex
-  :config
-  (setq org-latex-listings 'engraved))
-
-(defadvice! org-latex-src-block-engraved (orig-fn src-block contents info)
-  "Like `org-latex-src-block', but supporting an engraved backend"
-  :around #'org-latex-src-block
-  (if (eq 'engraved (plist-get info :latex-listings))
-      (org-latex-scr-block--engraved src-block contents info)
-    (funcall orig-fn src-block contents info)))
-
-(defadvice! org-latex-inline-src-block-engraved (orig-fn inline-src-block contents info)
-  "Like `org-latex-inline-src-block', but supporting an engraved backend"
-  :around #'org-latex-inline-src-block
-  (if (eq 'engraved (plist-get info :latex-listings))
-      (org-latex-inline-scr-block--engraved inline-src-block contents info)
-    (funcall orig-fn src-block contents info)))
-
-(defvar-local org-export-has-code-p nil)
-
-(defadvice! org-export-expect-no-code (&rest _)
-  :before #'org-export-as
-  (setq org-export-has-code-p nil))
-
-(defadvice! org-export-register-code (&rest _)
-  :after #'org-latex-src-block-engraved
-  :after #'org-latex-inline-src-block-engraved
-  (setq org-export-has-code-p t))
-
-(setq org-latex-engraved-code-preamble "
-\\usepackage{fvextra}
-\\fvset{
-  commandchars=\\\\\\{\\},
-  highlightcolor=white!95!black!80!blue,
-  breaklines=true,
-  breaksymbol=\\color{white!60!black}\\tiny\\ensuremath{\\hookrightarrow}}
-\\renewcommand\\theFancyVerbLine{\\footnotesize\\color{black!40!white}\\arabic{FancyVerbLine}}
-
-\\definecolor{codebackground}{HTML}{f7f7f7}
-\\definecolor{codeborder}{HTML}{f0f0f0}
-
-% TODO have code boxes keep line vertical alignment
-\\usepackage[breakable,xparse]{tcolorbox}
-\\DeclareTColorBox[]{Code}{o}%
-{colback=codebackground, colframe=codeborder,
-  fontupper=\\footnotesize,
-  colupper=EFD,
-  IfNoValueTF={#1}%
-  {boxsep=2pt, arc=2.5pt, outer arc=2.5pt,
-    boxrule=0.5pt, left=2pt}%
-  {boxsep=2.5pt, arc=0pt, outer arc=0pt,
-    boxrule=0pt, leftrule=1.5pt, left=0.5pt},
-  right=2pt, top=1pt, bottom=0.5pt,
-  breakable}
-")
-
-(add-to-list 'org-latex-conditional-features '((and org-export-has-code-p "^[ \t]*#\\+begin_src\\|^[ \t]*#\\+BEGIN_SRC\\|src_[A-Za-z]") . engraved-code) t)
-(add-to-list 'org-latex-conditional-features '("^[ \t]*#\\+begin_example\\|^[ \t]*#\\+BEGIN_EXAMPLE" . engraved-code-setup) t)
-(add-to-list 'org-latex-feature-implementations '(engraved-code :requires engraved-code-setup :snippet (engrave-faces-latex-gen-preamble) :order 99) t)
-(add-to-list 'org-latex-feature-implementations '(engraved-code-setup :snippet org-latex-engraved-code-preamble :order 98) t)
-
-(defun org-latex-scr-block--engraved (src-block contents info)
-  (let* ((lang (org-element-property :language src-block))
-         (attributes (org-export-read-attribute :attr_latex src-block))
-         (float (plist-get attributes :float))
-         (num-start (org-export-get-loc src-block info))
-         (retain-labels (org-element-property :retain-labels src-block))
-         (caption (org-element-property :caption src-block))
-         (caption-above-p (org-latex--caption-above-p src-block info))
-         (caption-str (org-latex--caption/label-string src-block info))
-         (placement (or (org-unbracket-string "[" "]" (plist-get attributes :placement))
-                        (plist-get info :latex-default-figure-position)))
-         (float-env
-          (cond
-           ((string= "multicolumn" float)
-            (format "\\begin{listing*}[%s]\n%s%%s\n%s\\end{listing*}"
-                    placement
-                    (if caption-above-p caption-str "")
-                    (if caption-above-p "" caption-str)))
-           (caption
-            (format "\\begin{listing}[%s]\n%s%%s\n%s\\end{listing}"
-                    placement
-                    (if caption-above-p caption-str "")
-                    (if caption-above-p "" caption-str)))
-           ((string= "t" float)
-            (concat (format "\\begin{listing}[%s]\n"
-                            placement)
-                    "%s\n\\end{listing}"))
-           (t "%s")))
-         (options (plist-get info :latex-minted-options))
-         (content-buffer
-          (with-temp-buffer
-            (insert
-             (let* ((code-info (org-export-unravel-code src-block))
-                    (max-width
-                     (apply 'max
-                            (mapcar 'length
-                                    (org-split-string (car code-info)
-                                                      "\n")))))
-               (org-export-format-code
-                (car code-info)
-                (lambda (loc _num ref)
-                  (concat
-                   loc
-                   (when ref
-                     ;; Ensure references are flushed to the right,
-                     ;; separated with 6 spaces from the widest line
-                     ;; of code.
-                     (concat (make-string (+ (- max-width (length loc)) 6)
-                                          ?\s)
-                             (format "(%s)" ref)))))
-                nil (and retain-labels (cdr code-info)))))
-            (funcall (org-src-get-lang-mode lang))
-            (engrave-faces-latex-buffer)))
-         (content
-          (with-current-buffer content-buffer
-            (buffer-string)))
-         (body
-          (format
-           "\\begin{Code}\n\\begin{Verbatim}[%s]\n%s\\end{Verbatim}\n\\end{Code}"
-           ;; Options.
-           (concat
-            (org-latex--make-option-string
-             (if (or (not num-start) (assoc "linenos" options))
-                 options
-               (append
-                `(("linenos")
-                  ("firstnumber" ,(number-to-string (1+ num-start))))
-                options)))
-            (let ((local-options (plist-get attributes :options)))
-              (and local-options (concat "," local-options))))
-           content)))
-    (kill-buffer content-buffer)
-    ;; Return value.
-    (format float-env body)))
-
-(defun org-latex-inline-scr-block--engraved (inline-src-block _contents info)
-  (let ((options (org-latex--make-option-string
-                  (plist-get info :latex-minted-options)))
-        code-buffer code)
-    (setq code-buffer
-          (with-temp-buffer
-            (insert (org-element-property :value inline-src-block))
-            (funcall (org-src-get-lang-mode
-                      (org-element-property :language inline-src-block)))
-            (engrave-faces-latex-buffer)))
-    (setq code (with-current-buffer code-buffer
-                 (buffer-string)))
-    (kill-buffer code-buffer)
-    (format "\\Verb%s{%s}"
-            (if (string= options "") ""
-              (format "[%s]" options))
-            code)))
-
-(defadvice! org-latex-example-block-engraved (orig-fn example-block contents info)
-  "Like `org-latex-example-block', but supporting an engraved backend"
-  :around #'org-latex-example-block
-  (let ((output-block (funcall orig-fn example-block contents info)))
-    (if (eq 'engraved (plist-get info :latex-listings))
-        (format "\\begin{Code}[alt]\n%s\n\\end{Code}" output-block)
-      output-block)))
-
-(use-package! ox-chameleon
-  :after ox)
-
-(setq org-export-in-background t)
-
-(setq org-export-with-sub-superscripts '{})
-
-(setq mu4e-update-interval 300)
-
-(after! mu4e
-  (setq sendmail-program "~/.nix-profile/bin/msmtp"
-        send-mail-function #'smtpmail-send-it
-        message-sendmail-f-is-evil t
-        message-sendmail-extra-arguments '("--read-envelope-from")
-        message-send-mail-function #'message-send-mail-with-sendmail))
-
-;;(setq alert-default-style 'osx-notifier)
-
-;;(use-package org
-;;  :demand t)
-
-;; (use-package webkit
-;;   :defer t
-;;   :commands webkit
-;;   :init
-;;   (setq webkit-search-prefix "https://google.com/search?q="
-;;         webkit-history-file nil
-;;         webkit-cookie-file nil
-;;         browse-url-browser-function 'webkit-browse-url
-;;         webkit-browse-url-force-new t
-;;         webkit-download-action-alist '(("\\.pdf\\'" . webkit-download-open)
-;;                                        ("\\.png\\'" . webkit-download-save)
-;;                                        (".*" . webkit-download-default)))
-
-;;   (defun webkit--display-progress (progress)
-;;     (setq webkit--progress-formatted
-;;           (if (equal progress 100.0)
-;;               ""
-;;             (format "%s%.0f%%  " (all-the-icons-faicon "spinner") progress)))
-;;    (force-mode-line-update)))
-
-(after! circe
-  (setq-default circe-use-tls t)
-  (setq circe-notifications-alert-icon "/usr/share/icons/breeze/actions/24/network-connect.svg"
-        lui-logging-directory "~/.emacs.d/.local/etc/irc"
-        lui-logging-file-format "{buffer}/%Y/%m-%d.txt"
-        circe-format-self-say "{nick:+13s} ┃ {body}")
-
-  (custom-set-faces!
-    '(circe-my-message-face :weight unspecified))
-
-  (enable-lui-logging-globally)
-  (enable-circe-display-images)
-
-  (defun lui-org-to-irc ()
-    "Examine a buffer with simple org-mode formatting, and converts the empasis:
-  *bold*, /italic/, and _underline_ to IRC semi-standard escape codes.
-  =code= is converted to inverse (highlighted) text."
-    (goto-char (point-min))
-    (while (re-search-forward "\\_<\\(?1:[*/_=]\\)\\(?2:[^[:space:]]\\(?:.*?[^[:space:]]\\)?\\)\\1\\_>" nil t)
-      (replace-match
-       (concat (pcase (match-string 1)
-                 ("*" "")
-                 ("/" "")
-                 ("_" "")
-                 ("=" ""))
-               (match-string 2)
-               "") nil nil)))
-  
-  (add-hook 'lui-pre-input-hook #'lui-org-to-irc)
-
-  (defun lui-ascii-to-emoji ()
-    (goto-char (point-min))
-    (while (re-search-forward "\\( \\)?::?\\([^[:space:]:]+\\):\\( \\)?" nil t)
-      (replace-match
-       (concat
-        (match-string 1)
-        (or (cdr (assoc (match-string 2) lui-emojis-alist))
-            (concat ":" (match-string 2) ":"))
-        (match-string 3))
-       nil nil)))
-  
-  (defun lui-emoticon-to-emoji ()
-    (dolist (emoticon lui-emoticons-alist)
-      (goto-char (point-min))
-      (while (re-search-forward (concat " " (car emoticon) "\\( \\)?") nil t)
-        (replace-match (concat " "
-                               (cdr (assoc (cdr emoticon) lui-emojis-alist))
-                               (match-string 1))))))
-  
-  (define-minor-mode lui-emojify
-    "Replace :emojis: and ;) emoticons with unicode emoji chars."
-    :global t
-    :init-value t
-    (if lui-emojify
-        (add-hook! lui-pre-input #'lui-ascii-to-emoji #'lui-emoticon-to-emoji)
-      (remove-hook! lui-pre-input #'lui-ascii-to-emoji #'lui-emoticon-to-emoji)))
-  (defvar lui-emojis-alist
-    '(("grinning"                      . "😀")
-      ("smiley"                        . "😃")
-      ("smile"                         . "😄")
-      ("grin"                          . "😁")
-      ("laughing"                      . "😆")
-      ("sweat_smile"                   . "😅")
-      ("joy"                           . "😂")
-      ("rofl"                          . "🤣")
-      ("relaxed"                       . "☺️")
-      ("blush"                         . "😊")
-      ("innocent"                      . "😇")
-      ("slight_smile"                  . "🙂")
-      ("upside_down"                   . "🙃")
-      ("wink"                          . "😉")
-      ("relieved"                      . "😌")
-      ("heart_eyes"                    . "😍")
-      ("yum"                           . "😋")
-      ("stuck_out_tongue"              . "😛")
-      ("stuck_out_tongue_closed_eyes"  . "😝")
-      ("stuck_out_tongue_wink"         . "😜")
-      ("zanzy"                         . "🤪")
-      ("raised_eyebrow"                . "🤨")
-      ("monocle"                       . "🧐")
-      ("nerd"                          . "🤓")
-      ("cool"                          . "😎")
-      ("star_struck"                   . "🤩")
-      ("party"                         . "🥳")
-      ("smirk"                         . "😏")
-      ("unamused"                      . "😒")
-      ("disapointed"                   . "😞")
-      ("pensive"                       . "😔")
-      ("worried"                       . "😟")
-      ("confused"                      . "😕")
-      ("slight_frown"                  . "🙁")
-      ("frown"                         . "☹️")
-      ("persevere"                     . "😣")
-      ("confounded"                    . "😖")
-      ("tired"                         . "😫")
-      ("weary"                         . "😩")
-      ("pleading"                      . "🥺")
-      ("tear"                          . "😢")
-      ("cry"                           . "😢")
-      ("sob"                           . "😭")
-      ("triumph"                       . "😤")
-      ("angry"                         . "😠")
-      ("rage"                          . "😡")
-      ("exploding_head"                . "🤯")
-      ("flushed"                       . "😳")
-      ("hot"                           . "🥵")
-      ("cold"                          . "🥶")
-      ("scream"                        . "😱")
-      ("fearful"                       . "😨")
-      ("disapointed"                   . "😰")
-      ("relieved"                      . "😥")
-      ("sweat"                         . "😓")
-      ("thinking"                      . "🤔")
-      ("shush"                         . "🤫")
-      ("liar"                          . "🤥")
-      ("blank_face"                    . "😶")
-      ("neutral"                       . "😐")
-      ("expressionless"                . "😑")
-      ("grimace"                       . "😬")
-      ("rolling_eyes"                  . "🙄")
-      ("hushed"                        . "😯")
-      ("frowning"                      . "😦")
-      ("anguished"                     . "😧")
-      ("wow"                           . "😮")
-      ("astonished"                    . "😲")
-      ("sleeping"                      . "😴")
-      ("drooling"                      . "🤤")
-      ("sleepy"                        . "😪")
-      ("dizzy"                         . "😵")
-      ("zipper_mouth"                  . "🤐")
-      ("woozy"                         . "🥴")
-      ("sick"                          . "🤢")
-      ("vomiting"                      . "🤮")
-      ("sneeze"                        . "🤧")
-      ("mask"                          . "😷")
-      ("bandaged_head"                 . "🤕")
-      ("money_face"                    . "🤑")
-      ("cowboy"                        . "🤠")
-      ("imp"                           . "😈")
-      ("ghost"                         . "👻")
-      ("alien"                         . "👽")
-      ("robot"                         . "🤖")
-      ("clap"                          . "👏")
-      ("thumpup"                       . "👍")
-      ("+1"                            . "👍")
-      ("thumbdown"                     . "👎")
-      ("-1"                            . "👎")
-      ("ok"                            . "👌")
-      ("pinch"                         . "🤏")
-      ("left"                          . "👈")
-      ("right"                         . "👉")
-      ("down"                          . "👇")
-      ("wave"                          . "👋")
-      ("pray"                          . "🙏")
-      ("eyes"                          . "👀")
-      ("brain"                         . "🧠")
-      ("facepalm"                      . "🤦")
-      ("tada"                          . "🎉")
-      ("fire"                          . "🔥")
-      ("flying_money"                  . "💸")
-      ("lighbulb"                      . "💡")
-      ("heart"                         . "❤️")
-      ("sparkling_heart"               . "💖")
-      ("heartbreak"                    . "💔")
-      ("100"                           . "💯")))
-  
-  (defvar lui-emoticons-alist
-    '((":)"   . "slight_smile")
-      (";)"   . "wink")
-      (":D"   . "smile")
-      ("=D"   . "grin")
-      ("xD"   . "laughing")
-      (";("   . "joy")
-      (":P"   . "stuck_out_tongue")
-      (";D"   . "stuck_out_tongue_wink")
-      ("xP"   . "stuck_out_tongue_closed_eyes")
-      (":("   . "slight_frown")
-      (";("   . "cry")
-      (";'("  . "sob")
-      (">:("  . "angry")
-      (">>:(" . "rage")
-      (":o"   . "wow")
-      (":O"   . "astonished")
-      (":/"   . "confused")
-      (":-/"  . "thinking")
-      (":|"   . "neutral")
-      (":-|"  . "expressionless")))
-
-  (defun named-circe-prompt ()
-    (lui-set-prompt
-     (concat (propertize (format "%13s > " (circe-nick))
-                         'face 'circe-prompt-face)
-             "")))
-  (add-hook 'circe-chat-mode-hook #'named-circe-prompt)
-
-  (appendq! all-the-icons-mode-icon-alist
-            '((circe-channel-mode all-the-icons-material "message" :face all-the-icons-lblue)
-              (circe-server-mode all-the-icons-material "chat_bubble_outline" :face all-the-icons-purple))))
-
-(defun auth-server-pass (server)
-  (if-let ((secret (plist-get (car (auth-source-search :host server)) :secret)))
-      (if (functionp secret)
-          (funcall secret) secret)
-    (error "Could not fetch password for host %s" server)))
-
-(defun register-irc-auths ()
-  (require 'circe)
-  (require 'dash)
-  (let ((accounts (-filter (lambda (a) (string= "irc" (plist-get a :for)))
-                           (auth-source-search :require '(:for) :max 10))))
-    (appendq! circe-network-options
-              (mapcar (lambda (entry)
-                        (let* ((host (plist-get entry :host))
-                               (label (or (plist-get entry :label) host))
-                               (_ports (mapcar #'string-to-number
-                                               (s-split "," (plist-get entry :port))))
-                               (port (if (= 1 (length _ports)) (car _ports) _ports))
-                               (user (plist-get entry :user))
-                               (nick (or (plist-get entry :nick) user))
-                               (channels (mapcar (lambda (c) (concat "#" c))
-                                                 (s-split "," (plist-get entry :channels)))))
-                          `(,label
-                            :host ,host :port ,port :nick ,nick
-                            :sasl-username ,user :sasl-password auth-server-pass
-                            :channels ,channels)))
-                      accounts))))
-
-(add-transient-hook! #'=irc (register-irc-auths))
-
-(defun lui-org-to-irc ()
-  "Examine a buffer with simple org-mode formatting, and converts the empasis:
-*bold*, /italic/, and _underline_ to IRC semi-standard escape codes.
-=code= is converted to inverse (highlighted) text."
-  (goto-char (point-min))
-  (while (re-search-forward "\\_<\\(?1:[*/_=]\\)\\(?2:[^[:space:]]\\(?:.*?[^[:space:]]\\)?\\)\\1\\_>" nil t)
-    (replace-match
-     (concat (pcase (match-string 1)
-               ("*" "")
-               ("/" "")
-               ("_" "")
-               ("=" ""))
-             (match-string 2)
-             "") nil nil)))
-
-(add-hook 'lui-pre-input-hook #'lui-org-to-irc)
-
-;;; config.el -*- lexical-binding: t; -*-
-
-(setq user-full-name "Shaurya Singh"
-      user-mail-address "shaunsingh0207@gmail.com")
-
-(setq auth-sources '("~/.authinfo.gpg")
-      auth-source-cache-expiry nil) ; default is 7200 (2h)
-
-(defun greedily-do-daemon-setup ()
-  (require 'org)
-  (require 'vertico)
-  (require 'consult)
-  (require 'marginalia)
-  (when (require 'mu4e nil t)
-    (setq mu4e-confirm-quit t)
-    (setq +mu4e-lock-greedy t)
-    (setq +mu4e-lock-relaxed t)
-    (+mu4e-lock-add-watcher)
-    (when (+mu4e-lock-available t)
-      (mu4e~start))))
-
-(when (daemonp)
-  (add-hook 'emacs-startup-hook #'greedily-do-daemon-setup)
-  (add-hook 'emacs-startup-hook #'init-mixed-pitch-h))
-
-(setq explicit-shell-file-name (executable-find "fish"))
-
-(setq +ligatures-in-modes t)
-
-;;fonts
-(setq doom-font (font-spec :family "Liga SFMono Nerd Font" :size 14)
-      doom-big-font (font-spec :family "Liga SFMono Nerd Font" :size 20)
-      doom-variable-pitch-font (font-spec :family "Overpass" :size 16)
-      doom-unicode-font (font-spec :family "Liga SFMono Nerd Font")
-      doom-serif-font (font-spec :family "Liga SFMono Nerd Font" :weight 'light))
-
-;;mixed pitch modes
-(defvar mixed-pitch-modes '(org-mode LaTeX-mode markdown-mode gfm-mode Info-mode)
-  "Modes that `mixed-pitch-mode' should be enabled in, but only after UI initialisation.")
-(defun init-mixed-pitch-h ()
-  "Hook `mixed-pitch-mode' into each mode in `mixed-pitch-modes'.
-Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
-  (when (memq major-mode mixed-pitch-modes)
-    (mixed-pitch-mode 1))
-  (dolist (hook mixed-pitch-modes)
-    (add-hook (intern (concat (symbol-name hook) "-hook")) #'mixed-pitch-mode)))
-(add-hook 'doom-init-ui-hook #'init-mixed-pitch-h)
-(add-hook! 'org-mode-hook #'+org-pretty-mode) ;enter mixed pitch mode in org mode
-
-;;set mixed pitch font
- (after! mixed-pitch
-  (defface variable-pitch-serif
-    '((t (:family "serif")))
-    "A variable-pitch face with serifs."
-    :group 'basic-faces)
-  (setq mixed-pitch-set-height t)
-  (setq variable-pitch-serif-font (font-spec :family "Alegreya" :size 16))
-  (set-face-attribute 'variable-pitch-serif nil :font variable-pitch-serif-font)
-  (defun mixed-pitch-serif-mode (&optional arg)
-    "Change the default face of the current buffer to a serifed variable pitch, while keeping some faces fixed pitch."
-    (interactive)
-    (let ((mixed-pitch-face 'variable-pitch-serif))
-      (mixed-pitch-mode (or arg 'toggle)))))
-
-(set-char-table-range composition-function-table ?f '(["\\(?:ff?[fijlt]\\)" 0 font-shape-gstring]))
-(set-char-table-range composition-function-table ?T '(["\\(?:Th\\)" 0 font-shape-gstring]))
-
-(defvar required-fonts '("Overpass" "Liga SFMono Nerd Font" "Alegreya" ))
-(defvar available-fonts
-  (delete-dups (or (font-family-list)
-                   (split-string (shell-command-to-string "fc-list : family")
-                                 "[,\n]"))))
-(defvar missing-fonts
-  (delq nil (mapcar
-             (lambda (font)
-               (unless (delq nil (mapcar (lambda (f)
-                           (string-match-p (format "^%s$" font) f))
-                                         available-fonts))
-                                         font))
-                                         required-fonts)))
-(if missing-fonts
-    (pp-to-string
-     `(unless noninteractive
-        (add-hook! 'doom-init-ui-hook
-          (run-at-time nil nil
-                       (lambda ()
-                         (message "%s missing the following fonts: %s"
-                                  (propertize "Warning!" 'face '(bold warning))
-                                  (mapconcat (lambda (font)
-                                               (propertize font 'face 'font-lock-variable-name-face))
-                                             ',missing-fonts
-                                             ", "))
-                         (sleep-for 0.5))))))
-  ";; No missing fonts detected")
-
-(setq doom-theme 'doom-one-light)
-(setq doom-one-light-padded-modeline t)
-;;(setq doom-theme 'doom-nord)
-;;(setq doom-nord-padded-modeline t)
-
-;;(use-package! vlf-setup
-  ;;:defer-incrementally vlf-tune vlf-base vlf-write vlf-search vlf-occur vlf-follow vlf-ediff vlf)
-
-(after! company
-   (setq company-idle-delay 0.1
-      company-minimum-prefix-length 1
-      company-selection-wrap-around t
-      company-require-match 'never
-      company-dabbrev-downcase nil
-      company-dabbrev-ignore-case t
-      company-dabbrev-other-buffers nil
-      company-tooltip-limit 5
-      company-tooltip-minimum-width 50))
-(set-company-backend!
-  '(text-mode
-    markdown-mode
-    gfm-mode)
-  '(:seperate
-    company-yasnippet
-    company-ispell
-    company-files))
-
-;;nested snippets
-(setq yas-triggers-in-field t)
-
-(use-package! aas
-  :commands aas-mode)
-
-(use-package! laas
-  :hook (LaTeX-mode . laas-mode)
-  :config
-  (defun laas-tex-fold-maybe ()
-    (unless (equal "/" aas-transient-snippet-key)
-      (+latex-fold-last-macro-a)))
-  (add-hook 'org-mode #'laas-mode)
-  (add-hook 'aas-post-snippet-expand-hook #'laas-tex-fold-maybe))
-
-(defadvice! fixed-org-yas-expand-maybe-h ()
-  "Expand a yasnippet snippet, if trigger exists at point or region is active.
-Made for `org-tab-first-hook'."
-  :override #'+org-yas-expand-maybe-h
-  (when (and (featurep! :editor snippets)
-             (require 'yasnippet nil t)
-             (bound-and-true-p yas-minor-mode))
-    (and (let ((major-mode (cond ((org-in-src-block-p t)
-                                  (org-src-get-lang-mode (org-eldoc-get-src-lang)))
-                                 ((org-inside-LaTeX-fragment-p)
-                                  'latex-mode)
-                                 (major-mode)))
-               (org-src-tab-acts-natively nil) ; causes breakages
-               ;; Smart indentation doesn't work with yasnippet, and painfully slow
-               ;; in the few cases where it does.
-               (yas-indent-line 'fixed))
-           (cond ((and (or (not (bound-and-true-p evil-local-mode))
-                           (evil-insert-state-p)
-                           (evil-emacs-state-p))
-                       (or (and (bound-and-true-p yas--tables)
-                                (gethash major-mode yas--tables))
-                           (progn (yas-reload-all) t))
-                       (yas--templates-for-key-at-point))
-                  (yas-expand)
-                  t)
-                 ((use-region-p)
-                  (yas-insert-snippet)
-                  t)))
-         ;; HACK Yasnippet breaks org-superstar-mode because yasnippets is
-         ;;      overzealous about cleaning up overlays.
-         (when (bound-and-true-p org-superstar-mode)
-           (org-superstar-restart)))))
-
 (set-file-template! "\\.org$" :trigger "__" :mode 'org-mode)
 
 (use-package! lsp-ui
@@ -1838,6 +296,10 @@ Made for `org-tab-first-hook'."
 
 (fringe-mode 0) ;;disable fringe
 (global-subword-mode 1) ;;navigate through Camel Case words
+
+(add-to-list 'default-frame-alist '(inhibit-double-buffering . t))
+
+(setq doom-scratch-initial-major-mode 'lisp-interaction-mode)
 
 (setq evil-vsplit-window-right t
       evil-split-window-below t)
@@ -2019,6 +481,98 @@ Made for `org-tab-first-hook'."
 
 (add-hook! '(mu4e-compose-mode org-msg-edit-mode) (emoticon-to-emoji 1))
 
+(defvar fancy-splash-image-template
+  (expand-file-name "misc/splash-images/emacs-e-template.svg" doom-private-dir)
+  "Default template svg used for the splash image, with substitutions from ")
+
+(defvar fancy-splash-sizes
+  `((:height 300 :min-height 50 :padding (0 . 2))
+    (:height 250 :min-height 42 :padding (2 . 4))
+    (:height 200 :min-height 35 :padding (3 . 3))
+    (:height 150 :min-height 28 :padding (3 . 3))
+    (:height 100 :min-height 20 :padding (2 . 2))
+    (:height 75  :min-height 15 :padding (2 . 1))
+    (:height 50  :min-height 10 :padding (1 . 0))
+    (:height 1   :min-height 0  :padding (0 . 0)))
+  "list of plists with the following properties
+  :height the height of the image
+  :min-height minimum `frame-height' for image
+  :padding `+doom-dashboard-banner-padding' (top . bottom) to apply
+  :template non-default template file
+  :file file to use instead of template")
+
+(defvar fancy-splash-template-colours
+  '(("$colour1" . keywords) ("$colour2" . type) ("$colour3" . base5) ("$colour4" . base8))
+  "list of colour-replacement alists of the form (\"$placeholder\" . 'theme-colour) which applied the template")
+
+(unless (file-exists-p (expand-file-name "theme-splashes" doom-cache-dir))
+  (make-directory (expand-file-name "theme-splashes" doom-cache-dir) t))
+
+(defun fancy-splash-filename (theme-name height)
+  (expand-file-name (concat (file-name-as-directory "theme-splashes")
+                            theme-name
+                            "-" (number-to-string height) ".svg")
+                    doom-cache-dir))
+
+(defun fancy-splash-clear-cache ()
+  "Delete all cached fancy splash images"
+  (interactive)
+  (delete-directory (expand-file-name "theme-splashes" doom-cache-dir) t)
+  (message "Cache cleared!"))
+
+(defun fancy-splash-generate-image (template height)
+  "Read TEMPLATE and create an image if HEIGHT with colour substitutions as
+   described by `fancy-splash-template-colours' for the current theme"
+  (with-temp-buffer
+    (insert-file-contents template)
+    (re-search-forward "$height" nil t)
+    (replace-match (number-to-string height) nil nil)
+    (dolist (substitution fancy-splash-template-colours)
+      (goto-char (point-min))
+      (while (re-search-forward (car substitution) nil t)
+        (replace-match (doom-color (cdr substitution)) nil nil)))
+    (write-region nil nil
+                  (fancy-splash-filename (symbol-name doom-theme) height) nil nil)))
+
+(defun fancy-splash-generate-images ()
+  "Perform `fancy-splash-generate-image' in bulk"
+  (dolist (size fancy-splash-sizes)
+    (unless (plist-get size :file)
+      (fancy-splash-generate-image (or (plist-get size :template)
+                                       fancy-splash-image-template)
+                                   (plist-get size :height)))))
+
+(defun ensure-theme-splash-images-exist (&optional height)
+  (unless (file-exists-p (fancy-splash-filename
+                          (symbol-name doom-theme)
+                          (or height
+                              (plist-get (car fancy-splash-sizes) :height))))
+    (fancy-splash-generate-images)))
+
+(defun get-appropriate-splash ()
+  (let ((height (frame-height)))
+    (cl-some (lambda (size) (when (>= height (plist-get size :min-height)) size))
+             fancy-splash-sizes)))
+
+(setq fancy-splash-last-size nil)
+(setq fancy-splash-last-theme nil)
+(defun set-appropriate-splash (&rest _)
+  (let ((appropriate-image (get-appropriate-splash)))
+    (unless (and (equal appropriate-image fancy-splash-last-size)
+                 (equal doom-theme fancy-splash-last-theme)))
+    (unless (plist-get appropriate-image :file)
+      (ensure-theme-splash-images-exist (plist-get appropriate-image :height)))
+    (setq fancy-splash-image
+          (or (plist-get appropriate-image :file)
+              (fancy-splash-filename (symbol-name doom-theme) (plist-get appropriate-image :height))))
+    (setq +doom-dashboard-banner-padding (plist-get appropriate-image :padding))
+    (setq fancy-splash-last-size appropriate-image)
+    (setq fancy-splash-last-theme doom-theme)
+    (+doom-dashboard-reload)))
+
+(add-hook 'window-size-change-functions #'set-appropriate-splash)
+(add-hook 'doom-load-theme-hook #'set-appropriate-splash)
+
 (defvar splash-phrase-source-folder
   (expand-file-name "misc/splash-phrases" doom-private-dir)
   "A folder of text files with a fun phrase on each line.")
@@ -2109,6 +663,12 @@ Made for `org-tab-first-hook'."
    (doom-dashboard-phrase)
    "\n"))
 
+(remove-hook '+doom-dashboard-functions #'doom-dashboard-widget-shortmenu)
+(add-hook! '+doom-dashboard-mode-hook (hide-mode-line-mode 1) (hl-line-mode -1))
+(setq-hook! '+doom-dashboard-mode-hook evil-normal-state-cursor (list nil))
+
+(setq +zen-text-scale 0.8)
+
 (defvar +zen-serif-p t
   "Whether to use a serifed font with `mixed-pitch-mode'.")
 (after! writeroom-mode
@@ -2154,6 +714,134 @@ Made for `org-tab-first-hook'."
                 (when (featurep 'org-superstar)
                   (org-superstar-restart))
                 (when +zen--original-org-indent-mode-p (org-indent-mode 1))))))
+
+(add-hook 'org-mode-hook #'+org-pretty-mode)
+
+(setq org-pretty-entities-include-sub-superscripts nil)
+
+(custom-set-faces!
+  '(org-document-title :height 1.2)
+  '(outline-1 :weight extra-bold :height 1.25)
+  '(outline-2 :weight bold :height 1.15)
+  '(outline-3 :weight bold :height 1.12)
+  '(outline-4 :weight semi-bold :height 1.09)
+  '(outline-5 :weight semi-bold :height 1.06)
+  '(outline-6 :weight semi-bold :height 1.03)
+  '(outline-8 :weight semi-bold)
+  '(outline-9 :weight semi-bold))
+
+(setq org-agenda-deadline-faces
+      '((1.0 . error)
+        (1.0 . org-warning)
+        (0.5 . org-upcoming-deadline)
+        (0.0 . org-upcoming-distant-deadline)))
+
+(setq org-fontify-quote-and-verse-blocks t)
+
+(use-package! org-appear
+  :hook (org-mode . org-appear-mode)
+  :config
+  (setq org-appear-autoemphasis t
+        org-appear-autosubmarkers t
+        org-appear-autolinks nil)
+  (run-at-time nil nil #'org-appear--set-elements))
+
+(defun locally-defer-font-lock ()
+  "Set jit-lock defer and stealth, when buffer is over a certain size."
+  (when (> (buffer-size) 50000)
+    (setq-local jit-lock-defer-time 0.05
+                jit-lock-stealth-time 1)))
+
+(add-hook 'org-mode-hook #'locally-defer-font-lock)
+
+
+(custom-set-faces!
+  `(org-block-end-line :background ,(doom-color 'base2))
+  `(org-block-begin-line :background ,(doom-color 'base2)))
+
+(defvar org-prettify-inline-results t
+  "Whether to use (ab)use prettify-symbols-mode on {{{results(...)}}}.
+Either t or a cons cell of strings which are used as substitutions
+for the start and end of inline results, respectively.")
+
+(defvar org-fontify-inline-src-blocks-max-length 200
+  "Maximum content length of an inline src block that will be fontified.")
+
+(defun org-fontify-inline-src-blocks (limit)
+  "Try to apply `org-fontify-inline-src-blocks-1'."
+  (condition-case nil
+      (org-fontify-inline-src-blocks-1 limit)
+    (error (message "Org mode fontification error in %S at %d"
+                    (current-buffer)
+                    (line-number-at-pos)))))
+
+(defun org-fontify-inline-src-blocks-1 (limit)
+  "Fontify inline src_LANG blocks, from `point' up to LIMIT."
+  (let ((case-fold-search t)
+        (initial-point (point)))
+    (while (re-search-forward "\\_<src_\\([^ \t\n[{]+\\)[{[]?" limit t) ; stolen from `org-element-inline-src-block-parser'
+      (let ((beg (match-beginning 0))
+            pt
+            (lang-beg (match-beginning 1))
+            (lang-end (match-end 1)))
+        (remove-text-properties beg lang-end '(face nil))
+        (font-lock-append-text-property lang-beg lang-end 'face 'org-meta-line)
+        (font-lock-append-text-property beg lang-beg 'face 'shadow)
+        (font-lock-append-text-property beg lang-end 'face 'org-block)
+        (setq pt (goto-char lang-end))
+        ;; `org-element--parse-paired-brackets' doesn't take a limit, so to
+        ;; prevent it searching the entire rest of the buffer we temporarily
+        ;; narrow the active region.
+        (save-restriction
+          (narrow-to-region beg (min (point-max) limit (+ lang-end org-fontify-inline-src-blocks-max-length)))
+          (when (ignore-errors (org-element--parse-paired-brackets ?\[))
+            (remove-text-properties pt (point) '(face nil))
+            (font-lock-append-text-property pt (point) 'face 'org-block)
+            (setq pt (point)))
+          (when (ignore-errors (org-element--parse-paired-brackets ?\{))
+            (remove-text-properties pt (point) '(face nil))
+            (font-lock-append-text-property pt (1+ pt) 'face '(org-block shadow))
+            (unless (= (1+ pt) (1- (point)))
+              (if org-src-fontify-natively
+                  (org-src-font-lock-fontify-block (buffer-substring-no-properties lang-beg lang-end) (1+ pt) (1- (point)))
+                (font-lock-append-text-property (1+ pt) (1- (point)) 'face 'org-block)))
+            (font-lock-append-text-property (1- (point)) (point) 'face '(org-block shadow))
+            (setq pt (point))))
+        (when (and org-prettify-inline-results (re-search-forward "\\= {{{results(" limit t))
+          (font-lock-append-text-property pt (1+ pt) 'face 'org-block)
+          (goto-char pt))))
+    (when org-prettify-inline-results
+      (goto-char initial-point)
+      (org-fontify-inline-src-results limit))))
+
+(defun org-fontify-inline-src-results (limit)
+  (while (re-search-forward "{{{results(\\(.+?\\))}}}" limit t)
+    (remove-list-of-text-properties (match-beginning 0) (point)
+                                    '(composition
+                                      prettify-symbols-start
+                                      prettify-symbols-end))
+    (font-lock-append-text-property (match-beginning 0) (match-end 0) 'face 'org-block)
+    (let ((start (match-beginning 0)) (end (match-beginning 1)))
+      (with-silent-modifications
+        (compose-region start end (if (eq org-prettify-inline-results t) "⟨" (car org-prettify-inline-results)))
+        (add-text-properties start end `(prettify-symbols-start ,start prettify-symbols-end ,end))))
+    (let ((start (match-end 1)) (end (point)))
+      (with-silent-modifications
+        (compose-region start end (if (eq org-prettify-inline-results t) "⟩" (cdr org-prettify-inline-results)))
+        (add-text-properties start end `(prettify-symbols-start ,start prettify-symbols-end ,end))))))
+
+(defun org-fontify-inline-src-blocks-enable ()
+  "Add inline src fontification to font-lock in Org.
+Must be run as part of `org-font-lock-set-keywords-hook'."
+  (setq org-font-lock-extra-keywords
+        (append org-font-lock-extra-keywords '((org-fontify-inline-src-blocks)))))
+
+(add-hook 'org-font-lock-set-keywords-hook #'org-fontify-inline-src-blocks-enable)
+
+;;make bullets look better
+(after! org-superstar
+  (setq org-superstar-headline-bullets-list '("◉" "○" "✸" "✿" "✤" "✜" "◆" "▶")
+        org-superstar-prettify-item-bullets t ))
 
 (setq org-ellipsis " ▾ "
       org-hide-leading-stars t
@@ -2503,6 +1191,9 @@ Made for `org-tab-first-hook'."
 
 (use-package! org-pretty-table
   :commands (org-pretty-table-mode global-org-pretty-table-mode))
+
+(use-package! org-pandoc-import
+  :after org)
 
 (setq org-directory "~/org"                      ; let's put files here
       org-use-property-inheritance t              ; it's convenient to have properties inherited
@@ -3064,6 +1755,44 @@ MathJax = {
 
 )
 
+(after! ox-html
+  
+)
+
+(defun org-html-block-collapsable (orig-fn block contents info)
+  "Wrap the usual block in a <details>"
+  (if (or (not org-fancy-html-export-mode) (bound-and-true-p org-msg-export-in-progress))
+      (funcall orig-fn block contents info)
+    (let ((ref (org-export-get-reference block info))
+          (type (pcase (car block)
+                  ('property-drawer "Properties")))
+          (collapsed-default (pcase (car block)
+                               ('property-drawer t)
+                               (_ nil)))
+          (collapsed-value (org-export-read-attribute :attr_html block :collapsed))
+          (collapsed-p (or (member (org-export-read-attribute :attr_html block :collapsed)
+                                   '("y" "yes" "t" t "true"))
+                           (member (plist-get info :collapsed) '("all")))))
+      (format
+       "<details id='%s' class='code'%s>
+<summary%s>%s</summary>
+<div class='gutter'>\
+<a href='#%s'>#</a>
+<button title='Copy to clipboard' onclick='copyPreToClipbord(this)'>⎘</button>\
+</div>
+%s\n
+</details>"
+       ref
+       (if (or collapsed-p collapsed-default) "" " open")
+       (if type " class='named'" "")
+       (if type (format "<span class='type'>%s</span>" type) "")
+       ref
+       (funcall orig-fn block contents info)))))
+
+(advice-add 'org-html-example-block   :around #'org-html-block-collapsable)
+(advice-add 'org-html-fixed-width     :around #'org-html-block-collapsable)
+(advice-add 'org-html-property-drawer :around #'org-html-block-collapsable)
+
 (setq org-roam-directory "~/org/roam/")
 
 (use-package! websocket
@@ -3093,6 +1822,189 @@ MathJax = {
 
 (setq org-agenda-files (list "~/org/school.org"
                              "~/org/todo.org"))
+
+(use-package! doct
+  :commands (doct))
+
+(defun org-capture-select-template-prettier (&optional keys)
+  "Select a capture template, in a prettier way than default
+Lisp programs can force the template by setting KEYS to a string."
+  (let ((org-capture-templates
+         (or (org-contextualize-keys
+              (org-capture-upgrade-templates org-capture-templates)
+              org-capture-templates-contexts)
+             '(("t" "Task" entry (file+headline "" "Tasks")
+                "* TODO %?\n  %u\n  %a")))))
+    (if keys
+        (or (assoc keys org-capture-templates)
+            (error "No capture template referred to by \"%s\" keys" keys))
+      (org-mks org-capture-templates
+               "Select a capture template\n━━━━━━━━━━━━━━━━━━━━━━━━━"
+               "Template key: "
+               `(("q" ,(concat (all-the-icons-octicon "stop" :face 'all-the-icons-red :v-adjust 0.01) "\tAbort")))))))
+(advice-add 'org-capture-select-template :override #'org-capture-select-template-prettier)
+
+(defun org-mks-pretty (table title &optional prompt specials)
+  "Select a member of an alist with multiple keys. Prettified.
+
+TABLE is the alist which should contain entries where the car is a string.
+There should be two types of entries.
+
+1. prefix descriptions like (\"a\" \"Description\")
+   This indicates that `a' is a prefix key for multi-letter selection, and
+   that there are entries following with keys like \"ab\", \"ax\"…
+
+2. Select-able members must have more than two elements, with the first
+   being the string of keys that lead to selecting it, and the second a
+   short description string of the item.
+
+The command will then make a temporary buffer listing all entries
+that can be selected with a single key, and all the single key
+prefixes.  When you press the key for a single-letter entry, it is selected.
+When you press a prefix key, the commands (and maybe further prefixes)
+under this key will be shown and offered for selection.
+
+TITLE will be placed over the selection in the temporary buffer,
+PROMPT will be used when prompting for a key.  SPECIALS is an
+alist with (\"key\" \"description\") entries.  When one of these
+is selected, only the bare key is returned."
+  (save-window-excursion
+    (let ((inhibit-quit t)
+          (buffer (org-switch-to-buffer-other-window "*Org Select*"))
+          (prompt (or prompt "Select: "))
+          case-fold-search
+          current)
+      (unwind-protect
+          (catch 'exit
+            (while t
+              (setq-local evil-normal-state-cursor (list nil))
+              (erase-buffer)
+              (insert title "\n\n")
+              (let ((des-keys nil)
+                    (allowed-keys '("\C-g"))
+                    (tab-alternatives '("\s" "\t" "\r"))
+                    (cursor-type nil))
+                ;; Populate allowed keys and descriptions keys
+                ;; available with CURRENT selector.
+                (let ((re (format "\\`%s\\(.\\)\\'"
+                                  (if current (regexp-quote current) "")))
+                      (prefix (if current (concat current " ") "")))
+                  (dolist (entry table)
+                    (pcase entry
+                      ;; Description.
+                      (`(,(and key (pred (string-match re))) ,desc)
+                       (let ((k (match-string 1 key)))
+                         (push k des-keys)
+                         ;; Keys ending in tab, space or RET are equivalent.
+                         (if (member k tab-alternatives)
+                             (push "\t" allowed-keys)
+                           (push k allowed-keys))
+                         (insert (propertize prefix 'face 'font-lock-comment-face) (propertize k 'face 'bold) (propertize "›" 'face 'font-lock-comment-face) "  " desc "…" "\n")))
+                      ;; Usable entry.
+                      (`(,(and key (pred (string-match re))) ,desc . ,_)
+                       (let ((k (match-string 1 key)))
+                         (insert (propertize prefix 'face 'font-lock-comment-face) (propertize k 'face 'bold) "   " desc "\n")
+                         (push k allowed-keys)))
+                      (_ nil))))
+                ;; Insert special entries, if any.
+                (when specials
+                  (insert "─────────────────────────\n")
+                  (pcase-dolist (`(,key ,description) specials)
+                    (insert (format "%s   %s\n" (propertize key 'face '(bold all-the-icons-red)) description))
+                    (push key allowed-keys)))
+                ;; Display UI and let user select an entry or
+                ;; a sub-level prefix.
+                (goto-char (point-min))
+                (unless (pos-visible-in-window-p (point-max))
+                  (org-fit-window-to-buffer))
+                (let ((pressed (org--mks-read-key allowed-keys prompt nil)))
+                  (setq current (concat current pressed))
+                  (cond
+                   ((equal pressed "\C-g") (user-error "Abort"))
+                   ((equal pressed "ESC") (user-error "Abort"))
+                   ;; Selection is a prefix: open a new menu.
+                   ((member pressed des-keys))
+                   ;; Selection matches an association: return it.
+                   ((let ((entry (assoc current table)))
+                      (and entry (throw 'exit entry))))
+                   ;; Selection matches a special entry: return the
+                   ;; selection prefix.
+                   ((assoc current specials) (throw 'exit current))
+                   (t (error "No entry available")))))))
+        (when buffer (kill-buffer buffer))))))
+(advice-add 'org-mks :override #'org-mks-pretty)
+
+(setf (alist-get 'height +org-capture-frame-parameters) 15)
+;; (alist-get 'name +org-capture-frame-parameters) "❖ Capture") ;; ATM hardcoded in other places, so changing breaks stuff
+(setq +org-capture-fn
+      (lambda ()
+        (interactive)
+        (set-window-parameter nil 'mode-line-format 'none)
+        (org-capture)))
+
+(defun +doct-icon-declaration-to-icon (declaration)
+  "Convert :icon declaration to icon"
+  (let ((name (pop declaration))
+        (set  (intern (concat "all-the-icons-" (plist-get declaration :set))))
+        (face (intern (concat "all-the-icons-" (plist-get declaration :color))))
+        (v-adjust (or (plist-get declaration :v-adjust) 0.01)))
+    (apply set `(,name :face ,face :v-adjust ,v-adjust))))
+
+(defun +doct-iconify-capture-templates (groups)
+  "Add declaration's :icon to each template group in GROUPS."
+  (let ((templates (doct-flatten-lists-in groups)))
+    (setq doct-templates (mapcar (lambda (template)
+                                   (when-let* ((props (nthcdr (if (= (length template) 4) 2 5) template))
+                                               (spec (plist-get (plist-get props :doct) :icon)))
+                                     (setf (nth 1 template) (concat (+doct-icon-declaration-to-icon spec)
+                                                                    "\t"
+                                                                    (nth 1 template))))
+                                   template)
+                                 templates))))
+
+(setq doct-after-conversion-functions '(+doct-iconify-capture-templates))
+
+(setq org-capture-templates
+      (doct `(("Home" :keys "h"
+               :icon ("home" :set "octicon" :color "cyan")
+               :file "Home.org"
+               :prepend t
+               :headline "Inbox"
+               :template ("* TODO %?"
+                          "%i %a"))
+              ("Work" :keys "w"
+               :icon ("business" :set "material" :color "yellow")
+               :file "Work.org"
+               :prepend t
+               :headline "Inbox"
+               :template ("* TODO %?"
+                          "SCHEDULED: %^{Schedule:}t"
+                          "DEADLINE: %^{Deadline:}t"
+                          "%i %a"))
+              ("Note" :keys "n"
+               :icon ("sticky-note" :set "faicon" :color "yellow")
+               :file "Notes.org"
+               :template ("* *?"
+                          "%i %a"))
+              ("Project" :keys "p"
+               :icon ("repo" :set "octicon" :color "silver")
+               :prepend t
+               :type entry
+               :headline "Inbox"
+               :template ("* %{keyword} %?"
+                          "%i"
+                          "%a")
+               :file ""
+               :custom (:keyword "")
+               :children (("Task" :keys "t"
+                           :icon ("checklist" :set "octicon" :color "green")
+                           :keyword "TODO"
+                           :file +org-capture-project-todo-file)
+                          ("Note" :keys "n"
+                           :icon ("sticky-note" :set "faicon" :color "yellow")
+                           :keyword "%U"
+                           :file +org-capture-project-notes-file)))
+              )))
 
 (after! org-plot
   (defun org-plot/generate-theme (_type)
@@ -3169,6 +2081,326 @@ set palette defined ( 0 '%s',\
             (doom-color 'bg)))
   (setq org-plot/gnuplot-script-preamble #'org-plot/generate-theme)
   (setq org-plot/gnuplot-term-extra #'org-plot/gnuplot-term-properties))
+
+(use-package! xkcd
+  :commands (xkcd-get-json
+             xkcd-download xkcd-get
+             ;; now for funcs from my extension of this pkg
+             +xkcd-find-and-copy +xkcd-find-and-view
+             +xkcd-fetch-info +xkcd-select)
+  :config
+  (setq xkcd-cache-dir (expand-file-name "xkcd/" doom-cache-dir)
+        xkcd-cache-latest (concat xkcd-cache-dir "latest"))
+  (unless (file-exists-p xkcd-cache-dir)
+    (make-directory xkcd-cache-dir))
+  (after! evil-snipe
+    (add-to-list 'evil-snipe-disabled-modes 'xkcd-mode))
+  :general (:states 'normal
+            :keymaps 'xkcd-mode-map
+            "<right>" #'xkcd-next
+            "n"       #'xkcd-next ; evil-ish
+            "<left>"  #'xkcd-prev
+            "N"       #'xkcd-prev ; evil-ish
+            "r"       #'xkcd-rand
+            "a"       #'xkcd-rand ; because image-rotate can interfere
+            "t"       #'xkcd-alt-text
+            "q"       #'xkcd-kill-buffer
+            "o"       #'xkcd-open-browser
+            "e"       #'xkcd-open-explanation-browser
+            ;; extras
+            "s"       #'+xkcd-find-and-view
+            "/"       #'+xkcd-find-and-view
+            "y"       #'+xkcd-copy))
+
+(after! xkcd
+  (require 'emacsql-sqlite)
+
+  (defun +xkcd-select ()
+    "Prompt the user for an xkcd using `completing-read' and `+xkcd-select-format'. Return the xkcd number or nil"
+    (let* (prompt-lines
+           (-dummy (maphash (lambda (key xkcd-info)
+                              (push (+xkcd-select-format xkcd-info) prompt-lines))
+                            +xkcd-stored-info))
+           (num (completing-read (format "xkcd (%s): " xkcd-latest) prompt-lines)))
+      (if (equal "" num) xkcd-latest
+        (string-to-number (replace-regexp-in-string "\\([0-9]+\\).*" "\\1" num)))))
+
+  (defun +xkcd-select-format (xkcd-info)
+    "Creates each completing-read line from an xkcd info plist. Must start with the xkcd number"
+    (format "%-4s  %-30s %s"
+            (propertize (number-to-string (plist-get xkcd-info :num))
+                        'face 'counsel-key-binding)
+            (plist-get xkcd-info :title)
+            (propertize (plist-get xkcd-info :alt)
+                        'face '(variable-pitch font-lock-comment-face))))
+
+  (defun +xkcd-fetch-info (&optional num)
+    "Fetch the parsed json info for comic NUM. Fetches latest when omitted or 0"
+    (require 'xkcd)
+    (when (or (not num) (= num 0))
+      (+xkcd-check-latest)
+      (setq num xkcd-latest))
+    (let ((res (or (gethash num +xkcd-stored-info)
+                   (puthash num (+xkcd-db-read num) +xkcd-stored-info))))
+      (unless res
+        (+xkcd-db-write
+         (let* ((url (format "https://xkcd.com/%d/info.0.json" num))
+                (json-assoc
+                 (if (gethash num +xkcd-stored-info)
+                     (gethash num +xkcd-stored-info)
+                   (json-read-from-string (xkcd-get-json url num)))))
+           json-assoc))
+        (setq res (+xkcd-db-read num)))
+      res))
+
+  ;; since we've done this, we may as well go one little step further
+  (defun +xkcd-find-and-copy ()
+    "Prompt for an xkcd using `+xkcd-select' and copy url to clipboard"
+    (interactive)
+    (+xkcd-copy (+xkcd-select)))
+
+  (defun +xkcd-copy (&optional num)
+    "Copy a url to xkcd NUM to the clipboard"
+    (interactive "i")
+    (let ((num (or num xkcd-cur)))
+      (gui-select-text (format "https://xkcd.com/%d" num))
+      (message "xkcd.com/%d copied to clipboard" num)))
+
+  (defun +xkcd-find-and-view ()
+    "Prompt for an xkcd using `+xkcd-select' and view it"
+    (interactive)
+    (xkcd-get (+xkcd-select))
+    (switch-to-buffer "*xkcd*"))
+
+  (defvar +xkcd-latest-max-age (* 60 60) ; 1 hour
+    "Time after which xkcd-latest should be refreshed, in seconds")
+
+  ;; initialise `xkcd-latest' and `+xkcd-stored-info' with latest xkcd
+  (add-transient-hook! '+xkcd-select
+    (require 'xkcd)
+    (+xkcd-fetch-info xkcd-latest)
+    (setq +xkcd-stored-info (+xkcd-db-read-all)))
+
+  (add-transient-hook! '+xkcd-fetch-info
+    (xkcd-update-latest))
+
+  (defun +xkcd-check-latest ()
+    "Use value in `xkcd-cache-latest' as long as it isn't older thabn `+xkcd-latest-max-age'"
+    (unless (and (file-exists-p xkcd-cache-latest)
+                 (< (- (time-to-seconds (current-time))
+                       (time-to-seconds (file-attribute-modification-time (file-attributes xkcd-cache-latest))))
+                    +xkcd-latest-max-age))
+      (let* ((out (xkcd-get-json "http://xkcd.com/info.0.json" 0))
+             (json-assoc (json-read-from-string out))
+             (latest (cdr (assoc 'num json-assoc))))
+        (when (/= xkcd-latest latest)
+          (+xkcd-db-write json-assoc)
+          (with-current-buffer (find-file xkcd-cache-latest)
+            (setq xkcd-latest latest)
+            (erase-buffer)
+            (insert (number-to-string latest))
+            (save-buffer)
+            (kill-buffer (current-buffer)))))
+      (shell-command (format "touch %s" xkcd-cache-latest))))
+
+  (defvar +xkcd-stored-info (make-hash-table :test 'eql)
+    "Basic info on downloaded xkcds, in the form of a hashtable")
+
+  (defadvice! xkcd-get-json--and-cache (url &optional num)
+    "Fetch the Json coming from URL.
+If the file NUM.json exists, use it instead.
+If NUM is 0, always download from URL.
+The return value is a string."
+    :override #'xkcd-get-json
+    (let* ((file (format "%s%d.json" xkcd-cache-dir num))
+           (cached (and (file-exists-p file) (not (eq num 0))))
+           (out (with-current-buffer (if cached
+                                         (find-file file)
+                                       (url-retrieve-synchronously url))
+                  (goto-char (point-min))
+                  (unless cached (re-search-forward "^$"))
+                  (prog1
+                      (buffer-substring-no-properties (point) (point-max))
+                    (kill-buffer (current-buffer))))))
+      (unless (or cached (eq num 0))
+        (xkcd-cache-json num out))
+      out))
+
+  (defadvice! +xkcd-get (num)
+    "Get the xkcd number NUM."
+    :override 'xkcd-get
+    (interactive "nEnter comic number: ")
+    (xkcd-update-latest)
+    (get-buffer-create "*xkcd*")
+    (switch-to-buffer "*xkcd*")
+    (xkcd-mode)
+    (let (buffer-read-only)
+      (erase-buffer)
+      (setq xkcd-cur num)
+      (let* ((xkcd-data (+xkcd-fetch-info num))
+             (num (plist-get xkcd-data :num))
+             (img (plist-get xkcd-data :img))
+             (safe-title (plist-get xkcd-data :safe-title))
+             (alt (plist-get xkcd-data :alt))
+             title file)
+        (message "Getting comic...")
+        (setq file (xkcd-download img num))
+        (setq title (format "%d: %s" num safe-title))
+        (insert (propertize title
+                            'face 'outline-1))
+        (center-line)
+        (insert "\n")
+        (xkcd-insert-image file num)
+        (if (eq xkcd-cur 0)
+            (setq xkcd-cur num))
+        (setq xkcd-alt alt)
+        (message "%s" title))))
+
+  (defconst +xkcd-db--sqlite-available-p
+    (with-demoted-errors "+org-xkcd initialization: %S"
+      (emacsql-sqlite-ensure-binary)
+      t))
+
+  (defvar +xkcd-db--connection (make-hash-table :test #'equal)
+    "Database connection to +org-xkcd database.")
+
+  (defun +xkcd-db--get ()
+    "Return the sqlite db file."
+    (expand-file-name "xkcd.db" xkcd-cache-dir))
+
+  (defun +xkcd-db--get-connection ()
+    "Return the database connection, if any."
+    (gethash (file-truename xkcd-cache-dir)
+             +xkcd-db--connection))
+
+  (defconst +xkcd-db--table-schema
+    '((xkcds
+       [(num integer :unique :primary-key)
+        (year        :not-null)
+        (month       :not-null)
+        (link        :not-null)
+        (news        :not-null)
+        (safe_title  :not-null)
+        (title       :not-null)
+        (transcript  :not-null)
+        (alt         :not-null)
+        (img         :not-null)])))
+
+  (defun +xkcd-db--init (db)
+    "Initialize database DB with the correct schema and user version."
+    (emacsql-with-transaction db
+      (pcase-dolist (`(,table . ,schema) +xkcd-db--table-schema)
+        (emacsql db [:create-table $i1 $S2] table schema))))
+
+  (defun +xkcd-db ()
+    "Entrypoint to the +org-xkcd sqlite database.
+Initializes and stores the database, and the database connection.
+Performs a database upgrade when required."
+    (unless (and (+xkcd-db--get-connection)
+                 (emacsql-live-p (+xkcd-db--get-connection)))
+      (let* ((db-file (+xkcd-db--get))
+             (init-db (not (file-exists-p db-file))))
+        (make-directory (file-name-directory db-file) t)
+        (let ((conn (emacsql-sqlite db-file)))
+          (set-process-query-on-exit-flag (emacsql-process conn) nil)
+          (puthash (file-truename xkcd-cache-dir)
+                   conn
+                   +xkcd-db--connection)
+          (when init-db
+            (+xkcd-db--init conn)))))
+    (+xkcd-db--get-connection))
+
+  (defun +xkcd-db-query (sql &rest args)
+    "Run SQL query on +org-xkcd database with ARGS.
+SQL can be either the emacsql vector representation, or a string."
+    (if  (stringp sql)
+        (emacsql (+xkcd-db) (apply #'format sql args))
+      (apply #'emacsql (+xkcd-db) sql args)))
+
+  (defun +xkcd-db-read (num)
+    (when-let ((res
+                (car (+xkcd-db-query [:select * :from xkcds
+                                      :where (= num $s1)]
+                                     num
+                                     :limit 1))))
+      (+xkcd-db-list-to-plist res)))
+
+  (defun +xkcd-db-read-all ()
+    (let ((xkcd-table (make-hash-table :test 'eql :size 4000)))
+      (mapcar (lambda (xkcd-info-list)
+                (puthash (car xkcd-info-list) (+xkcd-db-list-to-plist xkcd-info-list) xkcd-table))
+              (+xkcd-db-query [:select * :from xkcds]))
+      xkcd-table))
+
+  (defun +xkcd-db-list-to-plist (xkcd-datalist)
+    `(:num ,(nth 0 xkcd-datalist)
+      :year ,(nth 1 xkcd-datalist)
+      :month ,(nth 2 xkcd-datalist)
+      :link ,(nth 3 xkcd-datalist)
+      :news ,(nth 4 xkcd-datalist)
+      :safe-title ,(nth 5 xkcd-datalist)
+      :title ,(nth 6 xkcd-datalist)
+      :transcript ,(nth 7 xkcd-datalist)
+      :alt ,(nth 8 xkcd-datalist)
+      :img ,(nth 9 xkcd-datalist)))
+
+  (defun +xkcd-db-write (data)
+    (+xkcd-db-query [:insert-into xkcds
+                     :values $v1]
+                    (list (vector
+                           (cdr (assoc 'num        data))
+                           (cdr (assoc 'year       data))
+                           (cdr (assoc 'month      data))
+                           (cdr (assoc 'link       data))
+                           (cdr (assoc 'news       data))
+                           (cdr (assoc 'safe_title data))
+                           (cdr (assoc 'title      data))
+                           (cdr (assoc 'transcript data))
+                           (cdr (assoc 'alt        data))
+                           (cdr (assoc 'img        data))
+                           )))))
+
+(after! org
+	(org-link-set-parameters "xkcd"
+	                         :image-data-fun #'+org-xkcd-image-fn
+	                         :follow #'+org-xkcd-open-fn
+	                         :export #'+org-xkcd-export
+	                         :complete #'+org-xkcd-complete)
+	
+	(defun +org-xkcd-open-fn (link)
+	  (+org-xkcd-image-fn nil link nil))
+	
+	(defun +org-xkcd-image-fn (protocol link description)
+	  "Get image data for xkcd num LINK"
+	  (let* ((xkcd-info (+xkcd-fetch-info (string-to-number link)))
+	         (img (plist-get xkcd-info :img))
+	         (alt (plist-get xkcd-info :alt)))
+	    (message alt)
+	    (+org-image-file-data-fn protocol (xkcd-download img (string-to-number link)) description)))
+	
+	(defun +org-xkcd-export (num desc backend _com)
+	  "Convert xkcd to html/LaTeX form"
+	  (let* ((xkcd-info (+xkcd-fetch-info (string-to-number num)))
+	         (img (plist-get xkcd-info :img))
+	         (alt (plist-get xkcd-info :alt))
+	         (title (plist-get xkcd-info :title))
+	         (file (xkcd-download img (string-to-number num))))
+	    (cond ((org-export-derived-backend-p backend 'html)
+	           (format "<img class='invertible' src='%s' title=\"%s\" alt='%s'>" img (subst-char-in-string ?\" ?“ alt) title))
+	          ((org-export-derived-backend-p backend 'latex)
+	           (format "\\begin{figure}[!htb]
+	  \\centering
+	  \\includegraphics[scale=0.4]{%s}%s
+	\\end{figure}" file (if (equal desc (format "xkcd:%s" num)) ""
+	                      (format "\n  \\caption*{\\label{xkcd:%s} %s}"
+	                              num
+	                              (or desc
+	                                  (format "\\textbf{%s} %s" title alt))))))
+	          (t (format "https://xkcd.com/%s" num)))))
+	
+	(defun +org-xkcd-complete (&optional arg)
+	  "Complete xkcd using `+xkcd-stored-info'"
+	  (format "xkcd:%d" (+xkcd-select))))
 
 ;;spc+v = view exported file
 (map! :map org-mode-map
@@ -3283,6 +2515,496 @@ set palette defined ( 0 '%s',\
   (setq pdf-view-resize-factor 1.1)
   (setq-default pdf-view-display-size 'fit-page))
 
+(defvar org-latex-italic-quotes t
+  "Make \"quote\" environments italic.")
+(defvar org-latex-par-sep t
+  "Vertically seperate paragraphs, and remove indentation.")
+
+(defvar org-latex-conditional-features
+  '(("\\[\\[\\(?:file\\|https?\\):\\(?:[^]]\\|\\\\\\]\\)+?\\.\\(?:eps\\|pdf\\|png\\|jpeg\\|jpg\\|jbig2\\)\\]\\]" . image)
+    ("\\[\\[\\(?:file\\|https?\\):\\(?:[^]]+?\\|\\\\\\]\\)\\.svg\\]\\]" . svg)
+    ("^[ \t]*|" . table)
+    ("cref:\\|\\cref{\\|\\[\\[[^\\]]+\\]\\]" . cleveref)
+    ("[;\\\\]?\\b[A-Z][A-Z]+s?[^A-Za-z]" . acronym)
+    ("\\+[^ ].*[^ ]\\+\\|_[^ ].*[^ ]_\\|\\\\uu?line\\|\\\\uwave\\|\\\\sout\\|\\\\xout\\|\\\\dashuline\\|\\dotuline\\|\\markoverwith" . underline)
+    (":float wrap" . float-wrap)
+    (":float sideways" . rotate)
+    ("^[ \t]*#\\+caption:\\|\\\\caption" . caption)
+    ("\\[\\[xkcd:" . (image caption))
+    ((and org-latex-italic-quotes "^[ \t]*#\\+begin_quote\\|\\\\begin{quote}") . italic-quotes)
+    (org-latex-par-sep . par-sep)
+    ("^[ \t]*\\(?:[-+*]\\|[0-9]+[.)]\\|[A-Za-z]+[.)]\\) \\[[ -X]\\]" . checkbox)
+    ("^[ \t]*#\\+begin_warning\\|\\\\begin{warning}" . box-warning)
+    ("^[ \t]*#\\+begin_info\\|\\\\begin{info}"       . box-info)
+    ("^[ \t]*#\\+begin_success\\|\\\\begin{success}" . box-success)
+    ("^[ \t]*#\\+begin_error\\|\\\\begin{error}"     . box-error))
+  "Org feature tests and associated LaTeX feature flags.
+
+Alist where the car is a test for the presense of the feature,
+and the cdr is either a single feature symbol or list of feature symbols.
+
+When a string, it is used as a regex search in the buffer.
+The feature is registered as present when there is a match.
+
+The car can also be a
+- symbol, the value of which is fetched
+- function, which is called with info as an argument
+- list, which is `eval'uated
+
+If the symbol, function, or list produces a string: that is used as a regex
+search in the buffer. Otherwise any non-nil return value will indicate the
+existance of the feature.")
+
+(defvar org-latex-caption-preamble "
+\\usepackage{subcaption}
+\\usepackage[hypcap=true]{caption}
+\\setkomafont{caption}{\\sffamily\\small}
+\\setkomafont{captionlabel}{\\upshape\\bfseries}
+\\captionsetup{justification=raggedright,singlelinecheck=true}
+\\usepackage{capt-of} % required by Org
+"
+  "Preamble that improves captions.")
+
+(defvar org-latex-checkbox-preamble "
+\\newcommand{\\checkboxUnchecked}{$\\square$}
+\\newcommand{\\checkboxTransitive}{\\rlap{\\raisebox{-0.1ex}{\\hspace{0.35ex}\\Large\\textbf -}}$\\square$}
+\\newcommand{\\checkboxChecked}{\\rlap{\\raisebox{0.2ex}{\\hspace{0.35ex}\\scriptsize \\ding{52}}}$\\square$}
+"
+  "Preamble that improves checkboxes.")
+
+(defvar org-latex-box-preamble "
+% args = #1 Name, #2 Colour, #3 Ding, #4 Label
+\\newcommand{\\defsimplebox}[4]{%
+  \\definecolor{#1}{HTML}{#2}
+  \\newenvironment{#1}[1][]
+  {%
+    \\par\\vspace{-0.7\\baselineskip}%
+    \\textcolor{#1}{#3} \\textcolor{#1}{\\textbf{\\def\\temp{##1}\\ifx\\temp\\empty#4\\else##1\\fi}}%
+    \\vspace{-0.8\\baselineskip}
+    \\begin{addmargin}[1em]{1em}
+  }{%
+    \\end{addmargin}
+    \\vspace{-0.5\\baselineskip}
+  }%
+}
+"
+  "Preamble that provides a macro for custom boxes.")
+
+(defvar org-latex-feature-implementations
+  '((image         :snippet "\\usepackage{graphicx}" :order 2)
+    (svg           :snippet "\\usepackage{svg}" :order 2)
+    (table         :snippet "\\usepackage{longtable}\n\\usepackage{booktabs}" :order 2)
+    (cleveref      :snippet "\\usepackage[capitalize]{cleveref}" :order 1)
+    (underline     :snippet "\\usepackage[normalem]{ulem}" :order 0.5)
+    (float-wrap    :snippet "\\usepackage{wrapfig}" :order 2)
+    (rotate        :snippet "\\usepackage{rotating}" :order 2)
+    (caption       :snippet org-latex-caption-preamble :order 2.1)
+    (acronym       :snippet "\\newcommand{\\acr}[1]{\\protect\\textls*[110]{\\scshape #1}}\n\\newcommand{\\acrs}{\\protect\\scalebox{.91}[.84]\\hspace{0.15ex}s}" :order 0.4)
+    (italic-quotes :snippet "\\renewcommand{\\quote}{\\list{}{\\rightmargin\\leftmargin}\\item\\relax\\em}\n" :order 0.5)
+    (par-sep       :snippet "\\setlength{\\parskip}{\\baselineskip}\n\\setlength{\\parindent}{0pt}\n" :order 0.5)
+    (.pifont       :snippet "\\usepackage{pifont}")
+    (checkbox      :requires .pifont :order 3
+                   :snippet (concat (unless (memq 'maths features)
+                                      "\\usepackage{amssymb} % provides \\square")
+                                    org-latex-checkbox-preamble))
+    (.fancy-box    :requires .pifont    :snippet org-latex-box-preamble :order 3.9)
+    (box-warning   :requires .fancy-box :snippet "\\defsimplebox{warning}{e66100}{\\ding{68}}{Warning}" :order 4)
+    (box-info      :requires .fancy-box :snippet "\\defsimplebox{info}{3584e4}{\\ding{68}}{Information}" :order 4)
+    (box-success   :requires .fancy-box :snippet "\\defsimplebox{success}{26a269}{\\ding{68}}{\\vspace{-\\baselineskip}}" :order 4)
+    (box-error     :requires .fancy-box :snippet "\\defsimplebox{error}{c01c28}{\\ding{68}}{Important}" :order 4))
+  "LaTeX features and details required to implement them.
+
+List where the car is the feature symbol, and the rest forms a plist with the
+following keys:
+- :snippet, which may be either
+  - a string which should be included in the preamble
+  - a symbol, the value of which is included in the preamble
+  - a function, which is evaluated with the list of feature flags as its
+    single argument. The result of which is included in the preamble
+  - a list, which is passed to `eval', with a list of feature flags available
+    as \"features\"
+
+- :requires, a feature or list of features that must be available
+- :when, a feature or list of features that when all available should cause this
+    to be automatically enabled.
+- :prevents, a feature or list of features that should be masked
+- :order, for when ordering is important. Lower values appear first.
+    The default is 0.
+
+Features that start with ! will be eagerly loaded, i.e. without being detected.")
+
+(defun org-latex-detect-features (&optional buffer info)
+  "List features from `org-latex-conditional-features' detected in BUFFER."
+  (let ((case-fold-search nil))
+    (with-current-buffer (or buffer (current-buffer))
+      (delete-dups
+       (mapcan (lambda (construct-feature)
+                 (when (let ((out (pcase (car construct-feature)
+                                    ((pred stringp) (car construct-feature))
+                                    ((pred functionp) (funcall (car construct-feature) info))
+                                    ((pred listp) (eval (car construct-feature)))
+                                    ((pred symbolp) (symbol-value (car construct-feature)))
+                                    (_ (user-error "org-latex-conditional-features key %s unable to be used" (car construct-feature))))))
+                         (if (stringp out)
+                             (save-excursion
+                               (goto-char (point-min))
+                               (re-search-forward out nil t))
+                           out))
+                   (if (listp (cdr construct-feature)) (cdr construct-feature) (list (cdr construct-feature)))))
+               org-latex-conditional-features)))))
+
+(defun org-latex-expand-features (features)
+  "For each feature in FEATURES process :requires, :when, and :prevents keywords and sort according to :order."
+  (dolist (feature features)
+    (unless (assoc feature org-latex-feature-implementations)
+      (error "Feature %s not provided in org-latex-feature-implementations" feature)))
+  (setq current features)
+  (while current
+    (when-let ((requirements (plist-get (cdr (assq (car current) org-latex-feature-implementations)) :requires)))
+      (setcdr current (if (listp requirements)
+                          (append requirements (cdr current))
+                        (cons requirements (cdr current)))))
+    (setq current (cdr current)))
+  (dolist (potential-feature
+           (append features (delq nil (mapcar (lambda (feat)
+                                                (when (plist-get (cdr feat) :eager)
+                                                  (car feat)))
+                                              org-latex-feature-implementations))))
+    (when-let ((prerequisites (plist-get (cdr (assoc potential-feature org-latex-feature-implementations)) :when)))
+      (setf features (if (if (listp prerequisites)
+                             (cl-every (lambda (preq) (memq preq features)) prerequisites)
+                           (memq prerequisites features))
+                         (append (list potential-feature) features)
+                       (delq potential-feature features)))))
+  (dolist (feature features)
+    (when-let ((prevents (plist-get (cdr (assoc feature org-latex-feature-implementations)) :prevents)))
+      (setf features (cl-set-difference features (if (listp prevents) prevents (list prevents))))))
+  (sort (delete-dups features)
+        (lambda (feat1 feat2)
+          (if (< (or (plist-get (cdr (assoc feat1 org-latex-feature-implementations)) :order) 1)
+                 (or (plist-get (cdr (assoc feat2 org-latex-feature-implementations)) :order) 1))
+              t nil))))
+
+(defun org-latex-generate-features-preamble (features)
+  "Generate the LaTeX preamble content required to provide FEATURES.
+This is done according to `org-latex-feature-implementations'"
+  (let ((expanded-features (org-latex-expand-features features)))
+    (concat
+     (format "\n%% features: %s\n" expanded-features)
+     (mapconcat (lambda (feature)
+                  (when-let ((snippet (plist-get (cdr (assoc feature org-latex-feature-implementations)) :snippet)))
+                    (concat
+                     (pcase snippet
+                       ((pred stringp) snippet)
+                       ((pred functionp) (funcall snippet features))
+                       ((pred listp) (eval `(let ((features ',features)) (,@snippet))))
+                       ((pred symbolp) (symbol-value snippet))
+                       (_ (user-error "org-latex-feature-implementations :snippet value %s unable to be used" snippet)))
+                     "\n")))
+                expanded-features
+                "")
+     "% end features\n")))
+
+(defvar info--tmp nil)
+
+(defadvice! org-latex-save-info (info &optional t_ s_)
+  :before #'org-latex-make-preamble
+  (setq info--tmp info))
+
+(defadvice! org-splice-latex-header-and-generated-preamble-a (orig-fn tpl def-pkg pkg snippets-p &optional extra)
+  "Dynamically insert preamble content based on `org-latex-conditional-preambles'."
+  :around #'org-splice-latex-header
+  (let ((header (funcall orig-fn tpl def-pkg pkg snippets-p extra)))
+    (if snippets-p header
+      (concat header
+              (org-latex-generate-features-preamble (org-latex-detect-features nil info--tmp))
+              "\n"))))
+
+(defadvice! +org-latex-link (orig-fn link desc info)
+  "Acts as `org-latex-link', but supports remote images."
+  :around #'org-latex-link
+  (setq o-link link
+        o-desc desc
+        o-info info)
+  (if (and (member (plist-get (cadr link) :type) '("http" "https"))
+           (member (file-name-extension (plist-get (cadr link) :path))
+                   '("png" "jpg" "jpeg" "pdf" "svg")))
+      (org-latex-link--remote link desc info)
+    (funcall orig-fn link desc info)))
+
+(defun org-latex-link--remote (link _desc info)
+  (let* ((url (plist-get (cadr link) :raw-link))
+         (ext (file-name-extension url))
+         (target (format "%s%s.%s"
+                         (temporary-file-directory)
+                         (replace-regexp-in-string "[./]" "-"
+                                                   (file-name-sans-extension (substring (plist-get (cadr link) :path) 2)))
+                         ext)))
+    (unless (file-exists-p target)
+      (url-copy-file url target))
+    (setcdr link (--> (cadr link)
+                   (plist-put it :type "file")
+                   (plist-put it :path target)
+                   (plist-put it :raw-link (concat "file:" target))
+                   (list it)))
+    (concat "% fetched from " url "\n"
+            (org-latex--inline-image link info))))
+
+(setq org-latex-pdf-process '("tectonic -X compile --print --outdir=%o -Z shell-escape %f"))
+
+;; (setq org-preview-latex-process-alist
+;; '((dvipng :programs
+;;                   ("tectonic" "dvipng")
+;;                   :description "dvi > png" :message "you need to install the programs: tectonic and dvipng." :image-input-type "dvi" :image-output-type "png" :image-size-adjust
+;;                   (1.0 . 1.0)
+;;                   :latex-compiler
+;;                   ;; tectonic doesn't have a non interactive mode
+;;                   ("tectonic --outdir %o %f")
+;;                   :image-converter
+;;                   ("dvipng -D %D -T tight -bg Transparent -o %O %f"))
+;;           (dvisvgm :programs
+;;                    ("tectonic" "dvisvgm")
+;;                    :description "dvi > svg" :message "you need to install the programs: tectonic and dvisvgm." :image-input-type "dvi" :image-output-type "svg" :image-size-adjust
+;;                    (1.7 . 1.5)
+;;                    :latex-compiler
+;;                    ("tectonic --outdir %o %f")
+;;                    :image-converter
+;;                    ("dvisvgm %f -n -b min -c %S -o %O"))
+;;           (imagemagick :programs
+;;                        ("latex" "convert")
+;;                        :description "pdf > png" :message "you need to install the programs: latex and imagemagick." :image-input-type "pdf" :image-output-type "png" :image-size-adjust
+;;                        (1.0 . 1.0)
+;;                        :latex-compiler
+;;                        ("tectonic --outdir %o %f")
+;;                        :image-converter
+;;                        ("convert -density %D -trim -antialias %f -quality 100 %O"))))
+
+(after! ox-latex
+  (add-to-list 'org-latex-classes
+               '("cb-doc" "\\documentclass{scrartcl}"
+                 ("\\section{%s}" . "\\section*{%s}")
+                 ("\\subsection{%s}" . "\\subsection*{%s}")
+                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
+
+(after! ox-latex
+  (setq org-latex-default-class "cb-doc"
+        org-latex-tables-booktabs t
+        org-latex-hyperref-template "\\colorlet{greenyblue}{blue!70!green}
+\\colorlet{blueygreen}{blue!40!green}
+\\providecolor{link}{named}{greenyblue}
+\\providecolor{cite}{named}{blueygreen}
+\\hypersetup{
+  pdfauthor={%a},
+  pdftitle={%t},
+  pdfkeywords={%k},
+  pdfsubject={%d},
+  pdfcreator={%c},
+  pdflang={%L},
+  breaklinks=true,
+  colorlinks=true,
+  linkcolor=,
+  urlcolor=link,
+  citecolor=cite\n}
+\\urlstyle{same}
+"
+        org-latex-reference-command "\\cref{%s}"))
+
+(setq org-latex-default-packages-alist
+      `(("AUTO" "inputenc" t
+         ("pdflatex"))
+        ("T1" "fontenc" t
+         ("pdflatex"))
+        ("" "fontspec" t)
+        ("" "graphicx" t)
+        ("" "grffile" t)
+        ("" "longtable" nil)
+        ("" "wrapfig" nil)
+        ("" "rotating" nil)
+        ("normalem" "ulem" t)
+        ("" "amsmath" t)
+        ("" "textcomp" t)
+        ("" "amssymb" t)
+        ("" "capt-of" nil)
+        ("dvipsnames" "xcolor" nil)
+        ("colorlinks=true, linkcolor=Blue, citecolor=BrickRed, urlcolor=PineGreen" "hyperref" nil)
+    ("" "indentfirst" nil)
+    "\\setmainfont[Ligatures=TeX]{Alegreya}"
+    "\\setmonofont[Ligatures=TeX]{Liga SFMono Nerd Font}"))
+
+(use-package! engrave-faces-latex
+  :after ox-latex
+  :config
+  (setq org-latex-listings 'engraved))
+
+(defadvice! org-latex-src-block-engraved (orig-fn src-block contents info)
+  "Like `org-latex-src-block', but supporting an engraved backend"
+  :around #'org-latex-src-block
+  (if (eq 'engraved (plist-get info :latex-listings))
+      (org-latex-scr-block--engraved src-block contents info)
+    (funcall orig-fn src-block contents info)))
+
+(defadvice! org-latex-inline-src-block-engraved (orig-fn inline-src-block contents info)
+  "Like `org-latex-inline-src-block', but supporting an engraved backend"
+  :around #'org-latex-inline-src-block
+  (if (eq 'engraved (plist-get info :latex-listings))
+      (org-latex-inline-scr-block--engraved inline-src-block contents info)
+    (funcall orig-fn src-block contents info)))
+
+(defvar-local org-export-has-code-p nil)
+
+(defadvice! org-export-expect-no-code (&rest _)
+  :before #'org-export-as
+  (setq org-export-has-code-p nil))
+
+(defadvice! org-export-register-code (&rest _)
+  :after #'org-latex-src-block-engraved
+  :after #'org-latex-inline-src-block-engraved
+  (setq org-export-has-code-p t))
+
+(setq org-latex-engraved-code-preamble "
+\\usepackage{fvextra}
+\\fvset{
+  commandchars=\\\\\\{\\},
+  highlightcolor=white!95!black!80!blue,
+  breaklines=true,
+  breaksymbol=\\color{white!60!black}\\tiny\\ensuremath{\\hookrightarrow}}
+\\renewcommand\\theFancyVerbLine{\\footnotesize\\color{black!40!white}\\arabic{FancyVerbLine}}
+
+\\definecolor{codebackground}{HTML}{f7f7f7}
+\\definecolor{codeborder}{HTML}{f0f0f0}
+
+% TODO have code boxes keep line vertical alignment
+\\usepackage[breakable,xparse]{tcolorbox}
+\\DeclareTColorBox[]{Code}{o}%
+{colback=codebackground, colframe=codeborder,
+  fontupper=\\footnotesize,
+  colupper=EFD,
+  IfNoValueTF={#1}%
+  {boxsep=2pt, arc=2.5pt, outer arc=2.5pt,
+    boxrule=0.5pt, left=2pt}%
+  {boxsep=2.5pt, arc=0pt, outer arc=0pt,
+    boxrule=0pt, leftrule=1.5pt, left=0.5pt},
+  right=2pt, top=1pt, bottom=0.5pt,
+  breakable}
+")
+
+(add-to-list 'org-latex-conditional-features '((and org-export-has-code-p "^[ \t]*#\\+begin_src\\|^[ \t]*#\\+BEGIN_SRC\\|src_[A-Za-z]") . engraved-code) t)
+(add-to-list 'org-latex-conditional-features '("^[ \t]*#\\+begin_example\\|^[ \t]*#\\+BEGIN_EXAMPLE" . engraved-code-setup) t)
+(add-to-list 'org-latex-feature-implementations '(engraved-code :requires engraved-code-setup :snippet (engrave-faces-latex-gen-preamble) :order 99) t)
+(add-to-list 'org-latex-feature-implementations '(engraved-code-setup :snippet org-latex-engraved-code-preamble :order 98) t)
+
+(defun org-latex-scr-block--engraved (src-block contents info)
+  (let* ((lang (org-element-property :language src-block))
+         (attributes (org-export-read-attribute :attr_latex src-block))
+         (float (plist-get attributes :float))
+         (num-start (org-export-get-loc src-block info))
+         (retain-labels (org-element-property :retain-labels src-block))
+         (caption (org-element-property :caption src-block))
+         (caption-above-p (org-latex--caption-above-p src-block info))
+         (caption-str (org-latex--caption/label-string src-block info))
+         (placement (or (org-unbracket-string "[" "]" (plist-get attributes :placement))
+                        (plist-get info :latex-default-figure-position)))
+         (float-env
+          (cond
+           ((string= "multicolumn" float)
+            (format "\\begin{listing*}[%s]\n%s%%s\n%s\\end{listing*}"
+                    placement
+                    (if caption-above-p caption-str "")
+                    (if caption-above-p "" caption-str)))
+           (caption
+            (format "\\begin{listing}[%s]\n%s%%s\n%s\\end{listing}"
+                    placement
+                    (if caption-above-p caption-str "")
+                    (if caption-above-p "" caption-str)))
+           ((string= "t" float)
+            (concat (format "\\begin{listing}[%s]\n"
+                            placement)
+                    "%s\n\\end{listing}"))
+           (t "%s")))
+         (options (plist-get info :latex-minted-options))
+         (content-buffer
+          (with-temp-buffer
+            (insert
+             (let* ((code-info (org-export-unravel-code src-block))
+                    (max-width
+                     (apply 'max
+                            (mapcar 'length
+                                    (org-split-string (car code-info)
+                                                      "\n")))))
+               (org-export-format-code
+                (car code-info)
+                (lambda (loc _num ref)
+                  (concat
+                   loc
+                   (when ref
+                     ;; Ensure references are flushed to the right,
+                     ;; separated with 6 spaces from the widest line
+                     ;; of code.
+                     (concat (make-string (+ (- max-width (length loc)) 6)
+                                          ?\s)
+                             (format "(%s)" ref)))))
+                nil (and retain-labels (cdr code-info)))))
+            (funcall (org-src-get-lang-mode lang))
+            (engrave-faces-latex-buffer)))
+         (content
+          (with-current-buffer content-buffer
+            (buffer-string)))
+         (body
+          (format
+           "\\begin{Code}\n\\begin{Verbatim}[%s]\n%s\\end{Verbatim}\n\\end{Code}"
+           ;; Options.
+           (concat
+            (org-latex--make-option-string
+             (if (or (not num-start) (assoc "linenos" options))
+                 options
+               (append
+                `(("linenos")
+                  ("firstnumber" ,(number-to-string (1+ num-start))))
+                options)))
+            (let ((local-options (plist-get attributes :options)))
+              (and local-options (concat "," local-options))))
+           content)))
+    (kill-buffer content-buffer)
+    ;; Return value.
+    (format float-env body)))
+
+(defun org-latex-inline-scr-block--engraved (inline-src-block _contents info)
+  (let ((options (org-latex--make-option-string
+                  (plist-get info :latex-minted-options)))
+        code-buffer code)
+    (setq code-buffer
+          (with-temp-buffer
+            (insert (org-element-property :value inline-src-block))
+            (funcall (org-src-get-lang-mode
+                      (org-element-property :language inline-src-block)))
+            (engrave-faces-latex-buffer)))
+    (setq code (with-current-buffer code-buffer
+                 (buffer-string)))
+    (kill-buffer code-buffer)
+    (format "\\Verb%s{%s}"
+            (if (string= options "") ""
+              (format "[%s]" options))
+            code)))
+
+(defadvice! org-latex-example-block-engraved (orig-fn example-block contents info)
+  "Like `org-latex-example-block', but supporting an engraved backend"
+  :around #'org-latex-example-block
+  (let ((output-block (funcall orig-fn example-block contents info)))
+    (if (eq 'engraved (plist-get info :latex-listings))
+        (format "\\begin{Code}[alt]\n%s\n\\end{Code}" output-block)
+      output-block)))
+
+(use-package! ox-chameleon
+  :after ox)
+
+(setq org-export-in-background t)
+
+(setq org-export-with-sub-superscripts '{})
+
+(setq mu4e-update-interval 300)
+
 (set-email-account! "shaunsingh0207"
   '((mu4e-sent-folder       . "/Sent Mail")
     (mu4e-drafts-folder     . "/Drafts")
@@ -3321,7 +3043,285 @@ set palette defined ( 0 '%s',\
                    (replace-regexp-in-string "\\`.*/" "" (mu4e-message-field msg :maildir))
                    '+mu4e-header--folder-colors)))))))
 
+(after! mu4e
+  (setq sendmail-program "~/.nix-profile/bin/msmtp"
+        send-mail-function #'smtpmail-send-it
+        message-sendmail-f-is-evil t
+        message-sendmail-extra-arguments '("--read-envelope-from")
+        message-send-mail-function #'message-send-mail-with-sendmail))
+
+;;(setq alert-default-style 'osx-notifier)
+
+;;(use-package org
+;;  :demand t)
+
+;; (use-package webkit
+;;   :defer t
+;;   :commands webkit
+;;   :init
+;;   (setq webkit-search-prefix "https://google.com/search?q="
+;;         webkit-history-file nil
+;;         webkit-cookie-file nil
+;;         browse-url-browser-function 'webkit-browse-url
+;;         webkit-browse-url-force-new t
+;;         webkit-download-action-alist '(("\\.pdf\\'" . webkit-download-open)
+;;                                        ("\\.png\\'" . webkit-download-save)
+;;                                        (".*" . webkit-download-default)))
+
+;;   (defun webkit--display-progress (progress)
+;;     (setq webkit--progress-formatted
+;;           (if (equal progress 100.0)
+;;               ""
+;;             (format "%s%.0f%%  " (all-the-icons-faicon "spinner") progress)))
+;;    (force-mode-line-update)))
+
 ;; (use-package evil-collection-webkit
 ;;    :defer t
 ;;    :config
 ;;    (evil-collection-xwidget-setup))
+
+(after! circe
+  (setq-default circe-use-tls t)
+  (setq circe-notifications-alert-icon "/usr/share/icons/breeze/actions/24/network-connect.svg"
+        lui-logging-directory "~/.emacs.d/.local/etc/irc"
+        lui-logging-file-format "{buffer}/%Y/%m-%d.txt"
+        circe-format-self-say "{nick:+13s} ┃ {body}")
+
+  (custom-set-faces!
+    '(circe-my-message-face :weight unspecified))
+
+  (enable-lui-logging-globally)
+  (enable-circe-display-images)
+
+  (defun lui-org-to-irc ()
+    "Examine a buffer with simple org-mode formatting, and converts the empasis:
+  *bold*, /italic/, and _underline_ to IRC semi-standard escape codes.
+  =code= is converted to inverse (highlighted) text."
+    (goto-char (point-min))
+    (while (re-search-forward "\\_<\\(?1:[*/_=]\\)\\(?2:[^[:space:]]\\(?:.*?[^[:space:]]\\)?\\)\\1\\_>" nil t)
+      (replace-match
+       (concat (pcase (match-string 1)
+                 ("*" "")
+                 ("/" "")
+                 ("_" "")
+                 ("=" ""))
+               (match-string 2)
+               "") nil nil)))
+  
+  (add-hook 'lui-pre-input-hook #'lui-org-to-irc)
+
+  (defun lui-ascii-to-emoji ()
+    (goto-char (point-min))
+    (while (re-search-forward "\\( \\)?::?\\([^[:space:]:]+\\):\\( \\)?" nil t)
+      (replace-match
+       (concat
+        (match-string 1)
+        (or (cdr (assoc (match-string 2) lui-emojis-alist))
+            (concat ":" (match-string 2) ":"))
+        (match-string 3))
+       nil nil)))
+  
+  (defun lui-emoticon-to-emoji ()
+    (dolist (emoticon lui-emoticons-alist)
+      (goto-char (point-min))
+      (while (re-search-forward (concat " " (car emoticon) "\\( \\)?") nil t)
+        (replace-match (concat " "
+                               (cdr (assoc (cdr emoticon) lui-emojis-alist))
+                               (match-string 1))))))
+  
+  (define-minor-mode lui-emojify
+    "Replace :emojis: and ;) emoticons with unicode emoji chars."
+    :global t
+    :init-value t
+    (if lui-emojify
+        (add-hook! lui-pre-input #'lui-ascii-to-emoji #'lui-emoticon-to-emoji)
+      (remove-hook! lui-pre-input #'lui-ascii-to-emoji #'lui-emoticon-to-emoji)))
+  (defvar lui-emojis-alist
+    '(("grinning"                      . "😀")
+      ("smiley"                        . "😃")
+      ("smile"                         . "😄")
+      ("grin"                          . "😁")
+      ("laughing"                      . "😆")
+      ("sweat_smile"                   . "😅")
+      ("joy"                           . "😂")
+      ("rofl"                          . "🤣")
+      ("relaxed"                       . "☺️")
+      ("blush"                         . "😊")
+      ("innocent"                      . "😇")
+      ("slight_smile"                  . "🙂")
+      ("upside_down"                   . "🙃")
+      ("wink"                          . "😉")
+      ("relieved"                      . "😌")
+      ("heart_eyes"                    . "😍")
+      ("yum"                           . "😋")
+      ("stuck_out_tongue"              . "😛")
+      ("stuck_out_tongue_closed_eyes"  . "😝")
+      ("stuck_out_tongue_wink"         . "😜")
+      ("zanzy"                         . "🤪")
+      ("raised_eyebrow"                . "🤨")
+      ("monocle"                       . "🧐")
+      ("nerd"                          . "🤓")
+      ("cool"                          . "😎")
+      ("star_struck"                   . "🤩")
+      ("party"                         . "🥳")
+      ("smirk"                         . "😏")
+      ("unamused"                      . "😒")
+      ("disapointed"                   . "😞")
+      ("pensive"                       . "😔")
+      ("worried"                       . "😟")
+      ("confused"                      . "😕")
+      ("slight_frown"                  . "🙁")
+      ("frown"                         . "☹️")
+      ("persevere"                     . "😣")
+      ("confounded"                    . "😖")
+      ("tired"                         . "😫")
+      ("weary"                         . "😩")
+      ("pleading"                      . "🥺")
+      ("tear"                          . "😢")
+      ("cry"                           . "😢")
+      ("sob"                           . "😭")
+      ("triumph"                       . "😤")
+      ("angry"                         . "😠")
+      ("rage"                          . "😡")
+      ("exploding_head"                . "🤯")
+      ("flushed"                       . "😳")
+      ("hot"                           . "🥵")
+      ("cold"                          . "🥶")
+      ("scream"                        . "😱")
+      ("fearful"                       . "😨")
+      ("disapointed"                   . "😰")
+      ("relieved"                      . "😥")
+      ("sweat"                         . "😓")
+      ("thinking"                      . "🤔")
+      ("shush"                         . "🤫")
+      ("liar"                          . "🤥")
+      ("blank_face"                    . "😶")
+      ("neutral"                       . "😐")
+      ("expressionless"                . "😑")
+      ("grimace"                       . "😬")
+      ("rolling_eyes"                  . "🙄")
+      ("hushed"                        . "😯")
+      ("frowning"                      . "😦")
+      ("anguished"                     . "😧")
+      ("wow"                           . "😮")
+      ("astonished"                    . "😲")
+      ("sleeping"                      . "😴")
+      ("drooling"                      . "🤤")
+      ("sleepy"                        . "😪")
+      ("dizzy"                         . "😵")
+      ("zipper_mouth"                  . "🤐")
+      ("woozy"                         . "🥴")
+      ("sick"                          . "🤢")
+      ("vomiting"                      . "🤮")
+      ("sneeze"                        . "🤧")
+      ("mask"                          . "😷")
+      ("bandaged_head"                 . "🤕")
+      ("money_face"                    . "🤑")
+      ("cowboy"                        . "🤠")
+      ("imp"                           . "😈")
+      ("ghost"                         . "👻")
+      ("alien"                         . "👽")
+      ("robot"                         . "🤖")
+      ("clap"                          . "👏")
+      ("thumpup"                       . "👍")
+      ("+1"                            . "👍")
+      ("thumbdown"                     . "👎")
+      ("-1"                            . "👎")
+      ("ok"                            . "👌")
+      ("pinch"                         . "🤏")
+      ("left"                          . "👈")
+      ("right"                         . "👉")
+      ("down"                          . "👇")
+      ("wave"                          . "👋")
+      ("pray"                          . "🙏")
+      ("eyes"                          . "👀")
+      ("brain"                         . "🧠")
+      ("facepalm"                      . "🤦")
+      ("tada"                          . "🎉")
+      ("fire"                          . "🔥")
+      ("flying_money"                  . "💸")
+      ("lighbulb"                      . "💡")
+      ("heart"                         . "❤️")
+      ("sparkling_heart"               . "💖")
+      ("heartbreak"                    . "💔")
+      ("100"                           . "💯")))
+  
+  (defvar lui-emoticons-alist
+    '((":)"   . "slight_smile")
+      (";)"   . "wink")
+      (":D"   . "smile")
+      ("=D"   . "grin")
+      ("xD"   . "laughing")
+      (";("   . "joy")
+      (":P"   . "stuck_out_tongue")
+      (";D"   . "stuck_out_tongue_wink")
+      ("xP"   . "stuck_out_tongue_closed_eyes")
+      (":("   . "slight_frown")
+      (";("   . "cry")
+      (";'("  . "sob")
+      (">:("  . "angry")
+      (">>:(" . "rage")
+      (":o"   . "wow")
+      (":O"   . "astonished")
+      (":/"   . "confused")
+      (":-/"  . "thinking")
+      (":|"   . "neutral")
+      (":-|"  . "expressionless")))
+
+  (defun named-circe-prompt ()
+    (lui-set-prompt
+     (concat (propertize (format "%13s > " (circe-nick))
+                         'face 'circe-prompt-face)
+             "")))
+  (add-hook 'circe-chat-mode-hook #'named-circe-prompt)
+
+  (appendq! all-the-icons-mode-icon-alist
+            '((circe-channel-mode all-the-icons-material "message" :face all-the-icons-lblue)
+              (circe-server-mode all-the-icons-material "chat_bubble_outline" :face all-the-icons-purple))))
+
+(defun auth-server-pass (server)
+  (if-let ((secret (plist-get (car (auth-source-search :host server)) :secret)))
+      (if (functionp secret)
+          (funcall secret) secret)
+    (error "Could not fetch password for host %s" server)))
+
+(defun register-irc-auths ()
+  (require 'circe)
+  (require 'dash)
+  (let ((accounts (-filter (lambda (a) (string= "irc" (plist-get a :for)))
+                           (auth-source-search :require '(:for) :max 10))))
+    (appendq! circe-network-options
+              (mapcar (lambda (entry)
+                        (let* ((host (plist-get entry :host))
+                               (label (or (plist-get entry :label) host))
+                               (_ports (mapcar #'string-to-number
+                                               (s-split "," (plist-get entry :port))))
+                               (port (if (= 1 (length _ports)) (car _ports) _ports))
+                               (user (plist-get entry :user))
+                               (nick (or (plist-get entry :nick) user))
+                               (channels (mapcar (lambda (c) (concat "#" c))
+                                                 (s-split "," (plist-get entry :channels)))))
+                          `(,label
+                            :host ,host :port ,port :nick ,nick
+                            :sasl-username ,user :sasl-password auth-server-pass
+                            :channels ,channels)))
+                      accounts))))
+
+(add-transient-hook! #'=irc (register-irc-auths))
+
+(defun lui-org-to-irc ()
+  "Examine a buffer with simple org-mode formatting, and converts the empasis:
+*bold*, /italic/, and _underline_ to IRC semi-standard escape codes.
+=code= is converted to inverse (highlighted) text."
+  (goto-char (point-min))
+  (while (re-search-forward "\\_<\\(?1:[*/_=]\\)\\(?2:[^[:space:]]\\(?:.*?[^[:space:]]\\)?\\)\\1\\_>" nil t)
+    (replace-match
+     (concat (pcase (match-string 1)
+               ("*" "")
+               ("/" "")
+               ("_" "")
+               ("=" ""))
+             (match-string 2)
+             "") nil nil)))
+
+(add-hook 'lui-pre-input-hook #'lui-org-to-irc)
