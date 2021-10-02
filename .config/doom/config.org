@@ -319,10 +319,10 @@ vc                           ; version-control and Emacs, sitting in a tree
 
 #+name: doom-term
 #+begin_src emacs-lisp
-;;eshell                     ; the elisp shell that works everywhere
+eshell                       ; the elisp shell that works everywhere
 ;;shell                      ; simple shell REPL for Emacs
 ;;term                       ; basic terminal emulator for Emacs
-vterm                        ; the best terminal emulation in Emacs
+;;vterm                      ; the best terminal emulation in Emacs
 #+end_src
 
 #+name: doom-checkers
@@ -1855,8 +1855,7 @@ Make it easy to take nice screenshots. I need to figure out how to make
 clipboard work though.
 #+begin_src elisp
 (use-package! screenshot
-  :defer t
-  :config (setq screenshot-upload-fn "upload $s 2>/dev/null"))
+  :defer t)
 #+end_src
 
 ** RSS
@@ -2067,8 +2066,9 @@ terminal-oriented, so lets make it look a little better
 
 I like a little padding on my org blocks, just a millimeter or two on the top and bottom should do
 #+begin_src elisp
-(use-package! org-padding)
-(add-hook 'org-mode-hook #'org-padding-mode)
+(use-package! org-padding
+  :hook (org-mode-hook . org-padding-mode)
+  :defer t)
 (setq org-padding-block-begin-line-padding '(1.15 . 0.15))
 (setq org-padding-block-end-line-padding '(1.15 . 0.15))
 #+end_src
