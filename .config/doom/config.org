@@ -246,7 +246,6 @@ literate
 **** Interface
 There's a lot that can be done to enhance Emacs' capabilities.
 I reckon enabling half the modules Doom provides should do it.
-
 #+name: doom-completion
 #+begin_src emacs-lisp
 (company                     ; the ultimate code completion backend
@@ -765,10 +764,10 @@ emacs bootloaders
 ** Themes
 Right now I'm using nord, but I use doom-one-light sometimes
 #+begin_src elisp
-(setq doom-theme 'doom-one-light)
+;;(setq doom-theme 'doom-one-light)
 (setq doom-one-light-padded-modeline t)
-;;(setq doom-theme 'doom-nord)
-;;(setq doom-nord-padded-modeline t)
+(setq doom-theme 'doom-nord)
+(setq doom-nord-padded-modeline t)
 #+end_src
 
 ** Very large files

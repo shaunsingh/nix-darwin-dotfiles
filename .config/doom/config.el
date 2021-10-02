@@ -107,10 +107,10 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 
 ;; No missing fonts detected
 
-(setq doom-theme 'doom-one-light)
+;;(setq doom-theme 'doom-one-light)
 (setq doom-one-light-padded-modeline t)
-;;(setq doom-theme 'doom-nord)
-;;(setq doom-nord-padded-modeline t)
+(setq doom-theme 'doom-nord)
+(setq doom-nord-padded-modeline t)
 
 ;;(use-package! vlf-setup
   ;;:defer-incrementally vlf-tune vlf-base vlf-write vlf-search vlf-occur vlf-follow vlf-ediff vlf)
