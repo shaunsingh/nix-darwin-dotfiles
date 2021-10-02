@@ -12,18 +12,18 @@
     --background-accent: #2E3440;
     --channeltextarea-background: #2E3440;
     --text-normal: #D8DEE9;
-    --text-muted: #434C5E;
-    --channels-default: #434C5E;
-    --interactive-normal: #434C5E;
+    --text-muted: #616E88;
+    --channels-default: #616E88;
+    --interactive-normal: #616E88;
     --interactive-hover: #8FBCBB;
     --interactive-active: #D8DEE9;
     --interactive-muted: #81A1C1;
     --header-primary: #D8DEE9;
-    --header-secondary: #E8CB8B;
+    --header-secondary: #8FBCBB;
     --background-floating: #2E3440;
     --scrollbar-auto-thumb: #3B4252;
     --scrollbar-auto-track: #2E3440;
-    --text-link: #E8CB8B;
+    --text-link: #88C0D0;
     --selection: #3B4252;
 }
 
@@ -199,7 +199,7 @@
 
 .hljs,
 .hljs-subst {
-  color: #434C5E;
+  color: #616E88;
 }
 
 /* Nord Red */
@@ -272,7 +272,7 @@
 
 /* Nord Gray */
 .hljs-comment {
-  color: #434C5E;
+  color: #616E88;
 }
 
 /* Nord Purple */
