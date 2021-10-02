@@ -344,8 +344,28 @@ Return nil otherwise."
 (custom-set-faces!
   `(minimap-active-region-background :background unspecified))
 
-(add-to-list 'default-frame-alist '(internal-border-width . 24))
-(setq-default line-spacing 0.35)
+;; Make a clean & minimalist frame
+(use-package frame
+  :config
+  (setq-default default-frame-alist
+                (append (list
+                '(internal-border-width . 24)
+                '(left-fringe    . 0)
+                '(right-fringe   . 0)
+                '(tool-bar-lines . 0)
+                '(menu-bar-lines . 0)
+                '(line-spacing . 0.35)
+                '(vertical-scroll-bars . nil))))
+  (setq-default window-resize-pixelwise t)
+  (setq-default frame-resize-pixelwise t)
+  :custom
+  (window-divider-default-right-width 24)
+  (window-divider-default-bottom-width 12)
+  (window-divider-default-places 'right-only)
+  (window-divider-mode t))
+
+;; Make sure new frames use window-divider
+(add-hook 'before-make-frame-hook 'window-divider-mode)
 
 (use-package! selectric-mode
   :commands selectric-mode)

@@ -25,8 +25,8 @@
        ;;indent-guides              ; highlighted indent columns, notoriously slow
        (ligatures +extra)           ; ligatures and symbols to make your code pretty again
        ;;minimap                    ; show a map of the code on the side
-       modeline                     ; snazzy, Atom-inspired modeline, plus API
-        ;;+light)                   ; the doom modeline is a bit much, the default is a bit little
+       (modeline                    ; snazzy, Atom-inspired modeline, plus API
+        +light)                     ; the doom modeline is a bit much, the default is a bit little
        ;;nav-flash                  ; blink the current line after jumping
        ;;neotree                    ; a project drawer, like NERDTree for vim
        ophints                      ; highlight the region an operation acts on
