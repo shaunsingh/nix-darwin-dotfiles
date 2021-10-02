@@ -9,7 +9,7 @@ window:
     x: 45
     y: 45
 
-   decorations: full 
+   decorations: buttonless
 
 font:
   normal:
@@ -27,7 +27,7 @@ font:
     style: Italic
 
   # Font size
-  # size: 11.0
+  size: 14.0
 
 mouse:
   hide_when_typing: true
@@ -61,7 +61,7 @@ colors:
     cyan:    '0x8FBCBB'
     white:   '0xECEFF4'
 
-# cursor:
+cursor:
   # Cursor style
-  # style:
-    # shape: beam
+  style:
+    shape: beam
