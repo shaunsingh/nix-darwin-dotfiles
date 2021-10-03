@@ -138,3 +138,4 @@ alias nixos-rebuild-config 'sudo nixos-rebuild switch --cores 2 --upgrade --flak
 alias update 'brew update; brew upgrade; brew cleanup'
 alias cleanup "find . -type f -name '*.DS_Store' -ls -delete && rm -r ~/.config/discord && rm -r ~/.config/GIMP && rm -r ~/.config/chromium "
 
+fish_add_path /opt/homebrew/sbin
