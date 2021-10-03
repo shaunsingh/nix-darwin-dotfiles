@@ -226,8 +226,7 @@ have flags applied to tweak their behaviour.
        <<doom-app>>
 
        :config
-       <<doom-config>>
-       )
+       <<doom-config>>)
 #+end_src
 
 **** Structure
@@ -270,7 +269,7 @@ hl-todo                      ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
 ;;hydra                      ; quick documentation for related commands
 ;;indent-guides              ; highlighted indent columns, notoriously slow
 (ligatures +extra)           ; ligatures and symbols to make your code pretty again
-;;minimap                    ; show a map of the code on the side
+minimap                      ; show a map of the code on the side
 (modeline                    ; snazzy, Atom-inspired modeline, plus API
  +light)                     ; the doom modeline is a bit much, the default is a bit little
 ;;nav-flash                  ; blink the current line after jumping
@@ -1601,8 +1600,11 @@ responsive.
                 jit-lock-stealth-time 1)))
 
 (add-hook 'org-mode-hook #'locally-defer-font-lock)
+#+end_src
 
-
+I dislike that end/begin statements in org mode are the same color as the
+background. I've changed them to use a darker color
+#+begin_src elisp
 (custom-set-faces!
   `(org-block-end-line :background ,(doom-color 'base2))
   `(org-block-begin-line :background ,(doom-color 'base2)))

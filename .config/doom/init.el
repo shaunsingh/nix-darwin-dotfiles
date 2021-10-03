@@ -24,7 +24,7 @@
        ;;hydra                      ; quick documentation for related commands
        ;;indent-guides              ; highlighted indent columns, notoriously slow
        (ligatures +extra)           ; ligatures and symbols to make your code pretty again
-       ;;minimap                    ; show a map of the code on the side
+       minimap                      ; show a map of the code on the side
        (modeline                    ; snazzy, Atom-inspired modeline, plus API
         +light)                     ; the doom modeline is a bit much, the default is a bit little
        ;;nav-flash                  ; blink the current line after jumping
@@ -196,5 +196,4 @@
 
        :config
        literate
-       (default +bindings +smartparens)
-       )
+       (default +bindings +smartparens))
