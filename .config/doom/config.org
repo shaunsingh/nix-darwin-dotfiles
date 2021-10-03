@@ -4161,7 +4161,7 @@ setup your emails first
 We can also send messages using msmtp
 #+begin_src emacs-lisp
 (after! mu4e
-  (setq sendmail-program "~/.nix-profile/bin/msmtp"
+  (setq sendmail-program "msmtp"
         send-mail-function #'smtpmail-send-it
         message-sendmail-f-is-evil t
         message-sendmail-extra-arguments '("--read-envelope-from")

@@ -3293,7 +3293,7 @@ This is done according to `org-latex-feature-implementations'"
 
 ;; [[file:config.org::*Mu4e][Mu4e:3]]
 (after! mu4e
-  (setq sendmail-program "~/.nix-profile/bin/msmtp"
+  (setq sendmail-program "msmtp"
         send-mail-function #'smtpmail-send-it
         message-sendmail-f-is-evil t
         message-sendmail-extra-arguments '("--read-envelope-from")
