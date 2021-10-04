@@ -3926,7 +3926,8 @@ Teco is the goto for this, so basically just ripping off him. Engrave faces ftw
 (use-package! engrave-faces-latex
   :after ox-latex
   :config
-  (setq org-latex-listings 'engraved))
+  (setq org-latex-listings 'engraved
+        engrave-faces-preset-styles (engrave-faces-generate-preset)))
 #+end_src
 
 #+begin_src emacs-lisp
