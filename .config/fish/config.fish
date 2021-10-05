@@ -1,3 +1,7 @@
+# make sure nix works with fish
+set fish_function_path $fish_function_path ~/.config/fish/plugin-foreign-env/functions
+fenv source ~/.nix-profile/etc/profile.d/nix.sh
+
 # launch tmux if not active
 if status is-interactive
 and not set -q TMUX
@@ -118,7 +122,7 @@ function fish_prompt
     _print_in_color " λ " (_prompt_color_for_status $last_status)
 end
 
-set -x EDITOR "emacsclient -c --alternate-editor=COMMAND"
+set -x EDITOR "nvim"
 set -x PATH ~/.emacs.d/bin $PATH
 set -x PATH ~/.config/scripts $PATH
 
@@ -132,10 +136,5 @@ alias ll 'exa -lF --color-scale --no-user --no-time --no-permissions --group-dir
 alias ls 'exa -F --group-directories-first --icons -a'
 alias tree 'tree -a -C'
 alias cat 'bat --paging=never -p'
-
-alias nixos-rebuild-config 'sudo nixos-rebuild switch --cores 2 --upgrade --flake . --recreate-lock-file'
-
-alias update 'brew update; brew upgrade; brew cleanup'
 alias cleanup "find . -type f -name '*.DS_Store' -ls -delete && rm -r ~/.config/discord && rm -r ~/.config/GIMP && rm -r ~/.config/chromium "
 
-fish_add_path /opt/homebrew/sbin
