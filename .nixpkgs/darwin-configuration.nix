@@ -16,6 +16,7 @@ let
     (epkgs: [ epkgs.vterm epkgs.pdf-tools ]);
 
 in {
+
   # Allow me to install unfree packages
   nixpkgs.config.allowUnfree = true;
 
@@ -26,9 +27,7 @@ in {
   
     # Utils
     wget
-    git
     git-lfs
-    gcc
     ripgrep
     exa
     bat
@@ -52,13 +51,12 @@ in {
   
     # Emacs config deps (latex, aspell)
     (aspellWithDicts (dicts: with dicts; [ en en-computers en-science ]))
-    ## tectonic
+    (pkgs.texlive.combine { inherit (pkgs.texlive) scheme-small dvipng dvisvgm l3packages xcolor soul adjustbox collectbox amsmath siunitx cancel mathalpha capt-of chemfig wrapfig mhchem latexmk; })
     sdcv
     gnuplot
   
     # Editors
     neovim
-    ## emacsMacport
     my-emacs
   
     # Chat
@@ -66,16 +64,11 @@ in {
     discocss
   
     # Pdf/images
-    ## zathura
-
-    # Other
-    spacebar
-
+    zathura
   ];
 
   # Add ibm and overpass fonts for emacs
   fonts.fonts = with pkgs; [
-    # ibm-plex
     overpass
     alegreya
   ];
@@ -91,6 +84,9 @@ in {
   # Create /etc/bashrc that loads the nix-darwin environment.
   # programs.zsh.enable = true;  # default shell on catalina
   programs.fish.enable = true;
+
+  # bar
+  # services.spacebar.enable = true;
 
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog

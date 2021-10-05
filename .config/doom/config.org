@@ -402,6 +402,7 @@ emacs-lisp                   ; drown in parentheses
 ;;(kotlin +lsp)              ; a better, slicker Java(Script)
 (latex                       ; writing papers in Emacs has never been so fun
 ;; +fold                     ; fold the clutter away nicities
+ +latexmk                    ; modern latex plz
  +cdlatex                    ; quick maths symbols
  +lsp)
 ;;lean                       ; proof that mathematicians need help
@@ -410,7 +411,7 @@ emacs-lisp                   ; drown in parentheses
 ;;(lua +lsp)                 ; one-based indices? one-based indices
 ;;markdown                   ; writing docs for people to ignore
 ;;nim                        ; python + lisp at the speed of c
-;;nix                        ; I hereby declare "nix geht mehr!"
+nix                          ; I hereby declare "nix geht mehr!"
 ;;ocaml                      ; an objective camel
 (org                         ; organize your plain life in plain text
  +pretty                     ; yessss my pretties! (nice unicode symbols)
@@ -527,7 +528,7 @@ that a bit too
 (package! aas :recipe (:host github :repo "ymarco/auto-activating-snippets"))
 (package! laas :recipe (:host github :repo "tecosaur/LaTeX-auto-activating-snippets"))
 (package! engrave-faces :recipe (:host github :repo "tecosaur/engrave-faces"))
-(package! math-preview)
+(package! org-fragtog)
 #+end_src
 
 **** Web:
@@ -998,6 +999,7 @@ The defaults for emacs aren't so good nowadays. Lets fix that up a bit
 
 (fringe-mode 0) ;;disable fringe
 (global-subword-mode 1) ;;navigate through Camel Case words
+(tool-bar-mode 1) ;;re-enable the toolbar
 #+end_src
 
 There's issues with emacs flickering on mac (and sometimes wayland). This should
@@ -3538,11 +3540,16 @@ I like to preview images inline too
 (setq org-startup-with-inline-images "inlineimages")
 #+end_src
 
-Instead of using either of those, math-preview seems much faster
+I prefer svgs to pngs. It takes a little more time, but scales better on HiDPI displays
 #+begin_src elisp
-(use-package math-preview
-  :defer t
-  :custom (math-preview-command "~/.config/nvm/versions/node/v8.0.0/bin/math-preview"))
+(setq-default org-html-with-latex `dvisvgm)
+(setq org-preview-latex-default-process 'dvisvgm)
+#+end_src
+
+Obviously we can't edit a png though. Let use org-fragtog to toggle between previews and text mode
+#+begin_src elisp
+(use-package! org-fragtog
+  :hook (org-mode . org-fragtog-mode))
 #+end_src
 
 Here's just my private LaTeX config.
@@ -3844,12 +3851,15 @@ export that!
             (org-latex--inline-image link info))))
 #+end_src
 
-*** Tectonic
+*** LatexMK
 Tectonic is the hot new thing, which also means I can get rid of my tex
 installation. Dependencies are nice and auto-installed, and I don't need to
 bother with ascii stuff
+
+On the other hand, it still refuses to work with previews and just sucks with
+emacs overall. Back to LatexMK for me
 #+begin_src emacs-lisp
-(setq org-latex-pdf-process '("tectonic -X compile --print --outdir=%o -Z shell-escape %f"))
+(setq org-latex-pdf-process '("latexmk -f -pdf -%latex -shell-escape -interaction=nonstopmode -output-directory=%o %f"))
 #+end_src
 
 *** Classes

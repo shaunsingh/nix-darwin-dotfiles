@@ -18,7 +18,7 @@
 (package! aas :recipe (:host github :repo "ymarco/auto-activating-snippets"))
 (package! laas :recipe (:host github :repo "tecosaur/LaTeX-auto-activating-snippets"))
 (package! engrave-faces :recipe (:host github :repo "tecosaur/engrave-faces"))
-(package! math-preview)
+(package! org-fragtog)
 
 ;;markdown and html
 (package! ox-gfm)
