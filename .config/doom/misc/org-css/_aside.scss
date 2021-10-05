@@ -1,0 +1,33 @@
+aside {
+  background-color: $code-background;
+  border-radius: 5px;
+  @include light-para(15px);
+  margin: 20px 0;
+  padding: 5px 20px 10px;
+  line-height: 1.6 !important;
+
+  p {
+    @include light-para(15px);
+    line-height: 1.6 !important;
+  }
+
+  pre {
+    font-size: 12px;
+    border: none;
+    padding-left: 0;
+  }
+}
+
+@media (min-width: 1280px) {
+  aside {
+    float: right;
+    clear: right;
+    background-color: $back-white;
+    max-width: 45% !important;
+    margin-right: -52%;
+
+    &::before {
+      content: '';
+    }
+  }
+}

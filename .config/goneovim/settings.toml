@@ -1,0 +1,170 @@
+[Editor]
+## Makes the application window frameless.
+BorderlessWindow = true
+
+## Launch goneovim with full screen window size.
+# StartFullscreen = true
+
+## In MacOS, 
+FontFamily = "Liga SFMono Nerd Font"
+## Fontsize is
+FontSize = 11
+## linespace is
+Linespace = 9 
+
+## Neovim external UI features
+ExtCmdline   = true
+ExtPopupmenu = true
+ExtTabline   = true
+ExtMessages  = true
+
+## Goneovim has a cached rendering feature enabled to speed up the process.
+CachedDrawing = true
+
+## Copy yanked text to clipboard
+Clipboard = true
+
+## Draw built-in indent guide
+IndentGuide = false
+
+## Animates the scrolling behavior of Neovim when the scroll command is entered.
+# SmoothScroll = true
+
+## Disables horizontal scrolling for smooth scrolling with the touchpad.
+# DisableHorizontalScroll = true
+
+## Draw border on a float window
+DrawBorderForFloatWindow = false
+
+## Draw shadow under a float window
+DrawShadowForFloatWindow = true
+
+## Enable desktop notification settings for nvim messages.
+## This option works only if `ExtMessages` is enabled.
+# DesktopNotifications = false
+
+[Cursor]
+## Specifies whether the smooth cursor feature is enabled or disabled by a boolean value.
+# SmoothMove = false
+
+[Palette]
+## Specifies the proportion of the command line palette to the height of the entire window.
+ AreaRatio = 0.25
+## Specifies the number of items to be displayed in the command line palette.
+MaxNumberOfResultItems = 15
+## Specifies the opacity of the command line palette.
+
+
+## Configure externalized message UI.
+[Message]
+## Specifies the opacity of the message window.
+# Transparent = 1.0
+
+## The statusline configuration below relates to the display of Goenovim's own external status lines.
+## If you want to use neovim's status line plugin, you should disable its display.
+# [Statusline]
+## Whether or not to display the external status line
+# Visible = false
+
+## Options: "textLabel" / "icon" / "background" / "none"
+# ModeIndicatorType = "textLabel"
+
+## Optional setting colors per Neovim editing modes
+# NormalModeColor = "#3cabeb"
+# CommandModeColor = "#5285b8"
+# InsertModeColor = "#2abcb4"
+# ReplaceModeColor = "#ff8c0a"
+# VisualModeColor = "#9932cc"
+# TerminalModeColor = "#778899"
+
+## Statusline components
+# Left = [ "mode", "filepath", "filename" ]
+# Right = [ "message", "git", "filetype", "fileformat", "fileencoding", "curpos", "lint" ]
+
+
+## Configure externalized tabline UI.
+[Tabline]
+## Whether or not to display the external tabline
+Visible = true
+ShowIcon = true
+
+
+## Configure externalized popupmenu UI.
+[Popupmenu]
+## neovim's popupmenu is made up of word, menu and info parts.
+## Each of these parts will display the following information.
+##   word:   the text that will be inserted, mandatory
+##   menu:   extra text for the popup menu, displayed after "word"
+##   info:   more information about the item, can be displayed in a preview window
+## The following options specify whether to display a dedicated column in the popupmenu
+## to display the long text displayed in the `info` part.
+ShowDetail = true
+ 
+## total number to display item
+Total = 20
+ 
+## width of `menu` column
+MenuWidth = 400
+ 
+## width of `info` column
+InfoWidth = 1
+ 
+## width of `detail` column
+DetailWidth = 250
+ 
+## Show digit number which can select item for popupmenu
+ShowDigit = true
+
+[ScrollBar]
+## Specifies whether to show the external scrollbar or not.
+Visible = false
+
+[MiniMap]
+## To view the minimap, launch an additional nvim instance;
+## setting Disable to true will not launch this additional nvim instance
+## and will completely disable the minimap feature.
+Disable = false
+
+## Specifies whether to show the minimap or not.
+Visible = true
+
+## Specifies the width of the minimap.
+Width = 75 
+
+## Configure the markdown preview feature
+[Markdown]
+# Disable = false
+
+## Specifying code highlighting styles
+# CodeHlStyle = "github"
+
+
+[SideBar]
+## Specifies whether to show the external sidebar or not.
+# Visible = false
+
+## Specify the sidebar width
+# Width = 200
+
+## Specify whether or not to draw a shadow under the sidebar.
+# DropShadow = false
+
+## Specify the color to use when selecting items in the sidebar or palette in hexadecimal format
+# AccentColor = "#5596ea"
+
+
+[FileExplore]
+## Specify the maximum number of items to be displayed in the file explorer.
+MaxDisplayItems = 30
+
+
+[Workspace]
+## This setting sets the format of the path string of CWD in the sidebar.
+##  name: directoryname
+##  full: /path/to/directoryname
+##  minimum: /p/t/directoryname
+# PathStyle = "minimum"
+
+## Specifies whether the last exited session should be restored at the next startup.
+RestoreSession = false
+ 

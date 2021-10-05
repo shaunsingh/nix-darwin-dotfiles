@@ -1,0 +1,19 @@
+## Base16 Nord
+# Author: arcticicestudio
+
+set $base00 #2E3440
+set $base01 #3B4252
+set $base02 #434C5E
+set $base03 #4C566A
+set $base04 #D8DEE9
+set $base05 #E5E9F0
+set $base06 #ECEFF4
+set $base07 #8FBCBB
+set $base08 #BF616A
+set $base09 #D08770
+set $base0A #EBCB8B
+set $base0B #A3BE8C
+set $base0C #88C0D0
+set $base0D #81A1C1
+set $base0E #B48EAD
+set $base0F #5E81AC

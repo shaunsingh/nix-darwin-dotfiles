@@ -1,0 +1,75 @@
+{
+    "position": "bottom",
+    "height": 30,
+    "modules-center": ["sway/workspaces", "network", "pulseaudio", "battery", "clock", "custom/wofi-power"],
+    // Modules configuration
+	"sway/workspaces": {
+		"disable-scroll": true,
+		"all-outputs": true,
+		"format": "{icon}",
+	 	"persistent_workspaces": {
+	 		"1": [],
+	 		"2": [],
+	 		"3": [],
+	 		"4": [],
+	 		"5": [],
+	 		"6": [],
+	 		"7": [],
+	 		"8": [],
+	 		"9": [],
+	 		"10": []
+	},
+         	"format-icons": {
+             		"1": "λ",
+             		"2": "II",
+             		"3": "III",
+             		"4": "IV",
+             		"5": "V",
+             		"6": "VI",
+             		"7": "VII",
+             		"8": "VIII",
+             		"9": "IX",
+             		"10": "X" }
+     },
+	"clock": {
+		"format": "{:%H:%M} ",
+        	"tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+	},
+	"battery": {
+        	"states": {
+            		"warning": 30,
+            		"critical": 15,
+        	},
+        	"format": "{time}",
+        	"format-charging": "{time}",
+        	"format-plugged": "{time}",
+        	"format-alt": "{capacity}%",
+        	"format-full": "{capacity}%",
+	},
+	"network": {
+        	"format-wifi": "  {essid}",
+        	"format-ethernet": "󰤮 Disconnected",
+        	"format-linked": "{ifname} (No IP) ",
+        	"format-disconnected": "󰤮 Disconnected",
+		"tooltip-format-wifi": "Signal Strenght: {signalStrength}% | Down Speed: {bandwidthDownBits}, Up Speed: {bandwidthUpBits}",
+	},
+	"pulseaudio": {
+		"on-click": "pactl set-sink-mute 45 toggle",
+		"format": "{icon}  {volume}%",
+        	"format-muted": "󰖁 Muted",
+        	"format-icons": {
+            	"headphone": "",
+            	"hands-free": "",
+            	"headset": "",
+            	"phone": "",
+            	"portable": "",
+            	"car": "",
+            	"default": ["", "", ""]
+        },
+        "custom/wofi-power": {
+            "format": "",
+            "interval": "once",
+            "on-click": "~/.config/scripts/wofi-power.sh",
+        },
+    }
+}

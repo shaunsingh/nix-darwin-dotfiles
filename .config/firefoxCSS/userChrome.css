@@ -1,0 +1,103 @@
+@import url(right-click-menu.css);
+@import url(tabs-on-bottom.css);
+@import url(sidebar.css);
+
+:root {
+  --sfwindow: #2E3440;
+  --sfsecondary: #3B4252;
+}
+
+/*───────────────────────────────*/
+
+/* 
+┌─┐┌─┐┬  ┌─┐┬─┐┌─┐
+│  │ ││  │ │├┬┘└─┐
+└─┘└─┘┴─┘└─┘┴└─└─┘ 
+*/
+
+/* Inactive tabs color */
+#navigator-toolbox {
+  background-color: var(--sfwindow) !important;
+}
+
+:root {
+  --toolbar-bgcolor: var(--sfwindow) !important;
+  --toolbar-field-focus-background-color: var(--sfsecondary) !important;
+  --toolbar-field-focus-border-color: var(--sfsecondary) !important;
+  --toolbar-field-background-color: var(--sfwindow) !important;
+  --lwt-accent-color: var(--sfwindow) !important;
+  --lwt-selected-tab-background-color: var(--sfsecondary) !important;
+  --chrome-content-separator-color: var(--sfwindow) !important;
+}
+
+/* Url Bar  */
+#urlbar-input-container {
+  background-color: var(--sfsecondary) !important;
+  border: 0px solid rgba(0, 0, 0) !important;
+}
+
+/* Dark loading page */
+#tabbrowser-tabpanels{
+  background-color: var(--sfwindow) !important;
+}
+
+/*───────────────────────────────*/
+
+/*            
+┌─┐┌─┐┌┬┐┌─┐┌─┐┌┐┌┌─┐┌┐┌┌┬┐┌─┐
+│  │ ││││├─┘│ ││││├┤ │││ │ └─┐
+└─┘└─┘┴ ┴┴  └─┘┘└┘└─┘┘└┘ ┴ └─┘
+*/
+
+
+/* Toolbar  */
+
+#tracking-protection-icon-container,
+#urlbar-zoom-button,
+#star-button-box,
+#pageActionButton,
+#pageActionSeparator,
+#tabs-newtab-button,
+#identity-icon-box,
+#tracking-protection-icon-container,
+#identity-box > .identity-box-button,
+.tab-secondary-label {
+  display: none !important;
+}
+
+#PersonalToolbar,
+#nav-bar{ opacity: 0; transition: margin-bottom 100ms ease-in-out, opacity 100ms ease-out !important; }
+#nav-bar{ margin-bottom: -40px }
+#PersonalToolbar{ margin-bottom: -28px }
+#navigator-toolbox:hover > .browser-toolbar,
+#nav-bar:focus-within,#nav-bar:focus-within + #PersonalToolbar{ margin-bottom: 0; opacity: 1 }
+
+/* Tabs */
+.tabbrowser-tab:not([pinned]) .tab-icon-image {
+  display: none !important;
+}
+
+.tab-label-container{ display: grid; justify-content: safe center }
+.tabbrowser-tab[selected]:not(:hover) .tab-label-container,
+.tab-label,.tab-secondary-label{ overflow: hidden }
+#tabbrowser-tabs:not([closebuttons="activetab"]) .tabbrowser-tab:not(:hover,[pinned]) .tab-label-container{ margin-inline-end: 7px }
+
+:root {
+    --tab-min-height: 30px !important;
+    --tab-border-radius: 7px !important;
+    --tab-block-margin: 5px !important;
+}
+
+.tab-close-button{
+  list-style-image: url("close.png") !important;
+  height: 24px !important;
+  /* width: 21px !important; */
+}
+
+.tab-background{ margin-bottom: 0px !important; }
+.tab-content{ margin-top: 6px }
+
+/* Urlbar */
+
+#urlbar:not([focused]) #urlbar-input, /* ID for Firefox 70 */
+#urlbar:not([focused]) .urlbar-input{ text-align: center !important; }

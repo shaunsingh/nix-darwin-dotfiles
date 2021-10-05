@@ -1,0 +1,47 @@
+" settings
+set ignorecase
+set smartcase
+set scrolloff=3 " 3 lines above/below cursor when scrolling
+set nonumber
+set clipboard+=unnamed
+set multiple-cursors
+set numberwidth=2
+set expandtab=true
+set shiftwidth=4
+
+" plugins
+set easymotion
+set NERDTree
+set surround
+set highlightedyank
+
+
+" bindings
+let mapleader = " "
+nmap <leader>. :action GotoFile<cr>
+nmap <leader>fr :action RecentFiles<cr>
+nmap <leader>ww <Plug>(easymotion-w)
+nmap <leader>tz :action Enter Zen Mode<cr>
+nmap <leader>op :NERDTreeToggle<cr>
+nmap <leader>ot :Terminal<cr>
+nmap <leader>: :action SearchEverywhere<cr>
+nmap <leader>/ :action Find<cr>
+
+" use ; to enter command
+nmap ; :
+
+" use jk for escaping
+inoremap jk <Esc>
+cnoremap jk <Esc>
+
+" move by visual lines"
+nmap j gj
+nmap k gk
+
+" use C-hjkl to navigate splits
+nmap <C-h> <c-w>h
+nmap <C-l> <c-w>l
+nmap <C-k> <c-w>k
+nmap <C-j> <c-w>j
+
+nmap <leader>E :action Tool_External Tools_emacsclient<cr>
