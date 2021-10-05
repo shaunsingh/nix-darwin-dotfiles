@@ -1,6 +1,0 @@
-# -*- mode: snippet -*-
-# name: Global property
-# key: #+p
-# condition: (> 20 (line-number-at-pos))
-# --
-#+property: $0
