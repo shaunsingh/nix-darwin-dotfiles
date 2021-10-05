@@ -124,6 +124,7 @@ end
 
 set -x EDITOR "nvim"
 set -x PATH ~/.emacs.d/bin $PATH
+set -x PATH /Applications/Emacs.app/Contents/MacOS $PATH
 set -x PATH ~/.config/scripts $PATH
 
 alias vi "emacsclient -c --alternate-editor=COMMAND"

@@ -20,14 +20,14 @@
     fd
   
     # Terminal stuff
-    ## alacritty
+    alacritty
     tmux
   
     # Mail
     ## offlineimap
-    ## mu
-    ## msmtp
-    ## isync
+    mu
+    msmtp
+    isync
   
     # Browsers
     ## firefox
@@ -37,8 +37,8 @@
     # Emacs config deps (latex, aspell)
     (aspellWithDicts (dicts: with dicts; [ en en-computers en-science ]))
     ## tectonic
-    ## sdcv
-    ## gnuplot
+    sdcv
+    gnuplot
   
     # Editors
     neovim
@@ -52,7 +52,7 @@
     ## zathura
 
     # Other
-    ## spacebar
+    spacebar
 
   ];
 
@@ -69,7 +69,7 @@
 
   # Auto upgrade nix package and the daemon service.
   # services.nix-daemon.enable = true;
-  nix.package = pkgs.nix;
+  nix.package = pkgs.nixUnstable;
 
   # Create /etc/bashrc that loads the nix-darwin environment.
   programs.zsh.enable = true;  # default shell on catalina
