@@ -2,12 +2,6 @@
 set fish_function_path $fish_function_path ~/.config/fish/plugin-foreign-env/functions
 fenv source ~/.nix-profile/etc/profile.d/nix.sh
 
-# launch tmux if not active
-if status is-interactive
-and not set -q TMUX
-   exec tmux
-end
-
 # add nessecary vterm features
 function vterm_printf;
     if begin; [  -n "$TMUX" ]  ; and  string match -q -r "screen|tmux" "$TERM"; end
