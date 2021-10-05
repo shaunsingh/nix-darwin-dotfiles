@@ -64,7 +64,7 @@ in {
     discocss
   
     # Pdf/images
-    zathura
+    ## zathura
   ];
 
   # Add ibm and overpass fonts for emacs
