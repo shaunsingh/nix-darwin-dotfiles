@@ -3540,12 +3540,6 @@ I like to preview images inline too
 (setq org-startup-with-inline-images "inlineimages")
 #+end_src
 
-I prefer svgs to pngs. It takes a little more time, but scales better on HiDPI displays
-#+begin_src elisp
-(setq-default org-html-with-latex `dvisvgm)
-(setq org-preview-latex-default-process 'dvisvgm)
-#+end_src
-
 Obviously we can't edit a png though. Let use org-fragtog to toggle between previews and text mode
 #+begin_src elisp
 (use-package! org-fragtog
@@ -3859,7 +3853,33 @@ bother with ascii stuff
 On the other hand, it still refuses to work with previews and just sucks with
 emacs overall. Back to LatexMK for me
 #+begin_src emacs-lisp
-(setq org-latex-pdf-process '("latexmk -f -pdf -%latex -shell-escape -interaction=nonstopmode -output-directory=%o %f"))
+(setq org-latex-pdf-process (list "latexmk -f -pdflatex='xelatex -shell-escape -interaction nonstopmode' -pdf -output-directory=%o %f"))
+
+(setq xdvsvgm
+        '(xdvsvgm
+          :programs ("xelatex" "dvisvgm")
+          :description "xdv > svg"
+          :message "you need to install the programs: xelatex and dvisvgm."
+          :use-xcolor t
+          :image-input-type "xdv"
+          :image-output-type "svg"
+          :image-size-adjust (1.7 . 1.5)
+          :latex-compiler ("xelatex -no-pdf -interaction nonstopmode -output-directory %o %f")
+          :image-converter ("dvisvgm %f -n -b min -c %S -o %O")))
+
+(after! org
+    (add-to-list 'org-preview-latex-process-alist xdvsvgm)
+    (setq org-preview-latex-default-process 'xdvsvgm))
+#+end_src
+
+**** Compilation
+#+begin_src emacs-lisp
+(setq TeX-save-query nil
+      TeX-show-compilation t
+      TeX-command-extra-options "-shell-escape")
+
+(after! latex
+  (add-to-list 'TeX-command-list '("XeLaTeX" "%`xelatex%(mode)%' %t" TeX-run-TeX nil t)))
 #+end_src
 
 *** Classes
