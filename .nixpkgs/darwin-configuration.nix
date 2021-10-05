@@ -1,8 +1,24 @@
 { config, lib, pkgs, ... }:
 
-{
+let
+
+  unstable = import (fetchTarball
+    "https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz") {
+      overlays = [
+        (import (builtins.fetchTarball {
+          url =
+            "https://github.com/nix-community/emacs-overlay/archive/master.tar.gz";
+        }))
+      ];
+    };
+
+  my-emacs = (pkgs.emacsPackagesGen unstable.emacsPgtkGcc).emacsWithPackages
+    (epkgs: [ epkgs.vterm epkgs.pdf-tools ]);
+
+in {
   # Allow me to install unfree packages
   nixpkgs.config.allowUnfree = true;
+
   environment.systemPackages = with pkgs; [
 
     # Dotfiles Management
@@ -43,6 +59,7 @@
     # Editors
     neovim
     ## emacsMacport
+    my-emacs
   
     # Chat
     ## discord
