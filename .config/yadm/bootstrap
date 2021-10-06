@@ -9,12 +9,6 @@ set -eu
 # Install Homebrew and packages first
 source "$HOME/.config/yadm/nix.sh"
 
-# Switch to fish
-if [[ "$SHELL" != *"fish" ]]; then
-    sudo sh -c 'echo $(which fish) >> /etc/shells'
-    chsh -s $(which fish)
-fi
-
 # Directory to look for bootstrap executables in
 BOOTSTRAP_D="${BASH_SOURCE[0]}.d"
 
