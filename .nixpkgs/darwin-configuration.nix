@@ -2,6 +2,27 @@
 
 {
 
+  # Preferences
+  system.defaults.NSGlobalDomain.AppleKeyboardUIMode = 3;
+  system.defaults.NSGlobalDomain.ApplePressAndHoldEnabled = false;
+  system.defaults.NSGlobalDomain.InitialKeyRepeat = 10;
+  system.defaults.NSGlobalDomain.KeyRepeat = 1;
+  system.defaults.NSGlobalDomain.NSNavPanelExpandedStateForSaveMode = true;
+  system.defaults.NSGlobalDomain.NSNavPanelExpandedStateForSaveMode2 = true;
+  system.defaults.NSGlobalDomain._HIHideMenuBar = true;
+
+  system.defaults.dock.autohide = true;
+  system.defaults.dock.mru-spaces = false;
+  system.defaults.dock.showhidden = true;
+
+  system.defaults.finder.AppleShowAllExtensions = true;
+  system.defaults.finder.QuitMenuItem = true;
+  system.defaults.finder.FXEnableExtensionChangeWarning = false;
+
+  system.defaults.trackpad.Clicking = true;
+  system.keyboard.enableKeyMapping = true;
+  system.keyboard.remapCapsLockToControl = true;
+
   # Allow me to install unfree packages
   nixpkgs.config.allowUnfree = true;
 
@@ -20,8 +41,8 @@
     fd
   
     # Terminal stuff
-    alacritty
-    tmux
+    ## alacritty
+    ## tmux
   
     # Mail
     ## offlineimap
@@ -71,17 +92,30 @@
     alegreya
   ];
   
-  # Use a custom configuration.nix location.
-  # darwin-rebuild switch -I darwin-config=$HOME/.config/darwin/configuration.nix
-  # environment.darwinConfig = "$HOME/.config/darwin/configuration.nix";
-
   # Auto upgrade nix package and the daemon service.
-  # services.nix-daemon.enable = true;
   nix.package = pkgs.nixUnstable;
 
-  # Create /etc/bashrc that loads the nix-darwin environment.
-  # programs.zsh.enable = true;  # default shell on catalina
+  # Use Auto GC
+  nix.gc.automatic = true;
+  nix.gc.options = "--max-freed $((25 * 1024**3 - 1024 * $(df -P -k /nix/store | tail -n 1 | awk '{ print $4 }')))";
+  nix.gc.user = "shauryasingh";
+
+   # Use the nix sandbox
+  nix.useSandbox = true;
+  nix.sandboxPaths = [ "/private/tmp" "/private/var/tmp" "/usr/bin/env" ];
+
+  # Use Fish and Tmux as my user shell 
   programs.fish.enable = true;
+  programs.tmux.enable = true;
+
+  # Set loginShell
+  environment.loginShell = "${pkgs.zsh}/bin/zsh -l";
+  environment.variables.LANG = "en_US.UTF-8";
+
+  # Use yabai as my wm
+  # services.yabai.enable = true;
+  # services.yabai.package = pkgs.yabai;
+  # services.skhd.enable = true;
 
   # bar
   # services.spacebar.enable = true;
