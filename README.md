@@ -23,8 +23,7 @@ git clone --depth 1 https://github.com/shaunsingh/vimrc-dotfiles.git -f --no-boo
 Install nix, Launch a nix-shell with unstable, build, run
 ```zsh
 nix-shell -p nixUnstable git
-nix build --extra-experimental-features nix-command --extra-experimental-features flakes
-nix run --extra-experimental-features nix-command --extra-experimental-features flakes
+nix run github:shaunsingh/vimrc-dotfiles --extra-experimental-features nix-command --extra-experimental-features flakes
 ```
 
 ### nixOS
