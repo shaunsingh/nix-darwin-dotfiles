@@ -5,13 +5,12 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     neovim.url = "github:neovim/neovim?dir=contrib";
     emacs-overlay.url = "github:nix-community/emacs-overlay";
-    spacebar.url = "github:cmacrae/spacebar";
     mk-darwin-system = {
       url = "github:vic/mk-darwin-system/main";
     };
   };
 
-  outputs = { self, nixpkgs, emacs-overlay, spacebar, neovim, ... }@inputs: 
+  outputs = { self, nixpkgs, mk-darwin-system, emacs-overlay, neovim, ... }@inputs: 
     let
       flake-utils = mk-darwin-system.inputs.flake-utils;
       hostName = "shaunsingh-laptop";
@@ -25,7 +24,7 @@
           ./modules/homebrew.nix
           ./modules/git.nix
           ./modules/pam.nix
-          ({ pkgs, ... }: {
+          ({ pkgs, lib, ... }: {
             system.stateVersion = 4;
 
             system.keyboard = {
@@ -57,39 +56,30 @@
                 KeyRepeat = 1;
                 "com.apple.mouse.tapBehavior" = 1;
                 "com.apple.swipescrolldirection" = true;
-              } 
+              };
             };
 
             security.pam.enableSudoTouchIdAuth = true;
 
             programs.fish.enable = true;
             environment.shells = with pkgs; [ fish ];
-            users.users."${username}" = {
-              inherit home;
+            users.users.shauryasingh = {
+              home = "/Users/shauryasingh";
               shell = pkgs.fish;
             };
             system.activationScripts.postActivation.text = ''
               # Set the default shell as fish for the user
-              sudo chsh -s ${lib.getBin pkgs.fish}/bin/fish ${username}
+              sudo chsh -s ${lib.getBin pkgs.fish}/bin/fish shauryasingh 
             '';
 
             services.nix-daemon.enable = true;
-            nix.package = pkgs.nixUnstable;
 
-            services.spacebar.enable = true;
             programs.tmux.enable = true;
-          
-            programs.git = {
-              enable = true;
-              userName = "shaunsingh";
-              userEmail = "shaunsingh0207@gmail.com";
-            };
           
             nixpkgs = {
               overlays = [
                 emacs-overlay.overlay
                 neovim.overlay
-                spacebar.overlay
               ];
               config.allowUnfree = true;
             };
@@ -103,8 +93,6 @@
                 build-users-group = nixbld
               '';
             };
-
-            users.users.shauryasingh.home = "/Users/shauryasingh";
 
             fonts = {
               enableFontDir = true;
@@ -130,8 +118,6 @@
                 tree
                 fd
             
-                ## tmux
-              
                 # Mail
                 ## offlineimap
                 mu
