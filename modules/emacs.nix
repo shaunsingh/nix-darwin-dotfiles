@@ -15,6 +15,6 @@
     fd
     gnuplot
     sqlite
-    emacs
+    emacsPgtkGcc
   ];
 }

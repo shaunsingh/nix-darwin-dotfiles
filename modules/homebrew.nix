@@ -18,9 +18,5 @@
       "discord"
       "alacritty"
     ];
-
-    masApps = {
-      "Dato" = 1470584107;
-    };
   };
 }
