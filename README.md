@@ -15,14 +15,16 @@ Install XCode CLT (not required, but recommended)
 xcode-select --install
 ```
 
-Install Yadm
+Clone the repo
 ```sh
-sudo curl -fLo /usr/local/bin/yadm https://github.com/TheLocehiliosan/yadm/raw/master/yadm && sudo chmod a+x /usr/local/bin/yadm
+git clone --depth 1 https://github.com/shaunsingh/vimrc-dotfiles.git -f --no-bootstrap
 ```
 
-Clone the repo and run bootstrap (y)
-```sh
-yadm clone --depth 1 https://github.com/shaunsingh/vimrc-dotfiles.git -f
+Install nix, Launch a nix-shell with unstable, build, run
+```zsh
+nix-shell -p nixUnstable git
+nix build --extra-experimental-features nix-command --extra-experimental-features flakes
+nix run --extra-experimental-features nix-command --extra-experimental-features flakes
 ```
 
 ### nixOS
