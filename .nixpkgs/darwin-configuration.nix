@@ -1,21 +1,6 @@
 { config, lib, pkgs, ... }:
 
-let
-
-  unstable = import (fetchTarball
-    "https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz") {
-      overlays = [
-        (import (builtins.fetchTarball {
-          url =
-            "https://github.com/nix-community/emacs-overlay/archive/master.tar.gz";
-        }))
-      ];
-    };
-
-  my-emacs = (pkgs.emacsPackagesGen unstable.emacsPgtkGcc).emacsWithPackages
-    (epkgs: [ epkgs.vterm epkgs.pdf-tools ]);
-
-in {
+{
 
   # Allow me to install unfree packages
   nixpkgs.config.allowUnfree = true;
@@ -56,8 +41,10 @@ in {
     gnuplot
   
     # Editors
-    neovim
-    my-emacs
+    ## neovim
+    neovim-nightly
+    ## emacs
+    emacsPgtkGcc
   
     # Chat
     ## discord
@@ -66,6 +53,17 @@ in {
     # Pdf/images
     ## zathura
   ];
+
+  nixpkgs.overlays = [
+    (import (builtins.fetchTarball {
+      url = "https://github.com/nix-community/neovim-nightly-overlay/archive/master.tar.gz";
+
+    }))
+    (import (builtins.fetchTarball {
+      url = "https://github.com/nix-community/emacs-overlay/archive/master.tar.gz";
+    }))
+  ];
+
 
   # Add ibm and overpass fonts for emacs
   fonts.fonts = with pkgs; [
