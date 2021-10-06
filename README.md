@@ -18,7 +18,7 @@ xcode-select --install
 Install Yadm
 ```sh
 git clone https://github.com/TheLocehiliosan/yadm.git ~/.yadm-project
-ln -s ~/.yadm-project/yadm ~/bin/yadm
+ln -s ~/.yadm-project/yadm ~/usr/bin/yadm
 ```
 
 Clone the repo and run bootstrap (y)
