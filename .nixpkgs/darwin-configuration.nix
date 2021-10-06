@@ -147,6 +147,22 @@ in {
   system.activationScripts.postActivation.text = ''
     # Set the default shell as fish for the user
     sudo chsh -s ${lib.getBin pkgs.fish}/bin/fish ${username}
+
+    # Setup neovim
+    nvim --headless +PackerSync +qa
+
+    # Install emacs
+    emacs --batch --eval "(progn (require 'org) (setq org-confirm-babel-evaluate nil) (org-babel-tangle-file \"~/.config/doom/config.org\"))"
+    git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
+    ~/.emacs.d/bin/doom -y install
+
+    # Sync mu4e
+    mkdir ~/.mbsync
+    nvim .mbsyncrc
+    nvim .msmtprc
+    mu init --maildir=~/.mbsync --my-address=shaunsingh0207@gmail.com
+    mu index
+    mbsync --all
   '';
 
   # Touchid for sudo authentication
