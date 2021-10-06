@@ -3,25 +3,41 @@
 {
 
   # Preferences
-  system.defaults.NSGlobalDomain.AppleKeyboardUIMode = 3;
-  system.defaults.NSGlobalDomain.ApplePressAndHoldEnabled = false;
-  system.defaults.NSGlobalDomain.InitialKeyRepeat = 10;
-  system.defaults.NSGlobalDomain.KeyRepeat = 1;
+
+  ## Expand Save by default 
   system.defaults.NSGlobalDomain.NSNavPanelExpandedStateForSaveMode = true;
   system.defaults.NSGlobalDomain.NSNavPanelExpandedStateForSaveMode2 = true;
+
+  ## Hide menubar by default 
   system.defaults.NSGlobalDomain._HIHideMenuBar = true;
 
+  ## Use Dark theme
+  system.defaults.NSGlobalDomain.AppleInterfaceStyle = "Dark";
+
+  ## Save screenshots to /tmp
+  system.defaults.screencapture.location = "/tmp";
+
+  ## Autohide dock and disable mru
   system.defaults.dock.autohide = true;
   system.defaults.dock.mru-spaces = false;
   system.defaults.dock.showhidden = true;
 
+  ## Show all file extensions in finder, and disable the warning for it
   system.defaults.finder.AppleShowAllExtensions = true;
   system.defaults.finder.QuitMenuItem = true;
   system.defaults.finder.FXEnableExtensionChangeWarning = false;
 
-  system.defaults.trackpad.Clicking = true;
+  ## Disable natural scrolling, tap to click
+  system.defaults.NSGlobalDomain."com.apple.mouse.tapBehavior" = 1;
+  system.defaults.NSGlobalDomain."com.apple.swipescrolldirection" = false;
+
+  ## Bind Caps lock to CTRL 
   system.keyboard.enableKeyMapping = true;
   system.keyboard.remapCapsLockToControl = true;
+  system.defaults.NSGlobalDomain.AppleKeyboardUIMode = 3;
+  system.defaults.NSGlobalDomain.ApplePressAndHoldEnabled = false;
+  system.defaults.NSGlobalDomain.InitialKeyRepeat = 10;
+  system.defaults.NSGlobalDomain.KeyRepeat = 1;
 
   # Allow me to install unfree packages
   nixpkgs.config.allowUnfree = true;
