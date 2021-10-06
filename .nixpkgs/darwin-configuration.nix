@@ -1,6 +1,21 @@
 { config, lib, pkgs, ... }:
 
-{
+let
+
+  unstable = import (fetchTarball
+    "https://github.com/NixOS/nixpkgs/archive/nixos-unstable.tar.gz") {
+      overlays = [
+        (import (builtins.fetchTarball {
+          url =
+            "https://github.com/nix-community/emacs-overlay/archive/master.tar.gz";
+        }))
+      ];
+    };
+
+  my-emacs = (pkgs.emacsPackagesGen unstable.emacsPgtkGcc).emacsWithPackages
+    (epkgs: [ epkgs.emacsql-sqlite epkgs.vterm epkgs.pdf-tools ]);
+
+in {
 
   # Preferences
 
@@ -61,7 +76,6 @@
   
     # Terminal stuff
     ## alacritty
-    ## tmux
   
     # Mail
     ## offlineimap
@@ -84,8 +98,8 @@
     ## neovim
     neovim-nightly
     ## emacs
-    emacsPgtkGcc
-  
+    my-emacs
+
     # Chat
     ## discord
     discocss
@@ -98,9 +112,6 @@
     (import (builtins.fetchTarball {
       url = "https://github.com/nix-community/neovim-nightly-overlay/archive/master.tar.gz";
 
-    }))
-    (import (builtins.fetchTarball {
-      url = "https://github.com/nix-community/emacs-overlay/archive/master.tar.gz";
     }))
   ];
 
