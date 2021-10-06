@@ -4,13 +4,11 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     neovim.url = "github:neovim/neovim?dir=contrib";
-    emacs-overlay.url = "github:nix-community/emacs-overlay";
-    mk-darwin-system = {
-      url = "github:vic/mk-darwin-system/main";
-    };
+    mac-emacs.url = "github:cmacrae/emacs";
+    mk-darwin-system.url = "github:vic/mk-darwin-system/main";
   };
 
-  outputs = { self, nixpkgs, mk-darwin-system, emacs-overlay, neovim, ... }@inputs: 
+  outputs = { self, nixpkgs, mk-darwin-system, mac-emacs, neovim, ... }@inputs: 
     let
       flake-utils = mk-darwin-system.inputs.flake-utils;
       hostName = "shaunsingh-laptop";
@@ -77,7 +75,7 @@
           
             nixpkgs = {
               overlays = [
-                emacs-overlay.overlay
+                mac-emacs.overlay
                 neovim.overlay
               ];
               config.allowUnfree = true;
