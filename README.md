@@ -15,28 +15,15 @@ Install XCode CLT (not required, but recommended)
 xcode-select --install
 ```
 
-Install Nix 
+Install Yadm
 ```sh
-sh <(curl -L https://nixos.org/nix/install) --darwin-use-unencrypted-nix-store-volume
+git clone https://github.com/TheLocehiliosan/yadm.git ~/.yadm-project
+ln -s ~/.yadm-project/yadm ~/bin/yadm
 ```
 
-Use Nix Unstable 
+Clone the repo and run bootstrap (y)
 ```sh
-nix-channel --add https://channels.nixos.org/nixpkgs-unstable/ unstable
-sudo nix-channel --update
-```
-
-Install YADM and Clone the repo
-```sh
-nix-env -iA nixpkgs.yadm
-yadm clone https://github.com/shaunsingh/vimrc-dotfiles.git --no-bootstrap
-```
-
-Install Nix Darwin, don't edit the configuration, ask it nix to manage
-nix-darwin as a channel, and wait until everything finishes compiling
-```sh
-nix-build https://github.com/LnL7/nix-darwin/archive/master.tar.gz -A installer
-./result/bin/darwin-installer
+yadm clone --depth 1 https://github.com/shaunsingh/vimrc-dotfiles.git --no-bootstrap -f
 ```
 
 ### nixOS
@@ -55,12 +42,6 @@ yadm remote add origin https://github.com/shaunsingh/vimrc-dotfiles.git
 ```
 
 ### Emacs
-After you get everything up and running, be aware you need to tangle the file before installing doom emacs: 
-```sh
-emacs --batch --eval "(progn (require 'org) (setq org-confirm-babel-evaluate nil) (org-babel-tangle-file \"~/.config/doom/config.org\"))"
-git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
-~/.emacs.d/bin/doom install
-```
 
 **Personal Note:** this is my configuration for emacs-ng
 ```     

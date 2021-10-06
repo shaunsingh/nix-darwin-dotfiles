@@ -7,7 +7,7 @@
 set -eu
 
 # Install Homebrew and packages first
-source "$HOME/.config/yadm/brew.sh"
+source "$HOME/.config/yadm/nix.sh"
 
 # Switch to fish
 if [[ "$SHELL" != *"fish" ]]; then

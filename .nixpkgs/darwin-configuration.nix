@@ -8,6 +8,9 @@
   system.defaults.NSGlobalDomain.NSNavPanelExpandedStateForSaveMode = true;
   system.defaults.NSGlobalDomain.NSNavPanelExpandedStateForSaveMode2 = true;
 
+  ## Use Subpixel AA on external monitors
+  system.defaults.NSGlobalDomain.AppleFontSmoothing = 1;
+
   ## Hide menubar by default 
   system.defaults.NSGlobalDomain._HIHideMenuBar = true;
 

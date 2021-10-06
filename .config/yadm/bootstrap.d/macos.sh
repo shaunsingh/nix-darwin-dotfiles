@@ -43,11 +43,6 @@ if [ "$SYSTEM_TYPE" = "Darwin" ]; then
     # (e.g. enable Tab in modal dialogs)
     defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
 
-    # Set a blazingly fast keyboard repeat rate
-    # TODO: check
-    # defaults write NSGlobalDomain KeyRepeat -int 1
-    # defaults write NSGlobalDomain InitialKeyRepeat -int 10
-
     #===============
     # Energy saving
     #===============
@@ -73,15 +68,8 @@ if [ "$SYSTEM_TYPE" = "Darwin" ]; then
     defaults write com.apple.screensaver askForPassword -int 1
     defaults write com.apple.screensaver askForPasswordDelay -int 0
 
-    # Save screenshots to the desktop
-    defaults write com.apple.screencapture location -string "${HOME}/Desktop"
-
     # Save screenshots in PNG format (other options: BMP, GIF, JPG, PDF, TIFF)
     defaults write com.apple.screencapture type -string "png"
-
-    # Enable subpixel font rendering on non-Apple LCDs
-    # Reference: https://github.com/kevinSuttle/macOS-Defaults/issues/17#issuecomment-266633501
-    defaults write NSGlobalDomain AppleFontSmoothing -int 1
 
     # Enable HiDPI display modes (requires restart)
     sudo defaults write /Library/Preferences/com.apple.windowserver DisplayResolutionEnabled -bool true
@@ -95,12 +83,6 @@ if [ "$SYSTEM_TYPE" = "Darwin" ]; then
     defaults write com.apple.finder ShowHardDrivesOnDesktop -bool false
     defaults write com.apple.finder ShowMountedServersOnDesktop -bool false
     defaults write com.apple.finder ShowRemovableMediaOnDesktop -bool false
-
-    # Finder: show all filename extensions
-    defaults write NSGlobalDomain AppleShowAllExtensions -bool true
-
-    # Disable the warning when changing a file extension
-    defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
 
     # Avoid creating .DS_Store files on network or USB volumes
     defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
@@ -140,16 +122,7 @@ if [ "$SYSTEM_TYPE" = "Darwin" ]; then
     # Show indicator lights for open applications in the Dock
     defaults write com.apple.dock show-process-indicators -bool true
 
-    # Automatically hide and show the Dock
-    defaults write com.apple.dock autohide -bool true
-
-    # Automatically Hide and show the menubar
-    defaults write NSGlobalDomain _HIHideMenuBar -bool true
-
-    # set darkmode
-    osascript -l JavaScript -e "Application('System Events').appearancePreferences.darkMode = true"
-
-    #======
+   #======
     # Mail
     #======
 
