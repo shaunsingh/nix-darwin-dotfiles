@@ -23,7 +23,7 @@ ln -s ~/.yadm-project/yadm ~/bin/yadm
 
 Clone the repo and run bootstrap (y)
 ```sh
-yadm clone --depth 1 https://github.com/shaunsingh/vimrc-dotfiles.git --no-bootstrap -f
+yadm clone --depth 1 https://github.com/shaunsingh/vimrc-dotfiles.git -f
 ```
 
 ### nixOS
