@@ -1,6 +1,8 @@
 # make sure nix works with fish
-set fish_function_path $fish_function_path ~/.config/fish/plugin-foreign-env/functions
-fenv source ~/.nix-profile/etc/profile.d/nix.sh
+if status is-interactive
+and not set -q TMUX
+  tmux new-session -A -s main
+end
 
 # add nessecary vterm features
 function vterm_printf;
@@ -117,10 +119,10 @@ function fish_prompt
 end
 
 set -x EDITOR "nvim"
-set -x PATH ~/.emacs.d/bin $PATH
+set -x PATH ~/.config/emacs/bin $PATH
 set -x PATH ~/.config/scripts $PATH
 
-alias vi "emacsclient -c --alternate-editor=COMMAND"
+alias vi "emacsclient -c"
 alias .. "cd .."
 alias ... "cd ../.."
 alias .... "cd ../../.."
@@ -130,5 +132,5 @@ alias ll 'exa -lF --color-scale --no-user --no-time --no-permissions --group-dir
 alias ls 'exa -F --group-directories-first --icons -a'
 alias tree 'tree -a -C'
 alias cat 'bat --paging=never -p'
-alias cleanup "find . -type f -name '*.DS_Store' -ls -delete && rm -r ~/.config/discord && rm -r ~/.config/GIMP && rm -r ~/.config/chromium "
+alias cleanup "find . -type f -name '*.DS_Store' -ls -delete"
 

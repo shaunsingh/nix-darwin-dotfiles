@@ -48,9 +48,9 @@ in {
   system.defaults.finder.QuitMenuItem = true;
   system.defaults.finder.FXEnableExtensionChangeWarning = false;
 
-  ## Disable natural scrolling, tap to click
+  ## Enable natural scrolling, tap to click
   system.defaults.NSGlobalDomain."com.apple.mouse.tapBehavior" = 1;
-  system.defaults.NSGlobalDomain."com.apple.swipescrolldirection" = false;
+  system.defaults.NSGlobalDomain."com.apple.swipescrolldirection" = true;
 
   ## Bind Caps lock to CTRL 
   system.keyboard.enableKeyMapping = true;
@@ -126,6 +126,7 @@ in {
   ];
   
   # Auto upgrade nix package and the daemon service.
+  services.nix-daemon.enable = true;
   nix.package = pkgs.nixUnstable;
 
   # Use Auto GC
@@ -147,22 +148,6 @@ in {
   system.activationScripts.postActivation.text = ''
     # Set the default shell as fish for the user
     sudo chsh -s ${lib.getBin pkgs.fish}/bin/fish ${username}
-
-    # Setup neovim
-    nvim --headless +PackerSync +qa
-
-    # Install emacs
-    emacs --batch --eval "(progn (require 'org) (setq org-confirm-babel-evaluate nil) (org-babel-tangle-file \"~/.config/doom/config.org\"))"
-    git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.emacs.d
-    ~/.emacs.d/bin/doom -y install
-
-    # Sync mu4e
-    mkdir ~/.mbsync
-    nvim .mbsyncrc
-    nvim .msmtprc
-    mu init --maildir=~/.mbsync --my-address=shaunsingh0207@gmail.com
-    mu index
-    mbsync --all
   '';
 
   # Touchid for sudo authentication

@@ -3,7 +3,7 @@
 set -eu
 
 if [ ! command -v nix-env >/dev/null 2>&1 ]; then
-    sh <(curl -L https://nixos.org/nix/install) --darwin-use-unencrypted-nix-store-volume
+    curl -L https://nixos.org/nix/install | sh -s -- --darwin-use-unencrypted-nix-store-volume --daemon
     nix-channel --add https://channels.nixos.org/nixpkgs-unstable/ unstable
     sudo nix-channel --update
     echo "Nix ✅"
