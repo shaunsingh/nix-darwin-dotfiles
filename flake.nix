@@ -73,7 +73,6 @@
             '';
 
             services.nix-daemon.enable = true;
-
             programs.tmux.enable = true;
           
             nixpkgs = {
