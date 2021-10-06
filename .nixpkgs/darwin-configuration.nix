@@ -83,7 +83,7 @@ in {
   
     # Mail
     ## offlineimap
-    ## mu
+    mu
     msmtp
     isync
   
