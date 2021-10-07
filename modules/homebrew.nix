@@ -23,7 +23,8 @@
       "intellij-idea"
       "zoom"
       "discord"
-      "alacritty"
+      ## "alacritty"
+      "kitty"
     ];
     masApps = {
       "Vimari" = 148093394;
