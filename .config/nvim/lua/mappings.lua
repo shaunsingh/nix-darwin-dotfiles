@@ -7,8 +7,6 @@ local function map(mode, lhs, rhs, opts)
 end
 
 vim.g.mapleader = " " --leader
-map("i", "jk", "<esc>") --jk to exit
-map("c", "jk", "<C-C>")
 map("n", ";", ":") --semicolon to enter command mode
 map("n", "j", "gj") --move by visual line not actual line
 map("n", "k", "gk")

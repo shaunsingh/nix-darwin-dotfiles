@@ -21,9 +21,21 @@ return packer.startup(function()
       "dstein64/vim-startuptime",
       cmd = "StartupTime",
    }
+   use {
+      "max397574/better-escape.nvim",
+      event = "InsertEnter",
+      config = function()
+        require("better_escape").setup {
+          mapping = {"jk", "jj"}, 
+          timeout = vim.o.timeoutlen,
+          clear_empty_lines = true,
+          keys = "<Esc>",
+        }
+      end,
+    }
 
    use {
-      "~/.config/nvim/lua/theme/nord.nvim",
+      "shaunsingh/nord.nvim",
       after = "packer.nvim",
       config = function()
          vim.g.nord_borders = false
@@ -132,6 +144,7 @@ return packer.startup(function()
 
    use {
       "hrsh7th/nvim-cmp",
+      module = "cmp",
       after = "friendly-snippets",
       config = function()
          require "plugins.cmp"
@@ -159,7 +172,8 @@ return packer.startup(function()
 
    use {
       "hrsh7th/cmp-nvim-lsp",
-      after = "cmp-nvim-lua",
+      module = "cmp_nvim_lsp",
+      after = "nvim-lspconfig",
    }
 
    use {

@@ -57,6 +57,9 @@ capabilities.textDocument.completion.completionItem.resolveSupport = {
    },
 }
 
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities = require("cmp_nvim_lsp").update_capabilities(capabilities)
+
 local function setup_servers()
    lspinstall.setup()
    local servers = lspinstall.installed_servers()
