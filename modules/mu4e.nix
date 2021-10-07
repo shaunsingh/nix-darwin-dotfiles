@@ -1,10 +1,8 @@
 { pkgs, ... }: {
   system.activationScripts.postUserActivation.text = ''
     # Setup mu if .mbsync doesn't exist
-    if [[ ! -d "/Users/shauryasingh/.mbsync" ]]; then
+    if [[ ! -d "/Users/shauryasingh/.mbsync/" ]]; then
       mkdir ~/.mbsync
-      nvim .mbsyncrc
-      nvim .msmtprc
       mu init --maildir=~/.mbsync --my-address=shaunsingh0207@gmail.com
       mu index
       mbsync --all
