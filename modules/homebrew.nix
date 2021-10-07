@@ -23,7 +23,7 @@
       "intellij-idea"
       "zoom"
       "discord"
-      ## "alacritty"
+      "alacritty"
       "kitty"
     ];
     masApps = {
