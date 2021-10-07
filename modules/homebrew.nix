@@ -1,4 +1,10 @@
 { pkgs, ... }: {
+  system.activationScripts.postUserActivation.text = ''
+    # Install homebrew if it isn't there 
+    if [[ ! -d "/opt/homebrew/bin" ]]; then
+      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    fi
+  '';
   homebrew = {
     brewPrefix = "/opt/homebrew/bin";
     enable = true;
@@ -12,11 +18,16 @@
       "homebrew/core"
       "homebrew/cask"
     ];
-
     casks = [
+      "nvidia-geforce-now"
+      "intellij-idea"
       "zoom"
       "discord"
       "alacritty"
     ];
+    masApps = {
+      "Vimari" = 148093394;
+      "Adguard For Safari" = 144014725;
+    };
   };
 }

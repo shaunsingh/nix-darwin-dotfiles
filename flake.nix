@@ -3,10 +3,13 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-    neovim.url = "github:neovim/neovim?dir=contrib";
-    emacs-overlay.url = "github:nix-community/emacs-overlay";
-    # mac-emacs.url = "github:cmacrae/emacs";
     mk-darwin-system.url = "github:vic/mk-darwin-system/main";
+
+    neovim.url = "github:neovim/neovim?dir=contrib";
+    neovim.inputs.nixpkgs.follows = "nixpkgs";
+
+    emacs-overlay.url = "github:nix-community/emacs-overlay";
+    emacs-overlay.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = { self, nixpkgs, mk-darwin-system, emacs-overlay, neovim, ... }@inputs: 
@@ -133,6 +136,7 @@
                 (aspellWithDicts (dicts: with dicts; [ en en-computers en-science ]))
                 (pkgs.texlive.combine { inherit (pkgs.texlive) scheme-small dvipng dvisvgm l3packages xcolor soul adjustbox collectbox amsmath siunitx cancel mathalpha capt-of chemfig wrapfig mhchem fvextra latexmk; })
                 sdcv
+                pandoc
 
                 # Chat
                 discocss
