@@ -19,9 +19,12 @@
       "homebrew/cask"
     ];
     casks = [
-      "nvidia-geforce-now"
       "intellij-idea"
       "zoom"
+      "kitty"
+      # Note: Still emulated via rosetta
+      "nvidia-geforce-now"
+      "alacritty"
       "discord"
     ];
   };
