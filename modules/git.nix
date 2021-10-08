@@ -1,4 +1,4 @@
-{ pkgs, lib, ... }: {
+{ pkgs, lib, config, ... }: {
   home-manager.users.shauryasingh.programs.git = {
     package = pkgs.git;
     enable = true;
@@ -10,7 +10,7 @@
       ".DS_Store"
     ];
   };
-  home-manager.users.shauryasingh.programs.htop = {
+  home-manager.users.shauryasingh.programs.htop.settings = {
     color_scheme = 0;
     cpu_count_from_one = 0;
     delay = 15;
