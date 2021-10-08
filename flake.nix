@@ -10,9 +10,11 @@
 
     emacs-overlay.url = "github:nix-community/emacs-overlay";
     emacs-overlay.inputs.nixpkgs.follows = "nixpkgs";
+
+    spacebar.url = "github:cmacrae/spacebar/v1.3.0";
   };
 
-  outputs = { self, nixpkgs, mk-darwin-system, emacs-overlay, neovim, ... }@inputs: 
+  outputs = { self, nixpkgs, mk-darwin-system, emacs-overlay, neovim, spacebar, ... }@inputs: 
     let
       flake-utils = mk-darwin-system.inputs.flake-utils;
       hostName = "shaunsingh-laptop";
@@ -74,13 +76,15 @@
               sudo chsh -s ${lib.getBin pkgs.fish}/bin/fish shauryasingh 
             '';
 
-            services.nix-daemon.enable = true;
+            services.spacebar.enable = true;
+            services.spacebar.package = spacebar;
             programs.tmux.enable = true;
           
             nixpkgs = {
               overlays = [
                 emacs-overlay.overlay
                 neovim.overlay
+                spacebar.overlay
               ];
               config.allowUnfree = true;
             };
@@ -94,6 +98,7 @@
                 build-users-group = nixbld
               '';
             };
+            services.nix-daemon.enable = true;
 
             fonts = {
               enableFontDir = true;
@@ -130,13 +135,11 @@
 
                 # Neovim
                 neovim
-                ## neovide
               
                 # Emacs config deps (latex, aspell)
                 (aspellWithDicts (dicts: with dicts; [ en en-computers en-science ]))
                 (pkgs.texlive.combine { inherit (pkgs.texlive) scheme-small dvipng dvisvgm l3packages xcolor soul adjustbox collectbox amsmath siunitx cancel mathalpha capt-of chemfig wrapfig mhchem fvextra latexmk; })
                 sdcv
-                pandoc
 
                 # Chat
                 discocss

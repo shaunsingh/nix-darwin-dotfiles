@@ -26,9 +26,5 @@
       "alacritty"
       "kitty"
     ];
-    masApps = {
-      "Vimari" = 148093394;
-      "Adguard For Safari" = 144014725;
-    };
   };
 }
