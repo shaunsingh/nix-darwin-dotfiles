@@ -23,8 +23,6 @@
       "intellij-idea"
       "zoom"
       "discord"
-      "alacritty"
-      "kitty"
     ];
   };
 }
