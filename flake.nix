@@ -26,7 +26,6 @@
           ./modules/homebrew.nix
           ./modules/git.nix
           ./modules/pam.nix
-          ./modules/mu4e.nix
           ({ pkgs, lib, ... }: {
             system.stateVersion = 4;
 
@@ -118,6 +117,12 @@
                 bat
                 tree
 
+                # Mail
+                ## offlineimap
+                mu
+                msmtp
+                isync
+              
                 # Browsers
                 ## firefox
                 ## nyxt
@@ -127,6 +132,12 @@
                 neovim
                 ## neovide
               
+                # Emacs config deps (latex, aspell)
+                (aspellWithDicts (dicts: with dicts; [ en en-computers en-science ]))
+                (pkgs.texlive.combine { inherit (pkgs.texlive) scheme-small dvipng dvisvgm l3packages xcolor soul adjustbox collectbox amsmath siunitx cancel mathalpha capt-of chemfig wrapfig mhchem fvextra latexmk; })
+                sdcv
+                pandoc
+
                 # Chat
                 discocss
               ];
