@@ -14,7 +14,6 @@
     color_scheme = 0;
     cpu_count_from_one = 0;
     delay = 15;
-    show_program+path = 1;
     tree_view = 1;
     show_cpu_usage = 1;
     hide_function_bar = 2;
