@@ -25,9 +25,10 @@
           ./modules/homebrew.nix
           ./modules/git.nix
           ./modules/pam.nix
+          ./modules/mbsync.nix
           ({ pkgs, lib, ... }: {
+            networking.hostName = "shaunsingh-laptop";
             system.stateVersion = 4;
-
             system.keyboard = {
               enableKeyMapping = true;
               remapCapsLockToEscape = true;
@@ -63,7 +64,6 @@
             security.pam.enableSudoTouchIdAuth = true;
 
             services.spacebar.enable = true;
-            services.spacebar.package = spacebar;
     	 
             nixpkgs = {
               overlays = [
