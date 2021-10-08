@@ -50,7 +50,7 @@ in
 
     postExec = mkOption {
       type = types.str;
-      default = "";
+      default = "\${pkgs.mu}/bin/mu index";
       example = "\${pkgs.mu}/bin/mu index";
       description = ''
         An optional command to run after mbsync executes successfully.

@@ -9,6 +9,11 @@
     emacs-all-the-icons-fonts
   ];
 
+  services.emacs = {
+      enable = true;
+      package = pkgs.emacsGcc;
+  };
+
   home-manager.users.shauryasingh.home.packages = with pkgs; [
     (ripgrep.override { withPCRE2 = true; })
     gnutls

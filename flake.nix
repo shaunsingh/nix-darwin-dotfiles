@@ -63,8 +63,6 @@
 
             security.pam.enableSudoTouchIdAuth = true;
 
-            services.spacebar.enable = true;
-    	 
             nixpkgs = {
               overlays = [
                 emacs-overlay.overlay
@@ -82,7 +80,9 @@
                 build-users-group = nixbld
               '';
             };
+
             services.nix-daemon.enable = true;
+            services.mbsync.enable = true;
 
             fonts = {
               enableFontDir = true;
