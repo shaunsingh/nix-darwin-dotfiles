@@ -23,10 +23,10 @@
         inherit hostName system;
         nixosModules = [
           ./modules/emacs.nix
-          ./modules/mu4e.nix
+          ./modules/homebrew.nix
           ./modules/git.nix
           ./modules/pam.nix
-          ./modules/homebrew.nix
+          ./modules/mu4e.nix
           ({ pkgs, lib, ... }: {
             system.stateVersion = 4;
 
