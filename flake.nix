@@ -23,7 +23,6 @@
         inherit hostName system;
         nixosModules = [
           ./modules/emacs.nix
-          ./modules/mu4e.nix
           ./modules/git.nix
           ./modules/pam.nix
           ./modules/homebrew.nix
