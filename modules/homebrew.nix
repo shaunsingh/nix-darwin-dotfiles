@@ -19,6 +19,7 @@
       "homebrew/cask"
       "homebrew/cask-fonts"
       "d12frosted/emacs-plus"
+      "xorpse/formulae"
     ];
     casks = [
       "intellij-idea"
