@@ -380,6 +380,22 @@
                   width: 240px !important;
     '';
   };
+  home-manager.users.shauryasingh.programs.neovim = {
+    enable = true;
+    package = pkgs.neovim;
+    extraConfig = builtins.concatStringsSep "\n" [
+      ''
+        lua << EOF
+        ${lib.strings.fileContents ../configs/nvim/init.lua}
+        EOF
+      ''
+    ];
+
+    # install needed binaries here
+    extraPackages = with pkgs; [
+      tree-sitter
+    ];
+  };
   home-manager.users.shauryasingh.programs.htop.settings = {
     color_scheme = 0;
     cpu_count_from_one = 0;
