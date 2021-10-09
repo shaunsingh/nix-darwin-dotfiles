@@ -18,8 +18,8 @@
         inherit hostName system;
         nixosModules = [
           ./modules/emacs.nix
-          ./modules/homebrew.nix
-          ./modules/git.nix
+          ./modules/mac.nix
+          ./modules/home.nix
           ./modules/pam.nix
           ./modules/mbsync.nix
           ({ pkgs, lib, ... }: {
@@ -103,9 +103,9 @@
                 ## nyxt
                 ## qutebrowser
 
-                # Neovim
-                neovim 
+                # neovim
                 ## neovide
+                neovim 
 
                 # Chat
                 discocss
