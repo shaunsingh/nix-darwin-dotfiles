@@ -4,7 +4,7 @@
      if [[ ! -d "/Users/shauryasingh/.config/emacs" ]]; then
        git clone --depth 1 https://github.com/hlissner/doom-emacs "/Users/shaurysingh/.config/emacs"
      fi
-     ln -s ~/vimrc-dotfiles/configs/doom/ ~/.config/doom
+     ln -s ~/nix-darwin-dotfiles/configs/doom/ ~/.config/doom
    '';
   home-manager.users.shauryasingh.home.packages = with pkgs; [
     (ripgrep.override { withPCRE2 = true; })

@@ -381,7 +381,7 @@
     '';
   };
   system.activationScripts.postUserActivation.text = ''
-    ln -s ~/vimrc-dotfiles/configs/nvim/ ~/.config/nvim
+    ln -s ~/nix-darwin-dotfiles/configs/nvim/ ~/.config/nvim
   '';
   home-manager.users.shauryasingh.programs.htop.settings = {
     color_scheme = 0;
