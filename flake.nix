@@ -4,9 +4,10 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     mk-darwin-system.url = "github:vic/mk-darwin-system/main";
+    spacebar.url = "github:cmacrae/spacebar/v1.3.0";
   };
 
-  outputs = { self, nixpkgs, mk-darwin-system, ... }@inputs:
+  outputs = { self, nixpkgs, mk-darwin-system, spacebar, ... }@inputs:
     let
       flake-utils = mk-darwin-system.inputs.flake-utils;
       hostName = "shaunsingh-laptop";
@@ -60,6 +61,7 @@
 
             nixpkgs = {
               config.allowUnfree = true;
+              overlays = [ spacebar.overlay ];
             };
 
             nix = {

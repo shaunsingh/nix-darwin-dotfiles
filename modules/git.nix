@@ -90,6 +90,10 @@
   };
   home-manager.users.shauryasingh.programs.alacritty = {
     enable = true;
+    package = builtins.path {
+      path = /Applications/Alacritty.app/Contents/MacOS;
+      filter = (path: type: type == "directory" || builtins.baseNameOf path == "alacritty");
+    };
     settings = {
       window.padding.x = 45;
       window.padding.y = 45;
@@ -137,46 +141,51 @@
       };
     };
   };
-  home-manager.users.shauryasingh.programs.kitty = {
-    # enable = true;
-    settings = {
-	font_family = "Liga SFMono Nerd Font";
-	font_size = "14.0";
-	adjust_line_height = "120%";
-	disable_ligatures = "cursor";
-	hide_window_decorations = "yes";
-	scrollback_lines = "50000";
-	cursor_blink_interval = "0.5";
-	cursor_stop_blinking_after = "10.0";
-	window_border_width = "0.7pt";
-	draw_minimal_borders = "yes";
-	macos_option_as_alt = "no";
-	cursor_shape = "beam";
-	
-	foreground           =   "#D8DEE9";
-	background           =   "#2E3440";
-	selection_foreground =   "#000000";
-	selection_background =   "#FFFACD";
-	url_color            =   "#0087BD";
-	cursor               =   "#81A1C1";
-	color0               =   "#3B4252";
-	color8               =   "#4C566A";
-	color1               =   "#BF616A";
-	color9               =   "#BF616A";
-	color2               =   "#A3BE8C";
-	color10              =   "#A3BE8C";
-	color3               =   "#EBCB8B";
-	color11              =   "#EBCB8B";
-	color4               =   "#81A1C1";
-	color12              =   "#81A1C1";
-	color5               =   "#B48EAD";
-	color13              =   "#B48EAD";
-	color6               =   "#88C0D0";
-	color14              =   "#8FBCBB";
-	color7               =   "#E5E9F0";
-	color15              =   "#B48EAD";
-    };
-  };
+  # home-manager.users.shauryasingh.programs.kitty = {
+  #   enable = true;
+  #   package = builtins.path {
+  #     path = /Applications/kitty.app/Contents/MacOS;
+  #     filter = (path: type: type == "directory" || builtins.baseNameOf path == "kitty");
+  #   };
+  #   # enable = true;
+  #   settings = {
+	#   font_family = "Liga SFMono Nerd Font";
+  #   	font_size = "14.0";
+  #   	adjust_line_height = "120%";
+  #   	disable_ligatures = "cursor";
+  #   	hide_window_decorations = "yes";
+  #   	scrollback_lines = "50000";
+  #   	cursor_blink_interval = "0.5";
+  #   	cursor_stop_blinking_after = "10.0";
+  #   	window_border_width = "0.7pt";
+  #   	draw_minimal_borders = "yes";
+  #   	macos_option_as_alt = "no";
+  #   	cursor_shape = "beam";
+
+  #   	foreground           =   "#D8DEE9";
+  #   	background           =   "#2E3440";
+  #   	selection_foreground =   "#000000";
+  #   	selection_background =   "#FFFACD";
+  #   	url_color            =   "#0087BD";
+  #   	cursor               =   "#81A1C1";
+  #   	color0               =   "#3B4252";
+  #   	color8               =   "#4C566A";
+  #   	color1               =   "#BF616A";
+  #   	color9               =   "#BF616A";
+  #   	color2               =   "#A3BE8C";
+  #   	color10              =   "#A3BE8C";
+  #   	color3               =   "#EBCB8B";
+  #   	color11              =   "#EBCB8B";
+  #   	color4               =   "#81A1C1";
+  #   	color12              =   "#81A1C1";
+  #   	color5               =   "#B48EAD";
+  #   	color13              =   "#B48EAD";
+  #   	color6               =   "#88C0D0";
+  #   	color14              =   "#8FBCBB";
+  #   	color7               =   "#E5E9F0";
+  #   	color15              =   "#B48EAD";
+  #   };
+  # };
   programs.fish.enable = true;
   environment.shells = with pkgs; [ fish ];
   users.users.shauryasingh = {
