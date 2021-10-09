@@ -21,12 +21,10 @@
       "d12frosted/emacs-plus"
       "cmacrae/formulae"
       "koekeishiya/formulae"
-      "donaldguy/formulae"
     ];
     brews = [
       "cmacrae/formulae/spacebar"
       "koekeishiya/formulae/skhd"
-      "donaldguy/formulae/yabai"
     ];
     casks = [
       "intellij-idea"
@@ -40,6 +38,7 @@
     ];
     extraConfig = ''
       brew "d12frosted/emacs-plus/emacs-plus@28", args: ["with-elrumo2-icon", "with-native-comp", "with-xwidgets", "without-imagemagick"]
+      brew "xorpse/formulae/yabai", args: ["HEAD"]
     '';
   };
   services.yabai = {
