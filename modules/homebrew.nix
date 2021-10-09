@@ -20,9 +20,6 @@
       "homebrew/cask-fonts"
       "d12frosted/emacs-plus"
     ];
-    brews = [
-      "cmacrae/formulae/spacebar"
-    ];
     casks = [
       "intellij-idea"
       "zoom"
