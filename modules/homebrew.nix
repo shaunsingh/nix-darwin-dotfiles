@@ -17,6 +17,12 @@
     taps = [
       "homebrew/core"
       "homebrew/cask"
+      "homebrew/cask-fonts"
+      "d12frosted/emacs-plus"
+      "cmacrae/formulae"
+    ];
+    brews = [
+      "cmacrae/formulae/spacebar"
     ];
     casks = [
       "intellij-idea"
@@ -24,6 +30,12 @@
       # Note: Still emulated via rosetta
       "nvidia-geforce-now"
       "discord"
+      # Font support is better with homebrew
+      "font-alegreya"
+      "font-overpass"
     ];
+    extraConfig = ''
+      brew "d12frosted/emacs-plus/emacs-plus@28", args: ["with-elrumo2-icon", "with-native-comp", "with-xwidgets", "without-imagemagick"]
+    '';
   };
 }

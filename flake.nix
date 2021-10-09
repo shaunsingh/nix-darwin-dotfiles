@@ -4,18 +4,9 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     mk-darwin-system.url = "github:vic/mk-darwin-system/main";
-
-    emacs-overlay.url = "github:nix-community/emacs-overlay";
-    emacs-overlay.inputs.nixpkgs.follows = "nixpkgs";
-
-    nix-doom-emacs.url = "github:vlaci/nix-doom-emacs";
-    nix-doom-emacs.inputs.nixpkgs.follows = "nixpkgs";
-    nix-doom-emacs.inputs.emacs-overlay.follows = "emacs-overlay";
-
-    spacebar.url = "github:cmacrae/spacebar/v1.3.0";
   };
 
-  outputs = { self, nixpkgs, mk-darwin-system, emacs-overlay, spacebar, nix-doom-emacs, ... }@inputs:
+  outputs = { self, nixpkgs, mk-darwin-system, ... }@inputs:
     let
       flake-utils = mk-darwin-system.inputs.flake-utils;
       hostName = "shaunsingh-laptop";
@@ -68,10 +59,6 @@
             security.pam.enableSudoTouchIdAuth = true;
 
             nixpkgs = {
-              overlays = [
-                emacs-overlay.overlay
-                spacebar.overlay
-              ];
               config.allowUnfree = true;
             };
 
@@ -91,8 +78,8 @@
             fonts = {
               enableFontDir = true;
               fonts = with pkgs; [
-                overpass
                 alegreya
+                overpass
               ];
             };
 
