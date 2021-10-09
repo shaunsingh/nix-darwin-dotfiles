@@ -19,12 +19,9 @@
       "homebrew/cask"
       "homebrew/cask-fonts"
       "d12frosted/emacs-plus"
-      "cmacrae/formulae"
-      "koekeishiya/formulae"
     ];
     brews = [
       "cmacrae/formulae/spacebar"
-      "koekeishiya/formulae/skhd"
     ];
     casks = [
       "intellij-idea"
