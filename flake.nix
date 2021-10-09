@@ -91,7 +91,6 @@
               useUserPackages = true;
               users.shauryasingh.home.packages = with pkgs; [
                 # Utils
-                yadm
                 wget
                 git-lfs
                 exa
