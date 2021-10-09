@@ -384,6 +384,7 @@
   system.activationScripts.postUserActivation.text = ''
     ln -s ~/nix-darwin-dotfiles/configs/nvim/ ~/.config/nvim
   '';
+  # home-manager.users.shauryasingh.home.file."~/.config/nvim".source = config.lib.file.mkOutOfStoreSymlink ../configs/nvim;
   home-manager.users.shauryasingh.programs.htop.settings = {
     color_scheme = 0;
     cpu_count_from_one = 0;
