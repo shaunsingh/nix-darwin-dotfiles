@@ -1,0 +1,24 @@
+figure {
+  text-align: center;
+  figcaption {
+    .figure-number {
+      @include light-meta();
+    }
+    margin-top: 10px;
+    @include light-para(15px);
+  }
+}
+
+img.zoomTarget:hover {
+  cursor: default !important;
+}
+
+// make white image backgrounds match page
+img, object[type="image/svg+xml"] {
+  filter: invert(7%) sepia(4%);
+  max-width: 100%;
+}
+
+.org-svg {
+  width: 90%
+}

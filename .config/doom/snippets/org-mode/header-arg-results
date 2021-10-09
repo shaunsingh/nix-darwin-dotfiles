@@ -1,0 +1,15 @@
+# -*- mode: snippet -*-
+# name: Header arg - results
+# key: r
+# condition: (+yas/org-src-header-p)
+# --
+`(let ((out
+(string-trim-right
+ (concat
+  (+yas/org-prompt-header-arg :results "Result collection: " '("value " "output "))
+  (+yas/org-prompt-header-arg :results "Results type: " '("table " "vector " "list " "verbatim " "file "))
+  (+yas/org-prompt-header-arg :results "Results format: " '("code " "drawer " "html " "latex " "link " "graphics " "org " "pp " "raw "))
+  (+yas/org-prompt-header-arg :results "Result output: " '("silent " "replace " "append " "prepend "))))))
+  (if (string= out "") ""
+  (concat ":results " out " ")))
+`
