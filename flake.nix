@@ -92,7 +92,6 @@
               users.shauryasingh.home.packages = with pkgs; [
                 # Utils
                 wget
-                git-lfs
                 exa
                 bat
                 tree

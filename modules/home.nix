@@ -1,9 +1,10 @@
 { pkgs, lib, config, ... }: {
   home-manager.users.shauryasingh.programs.git = {
-    package = pkgs.git;
+    package = pkgs.gitFull;
     enable = true;
     userName = "shaunsingh";
     userEmail = "shaunsingh0207@gmail.com";
+    lfs.enable = true;
     ignores = [
       ".dir-locals.el"
       ".envrc"
