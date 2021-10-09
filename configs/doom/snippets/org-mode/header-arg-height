@@ -1,6 +1,0 @@
-# -*- mode: snippet -*-
-# name: Header arg - height
-# key: H
-# condition: (+yas/org-src-header-p)
-# --
-:height $0
