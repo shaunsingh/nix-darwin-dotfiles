@@ -1,15 +1,14 @@
 # Dotfiles
 
-Managed via [YADM](https://github.com/TheLocehiliosan/yadm) and Nix (NixOS + Nix-Darwin)
+Managed via [Nix-Darwin](https://github.com/LnL7/nix-darwin), [Home-Manager](https://github.com/nix-community/home-manager),
+and build using [Mk-Darwin-System](https://github.com/vic/mk-darwin-system//).
 
 ## Installation
 
 **Warning:** If you want to give these dotfiles a try, you should first fork this repository, review the code, and remove things you don’t want or need. Don’t blindly use my settings unless you know what that entails.
 
 ## Install
-
 ### MacOS
-
 Install XCode CLT (not required, but recommended)
 ```sh
 xcode-select --install
@@ -17,32 +16,35 @@ xcode-select --install
 
 Clone the repo
 ```sh
-git clone --depth 1 https://github.com/shaunsingh/vimrc-dotfiles.git -f --no-bootstrap
+git clone --depth 1 https://github.com/shaunsingh/vimrc-dotfiles.git ~/vimrc-dotfiles && cd vimrc-dotfiles
 ```
 
-Install nix, Launch a nix-shell with unstable, build, run
+Install nix (unstable), Enable flakes and nix-commands, and run the dotfiles
 ```zsh
-nix-shell -p nixUnstable git
-nix run github:shaunsingh/vimrc-dotfiles --impure
-```
+λ cat /etc/nix/nix.conf
+# WARNING: this file is generated from the nix.* options in
+# your NixOS configuration, typically
+# /etc/nixos/configuration.nix.  Do not edit it!
 
-### nixOS
-**Note** This is more of a note for myself for when I install on linux machines. I am quite new to nixos, and I recommend you check over my config before installing it. The config also uses wayland+sway, so it may be incompatible with certain gpus
+max-jobs = auto
+cores = 0
+sandbox = false
 
-Install via flakes
-```zsh
-nix-shell -p nixUnstable git
-nixos-install --flake https://github.com/shaunsingh/vimrc-dotfiles#shaunsingh-laptop
-```
+substituters = https://cache.nixos.org/
+trusted-substituters =
+trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
+require-sigs = true
+trusted-users = root
+allowed-users = *
+system = aarch64-darwin
+extra-platforms = aarch64-darwin x86_64-darwin
+experimental-features = nix-command flakes
+build-users-group = nixbld
 
-Boot, clone the dotiles
-```zsh
-yadm clone https://github.com/shaunsingh/vimrc-dotfiles.git --no-bootstrap
-yadm remote add origin https://github.com/shaunsingh/vimrc-dotfiles.git
+λ nix run github:shaunsingh/vimrc-dotfiles --impure
 ```
 
 ### Emacs
-
 **Personal Note:** this is my configuration for emacs-ng
 ```     
 git clone --depth 1 https://github.com/emacs-ng/emacs-ng.git
@@ -61,13 +63,11 @@ make install-strip
 ```
 
 If you want to force recompile the literate configuration, you can run
-
 ```zsh
 doom sync -u
 ```
 
 If you want to update the doom configuration, you can run
-
 ```zsh
 doom upgrade
 ```
@@ -96,7 +96,7 @@ Both these plugins need a set directory. All org files can go under the created 
 
 ## Additional Configurations
 ### Fonts
-My configuruation uses 3 fonts not installed by default. My nix config should
+My config uses 3 fonts not installed by default. My nix config should
 handle installing the proportional fonts. SFMono must be installed seperately
 
 Required:
@@ -122,7 +122,7 @@ If you want to take advantage of the LSP, you can install language servers using
 Similarly for treesitter, do 
 `:TSInstall (language)` e.g. `:TSInstall java` to install the java treesitter parser
 
-I also recommend installing [Neovide](https://github.com/Kethku/neovide) or [goneovim](https://github.com/akiyosi/goneovim) if you prefer a gui experience. A goneovim config is included in the dotfiles
+I also recommend installing [Neovide](https://github.com/Kethku/neovide) or [goneovim](https://github.com/akiyosi/goneovim) if you prefer a gui experience. 
 
 ## Feedback
 
