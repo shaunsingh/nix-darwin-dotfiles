@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: elisp src
+# uuid: src_elisp
+# key: <el
+# condition: t
+# expand-env: ((yas-after-exit-snippet-hook #'org-edit-src-code))
+# --
+#+begin_src emacs-lisp
+`%`$0
+#+end_src

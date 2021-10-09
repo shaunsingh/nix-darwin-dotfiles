@@ -1,19 +1,18 @@
-{ pkgs, emacs-overlay, ... }: {
-  system.activationScripts.postUserActivation.text = ''
-    # Clone to $XDG_CONFIG_HOME because Emacs expects this location.
-    if [[ ! -d "/Users/shauryasingh/.config/emacs" ]]; then
-      git clone --depth 1 https://github.com/hlissner/doom-emacs "/Users/shaurysingh/.config/emacs"
-    fi
-  '';
+{ config, pkgs, libs, emacs-overlay, nix-doom-emacs, ... }: {
+  imports = [ nix-doom-emacs.hmModule ];
+  home-manager.users.shauryasingh.home.programs.doom-emacs = {
+    enable = true;
+    doomPrivateDir = ../configs/doom;
+    emacsPackage = pkgs.emacsGcc;
+  };
+  home-manager.users.shauryasingh.home.file.".doom.d".source = ../configs/doom;
   fonts.fonts = with pkgs; [
     emacs-all-the-icons-fonts
   ];
-
   services.emacs = {
       enable = true;
-      package = pkgs.emacsGcc;
+      package = pkgs.doom-emacs;
   };
-
   home-manager.users.shauryasingh.home.packages = with pkgs; [
     (ripgrep.override { withPCRE2 = true; })
     gnutls

@@ -1,0 +1,139 @@
+// Table of contents
+
+::-webkit-scrollbar { width: 10px; height: 8px; }
+::-webkit-scrollbar-track { background:#9992; }
+::-webkit-scrollbar-thumb { background:#ccc; }
+::-webkit-scrollbar-thumb:hover { background:#888; }
+
+@media (min-width: 1280px) {
+  #table-of-contents {
+    position: fixed;
+    width: 18rem;
+    right: 1rem;
+    top: 0;
+    padding: 1em;
+    line-height: 1.5;
+    margin-top: 4rem;
+    h2 {
+      margin-top: 0;
+    }
+    #text-table-of-contents {
+      position: relative;
+      &::before, &::after {
+        position: absolute;
+        content: '';
+        width: calc(100% - 10px);
+        height: 0.7rem;
+        left: 0;
+        z-index: 1;
+      }
+      &::before {
+        top: 0;
+        background: linear-gradient(180deg, $back-light 0%, $back-light 35%, rgba(0,0,0,0) 100%);
+      }
+      &::after {
+        bottom: 0;
+        background: linear-gradient(0deg, $back-light 0%, $back-light 35%, rgba(0,0,0,0) 100%);
+      }
+      > ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        max-height: calc(100vh - 5rem - 50px);
+        overflow-y: auto;
+        overflow-x: hidden;
+        scrollbar-width: thin;
+        ul {
+          padding-left: 2em;
+        }
+        ul.active {
+          display: inline-block;
+        }
+        li.active > ul {
+          display: inline-block;
+        }
+        li.active > label a, li.active > a {
+          color: $text-dark;
+        }
+        li.active > input:not(:checked) ~ label::after {
+          transform: rotate(90deg);
+          top: 5px;
+          opacity: 0.35;
+        }
+        > li:last-child {
+          margin-bottom: 2rem;
+        }
+      }
+    }
+  }
+}
+#table-of-contents {
+  // @ 1280px
+  // width: 20rem
+  // right: 1rem
+  @media (min-width: 1440px) {
+    width: 20rem;
+    right: 2rem;
+  }
+  @media (min-width: 1640px) {
+    right: 5rem;
+  }
+  @media (min-width: 2000px) {
+    width: 25rem;
+  }
+}
+
+#table-of-contents {
+  #text-table-of-contents {
+    ul {
+      width: 100%;
+    }
+    > ul ul {
+      display: none;
+    }
+    li {
+      input[type=checkbox] {
+        display: none;
+      }
+      label {
+        display: inline-block;
+        width: 100%;
+        position: relative;
+      }
+      a {
+        display: inline-block;
+        color: $text-gray;
+        text-decoration: none !important;
+        // negating other <a> styles
+        text-shadow: none;
+        background: none !important;
+      }
+      label::after {
+        content: "\25b6";
+        color: $text-gray;
+        margin-left: 0.5em;
+        font-size: 10px;
+        display: inline-block;
+        position: absolute;
+        top: 3.4px;
+        left: -20px;
+        opacity: 0.8;
+      }
+      input:checked ~ ul {
+        display: inline-block !important; // needs to override more deeper selector div > ul ul
+      }
+      input:checked ~ label {
+        a {
+          font-weight: bold;
+        }
+        &::after {
+          transform: rotate(90deg);
+          top: 5px;
+        }
+      }
+      &::before {
+        content: "" !important;
+      }
+    }
+  }
+}

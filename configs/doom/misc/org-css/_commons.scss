@@ -1,0 +1,154 @@
+// Common mixins and variables
+@charset "UTF-8";
+
+@import 'theme';
+
+// Fonts
+
+@mixin font-face($name, $file, $weight, $style) {
+  @font-face {
+    font-family: $name;
+    src: url("https://tecosaur.com/resources/org/#{$file}.woff2") format("woff2");
+    font-weight: $weight;
+    font-style: $style;
+    font-display: fallback;
+  }
+}
+
+@include font-face('Merriweather', 'Merriweather-TextRegular', normal, normal)
+@include font-face('Merriweather', 'Merriweather-TextItalic', normal, italic)
+@include font-face('Merriweather', 'Merriweather-TextBold', bold, normal)
+
+@include font-face('et-book', 'etbookot-roman-webfont', normal, normal)
+@include font-face('et-book', 'etbookot-italic-webfont', normal, italic)
+
+// Face variables
+$sans-font: 'Open Sans',sans;
+$body-font: 'Merriweather',serif;
+$title-font: 'et-book',serif;
+$code-font: SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace;
+
+@mixin text-background($color-bg, $color-text) {
+  background-image: linear-gradient($color-text, $color-text);
+  background-size: 1px 1px;
+  background-repeat: repeat-x;
+  background-position: 0% 95%;
+}
+
+@mixin text-selection($selection) {
+  &::selection {
+    background: $selection;
+  }
+}
+
+@mixin link-underline($background, $text) {
+  @include text-background($background, $text);
+  @include text-selection($back-medium);
+
+  border-radius: 1px;
+  // background-color: $background;
+  // color: $text;
+  text-decoration: none;
+
+  *,
+  *:after,
+  &:after,
+  *:before,
+  &:before {
+    text-shadow: none;
+  }
+
+  &:visited {
+    color: $text;
+  }
+}
+
+@mixin link-reset() {
+  background: none;
+  text-shadow: none;
+  text-decoration: none;
+}
+
+@function twice($v1) {
+  @return $v1 + $v1;
+}
+
+@mixin button($radius, $font-size, $padding) {
+  padding: $padding twice($padding);
+  border-style: solid;
+  border-width: 1px;
+  border-color: $back-light;
+  border-radius: $radius;
+  font-family: $sans-font;
+  font-variant: all-small-caps;
+  font-size: $font-size;
+  font-style: normal;
+  letter-spacing: 2px;
+  background-image: none;
+  &:hover {
+    background-color: $back-light;
+    background-image: none;
+  }
+}
+
+@mixin tag() {
+  @include button(1px, #{"max(0.4em, 10px)"}, 0.1em);
+  line-height: 1;
+  white-space: nowrap;
+  vertical-align: middle;
+  padding: 0.1em 0.5em;
+  background-color: $back-white;
+
+  &:not(.active) {
+    border-color: $back-white;
+  }
+  &.active {
+    text-shadow: none;
+    text-decoration: none;
+    color: $back-white;
+    background-color: $code-foreground;
+
+    &:hover {
+      background-color: $back-light;
+      background-image: none;
+      color: $text-dark;
+    }
+  }
+}
+
+@mixin light-para($font-size) {
+  font-family: $sans-font;
+  font-weight: normal;
+  font-size: $font-size;
+  line-height: 1.6;
+  color: $text-gray;
+}
+
+@mixin light-meta() {
+  font-family: $sans-font;
+  font-weight: normal;
+  font-style: normal;
+  font-size: 12px;
+  line-height: 1.9;
+  color: $text-light;
+}
+
+@mixin left-line() {
+  border-width: 0;
+  border-left-style: solid;
+  border-left-width: 1px;
+  border-left-color: $back-medium;
+  margin: 20px 0;
+  padding: 0;
+  padding-left: 15px;
+}
+
+// Selection colors:
+*::selection {
+  background: $back-medium;
+}
+
+// Loading bar
+.pace .pace-progress {
+  background-color: $accent !important;
+}
