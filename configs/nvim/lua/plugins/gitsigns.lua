@@ -37,7 +37,4 @@ gitsigns.setup {
       ["x ih"] = ':<C-U>lua require"gitsigns.actions".select_hunk()<CR>',
    },
    update_debounce = 200,
-   yadm = {
-      enable = true,
-   },
 }
