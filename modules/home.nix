@@ -5,6 +5,10 @@
     userName = "shaunsingh";
     userEmail = "shaunsingh0207@gmail.com";
     lfs.enable = true;
+    delta = {
+      enable = true;
+      options = { syntax-theme="Nord"; };
+    };
     ignores = [
       ".dir-locals.el"
       ".envrc"
@@ -524,15 +528,18 @@
     ll = "exa -lF --color-scale --no-user --no-time --no-permissions --group-directories-first --icons -a";
     ls = "exa -lF -T --level=2 --group-directories-first --icons -a";
     tree = "tree -a -C";
-    cat = "bat --paging=never -p";
+    cat = "bat";
     find = "fd";
     sed = "sd";
+  };
+  home-manager.users.shauryasingh.programs.bat = {
+    enable = true;
+    config = { theme = "Nord"; };
   };
   home-manager.users.shauryasingh.home.packages = with pkgs; [
     (ripgrep.override { withPCRE2 = true; })
     wget
     exa
-    bat
     tree
     fd
     sd
