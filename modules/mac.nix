@@ -1,8 +1,19 @@
 { pkgs, spacebar, ... }: {
+  home-manager.users.shauryasingh.home.packages = with pkgs; [
+    luarocks
+  ];
   system.activationScripts.postUserActivation.text = ''
     # Install homebrew if it isn't there 
     if [[ ! -d "/opt/homebrew/bin" ]]; then
       /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    fi
+    # Install spacehammer if it isn't there
+    if [ ! -d "~/.hammerspoon" ] ; then
+      git clone --depth 1 https://github.com/agzam/spacehammer ~/.hammerspoon
+    fi
+    if ! command -v fennel &> /dev/null
+    then
+        ~/.nix-profile/bin/luarocks install fennel --local
     fi
   '';
   homebrew = {
@@ -25,10 +36,11 @@
     casks = [
       "intellij-idea"
       "zoom"
+      "hammerspoon"
+      ## "kitty"
       # Note: Still emulated via rosetta
       "nvidia-geforce-now"
       "discord"
-      ## "kitty"
       # Font support is better with homebrew
       "font-alegreya"
       "font-overpass"
