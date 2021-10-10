@@ -528,7 +528,21 @@
     ls = "exa -F --group-directories-first --icons -a";
     tree = "tree -a -C";
     cat = "bat --paging=never -p";
+    find = "fd";
+    sed = "sd";
   };
+  home-manager.users.shauryasingh.home.packages = with pkgs; [
+    (ripgrep.override { withPCRE2 = true; })
+    wget
+    exa
+    bat
+    tree
+    fd
+    sd
+    discocss
+    neovim
+    ## neovide
+  ];
   programs.fish.interactiveShellInit = ''
     set -g fish_greeting ""
     if not set -q TMUX

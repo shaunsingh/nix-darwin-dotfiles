@@ -9,9 +9,7 @@
    '';
   # home-manager.users.shauryasingh.home.file."~/.config/doom".source = config.lib.file.mkOutOfStoreSymlink ../configs/doom;
   home-manager.users.shauryasingh.home.packages = with pkgs; [
-    (ripgrep.override { withPCRE2 = true; })
     gnutls
-    fd
     gnuplot
     sqlite
     (aspellWithDicts (dicts: with dicts; [ en en-computers en-science ]))

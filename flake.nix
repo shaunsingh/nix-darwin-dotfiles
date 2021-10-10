@@ -89,25 +89,6 @@
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
-              users.shauryasingh.home.packages = with pkgs; [
-                # Utils
-                wget
-                exa
-                bat
-                tree
-
-                # Browsers
-                ## firefox
-                ## nyxt
-                ## qutebrowser
-
-                # neovim
-                ## neovide
-                neovim 
-
-                # Chat
-                discocss
-              ];
             };
           })
         ];
