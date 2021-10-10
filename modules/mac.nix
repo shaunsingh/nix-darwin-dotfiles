@@ -85,7 +85,7 @@
   #   };
   #   services.spacebar.config = {
   #     position                   = "bottom";
-  #     display                    = "main";
+  #     display                    = "all";
   #     height                     = 26;
   #     title                      = "on";
   #     spaces                     = "on";

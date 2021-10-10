@@ -99,46 +99,10 @@
         "type": "github"
       }
     },
-    "nixpkgs_2": {
-      "locked": {
-        "lastModified": 1616847335,
-        "narHash": "sha256-AQrNtJZRl9P78u+otHNXVxcQzu84vuTJLqynupp335g=",
-        "owner": "cmacrae",
-        "repo": "nixpkgs",
-        "rev": "7745d5338ad3c6cef295f40a732c6a739b1fcc7b",
-        "type": "github"
-      },
-      "original": {
-        "owner": "cmacrae",
-        "ref": "fix_spacebar",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "root": {
       "inputs": {
         "mk-darwin-system": "mk-darwin-system",
-        "nixpkgs": "nixpkgs",
-        "spacebar": "spacebar"
-      }
-    },
-    "spacebar": {
-      "inputs": {
-        "nixpkgs": "nixpkgs_2"
-      },
-      "locked": {
-        "lastModified": 1619365544,
-        "narHash": "sha256-f72eQ5KrsBPKlCCENDeTA+Lkqik/ps2xotS2CrEpMpM=",
-        "owner": "cmacrae",
-        "repo": "spacebar",
-        "rev": "96e210e579c1f7a0ce80074e0f22b73e7a7cef00",
-        "type": "github"
-      },
-      "original": {
-        "owner": "cmacrae",
-        "ref": "v1.3.0",
-        "repo": "spacebar",
-        "type": "github"
+        "nixpkgs": "nixpkgs"
       }
     }
   },
