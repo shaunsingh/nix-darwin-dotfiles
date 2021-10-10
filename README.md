@@ -44,6 +44,13 @@ build-users-group = nixbld
 λ nix run github:shaunsingh/vimrc-dotfiles --impure
 ```
 
+Currently I don't know how to do symlinks with nix, so you will have to do them manually: 
+```
+ln -s ~/nix-darwin-dotfiles/configs/spacebar/ ~/.config/spacebar
+ln -s ~/nix-darwin-dotfiles/configs/nvim/ ~/.config/nvim
+ln -s ~/nix-darwin-dotfiles/configs/doom/ ~/.config/doom
+```
+
 ### Emacs
 **Personal Note:** this is my configuration for emacs-ng
 ```     
