@@ -381,9 +381,6 @@
                   width: 240px !important;
     '';
   };
-  system.activationScripts.postUserActivation.text = ''
-    ln -s ~/nix-darwin-dotfiles/configs/nvim/ ~/.config/nvim
-  '';
   # home-manager.users.shauryasingh.home.file."~/.config/nvim".source = config.lib.file.mkOutOfStoreSymlink ../configs/nvim;
   home-manager.users.shauryasingh.programs.htop.settings = {
     color_scheme = 0;
@@ -525,7 +522,7 @@
     vi = "emacsclient -c";
     git-rebsae = "git rebase -i HEAD~2";
     ll = "exa -lF --color-scale --no-user --no-time --no-permissions --group-directories-first --icons -a";
-    ls = "exa -F --group-directories-first --icons -a";
+    ls = "exa -lF -T --level=2 --group-directories-first --icons -a";
     tree = "tree -a -C";
     cat = "bat --paging=never -p";
     find = "fd";

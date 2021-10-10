@@ -4,8 +4,6 @@
      if [[ ! -d "~/.config/emacs" ]]; then
        git clone --depth 1 https://github.com/hlissner/doom-emacs "~/.config/emacs"
      fi
-     # Temporary while I figure out a better solution
-     ln -s ~/nix-darwin-dotfiles/configs/doom/ ~/.config/doom
    '';
   # home-manager.users.shauryasingh.home.file."~/.config/doom".source = config.lib.file.mkOutOfStoreSymlink ../configs/doom;
   home-manager.users.shauryasingh.home.packages = with pkgs; [
