@@ -31,7 +31,6 @@
       "homebrew/cask-fonts"
       "d12frosted/emacs-plus"
       "shaunsingh/formulae"
-      # "shaunsingh/sf-mono-nerd-font-ligaturized"
     ];
     casks = [
       "intellij-idea"
@@ -44,7 +43,7 @@
       # Font support is better with homebrew
       "font-alegreya"
       "font-overpass"
-      # "shaunsingh/sf-mono-nerd-font-ligaturized/font-sf-mono-nerd-font-ligaturized"
+      "shaunsingh/formulae/font-sf-mono-nerd-font-ligaturized"
     ];
     extraConfig = ''
       brew "shaunsingh/formulae/yabai", args:["HEAD"]
