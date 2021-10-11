@@ -45,15 +45,15 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1633903584,
-        "narHash": "sha256-dwQZMMvCjlXCx8hjmdgSQEyjS3S/MgOOaNH1XogFkIQ=",
-        "owner": "shaunsingh",
+        "lastModified": 1627664566,
+        "narHash": "sha256-vJ9lTU4m6lGmiPvquPdrfQWsleAu8n2sCkWoO4T7nEM=",
+        "owner": "vic",
         "repo": "mk-darwin-system",
-        "rev": "ddcad691a582ca8f2c1fa2572f83580a34e1fb4a",
+        "rev": "444fd6c4d9ebcfb0ad56c8a814576ccfadd2c436",
         "type": "github"
       },
       "original": {
-        "owner": "shaunsingh",
+        "owner": "vic",
         "ref": "main",
         "repo": "mk-darwin-system",
         "type": "github"

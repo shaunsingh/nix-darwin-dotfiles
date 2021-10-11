@@ -3,7 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-    mk-darwin-system.url = "github:shaunsingh/mk-darwin-system/main";
+    mk-darwin-system.url = "github:vic/mk-darwin-system/main";
     spacebar.url = "github:shaunsingh/spacebar/master";
   };
 
