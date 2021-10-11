@@ -42,20 +42,18 @@
         "flake-utils": "flake-utils",
         "home-manager": "home-manager",
         "nix-darwin": "nix-darwin",
-        "nixpkgs": [
-          "nixpkgs"
-        ]
+        "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1627664566,
-        "narHash": "sha256-vJ9lTU4m6lGmiPvquPdrfQWsleAu8n2sCkWoO4T7nEM=",
-        "owner": "vic",
+        "lastModified": 1633903584,
+        "narHash": "sha256-dwQZMMvCjlXCx8hjmdgSQEyjS3S/MgOOaNH1XogFkIQ=",
+        "owner": "shaunsingh",
         "repo": "mk-darwin-system",
-        "rev": "444fd6c4d9ebcfb0ad56c8a814576ccfadd2c436",
+        "rev": "ddcad691a582ca8f2c1fa2572f83580a34e1fb4a",
         "type": "github"
       },
       "original": {
-        "owner": "vic",
+        "owner": "shaunsingh",
         "ref": "main",
         "repo": "mk-darwin-system",
         "type": "github"
@@ -85,6 +83,38 @@
     },
     "nixpkgs": {
       "locked": {
+        "lastModified": 1626312449,
+        "narHash": "sha256-EQMvoKv8xTPzdl85Vil24dpnKzmgKLF9ggo01kV7mkc=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "fe653f953d3a1f09ef6888f0ecc3490b2f2a0216",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixpkgs-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_2": {
+      "locked": {
+        "lastModified": 1633329294,
+        "narHash": "sha256-0LpQLS4KMgxslMgmDHmxG/5twFlXDBW9z4Or1iOrCvU=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "ee084c02040e864eeeb4cf4f8538d92f7c675671",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixpkgs-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_3": {
+      "locked": {
         "lastModified": 1633329294,
         "narHash": "sha256-0LpQLS4KMgxslMgmDHmxG/5twFlXDBW9z4Or1iOrCvU=",
         "owner": "nixos",
@@ -102,7 +132,27 @@
     "root": {
       "inputs": {
         "mk-darwin-system": "mk-darwin-system",
-        "nixpkgs": "nixpkgs"
+        "nixpkgs": "nixpkgs_2",
+        "spacebar": "spacebar"
+      }
+    },
+    "spacebar": {
+      "inputs": {
+        "nixpkgs": "nixpkgs_3"
+      },
+      "locked": {
+        "lastModified": 1633968876,
+        "narHash": "sha256-FYNMnmaqLQWyRAUy56GEhU2OPz7CakUzgpDtt2+hyB8=",
+        "owner": "shaunsingh",
+        "repo": "spacebar",
+        "rev": "03d06a48948793130ce916a443029c9302e64dac",
+        "type": "github"
+      },
+      "original": {
+        "owner": "shaunsingh",
+        "ref": "master",
+        "repo": "spacebar",
+        "type": "github"
       }
     }
   },

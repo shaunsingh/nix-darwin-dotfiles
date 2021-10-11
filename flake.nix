@@ -3,10 +3,11 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-    mk-darwin-system.url = "github:vic/mk-darwin-system/main";
+    mk-darwin-system.url = "github:shaunsingh/mk-darwin-system/main";
+    spacebar.url = "github:shaunsingh/spacebar/master";
   };
 
-  outputs = { self, nixpkgs, mk-darwin-system, ... }@inputs:
+  outputs = { self, nixpkgs, mk-darwin-system, spacebar, ... }@inputs:
     let
       flake-utils = mk-darwin-system.inputs.flake-utils;
       hostName = "shaunsingh-laptop";
@@ -59,6 +60,9 @@
             security.pam.enableSudoTouchIdAuth = true;
 
             nixpkgs = {
+              overlays = [
+                spacebar.overlay
+              ];
               config.allowUnfree = true;
             };
 

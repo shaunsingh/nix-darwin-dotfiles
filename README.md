@@ -14,11 +14,6 @@ Install XCode CLT (not required, but recommended)
 xcode-select --install
 ```
 
-Clone the repo
-```sh
-git clone --depth 1 https://github.com/shaunsingh/vimrc-dotfiles.git ~/vimrc-dotfiles && cd vimrc-dotfiles
-```
-
 Install nix (unstable), Enable flakes and nix-commands, and run the dotfiles
 ```zsh
 λ cat /etc/nix/nix.conf
@@ -46,7 +41,6 @@ build-users-group = nixbld
 
 Currently I don't know how to do symlinks with nix, so you will have to do them manually: 
 ```
-ln -s ~/nix-darwin-dotfiles/configs/spacebar/ ~/.config/spacebar
 ln -s ~/nix-darwin-dotfiles/configs/nvim/ ~/.config/nvim
 ln -s ~/nix-darwin-dotfiles/configs/doom/ ~/.config/doom
 ```
