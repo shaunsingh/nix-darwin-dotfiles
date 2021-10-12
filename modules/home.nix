@@ -1,4 +1,4 @@
-{ pkgs, lib, config, ... }: {
+{ pkgs, lib, config, home-manager, nix-darwin, ... }: {
   home-manager.users.shauryasingh.programs.git = {
     package = pkgs.gitFull;
     enable = true;
@@ -393,20 +393,6 @@
     tree_view = 1;
     show_cpu_usage = 1;
     hide_function_bar = 2;
-    fields = with config.lib.htop.fields; [
-      PID
-      USER
-      PRIORITY
-      NICE
-      M_SIZE
-      M_RESIDENT
-      M_SHARE
-      STATE
-      PERCENT_CPU
-      PERCENT_MEM
-      TIME
-      COMM
-    ];
     highlight_base_name = 0;
     highlight_megabytes = 1;
     highlight_threads = 1;
