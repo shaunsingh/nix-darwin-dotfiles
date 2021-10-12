@@ -62,9 +62,11 @@
       mouse_follows_focus = "on";
       mouse_modifier = "fn";
       split_ratio = "0.50";
-      window_border = "off";
       window_placement = "second_child";
-      window_topmost = "on";
+      window_topmost = "off";
+      window_opacity = "off";
+      window_shadow = "on";
+      window_border = "off";
     };
   };
   services.spacebar = {
