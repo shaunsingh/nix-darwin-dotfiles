@@ -1,4 +1,15 @@
-{ pkgs, spacebar, ... }: {
+{ pkgs, spacebar, ... }: 
+  let
+    yabai = pkgs.yabai.overrideAttrs (old: rec {
+      src = pkgs.fetchFromGitHub {
+        owner = "donaldguy";
+        repo = "yabai";
+        rev = "723f2ee0346b78360c497b7a7eb7be409c02302c";
+        sha256 = "sha256:1z95njalhvyfs2xx6d91p9b013pc4ad846drhw0k5gipvl03pp92";
+      };
+    });
+
+  in {
   system.activationScripts.postUserActivation.text = ''
     # Install homebrew if it isn't there 
     if [[ ! -d "/opt/homebrew/bin" ]]; then
@@ -33,17 +44,13 @@
       "shaunsingh/formulae/font-sf-mono-nerd-font-ligaturized"
     ];
     extraConfig = ''
-      brew "shaunsingh/formulae/yabai", args:["HEAD"]
       brew "d12frosted/emacs-plus/emacs-plus@28", args: ["with-elrumo2-icon", "with-native-comp", "with-xwidgets", "without-imagemagick"]
     '';
   };
   services.yabai = {
     enable = true;
-    enableScriptingAddition = false;
-    package = builtins.path {
-      path = /opt/homebrew;
-      filter = (path: type: type == "directory" || builtins.baseNameOf path == "yabai");
-    };
+    enableScriptingAddition = true;
+    package = yabai;
     config = {
       auto_balance = "on";
       layout = "bsp";
@@ -68,16 +75,14 @@
       height                     = 28;
       title                      = "on";
       spaces                     = "on";
-      clock                      = "off";
+      clock                      = "on";
       power                      = "on";
       padding_left               = 20;
       padding_right              = 20;
       spacing_left               = 25;
       spacing_right              = 25;
-      text_font                  = ''"Liga SFMono Nerd Font:Medium:14.0"'';
+      text_font                  = ''"Overpass:15.0"'';
       icon_font                  = ''"Liga SFMono Nerd Font:Light:15.0"'';
-      # text_font                  = "Liga SFMono Nerd Font:13.0";
-      # icon_font                  = "Liga SFMono Nerd Font:13.0";
       background_color           = "0xff2E3440";
       foreground_color           = "0xffD8DEE9";
       space_icon_color           = "0xff8fBcBB";
