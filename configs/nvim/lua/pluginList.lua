@@ -41,17 +41,8 @@ return packer.startup(function()
          vim.g.nord_borders = false
          vim.g.nord_contrast = false
          vim.g.nord_cursorline_transparent = true
-         vim.g.nord_disable_background = false
+         vim.g.nord_disable_background = true
          vim.cmd [[colorscheme nord]]
-      end,
-   }
-
-   use {
-      "goolord/alpha-nvim",
-      after = "nord.nvim",
-      requires = { "kyazdani42/nvim-web-devicons" },
-      config = function()
-         require "plugins.alpha"
       end,
    }
 
