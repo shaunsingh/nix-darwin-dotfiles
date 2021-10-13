@@ -3,8 +3,14 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-    spacebar.url = "github:shaunsingh/spacebar/master";
-
+    spacebar = {
+      url = "github:shaunsingh/spacebar/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    neovim = {
+      url = "github:neovim/neovim?dir=contrib";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     darwin = {
       url = "github:LnL7/nix-darwin/master";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -13,10 +19,9 @@
       url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
   };
 
-  outputs = { self, nixpkgs, spacebar, darwin, home-manager, ... }@inputs: {
+  outputs = { self, nixpkgs, spacebar, neovim, darwin, home-manager, ... }@inputs: {
     darwinConfigurations."shaunsingh-laptop" = darwin.lib.darwinSystem {
       system = "aarch64-darwin";
       modules = [
@@ -35,7 +40,7 @@
         ({ pkgs, lib, ... }: {
           security.pam.enableSudoTouchIdAuth = true;
           nixpkgs = {
-            overlays = [ spacebar.overlay ];
+            overlays = [ spacebar.overlay neovim.overlay ];
             config.allowUnfree = true;
           };
 
