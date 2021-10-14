@@ -11,8 +11,8 @@
       url = "github:neovim/neovim?dir=contrib";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    emacs-overlay = {
-      url = "github:nix-community/emacs-overlay";
+    emacs = {
+      url = "github:shaunsingh/emacs";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     darwin = {
@@ -25,7 +25,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, spacebar, neovim, emacs-overlay, darwin, home-manager, ... }@inputs: {
+  outputs = { self, nixpkgs, spacebar, neovim, emacs, darwin, home-manager, ... }@inputs: {
     darwinConfigurations."shaunsingh-laptop" = darwin.lib.darwinSystem {
       system = "aarch64-darwin";
       modules = [
@@ -44,7 +44,7 @@
         ({ pkgs, lib, ... }: {
           security.pam.enableSudoTouchIdAuth = true;
           nixpkgs = {
-            overlays = [ spacebar.overlay neovim.overlay emacs-overlay.overlay ];
+            overlays = [ spacebar.overlay neovim.overlay emacs.overlay ];
             config.allowUnfree = true;
           };
 

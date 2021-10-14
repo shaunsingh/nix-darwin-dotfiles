@@ -1,23 +1,14 @@
-;; [[file:config.org::*Basic Configuration][Basic Configuration:1]]
 ;;; config.el -*- lexical-binding: t; -*-
-;; Basic Configuration:1 ends here
 
-;; [[file:config.org::*Basic Configuration][Basic Configuration:2]]
 (when 'native-comp-compiler-options
                  (setq native-comp-compiler-options '("-O3")))
-;; Basic Configuration:2 ends here
 
-;; [[file:config.org::*Personal information][Personal information:1]]
 (setq user-full-name "Shaurya Singh"
       user-mail-address "shaunsingh0207@gmail.com")
-;; Personal information:1 ends here
 
-;; [[file:config.org::*Authinfo][Authinfo:1]]
 (setq auth-sources '("~/.authinfo.gpg")
       auth-source-cache-expiry nil) ; default is 7200 (2h)
-;; Authinfo:1 ends here
 
-;; [[file:config.org::*Emacsclient][Emacsclient:1]]
 (defun greedily-do-daemon-setup ()
   (require 'org)
   (require 'vertico)
@@ -34,41 +25,27 @@
 (when (daemonp)
   (add-hook 'emacs-startup-hook #'greedily-do-daemon-setup)
   (add-hook 'emacs-startup-hook #'init-mixed-pitch-h))
-;; Emacsclient:1 ends here
 
-;; [[file:config.org::*Shell][Shell:1]]
 (setq explicit-shell-file-name (executable-find "fish"))
-;; Shell:1 ends here
 
-;; [[file:config.org::*Always compile][Always compile:1]]
 (setq vterm-always-compile-module t)
-;; Always compile:1 ends here
 
-;; [[file:config.org::*Kill buffer][Kill buffer:1]]
 (setq vterm-kill-buffer-on-exit t)
-;; Kill buffer:1 ends here
 
-;; [[file:config.org::*Functions][Functions:1]]
 (after! vterm
   (setf (alist-get "magit-status" vterm-eval-cmds nil nil #'equal)
         '((lambda (path)
             (magit-status path)))))
-;; Functions:1 ends here
 
-;; [[file:config.org::*Ligatures][Ligatures:1]]
 (setq +ligatures-in-modes t)
-;; Ligatures:1 ends here
 
-;; [[file:config.org::*Fonts][Fonts:1]]
 ;;fonts
 (setq doom-font (font-spec :family "Liga SFMono Nerd Font" :size 14)
       doom-big-font (font-spec :family "Liga SFMono Nerd Font" :size 20)
       doom-variable-pitch-font (font-spec :family "Overpass" :size 16)
       doom-unicode-font (font-spec :family "Liga SFMono Nerd Font")
       doom-serif-font (font-spec :family "Liga SFMono Nerd Font" :weight 'light))
-;; Fonts:1 ends here
 
-;; [[file:config.org::*Fonts][Fonts:2]]
 ;;mixed pitch modes
 (defvar mixed-pitch-modes '(org-mode LaTeX-mode markdown-mode gfm-mode Info-mode)
   "Modes that `mixed-pitch-mode' should be enabled in, but only after UI initialisation.")
@@ -96,14 +73,10 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
     (interactive)
     (let ((mixed-pitch-face 'variable-pitch-serif))
       (mixed-pitch-mode (or arg 'toggle)))))
-;; Fonts:2 ends here
 
-;; [[file:config.org::*Fonts][Fonts:3]]
 (set-char-table-range composition-function-table ?f '(["\\(?:ff?[fijlt]\\)" 0 font-shape-gstring]))
 (set-char-table-range composition-function-table ?T '(["\\(?:Th\\)" 0 font-shape-gstring]))
-;; Fonts:3 ends here
 
-;; [[file:config.org::detect-missing-fonts][detect-missing-fonts]]
 (defvar required-fonts '("Overpass" "Liga SFMono Nerd Font" "Alegreya" ))
 (defvar available-fonts
   (delete-dups (or (font-family-list)
@@ -131,25 +104,30 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
                                              ", "))
                          (sleep-for 0.5))))))
   ";; No missing fonts detected")
-;; detect-missing-fonts ends here
 
-;; [[file:config.org::*Fonts][Fonts:5]]
-;; No missing fonts detected
-;; Fonts:5 ends here
+(unless noninteractive
+  (add-hook! 'doom-init-ui-hook
+    (run-at-time nil nil
+		 (lambda nil
+		   (message "%s missing the following fonts: %s"
+			    (propertize "Warning!" 'face
+					'(bold warning))
+			    (mapconcat
+			     (lambda
+			       (font)
+			       (propertize font 'face 'font-lock-variable-name-face))
+			     '("Overpass" "Liga SFMono Nerd Font" "Alegreya")
+			     ", "))
+		   (sleep-for 0.5)))))
 
-;; [[file:config.org::*Themes][Themes:1]]
 ;;(setq doom-theme 'doom-one-light)
 (setq doom-one-light-padded-modeline t)
 (setq doom-theme 'doom-nord)
 (setq doom-nord-padded-modeline t)
-;; Themes:1 ends here
 
-;; [[file:config.org::*Very large files][Very large files:1]]
 ;;(use-package! vlf-setup
   ;;:defer-incrementally vlf-tune vlf-base vlf-write vlf-search vlf-occur vlf-follow vlf-ediff vlf)
-;; Very large files:1 ends here
 
-;; [[file:config.org::*Company][Company:1]]
 (after! company
    (setq company-idle-delay 0.1
       company-minimum-prefix-length 1
@@ -171,9 +149,7 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 
 ;;nested snippets
 (setq yas-triggers-in-field t)
-;; Company:1 ends here
 
-;; [[file:config.org::*Company][Company:2]]
 (use-package! aas
   :commands aas-mode)
 
@@ -185,9 +161,7 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
       (+latex-fold-last-macro-a)))
   (add-hook 'org-mode #'laas-mode)
   (add-hook 'aas-post-snippet-expand-hook #'laas-tex-fold-maybe))
-;; Company:2 ends here
 
-;; [[file:config.org::*Company][Company:3]]
 (defadvice! fixed-org-yas-expand-maybe-h ()
   "Expand a yasnippet snippet, if trigger exists at point or region is active.
 Made for `org-tab-first-hook'."
@@ -220,9 +194,7 @@ Made for `org-tab-first-hook'."
          ;;      overzealous about cleaning up overlays.
          (when (bound-and-true-p org-superstar-mode)
            (org-superstar-restart)))))
-;; Company:3 ends here
 
-;; [[file:config.org::*Company][Company:4]]
 (defun +yas/org-src-header-p ()
   "Determine whether `point' is within a src-block header or header-args."
   (pcase (org-element-type (org-element-context))
@@ -235,9 +207,7 @@ Made for `org-tab-first-hook'."
                                           (search-forward "]{")
                                           (point))))
     ('keyword (string-match-p "^header-args" (org-element-property :value (org-element-context))))))
-;; Company:4 ends here
 
-;; [[file:config.org::*Company][Company:5]]
 (defun +yas/org-prompt-header-arg (arg question values)
   "Prompt the user to set ARG header property to one of VALUES with QUESTION.
 The default value is identified and indicated. If either default is selected,
@@ -268,9 +238,7 @@ or no selection is made: nil is returned."
       (unless (or (string-match-p "(default)$" selection)
                   (string= "" selection))
         selection))))
-;; Company:5 ends here
 
-;; [[file:config.org::*Company][Company:6]]
 (defun +yas/org-src-lang ()
   "Try to find the current language of the src/header at `point'.
 Return nil otherwise."
@@ -309,20 +277,14 @@ Return nil otherwise."
                    (lambda (a b) (> (cdr a) (cdr b))))))
 
     (car (cl-set-difference src-langs header-langs :test #'string=))))
-;; Company:6 ends here
 
-;; [[file:config.org::*Company][Company:7]]
 (sp-local-pair
  '(org-mode)
  "<<" ">>"
  :actions '(insert))
-;; Company:7 ends here
 
-;; [[file:config.org::*Company][Company:8]]
 (set-file-template! "\\.org$" :trigger "__" :mode 'org-mode)
-;; Company:8 ends here
 
-;; [[file:config.org::*LSP][LSP:1]]
 (use-package! lsp-ui
   :hook (lsp-mode . lsp-ui-mode)
   :config
@@ -334,9 +296,7 @@ Return nil otherwise."
         lsp-ui-peek-enable t
         lsp-ui-peek-fontify 'on-demand
         lsp-enable-symbol-highlighting nil))
-;; LSP:1 ends here
 
-;; [[file:config.org::*Better Defaults][Better Defaults:1]]
 (setq undo-limit 80000000                          ;I mess up too much
       evil-want-fine-undo t                        ;By default while in insert all changes are one big blob. Be more granular
       scroll-margin 2                              ;having a little margin is nice
@@ -350,48 +310,32 @@ Return nil otherwise."
 (fringe-mode 0) ;;disable fringe
 (global-subword-mode 1) ;;navigate through Camel Case words
 (tool-bar-mode 1) ;;re-enable the toolbar
-;; Better Defaults:1 ends here
 
-;; [[file:config.org::*Better Defaults][Better Defaults:2]]
 (add-to-list 'default-frame-alist '(inhibit-double-buffering . t))
-;; Better Defaults:2 ends here
 
-;; [[file:config.org::*Better Defaults][Better Defaults:3]]
 (setq doom-scratch-initial-major-mode 'lisp-interaction-mode)
-;; Better Defaults:3 ends here
 
-;; [[file:config.org::*Better Defaults][Better Defaults:4]]
 (setq evil-vsplit-window-right t
       evil-split-window-below t)
-;; Better Defaults:4 ends here
 
-;; [[file:config.org::*Better Defaults][Better Defaults:5]]
 (defadvice! prompt-for-buffer (&rest _)
   :after '(evil-window-split evil-window-vsplit)
   (consult-buffer))
-;; Better Defaults:5 ends here
 
-;; [[file:config.org::*Better Defaults][Better Defaults:6]]
 (map! :leader
       :desc "hop to word" "w w" #'avy-goto-word-0)
 (map! :leader
       :desc "hop to line"
       "l" #'avy-goto-line)
-;; Better Defaults:6 ends here
 
-;; [[file:config.org::*Better Defaults][Better Defaults:7]]
 (after! evil
   (map! :nmv ";" #'evil-ex))
-;; Better Defaults:7 ends here
 
-;; [[file:config.org::*Better Defaults][Better Defaults:8]]
 (after! evil
   (setq evil-ex-substitute-global t     ; I like my s/../.. to by global by default
         evil-move-cursor-back nil       ; Don't move the block cursor when toggling insert mode
         evil-kill-on-visual-paste nil)) ; Don't put overwritten text in the kill ring
-;; Better Defaults:8 ends here
 
-;; [[file:config.org::*Better Defaults][Better Defaults:9]]
 (custom-set-faces!
   `(vertical-border :background ,(doom-color 'bg) :foreground ,(doom-color 'bg)))
 
@@ -400,28 +344,20 @@ Return nil otherwise."
         window-divider-default-bottom-width 0
         window-divider-default-right-width 0)
   (window-divider-mode -1))
-;; Better Defaults:9 ends here
 
-;; [[file:config.org::*Better Defaults][Better Defaults:10]]
 (remove-hook 'doom-first-buffer-hook #'global-hl-line-mode)
-;; Better Defaults:10 ends here
 
-;; [[file:config.org::*Better Defaults][Better Defaults:11]]
 (defadvice! fix-+evil-default-cursor-fn ()
   :override #'+evil-default-cursor-fn
   (evil-set-cursor-color (face-background 'cursor)))
 (defadvice! fix-+evil-emacs-cursor-fn ()
   :override #'+evil-emacs-cursor-fn
   (evil-set-cursor-color (face-foreground 'warning)))
-;; Better Defaults:11 ends here
 
-;; [[file:config.org::*Better Defaults][Better Defaults:12]]
 (setq minimap-highlight-line nil)
 (custom-set-faces!
   `(minimap-active-region-background :background unspecified))
-;; Better Defaults:12 ends here
 
-;; [[file:config.org::*Better Defaults][Better Defaults:13]]
 ;; Make a clean & minimalist frame
 (use-package frame
   :config
@@ -444,14 +380,10 @@ Return nil otherwise."
 
 ;; Make sure new frames use window-divider
 (add-hook 'before-make-frame-hook 'window-divider-mode)
-;; Better Defaults:13 ends here
 
-;; [[file:config.org::*Selectric mode][Selectric mode:1]]
 (use-package! selectric-mode
   :commands selectric-mode)
-;; Selectric mode:1 ends here
 
-;; [[file:config.org::*Modeline][Modeline:1]]
 (after! doom-modeline
   (doom-modeline-def-segment buffer-name
     "Display the current buffer's name, without any other information."
@@ -489,9 +421,7 @@ Return nil otherwise."
   (doom-modeline-def-modeline 'pdf
     '(bar window-number pdf-pages pdf-icon buffer-name)
     '(misc-info matches major-mode process vcs)))
-;; Modeline:1 ends here
 
-;; [[file:config.org::*Modeline][Modeline:2]]
 (after! doom-modeline
   (display-time-mode 1)                              ;Enable time in the mode-line
   (display-battery-mode 1)                           ;display the battery
@@ -499,9 +429,7 @@ Return nil otherwise."
         doom-modeline-enable-word-count t            ;Show word count
         doom-modeline-modal-icon t                   ;Show vim mode icon
         inhibit-compacting-font-caches t))           ;Don't compact font caches in gc
-;; Modeline:2 ends here
 
-;; [[file:config.org::*Modeline][Modeline:3]]
 (defun doom-modeline-conditional-buffer-encoding ()
   "We expect the encoding to be LF UTF-8, so only show the modeline when this is not the case"
   (setq-local doom-modeline-buffer-encoding
@@ -510,9 +438,7 @@ Return nil otherwise."
                            (not (memq (coding-system-eol-type buffer-file-coding-system) '(1 2))))
                 t)))
 (add-hook 'after-change-major-mode-hook #'doom-modeline-conditional-buffer-encoding) ;;remove encoding
-;; Modeline:3 ends here
 
-;; [[file:config.org::*Centaur tabs][Centaur tabs:1]]
 (defun centaur-tabs-get-total-tab-length ()
   (length (centaur-tabs-tabs (centaur-tabs-current-tabset))))
 
@@ -526,9 +452,7 @@ Return nil otherwise."
     (cond
      ((and (= len 1) (not (centaur-tabs-local-mode))) (call-interactively #'centaur-tabs-local-mode))
      ((and (>= len 2) (centaur-tabs-local-mode)) (call-interactively #'centaur-tabs-local-mode)))))
-;; Centaur tabs:1 ends here
 
-;; [[file:config.org::*Centaur tabs][Centaur tabs:2]]
 (after! centaur-tabs
   (centaur-tabs-mode -1)
   (setq centaur-tabs-height 20
@@ -536,9 +460,7 @@ Return nil otherwise."
         centaur-tabs-gray-out-icons 'buffer)
   (add-hook 'window-configuration-change-hook 'centaur-tabs-hide-on-window-change)
   (centaur-tabs-change-fonts "Liga SFMono Nerd Font" 105))
-;; Centaur tabs:2 ends here
 
-;; [[file:config.org::*Vertico][Vertico:1]]
 (after! marginalia
   (setq marginalia-censor-variables nil)
 
@@ -572,14 +494,10 @@ Return nil otherwise."
                       (doom-blend 'orange 'green size-index)
                     (doom-blend 'red 'orange (- size-index 1)))))
       (propertize (file-size-human-readable size) 'face (list :foreground color)))))
-;; Vertico:1 ends here
 
-;; [[file:config.org::*Treemacs][Treemacs:1]]
 (setq treemacs-width 25)
 (setq doom-themes-treemacs-theme "doom-colors")
-;; Treemacs:1 ends here
 
-;; [[file:config.org::*Emojis][Emojis:1]]
 (defvar emojify-disabled-emojis
   '(;; Org
     "◼" "☑" "☸" "⚙" "⏩" "⏪" "⬆" "⬇" "❓"
@@ -596,9 +514,7 @@ Return nil otherwise."
     (remhash emoji emojify-emojis)))
 
 (add-hook! '(mu4e-compose-mode org-msg-edit-mode) (emoticon-to-emoji 1))
-;; Emojis:1 ends here
 
-;; [[file:config.org::*Splash screen][Splash screen:1]]
 (defvar fancy-splash-image-template
   (expand-file-name "misc/splash-images/emacs-e-template.svg" doom-private-dir)
   "Default template svg used for the splash image, with substitutions from ")
@@ -690,9 +606,7 @@ Return nil otherwise."
 
 (add-hook 'window-size-change-functions #'set-appropriate-splash)
 (add-hook 'doom-load-theme-hook #'set-appropriate-splash)
-;; Splash screen:1 ends here
 
-;; [[file:config.org::*Splash screen][Splash screen:2]]
 (defvar splash-phrase-source-folder
   (expand-file-name "misc/splash-phrases" doom-private-dir)
   "A folder of text files with a fun phrase on each line.")
@@ -782,19 +696,13 @@ Return nil otherwise."
    "\n"
    (doom-dashboard-phrase)
    "\n"))
-;; Splash screen:2 ends here
 
-;; [[file:config.org::*Splash screen][Splash screen:3]]
 (remove-hook '+doom-dashboard-functions #'doom-dashboard-widget-shortmenu)
 (add-hook! '+doom-dashboard-mode-hook (hide-mode-line-mode 1) (hl-line-mode -1))
 (setq-hook! '+doom-dashboard-mode-hook evil-normal-state-cursor (list nil))
-;; Splash screen:3 ends here
 
-;; [[file:config.org::*Writeroom][Writeroom:1]]
 (setq +zen-text-scale 0.8)
-;; Writeroom:1 ends here
 
-;; [[file:config.org::*Writeroom][Writeroom:2]]
 (defvar +zen-serif-p t
   "Whether to use a serifed font with `mixed-pitch-mode'.")
 (after! writeroom-mode
@@ -840,17 +748,11 @@ Return nil otherwise."
                 (when (featurep 'org-superstar)
                   (org-superstar-restart))
                 (when +zen--original-org-indent-mode-p (org-indent-mode 1))))))
-;; Writeroom:2 ends here
 
-;; [[file:config.org::*Font Display][Font Display:1]]
 (add-hook 'org-mode-hook #'+org-pretty-mode)
-;; Font Display:1 ends here
 
-;; [[file:config.org::*Font Display][Font Display:2]]
 (setq org-pretty-entities-include-sub-superscripts nil)
-;; Font Display:2 ends here
 
-;; [[file:config.org::*Font Display][Font Display:3]]
 (custom-set-faces!
   '(org-document-title :height 1.2)
   '(outline-1 :weight extra-bold :height 1.25)
@@ -861,21 +763,15 @@ Return nil otherwise."
   '(outline-6 :weight semi-bold :height 1.03)
   '(outline-8 :weight semi-bold)
   '(outline-9 :weight semi-bold))
-;; Font Display:3 ends here
 
-;; [[file:config.org::*Font Display][Font Display:4]]
 (setq org-agenda-deadline-faces
       '((1.0 . error)
         (1.0 . org-warning)
         (0.5 . org-upcoming-deadline)
         (0.0 . org-upcoming-distant-deadline)))
-;; Font Display:4 ends here
 
-;; [[file:config.org::*Font Display][Font Display:5]]
 (setq org-fontify-quote-and-verse-blocks t)
-;; Font Display:5 ends here
 
-;; [[file:config.org::*Font Display][Font Display:6]]
 (use-package! org-appear
   :hook (org-mode . org-appear-mode)
   :config
@@ -883,9 +779,7 @@ Return nil otherwise."
         org-appear-autosubmarkers t
         org-appear-autolinks nil)
   (run-at-time nil nil #'org-appear--set-elements))
-;; Font Display:6 ends here
 
-;; [[file:config.org::*Font Display][Font Display:7]]
 (defun locally-defer-font-lock ()
   "Set jit-lock defer and stealth, when buffer is over a certain size."
   (when (> (buffer-size) 50000)
@@ -893,15 +787,11 @@ Return nil otherwise."
                 jit-lock-stealth-time 1)))
 
 (add-hook 'org-mode-hook #'locally-defer-font-lock)
-;; Font Display:7 ends here
 
-;; [[file:config.org::*Font Display][Font Display:8]]
 (custom-set-faces!
   `(org-block-end-line :background ,(doom-color 'base2))
   `(org-block-begin-line :background ,(doom-color 'base2)))
-;; Font Display:8 ends here
 
-;; [[file:config.org::*Fontifying inline src blocks][Fontifying inline src blocks:1]]
 (defvar org-prettify-inline-results t
   "Whether to use (ab)use prettify-symbols-mode on {{{results(...)}}}.
 Either t or a cons cell of strings which are used as substitutions
@@ -980,16 +870,12 @@ Must be run as part of `org-font-lock-set-keywords-hook'."
         (append org-font-lock-extra-keywords '((org-fontify-inline-src-blocks)))))
 
 (add-hook 'org-font-lock-set-keywords-hook #'org-fontify-inline-src-blocks-enable)
-;; Fontifying inline src blocks:1 ends here
 
-;; [[file:config.org::*Symbols][Symbols:1]]
 ;;make bullets look better
 (after! org-superstar
   (setq org-superstar-headline-bullets-list '("◉" "○" "✸" "✿" "✤" "✜" "◆" "▶")
         org-superstar-prettify-item-bullets t ))
-;; Symbols:1 ends here
 
-;; [[file:config.org::*Symbols][Symbols:2]]
 (setq org-ellipsis " ▾ "
       org-hide-leading-stars t
       org-priority-highest ?A
@@ -1000,9 +886,7 @@ Must be run as part of `org-font-lock-set-keywords-hook'."
         (?C . 'all-the-icons-yellow)
         (?D . 'all-the-icons-green)
         (?E . 'all-the-icons-blue)))
-;; Symbols:2 ends here
 
-;; [[file:config.org::*Symbols][Symbols:3]]
 (appendq! +ligatures-extra-symbols
           `(:checkbox      "☐"
             :pending       "◼"
@@ -1079,9 +963,7 @@ Must be run as part of `org-font-lock-set-keywords-hook'."
   :priority_d    "[#D]"
   :priority_e    "[#E]")
 (plist-put +ligatures-extra-symbols :name "⁍")
-;; Symbols:3 ends here
 
-;; [[file:config.org::*Symbols][Symbols:4]]
 (defun org-syntax-convert-keyword-case-to-lower ()
   "Convert all #+KEYWORDS to #+keywords."
   (interactive)
@@ -1094,9 +976,7 @@ Must be run as part of `org-font-lock-set-keywords-hook'."
           (replace-match (downcase (match-string 0)) t)
           (setq count (1+ count))))
       (message "Replaced %d occurances" count))))
-;; Symbols:4 ends here
 
-;; [[file:config.org::*Keycast][Keycast:1]]
 (use-package! keycast
   :commands keycast-mode
   :config
@@ -1115,29 +995,23 @@ Must be run as part of `org-font-lock-set-keywords-hook'."
     '(keycast-key :inherit custom-modified
                   :height 1.0
                   :weight bold)))
-;; Keycast:1 ends here
 
-;; [[file:config.org::*Transparency][Transparency:1]]
- (defun toggle-transparency ()
-   (interactive)
-   (let ((alpha (frame-parameter nil 'alpha)))
-     (set-frame-parameter
-      nil 'alpha
-      (if (eql (cond ((numberp alpha) alpha)
-                     ((numberp (cdr alpha)) (cdr alpha))
-                     ;; Also handle undocumented (<active> <inactive>) form.
-                     ((numberp (cadr alpha)) (cadr alpha)))
-               100)
-          '(100 . 85) '(100 . 100)))))
- (global-set-key (kbd "C-c t") 'toggle-transparency)
-;; Transparency:1 ends here
+(defun toggle-transparency ()
+  (interactive)
+  (let ((alpha (frame-parameter nil 'alpha)))
+    (set-frame-parameter
+     nil 'alpha
+     (if (eql (cond ((numberp alpha) alpha)
+                    ((numberp (cdr alpha)) (cdr alpha))
+                    ;; Also handle undocumented (<active> <inactive>) form.
+                    ((numberp (cadr alpha)) (cadr alpha)))
+              100)
+         '(100 . 85) '(100 . 100)))))
+(global-set-key (kbd "C-c t") 'toggle-transparency)
 
-;; [[file:config.org::*Screenshots][Screenshots:1]]
 (use-package! screenshot
   :defer t)
-;; Screenshots:1 ends here
 
-;; [[file:config.org::*RSS][RSS:1]]
 (map! :map elfeed-search-mode-map
       :after elfeed-search
       [remap kill-this-buffer] "q"
@@ -1334,47 +1208,33 @@ Must be run as part of `org-font-lock-set-keywords-hook'."
               (make-directory (file-name-directory file) t))
             (url-copy-file pdf file)
             (funcall file-view-function file)))))))
-;; RSS:1 ends here
 
-;; [[file:config.org::*Org-Mode][Org-Mode:1]]
 (use-package! org-padding
   :hook (org-mode-hook . org-padding-mode)
   :defer t)
 (setq org-padding-block-begin-line-padding '(1.15 . 0.15))
 (setq org-padding-block-end-line-padding '(1.15 . 0.15))
-;; Org-Mode:1 ends here
 
-;; [[file:config.org::*Org-Mode][Org-Mode:2]]
 (defadvice! shut-up-org-problematic-hooks (orig-fn &rest args)
   :around #'org-fancy-priorities-mode
   :around #'org-superstar-mode
   (ignore-errors (apply orig-fn args)))
-;; Org-Mode:2 ends here
 
-;; [[file:config.org::*Org-Mode][Org-Mode:3]]
 (setq org-startup-with-inline-images t)
-;; Org-Mode:3 ends here
 
-;; [[file:config.org::*Org-Mode][Org-Mode:4]]
 (use-package! org-pretty-table
   :commands (org-pretty-table-mode global-org-pretty-table-mode))
-;; Org-Mode:4 ends here
 
-;; [[file:config.org::*Org-Mode][Org-Mode:5]]
 (use-package! org-pandoc-import
   :after org)
-;; Org-Mode:5 ends here
 
-;; [[file:config.org::*Org-Mode][Org-Mode:6]]
 (setq org-directory "~/org"                      ; let's put files here
       org-use-property-inheritance t              ; it's convenient to have properties inherited
       org-log-done 'time                          ; having the time a item is done sounds convenient
       org-list-allow-alphabetical t               ; have a. A. a) A) list bullets
       org-export-in-background t                  ; run export processes in external emacs process
       org-catch-invisible-edits 'smart)            ; try not to accidently do weird stuff in invisible regions
-;; Org-Mode:6 ends here
 
-;; [[file:config.org::*Org-Mode][Org-Mode:7]]
 (setq org-babel-default-header-args
       '((:session . "none")
         (:results . "replace")
@@ -1384,44 +1244,30 @@ Must be run as part of `org-font-lock-set-keywords-hook'."
         (:hlines . "no")
         (:tangle . "no")
         (:comments . "link")))
-;; Org-Mode:7 ends here
 
-;; [[file:config.org::*Org-Mode][Org-Mode:8]]
 (add-hook 'text-mode-hook #'auto-fill-mode)
-;; Org-Mode:8 ends here
 
-;; [[file:config.org::*Org-Mode][Org-Mode:9]]
 (map! :map evil-org-mode-map
       :after evil-org
       :n "g <up>" #'org-backward-heading-same-level
       :n "g <down>" #'org-forward-heading-same-level
       :n "g <left>" #'org-up-element
       :n "g <right>" #'org-down-element)
-;; Org-Mode:9 ends here
 
-;; [[file:config.org::*Org-Mode][Org-Mode:10]]
 (setq org-list-demote-modify-bullet '(("+" . "-") ("-" . "+") ("*" . "+") ("1." . "a.")))
-;; Org-Mode:10 ends here
 
-;; [[file:config.org::*Org-Mode][Org-Mode:11]]
 (add-hook 'org-mode-hook 'turn-on-flyspell)
-;; Org-Mode:11 ends here
 
-;; [[file:config.org::*Org-Mode][Org-Mode:12]]
 (use-package! org-ol-tree
   :commands org-ol-tree)
 (map! :map org-mode-map
       :after org
       :localleader
       :desc "Outline" "O" #'org-ol-tree)
-;; Org-Mode:12 ends here
 
-;; [[file:config.org::*HTML][HTML:1]]
 (use-package! ox-gfm
   :after org)
-;; HTML:1 ends here
 
-;; [[file:config.org::*HTML][HTML:2]]
 (after! org
   (define-minor-mode org-fancy-html-export-mode
   "Toggle my fabulous org export tweaks. While this mode itself does a little bit,
@@ -1941,15 +1787,11 @@ MathJax = {
         src=\"%PATH\"></script>")
 
 )
-;; HTML:2 ends here
 
-;; [[file:config.org::*HTML][HTML:3]]
 (after! ox-html
   
 )
-;; HTML:3 ends here
 
-;; [[file:config.org::Example, fixed width, and property blocks][Example, fixed width, and property blocks]]
 (defun org-html-block-collapsable (orig-fn block contents info)
   "Wrap the usual block in a <details>"
   (if (or (not org-fancy-html-export-mode) (bound-and-true-p org-msg-export-in-progress))
@@ -1983,13 +1825,9 @@ MathJax = {
 (advice-add 'org-html-example-block   :around #'org-html-block-collapsable)
 (advice-add 'org-html-fixed-width     :around #'org-html-block-collapsable)
 (advice-add 'org-html-property-drawer :around #'org-html-block-collapsable)
-;; Example, fixed width, and property blocks ends here
 
-;; [[file:config.org::*Org-Roam][Org-Roam:1]]
 (setq org-roam-directory "~/org/roam/")
-;; Org-Roam:1 ends here
 
-;; [[file:config.org::*Org-Roam][Org-Roam:2]]
 (use-package! websocket
   :after org-roam)
 
@@ -2002,9 +1840,7 @@ MathJax = {
             org-roam-ui-follow t
             org-roam-ui-update-on-save t
             org-roam-ui-open-on-start t))
-;; Org-Roam:2 ends here
 
-;; [[file:config.org::*Org-Roam][Org-Roam:3]]
 (defadvice! doom-modeline--buffer-file-name-roam-aware-a (orig-fun)
   :around #'doom-modeline-buffer-file-name ; takes no args
   (if (s-contains-p org-roam-directory (or buffer-file-name ""))
@@ -2013,24 +1849,16 @@ MathJax = {
        "🢔(\\1-\\2-\\3) "
        (subst-char-in-string ?_ ?  buffer-file-name))
     (funcall orig-fun)))
-;; Org-Roam:3 ends here
 
-;; [[file:config.org::*Org-Roam][Org-Roam:4]]
 (after! org-roam
    (setq +org-roam-open-buffer-on-find-file nil))
-;; Org-Roam:4 ends here
 
-;; [[file:config.org::*Org-Agenda][Org-Agenda:1]]
 (setq org-agenda-files (list "~/org/school.org"
                              "~/org/todo.org"))
-;; Org-Agenda:1 ends here
 
-;; [[file:config.org::*Org-Capture][Org-Capture:1]]
 (use-package! doct
   :commands (doct))
-;; Org-Capture:1 ends here
 
-;; [[file:config.org::*Prettify][Prettify:1]]
 (defun org-capture-select-template-prettier (&optional keys)
   "Select a capture template, in a prettier way than default
 Lisp programs can force the template by setting KEYS to a string."
@@ -2138,9 +1966,7 @@ is selected, only the bare key is returned."
                    (t (error "No entry available")))))))
         (when buffer (kill-buffer buffer))))))
 (advice-add 'org-mks :override #'org-mks-pretty)
-;; Prettify:1 ends here
 
-;; [[file:config.org::*Prettify][Prettify:2]]
 (setf (alist-get 'height +org-capture-frame-parameters) 15)
 ;; (alist-get 'name +org-capture-frame-parameters) "❖ Capture") ;; ATM hardcoded in other places, so changing breaks stuff
 (setq +org-capture-fn
@@ -2148,9 +1974,7 @@ is selected, only the bare key is returned."
         (interactive)
         (set-window-parameter nil 'mode-line-format 'none)
         (org-capture)))
-;; Prettify:2 ends here
 
-;; [[file:config.org::*Prettify][Prettify:3]]
 (defun +doct-icon-declaration-to-icon (declaration)
   "Convert :icon declaration to icon"
   (let ((name (pop declaration))
@@ -2172,9 +1996,7 @@ is selected, only the bare key is returned."
                                  templates))))
 
 (setq doct-after-conversion-functions '(+doct-iconify-capture-templates))
-;; Prettify:3 ends here
 
-;; [[file:config.org::*Templates][Templates:1]]
 (setq org-capture-templates
       (doct `(("Home" :keys "h"
                :icon ("home" :set "octicon" :color "cyan")
@@ -2216,9 +2038,7 @@ is selected, only the bare key is returned."
                            :keyword "%U"
                            :file +org-capture-project-notes-file)))
               )))
-;; Templates:1 ends here
 
-;; [[file:config.org::*ORG Plot][ORG Plot:1]]
 (after! org-plot
   (defun org-plot/generate-theme (_type)
     "Use the current Doom theme colours to generate a GnuPlot preamble."
@@ -2294,9 +2114,7 @@ set palette defined ( 0 '%s',\
             (doom-color 'bg)))
   (setq org-plot/gnuplot-script-preamble #'org-plot/generate-theme)
   (setq org-plot/gnuplot-term-extra #'org-plot/gnuplot-term-properties))
-;; ORG Plot:1 ends here
 
-;; [[file:config.org::*XKCD][XKCD:1]]
 (use-package! xkcd
   :commands (xkcd-get-json
              xkcd-download xkcd-get
@@ -2326,9 +2144,7 @@ set palette defined ( 0 '%s',\
             "s"       #'+xkcd-find-and-view
             "/"       #'+xkcd-find-and-view
             "y"       #'+xkcd-copy))
-;; XKCD:1 ends here
 
-;; [[file:config.org::*XKCD][XKCD:2]]
 (after! xkcd
   (require 'emacsql-sqlite)
 
@@ -2576,9 +2392,7 @@ SQL can be either the emacsql vector representation, or a string."
                            (cdr (assoc 'alt        data))
                            (cdr (assoc 'img        data))
                            )))))
-;; XKCD:2 ends here
 
-;; [[file:config.org::*XKCD][XKCD:3]]
 (after! org
 	(org-link-set-parameters "xkcd"
 	                         :image-data-fun #'+org-xkcd-image-fn
@@ -2620,9 +2434,7 @@ SQL can be either the emacsql vector representation, or a string."
 	(defun +org-xkcd-complete (&optional arg)
 	  "Complete xkcd using `+xkcd-stored-info'"
 	  (format "xkcd:%d" (+xkcd-select))))
-;; XKCD:3 ends here
 
-;; [[file:config.org::*View Exported File][View Exported File:1]]
 ;;spc+v = view exported file
 (map! :map org-mode-map
       :localleader
@@ -2651,9 +2463,7 @@ SQL can be either the emacsql vector representation, or a string."
   "Search for output files with these extensions, in order, viewing the first that matches")
 (defvar org-view-external-file-extensions '("html")
   "File formats that should be opened externally.")
-;; View Exported File:1 ends here
 
-;; [[file:config.org::*Dictionaries][Dictionaries:1]]
 (use-package! lexic
   :commands lexic-search lexic-list-dictionary
   :config
@@ -2683,42 +2493,30 @@ SQL can be either the emacsql vector representation, or a string."
              (read-string "Look up in dictionary: "))
          current-prefix-arg))
   (lexic-search identifier nil nil t))
-;; Dictionaries:1 ends here
 
-;; [[file:config.org::*Basic configuration][Basic configuration:1]]
 (setq +latex-viewers '(pdf-tools evince zathura okular skim sumatrapdf))
-;; Basic configuration:1 ends here
 
-;; [[file:config.org::*Basic configuration][Basic configuration:2]]
 (after! org
   (setq org-highlight-latex-and-related '(native script entities))
   (add-to-list 'org-src-block-faces '("latex" (:inherit default :extend t))))
 
 (after! org
   (plist-put org-format-latex-options :background "Transparent"))
-;; Basic configuration:2 ends here
 
-;; [[file:config.org::*Basic configuration][Basic configuration:3]]
 (after! org
   (add-hook 'org-mode-hook 'turn-on-org-cdlatex))
 
 (defadvice! org-edit-latex-emv-after-insert ()
   :after #'org-cdlatex-environment-indent
   (org-edit-latex-environment))
-;; Basic configuration:3 ends here
 
-;; [[file:config.org::*Basic configuration][Basic configuration:4]]
 (setq org-display-inline-images t)
 (setq org-redisplay-inline-images t)
 (setq org-startup-with-inline-images "inlineimages")
-;; Basic configuration:4 ends here
 
-;; [[file:config.org::*Basic configuration][Basic configuration:5]]
 (use-package! org-fragtog
   :hook (org-mode . org-fragtog-mode))
-;; Basic configuration:5 ends here
 
-;; [[file:config.org::*Basic configuration][Basic configuration:6]]
 (setq org-format-latex-header "\\documentclass{article}
 \\usepackage[usenames]{xcolor}
 
@@ -2741,18 +2539,14 @@ SQL can be either the emacsql vector representation, or a string."
 \\setlength{\\topmargin}{1.5cm}
 \\addtolength{\\topmargin}{-2.54cm}
 ")
-;; Basic configuration:6 ends here
 
-;; [[file:config.org::*PDF-Tools][PDF-Tools:1]]
 (use-package pdf-view
   :hook (pdf-tools-enabled . pdf-view-themed-minor-mode)
   :hook (pdf-tools-enabled . hide-mode-line-mode)
   :config
   (setq pdf-view-resize-factor 1.1)
   (setq-default pdf-view-display-size 'fit-page))
-;; PDF-Tools:1 ends here
 
-;; [[file:config.org::*Conditional features][Conditional features:1]]
 (defvar org-latex-italic-quotes t
   "Make \"quote\" environments italic.")
 (defvar org-latex-par-sep t
@@ -2792,9 +2586,7 @@ The car can also be a
 If the symbol, function, or list produces a string: that is used as a regex
 search in the buffer. Otherwise any non-nil return value will indicate the
 existance of the feature.")
-;; Conditional features:1 ends here
 
-;; [[file:config.org::*Conditional features][Conditional features:2]]
 (defvar org-latex-caption-preamble "
 \\usepackage{subcaption}
 \\usepackage[hypcap=true]{caption}
@@ -2829,9 +2621,7 @@ existance of the feature.")
 }
 "
   "Preamble that provides a macro for custom boxes.")
-;; Conditional features:2 ends here
 
-;; [[file:config.org::*Conditional features][Conditional features:3]]
 (defvar org-latex-feature-implementations
   '((image         :snippet "\\usepackage{graphicx}" :order 2)
     (svg           :snippet "\\usepackage{svg}" :order 2)
@@ -2874,9 +2664,7 @@ following keys:
     The default is 0.
 
 Features that start with ! will be eagerly loaded, i.e. without being detected.")
-;; Conditional features:3 ends here
 
-;; [[file:config.org::*Conditional features][Conditional features:4]]
 (defun org-latex-detect-features (&optional buffer info)
   "List features from `org-latex-conditional-features' detected in BUFFER."
   (let ((case-fold-search nil))
@@ -2896,9 +2684,7 @@ Features that start with ! will be eagerly loaded, i.e. without being detected."
                            out))
                    (if (listp (cdr construct-feature)) (cdr construct-feature) (list (cdr construct-feature)))))
                org-latex-conditional-features)))))
-;; Conditional features:4 ends here
 
-;; [[file:config.org::*Conditional features][Conditional features:5]]
 (defun org-latex-expand-features (features)
   "For each feature in FEATURES process :requires, :when, and :prevents keywords and sort according to :order."
   (dolist (feature features)
@@ -2930,9 +2716,7 @@ Features that start with ! will be eagerly loaded, i.e. without being detected."
           (if (< (or (plist-get (cdr (assoc feat1 org-latex-feature-implementations)) :order) 1)
                  (or (plist-get (cdr (assoc feat2 org-latex-feature-implementations)) :order) 1))
               t nil))))
-;; Conditional features:5 ends here
 
-;; [[file:config.org::*Conditional features][Conditional features:6]]
 (defun org-latex-generate-features-preamble (features)
   "Generate the LaTeX preamble content required to provide FEATURES.
 This is done according to `org-latex-feature-implementations'"
@@ -2952,9 +2736,7 @@ This is done according to `org-latex-feature-implementations'"
                 expanded-features
                 "")
      "% end features\n")))
-;; Conditional features:6 ends here
 
-;; [[file:config.org::*Conditional features][Conditional features:7]]
 (defvar info--tmp nil)
 
 (defadvice! org-latex-save-info (info &optional t_ s_)
@@ -2969,9 +2751,7 @@ This is done according to `org-latex-feature-implementations'"
       (concat header
               (org-latex-generate-features-preamble (org-latex-detect-features nil info--tmp))
               "\n"))))
-;; Conditional features:7 ends here
 
-;; [[file:config.org::*Embed Externally Linked Images][Embed Externally Linked Images:1]]
 (defadvice! +org-latex-link (orig-fn link desc info)
   "Acts as `org-latex-link', but supports remote images."
   :around #'org-latex-link
@@ -3001,9 +2781,7 @@ This is done according to `org-latex-feature-implementations'"
                    (list it)))
     (concat "% fetched from " url "\n"
             (org-latex--inline-image link info))))
-;; Embed Externally Linked Images:1 ends here
 
-;; [[file:config.org::*LatexMK][LatexMK:1]]
 (setq org-latex-pdf-process (list "latexmk -f -pdflatex='xelatex -shell-escape -interaction nonstopmode' -pdf -output-directory=%o %f"))
 
 (setq xdvsvgm
@@ -3021,18 +2799,14 @@ This is done according to `org-latex-feature-implementations'"
 (after! org
     (add-to-list 'org-preview-latex-process-alist xdvsvgm)
     (setq org-preview-latex-default-process 'xdvsvgm))
-;; LatexMK:1 ends here
 
-;; [[file:config.org::*Compilation][Compilation:1]]
 (setq TeX-save-query nil
       TeX-show-compilation t
       TeX-command-extra-options "-shell-escape")
 
 (after! latex
   (add-to-list 'TeX-command-list '("XeLaTeX" "%`xelatex%(mode)%' %t" TeX-run-TeX nil t)))
-;; Compilation:1 ends here
 
-;; [[file:config.org::*Classes][Classes:1]]
 (after! ox-latex
   (add-to-list 'org-latex-classes
                '("cb-doc" "\\documentclass{scrartcl}"
@@ -3041,9 +2815,7 @@ This is done according to `org-latex-feature-implementations'"
                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
-;; Classes:1 ends here
 
-;; [[file:config.org::*Classes][Classes:2]]
 (after! ox-latex
   (setq org-latex-default-class "cb-doc"
         org-latex-tables-booktabs t
@@ -3066,9 +2838,7 @@ This is done according to `org-latex-feature-implementations'"
 \\urlstyle{same}
 "
         org-latex-reference-command "\\cref{%s}"))
-;; Classes:2 ends here
 
-;; [[file:config.org::*Packages][Packages:1]]
 (setq org-latex-default-packages-alist
       `(("AUTO" "inputenc" t
          ("pdflatex"))
@@ -3090,17 +2860,13 @@ This is done according to `org-latex-feature-implementations'"
     ("" "indentfirst" nil)
     "\\setmainfont[Ligatures=TeX]{Alegreya}"
     "\\setmonofont[Ligatures=TeX]{Liga SFMono Nerd Font}"))
-;; Packages:1 ends here
 
-;; [[file:config.org::*Pretty code blocks][Pretty code blocks:1]]
 (use-package! engrave-faces-latex
   :after ox-latex
   :config
   (setq org-latex-listings 'engraved
         engrave-faces-preset-styles (engrave-faces-generate-preset)))
-;; Pretty code blocks:1 ends here
 
-;; [[file:config.org::*Pretty code blocks][Pretty code blocks:2]]
 (defadvice! org-latex-src-block-engraved (orig-fn src-block contents info)
   "Like `org-latex-src-block', but supporting an engraved backend"
   :around #'org-latex-src-block
@@ -3258,26 +3024,16 @@ This is done according to `org-latex-feature-implementations'"
     (if (eq 'engraved (plist-get info :latex-listings))
         (format "\\begin{Code}[alt]\n%s\n\\end{Code}" output-block)
       output-block)))
-;; Pretty code blocks:2 ends here
 
-;; [[file:config.org::*ox-chameleon][ox-chameleon:1]]
 (use-package! ox-chameleon
   :after ox)
-;; ox-chameleon:1 ends here
 
-;; [[file:config.org::*Async][Async:1]]
 (setq org-export-in-background t)
-;; Async:1 ends here
 
-;; [[file:config.org::*(sub|super)script characters][(sub|super)script characters:1]]
 (setq org-export-with-sub-superscripts '{})
-;; (sub|super)script characters:1 ends here
 
-;; [[file:config.org::*Mu4e][Mu4e:1]]
 (setq mu4e-update-interval 300)
-;; Mu4e:1 ends here
 
-;; [[file:config.org::*Mu4e][Mu4e:2]]
 (set-email-account! "shaunsingh0207"
   '((mu4e-sent-folder       . "/Sent Mail")
     (mu4e-drafts-folder     . "/Drafts")
@@ -3315,22 +3071,16 @@ This is done according to `org-latex-feature-implementations'"
                   (+mu4e-colorize-str
                    (replace-regexp-in-string "\\`.*/" "" (mu4e-message-field msg :maildir))
                    '+mu4e-header--folder-colors)))))))
-;; Mu4e:2 ends here
 
-;; [[file:config.org::*Mu4e][Mu4e:3]]
 (after! mu4e
   (setq sendmail-program "msmtp"
         send-mail-function #'smtpmail-send-it
         message-sendmail-f-is-evil t
         message-sendmail-extra-arguments '("--read-envelope-from")
         message-send-mail-function #'message-send-mail-with-sendmail))
-;; Mu4e:3 ends here
 
-;; [[file:config.org::*Mu4e][Mu4e:4]]
 ;;(setq alert-default-style 'osx-notifier)
-;; Mu4e:4 ends here
 
-;; [[file:config.org::*Webkit][Webkit:1]]
 ;;(use-package org
 ;;  :demand t)
 
@@ -3353,16 +3103,12 @@ This is done according to `org-latex-feature-implementations'"
 ;;               ""
 ;;             (format "%s%.0f%%  " (all-the-icons-faicon "spinner") progress)))
 ;;    (force-mode-line-update)))
-;; Webkit:1 ends here
 
-;; [[file:config.org::*Webkit][Webkit:2]]
 ;; (use-package evil-collection-webkit
 ;;    :defer t
 ;;    :config
 ;;    (evil-collection-xwidget-setup))
-;; Webkit:2 ends here
 
-;; [[file:config.org::*IRC][IRC:2]]
 (after! circe
   (setq-default circe-use-tls t)
   (setq circe-notifications-alert-icon "/usr/share/icons/breeze/actions/24/network-connect.svg"
@@ -3591,9 +3337,7 @@ This is done according to `org-latex-feature-implementations'"
                       accounts))))
 
 (add-transient-hook! #'=irc (register-irc-auths))
-;; IRC:2 ends here
 
-;; [[file:config.org::org-emph-to-irc][org-emph-to-irc]]
 (defun lui-org-to-irc ()
   "Examine a buffer with simple org-mode formatting, and converts the empasis:
 *bold*, /italic/, and _underline_ to IRC semi-standard escape codes.
@@ -3610,4 +3354,3 @@ This is done according to `org-latex-feature-implementations'"
              "") nil nil)))
 
 (add-hook 'lui-pre-input-hook #'lui-org-to-irc)
-;; org-emph-to-irc ends here

@@ -21,18 +21,57 @@
         "type": "github"
       }
     },
-    "emacs-overlay": {
+    "emacs": {
+      "inputs": {
+        "emacs-src": "emacs-src",
+        "emacs-vterm-src": "emacs-vterm-src",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
       "locked": {
-        "lastModified": 1634151232,
-        "narHash": "sha256-cF4eMrDL2AxU1NEq5i9gz44XFTKaZc5ZM29jqJpRn2M=",
-        "owner": "nix-community",
-        "repo": "emacs-overlay",
-        "rev": "0952bf80e04f05671631344b0d39a489b781284a",
+        "lastModified": 1634175170,
+        "narHash": "sha256-u/0qB9yXHbES4Z6lJXlt/JgA9WfEYaLmB+qWOLq5zNI=",
+        "owner": "shaunsingh",
+        "repo": "emacs",
+        "rev": "bce724d046f2c03e5e1fb578f24ddd6c4dcf59b8",
         "type": "github"
       },
       "original": {
-        "owner": "nix-community",
-        "repo": "emacs-overlay",
+        "owner": "shaunsingh",
+        "repo": "emacs",
+        "type": "github"
+      }
+    },
+    "emacs-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1634074323,
+        "narHash": "sha256-xbbb1Ny2TA33+X+2QqrVo5WSyzn0b0c987Ceshhd11o=",
+        "owner": "emacs-mirror",
+        "repo": "emacs",
+        "rev": "bcb43fbc95ad0c635c8f19c391ec90d3f8a74035",
+        "type": "github"
+      },
+      "original": {
+        "owner": "emacs-mirror",
+        "repo": "emacs",
+        "type": "github"
+      }
+    },
+    "emacs-vterm-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1631083259,
+        "narHash": "sha256-+fl1GUCpAZBOvgMd3akF9EMirp1/K+JyRq0TWKSDeJw=",
+        "owner": "akermu",
+        "repo": "emacs-libvterm",
+        "rev": "2681120b770573044832ba8c22ccbac192e1a294",
+        "type": "github"
+      },
+      "original": {
+        "owner": "akermu",
+        "repo": "emacs-libvterm",
         "type": "github"
       }
     },
@@ -114,7 +153,7 @@
     "root": {
       "inputs": {
         "darwin": "darwin",
-        "emacs-overlay": "emacs-overlay",
+        "emacs": "emacs",
         "home-manager": "home-manager",
         "neovim": "neovim",
         "nixpkgs": "nixpkgs",

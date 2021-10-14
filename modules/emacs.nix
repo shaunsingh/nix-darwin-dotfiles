@@ -22,6 +22,6 @@
     mu
     msmtp
     isync
-    emacsGcc
+    emacs
   ];
 }
