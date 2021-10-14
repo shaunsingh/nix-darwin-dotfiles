@@ -43,6 +43,7 @@
             };
           }
           ({ pkgs, lib, ... }: {
+            services.nix-daemon.enable = true;
             security.pam.enableSudoTouchIdAuth = true;
             nixpkgs = {
               overlays = [ spacebar.overlay neovim.overlay emacs.overlay ];
@@ -58,9 +59,6 @@
                 build-users-group = nixbld
               '';
             };
-
-            services.nix-daemon.enable = true;
-            services.mbsync.enable = true;
           })
         ];
       };
