@@ -25,43 +25,44 @@
     };
   };
 
-  outputs = { self, nixpkgs, spacebar, neovim, emacs, darwin, home-manager, ... }@inputs: {
-    darwinConfigurations."shaunsingh-laptop" = darwin.lib.darwinSystem {
-      system = "aarch64-darwin";
-      modules = [
-        ./modules/emacs.nix
-        ./modules/mac.nix
-        ./modules/home.nix
-        ./modules/pam.nix
-        ./modules/mbsync.nix
-        home-manager.darwinModule
+  outputs = { self, nixpkgs, spacebar, neovim, emacs, darwin, home-manager, ...
+    }@inputs: {
+      darwinConfigurations."shaunsingh-laptop" = darwin.lib.darwinSystem {
+        system = "aarch64-darwin";
+        modules = [
+          ./modules/emacs.nix
+          ./modules/mac.nix
+          ./modules/home.nix
+          ./modules/pam.nix
+          ./modules/mbsync.nix
+          home-manager.darwinModule
           {
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
             };
           }
-        ({ pkgs, lib, ... }: {
-          security.pam.enableSudoTouchIdAuth = true;
-          nixpkgs = {
-            overlays = [ spacebar.overlay neovim.overlay emacs.overlay ];
-            config.allowUnfree = true;
-          };
+          ({ pkgs, lib, ... }: {
+            security.pam.enableSudoTouchIdAuth = true;
+            nixpkgs = {
+              overlays = [ spacebar.overlay neovim.overlay emacs.overlay ];
+              config.allowUnfree = true;
+            };
 
-          nix = {
-            package = pkgs.nixUnstable;
-            extraOptions = ''
-              system = aarch64-darwin
-              extra-platforms = aarch64-darwin x86_64-darwin
-              experimental-features = nix-command flakes
-              build-users-group = nixbld
-            '';
-          };
+            nix = {
+              package = pkgs.nixUnstable;
+              extraOptions = ''
+                system = aarch64-darwin
+                extra-platforms = aarch64-darwin x86_64-darwin
+                experimental-features = nix-command flakes
+                build-users-group = nixbld
+              '';
+            };
 
-          services.nix-daemon.enable = true;
-          services.mbsync.enable = true;
-        })
-      ];
+            services.nix-daemon.enable = true;
+            services.mbsync.enable = true;
+          })
+        ];
+      };
     };
-  };
 }

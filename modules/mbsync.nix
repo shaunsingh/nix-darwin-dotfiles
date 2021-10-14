@@ -7,11 +7,9 @@ let
   cfg = config.services.mbsync;
 
   mbsyncOptions = [ "--all" ] ++ optional (cfg.verbose) "--verbose"
-  ++ optional (cfg.configFile != "")
-    "--config ${cfg.configFile}";
+    ++ optional (cfg.configFile != "") "--config ${cfg.configFile}";
 
-in
-{
+in {
 
   options.services.mbsync = {
     enable = mkEnableOption "mbsync";
