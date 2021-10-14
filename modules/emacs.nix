@@ -5,7 +5,13 @@
        git clone --depth 1 https://github.com/hlissner/doom-emacs "~/.config/emacs"
      fi
    '';
-  # home-manager.users.shauryasingh.home.file."~/.config/doom".source = config.lib.file.mkOutOfStoreSymlink ../configs/doom;
+  fonts = {
+    enableFontDir = true;
+    fonts = with pkgs; [
+      alegreya
+      overpass
+    ];
+  };
   home-manager.users.shauryasingh.home.packages = with pkgs; [
     gnutls
     gnuplot
@@ -16,5 +22,6 @@
     mu
     msmtp
     isync
+    emacsGcc
   ];
 }

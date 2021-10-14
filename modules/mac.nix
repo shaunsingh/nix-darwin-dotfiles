@@ -1,72 +1,44 @@
 { pkgs, spacebar, ... }: 
-  let
-    yabai = pkgs.yabai.overrideAttrs (old: rec {
-      src = pkgs.fetchFromGitHub {
-        owner = "donaldguy";
-        repo = "yabai";
-        rev = "723f2ee0346b78360c497b7a7eb7be409c02302c";
-        sha256 = "sha256:1z95njalhvyfs2xx6d91p9b013pc4ad846drhw0k5gipvl03pp92";
-      };
-    });
-
-  in {
-  system.activationScripts.postUserActivation.text = ''
-    # Install homebrew if it isn't there 
-    if [[ ! -d "/opt/homebrew/bin" ]]; then
-      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    fi
-  '';
-  homebrew = {
-    brewPrefix = "/opt/homebrew/bin";
-    enable = true;
-    autoUpdate = true;
-    cleanup = "zap";
-    global = {
-      brewfile = true;
-      noLock = true;
+let
+  yabai = pkgs.yabai.overrideAttrs (old: rec {
+    src = pkgs.fetchFromGitHub {
+      owner = "donaldguy";
+      repo = "yabai";
+      rev = "723f2ee0346b78360c497b7a7eb7be409c02302c";
+      sha256 = "sha256:1z95njalhvyfs2xx6d91p9b013pc4ad846drhw0k5gipvl03pp92";
     };
-    taps = [
-      "homebrew/core"
-      "homebrew/cask"
-      "homebrew/cask-fonts"
-      "d12frosted/emacs-plus"
-      "shaunsingh/formulae"
-    ];
-    casks = [
-      "intellij-idea"
-      "zoom"
-      # Note: Still emulated via rosetta
-      "nvidia-geforce-now"
-      "discord"
-      # Font support is better with homebrew
-      "font-alegreya"
-      "font-overpass"
-      "shaunsingh/formulae/font-sf-mono-nerd-font-ligaturized"
-    ];
-    extraConfig = ''
-      brew "d12frosted/emacs-plus/emacs-plus@28", args: ["with-elrumo2-icon", "with-native-comp", "with-xwidgets", "without-imagemagick"]
-    '';
-  };
+  });
+
+in {
   services.yabai = {
     enable = true;
     enableScriptingAddition = true;
     package = yabai;
     config = {
+      window_border = "on";
+      window_border_width = 5;
+      active_window_border_color = "0xff8FBCBB";
+      normal_window_border_color = "0xff3B4252";
+      focus_follows_mouse = "autoraise";
+      mouse_follows_focus = "off";
+      mouse_drop_action = "stack";
+      window_placement = "second_child";
+      window_opacity = "off";
+      window_topmost = "on";
+      window_shadow = "on";
+      active_window_opacity = "1.0";
+      normal_window_opacity = "1.0";
+      split_ratio = "0.50";
       auto_balance = "on";
+      mouse_modifier = "fn";
+      mouse_action1 = "move";
+      mouse_action2 = "resize";
       layout = "bsp";
-      bottom_padding = 48;
+      top_padding = 18;
+      bottom_padding = 46;
       left_padding = 18;
       right_padding = 18;
-      top_padding = 18;
       window_gap = 18;
-      mouse_follows_focus = "on";
-      mouse_modifier = "fn";
-      split_ratio = "0.50";
-      window_placement = "second_child";
-      window_topmost = "off";
-      window_opacity = "off";
-      window_shadow = "on";
-      window_border = "off";
     };
   };
   services.spacebar = {

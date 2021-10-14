@@ -408,7 +408,7 @@
     settings = {
       window.padding.x = 45;
       window.padding.y = 45;
-      window.decorations = "buttonless";
+      window.decorations = "none";
       window.dynamic_title = true;
       live_config_reload = true;
       mouse.hide_when_typing = true;

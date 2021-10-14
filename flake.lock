@@ -21,6 +21,21 @@
         "type": "github"
       }
     },
+    "emacs-overlay": {
+      "locked": {
+        "lastModified": 1634151232,
+        "narHash": "sha256-cF4eMrDL2AxU1NEq5i9gz44XFTKaZc5ZM29jqJpRn2M=",
+        "owner": "nix-community",
+        "repo": "emacs-overlay",
+        "rev": "0952bf80e04f05671631344b0d39a489b781284a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "emacs-overlay",
+        "type": "github"
+      }
+    },
     "flake-utils": {
       "locked": {
         "lastModified": 1629481132,
@@ -43,11 +58,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1634081472,
-        "narHash": "sha256-tN7xnabilqA5nYaWYg2Nz4mymxX8gBH65nWXRc1xXvY=",
+        "lastModified": 1634162770,
+        "narHash": "sha256-ul1hN+gjDOPw85YLO/GXYadbcDAh60SpTKyDW3K2uPo=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "b22004bf1f303d68d97928ffbd0b9c76c415362e",
+        "rev": "13e00b70a42959835190576a80fe9d8ebab062f2",
         "type": "github"
       },
       "original": {
@@ -66,11 +81,11 @@
       },
       "locked": {
         "dir": "contrib",
-        "lastModified": 1634053974,
-        "narHash": "sha256-hqteQ2Jrz6cviqHRfvMxwOoFD09dirwdD+klYd/5iaE=",
+        "lastModified": 1634155942,
+        "narHash": "sha256-r1Iy52Qu9iRUE50A9dUG/C0iWj5JUfTRiFee1clA9F4=",
         "owner": "neovim",
         "repo": "neovim",
-        "rev": "649b3160a10f0053747383f0703b0a5a94548570",
+        "rev": "6b9cb665fa101299d8a6f67d6d7e4705da13abee",
         "type": "github"
       },
       "original": {
@@ -99,6 +114,7 @@
     "root": {
       "inputs": {
         "darwin": "darwin",
+        "emacs-overlay": "emacs-overlay",
         "home-manager": "home-manager",
         "neovim": "neovim",
         "nixpkgs": "nixpkgs",
