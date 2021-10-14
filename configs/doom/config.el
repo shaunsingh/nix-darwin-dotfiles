@@ -37,6 +37,9 @@
         '((lambda (path)
             (magit-status path)))))
 
+(after! magit
+   (magit-delta-mode +1))
+
 (setq +ligatures-in-modes t)
 
 ;;fonts

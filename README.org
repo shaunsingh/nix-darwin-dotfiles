@@ -9,8 +9,8 @@ entails.
 
 ** Install
 *** MacOS
-Install XCode CLT (not required, but recommended)
-
+Install XCode clt (currently the yabai build needs
+xcode-clt. This should be resolved soon. Until then, xcode clt will be required)
 #+begin_src sh
   xcode-select --install
 #+end_src
@@ -40,8 +40,9 @@ cat /etc/nix/nix.conf
 
 Clone the repo, build it, install it
 #+begin_src sh
+git clone --depth 1 https://github.com/shaunsingh/nix-darwin-dotfiles.git ~/nix-darwin-dotfiles
 nix build ~/nix-darwin-dotfiles\#darwinConfigurations.shaunsingh-laptop.system --impure
-./result/sw/bin/darwin-rebuild switch --flake .#shaunsingh-laptop --impure
+~/nix-darwin-dotfiles/result/sw/bin/darwin-rebuild switch --flake .#shaunsingh-laptop --impure
 #+end_src
 
 Currently I don't know how to do symlinks with nix, so you will have to
@@ -52,7 +53,7 @@ ln -s ~/nix-darwin-dotfiles/configs/doom/ ~/.config/doom
 #+end_src
 
 *** Emacs
-*Personal Note:* this is my configuration for emacs-ng
+If you want to use [[https://github.com/emacs-ng/emacs-ng][Emacs-NG]], use the following build options
 #+begin_src sh
   git clone --depth 1 https://github.com/emacs-ng/emacs-ng.git
   cd emacs-ng
@@ -64,19 +65,17 @@ ln -s ~/nix-darwin-dotfiles/configs/doom/ ~/.config/doom
               --with-rsvg --with-native-compilation --with-webrender --without-javascript \
               --without-sound --without-imagemagick --without-makeinfo --without-gpm --without-dbus \
               --without-pop --without-toolkit-scroll-bars --without-mailutils --without-gsettings \
-              --with-all 
+              --with-all
   make -j$(($(nproc) * 2)) NATIVE_FULL_AOT=1
   make install-strip
 #+end_src
 
 If you want to force recompile the literate configuration, you can run
-
 #+begin_src sh
   doom sync -u
 #+end_src
 
 If you want to update the doom configuration, you can run
-
 #+begin_src sh
   doom upgrade
 #+end_src
@@ -85,24 +84,10 @@ If you modify your shell configuration, run =doom env= to regenerate env
 vars
 
 **** Mu4e and Gmail
-Email will have a few issues, since its hardcoded to my account and my
-machines path. Do the following steps to get email up and running for
-you
+Email will have a few issues, since its hardcoded to my account. Replace instances of my name and email in =~/.doom.d/config.org=
 
-1. modify =~/.mbsyncrc= to include your email and password
-2. replace instances of my name and email in =~/.doom.d/config.org=
-3. replace the path to =msmtp= in =~/.doom.d/config.org= if you have an
-   intel mac
-4. Rerun the following commands, replace the example with your email:
-
-#+begin_src sh
-  mu init --maildir=~/.mbsync --my-address=email@example.org
-  mu index
-  mbsync --all
-#+end_src
-
-Indexed mail will go under =~/.mbsync/=, you can either manually mbsync
-or use emacs to update mail
+Indexed mail will go under =~/.mbsync/=, you can either manually run mbsync
+or use emacs to update mail.
 
 **** Org Mode
 My org mode config includes two additional plugins, org-agenda and
@@ -111,14 +96,8 @@ under the created =~/org= dir. Roam files go under =~/org/roam=
 
 ** Additional Configurations
 *** Fonts
-My config uses 3 fonts not installed by default. My nix config should
-handle installing the proportional fonts. SFMono must be installed
-seperately
-
-Required: 1. Fira SFMono Nerd Font
-(https://github.com/shaunsingh/SFMono-Nerd-Font-Ligaturized)
-
-Required for emacs 1. Overpass 2. Alegreya
+ [[https://github.com/shaunsingh/SFMono-Nerd-Font-Ligaturized][SFMono]] must be installed seperately, currently both Overpass and Alegreya are
+ managed via nix.
 
 *** Neovim
 My neovim configuration is designed for programming and quick text
@@ -138,16 +117,10 @@ to run =:PackerSync= to apply changes
 If you want to take advantage of the LSP, you can install language
 servers using the following command:
 
-=:LspInstall (language)= e.g. =:LspInstall java= to install the java LSP
-(jdtls)
+=:LspInstall (language)=
+=:TSInstall (language)=
 
-Similarly for treesitter, do =:TSInstall (language)=
-e.g. =:TSInstall java= to install the java treesitter parser
-
-I also recommend installing
-[[https://github.com/Kethku/neovide][Neovide]] or
-[[https://github.com/akiyosi/goneovim][goneovim]] if you prefer a gui
-experience.
+I also recommend installing [[https://github.com/Kethku/neovide][Neovide]]
 
 ** Feedback
 Suggestions/improvements

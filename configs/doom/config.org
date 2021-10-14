@@ -565,6 +565,7 @@ screenshot capabilities are nice, and using the same dictionaries accross
 ;;(package! vlf :recipe (:host github :repo "m00natic/vlfi" :files ("*.el")))
 (package! screenshot :recipe (:host github :repo "tecosaur/screenshot"))
 (package! lexic :recipe (:host github :repo "tecosaur/lexic"))
+(package! magit-delta :recipe (:host github :repo "dandavison/magit-delta"))
 #+end_src
 
 **** LSP:
@@ -662,6 +663,12 @@ Useful functions for the shell-side integration provided by vterm.
   (setf (alist-get "magit-status" vterm-eval-cmds nil nil #'equal)
         '((lambda (path)
             (magit-status path)))))
+#+end_src
+
+I also want to hook Delta into Magit
+#+begin_src elisp
+(after! magit
+   (magit-delta-mode +1))
 #+end_src
 
 **** Ligatures
