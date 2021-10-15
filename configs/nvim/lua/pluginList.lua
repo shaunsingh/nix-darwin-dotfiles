@@ -89,6 +89,11 @@ return packer.startup(function()
    }
 
    use {
+      "nvim-treesitter/playground",
+      after = "nord.nvim",
+   }
+
+   use {
       "p00f/nvim-ts-rainbow",
       after = "nvim-treesitter",
    }
