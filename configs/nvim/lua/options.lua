@@ -1,4 +1,4 @@
-vim.g.neovide_fullscreen = true
+--vim.g.neovide_fullscreen = true
 --vim.g.neovide_cursor_vfx_mode = "ripple"
 vim.g.neovide_cursor_vfx_mode = "pixiedust"
 
@@ -25,7 +25,7 @@ vim.opt.shiftwidth = 4
 vim.opt.smartindent = true
 vim.opt.shortmess:append "casI"
 vim.opt.whichwrap:append "<>hl"
-vim.opt.guifont = "Liga SFMono Nerd Font:h11"
+vim.opt.guifont = "Liga SFMono Nerd Font:h14"
 
 local disabled_built_ins = {
    "2html_plugin",
