@@ -98,6 +98,10 @@ return packer.startup(function()
 
    use {
       "lewis6991/gitsigns.nvim",
+      opt = true,
+      setup = function()
+         require("options").packer_lazy_load "gitsigns.nvim"
+      end,
       config = function()
          require "plugins.gitsigns"
       end,
@@ -105,7 +109,13 @@ return packer.startup(function()
 
    use {
       "neovim/nvim-lspconfig",
-      after = "nvim-lsp-installer",
+      opt = true,
+      setup = function()
+         require("options").packer_lazy_load "nvim-lspconfig"
+         vim.defer_fn(function()
+            vim.cmd 'if &ft == "packer" | echo "" | else | silent! e %'
+         end, 0)
+      end,
       config = function()
          require "plugins.lspconfig"
       end,
