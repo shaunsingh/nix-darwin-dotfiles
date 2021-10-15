@@ -252,6 +252,7 @@ return packer.startup(function()
 
    use {
       "kristijanhusak/orgmode.nvim",
+      branch = 'tree-sitter',
       ft = { "org" },
       config = function()
          require("plugins.others").orgmode()
@@ -264,7 +265,7 @@ return packer.startup(function()
          "Neogit",
          "Neogit commit",
       },
-      requires = { 
+      requires = {
          "nvim-lua/plenary.nvim",
          "sindrets/diffview.nvim",
       },
