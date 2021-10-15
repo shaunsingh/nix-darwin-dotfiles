@@ -18,9 +18,10 @@ return packer.startup(function()
    }
 
    use {
-      "dstein64/vim-startuptime",
-      cmd = "StartupTime",
+     'tweekmonster/startuptime.vim',
+     cmd = 'StartupTime',
    }
+
    use {
       "max397574/better-escape.nvim",
       event = "InsertEnter",
@@ -38,10 +39,6 @@ return packer.startup(function()
       "shaunsingh/nord.nvim",
       after = "packer.nvim",
       config = function()
-         vim.g.nord_borders = false
-         vim.g.nord_contrast = false
-         vim.g.nord_cursorline_transparent = true
-         vim.g.nord_disable_background = true
          vim.cmd [[colorscheme nord]]
       end,
    }
@@ -69,7 +66,7 @@ return packer.startup(function()
 
    use {
       "lukas-reineke/indent-blankline.nvim",
-      event = "BufRead",
+      after = "nord.nvim",
       config = function()
          require("plugins.others").blankline()
       end,
@@ -77,7 +74,7 @@ return packer.startup(function()
 
    use {
       "norcalli/nvim-colorizer.lua",
-      event = "BufRead",
+      cmd = 'ColorizerToggle',
       config = function()
          require("plugins.others").colorizer()
       end,
@@ -85,7 +82,7 @@ return packer.startup(function()
 
    use {
       "nvim-treesitter/nvim-treesitter",
-      event = "BufRead",
+      after = "nord.nvim",
       config = function()
          require "plugins.treesitter"
       end,

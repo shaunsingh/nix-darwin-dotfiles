@@ -514,6 +514,7 @@
     cat = "bat";
     find = "fd";
     sed = "sd";
+    neovide = "/Applications/Neovide.app/Contents/MacOS/neovide --frameless --multigrid";
   };
   home-manager.users.shauryasingh.programs.bat = {
     enable = true;
