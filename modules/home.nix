@@ -381,6 +381,58 @@
                   width: 240px !important;
     '';
   };
+  home-manager.users.shauryasingh.programs.firefox.enable = true;
+  # Handled by the Homebrew module
+  # This populates a dummy package to satsify the requirement
+  home-manager.users.shauryasingh.programs.firefox.package = pkgs.runCommand "firefox-0.0.0" {} "mkdir $out";
+  home-manager.users.shauryasingh.programs.firefox.profiles =
+    let
+      userChrome = builtins.readFile ../confgs/userChrome.css;
+      settings = {
+        "app.update.auto" = false;
+        "browser.startup.homepage" = "https://lobste.rs";
+        "browser.search.region" = "GB";
+        "browser.search.countryCode" = "GB";
+        "browser.search.isUS" = false;
+        "browser.ctrlTab.recentlyUsedOrder" = false;
+        "browser.newtabpage.enabled" = false;
+        "browser.bookmarks.showMobileBookmarks" = true;
+        "browser.uidensity" = 1;
+        "browser.urlbar.placeholderName" = "DuckDuckGo";
+        "browser.urlbar.update1" = true;
+        "distribution.searchplugins.defaultLocale" = "en-GB";
+        "general.useragent.locale" = "en-GB";
+        "identity.fxaccounts.account.device.name" = config.networking.hostName;
+        "privacy.trackingprotection.enabled" = true;
+        "privacy.trackingprotection.socialtracking.enabled" = true;
+        "privacy.trackingprotection.socialtracking.annotate.enabled" = true;
+        "reader.color_scheme" = "sepia";
+        "services.sync.declinedEngines" = "addons,passwords,prefs";
+        "services.sync.engine.addons" = false;
+        "services.sync.engineStatusChanged.addons" = true;
+        "services.sync.engine.passwords" = false;
+        "services.sync.engine.prefs" = false;
+        "services.sync.engineStatusChanged.prefs" = true;
+        "signon.rememberSignons" = false;
+        "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
+      };
+    in
+      {
+        home = {
+          inherit settings;
+          inherit userChrome;
+          id = 0;
+        };
+
+        work = {
+          inherit userChrome;
+          id = 1;
+          settings = settings // {
+            "browser.startup.homepage" = "about:blank";
+            "browser.urlbar.placeholderName" = "Google";
+          };
+        };
+      };
   # home-manager.users.shauryasingh.home.file."~/.config/nvim".source = config.lib.file.mkOutOfStoreSymlink ../configs/nvim;
   home-manager.users.shauryasingh.programs.htop.settings = {
     color_scheme = 0;
@@ -397,15 +449,12 @@
   };
   home-manager.users.shauryasingh.programs.alacritty = {
     enable = true;
-    package = builtins.path {
-      path = /Applications/Alacritty.app/Contents/MacOS;
-      filter = (path: type:
-        type == "directory" || builtins.baseNameOf path == "alacritty");
-    };
+    # We need to give it a dummy package 
+    package = pkgs.runCommand "alacritty-0.0.0" {} "mkdir $out";
     settings = {
       window.padding.x = 45;
       window.padding.y = 45;
-      window.decorations = "none";
+      window.decorations = "buttonless";
       window.dynamic_title = true;
       live_config_reload = true;
       mouse.hide_when_typing = true;

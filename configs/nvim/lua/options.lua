@@ -1,6 +1,9 @@
 --vim.g.neovide_fullscreen = true
 --vim.g.neovide_cursor_vfx_mode = "ripple"
 vim.g.neovide_cursor_vfx_mode = "pixiedust"
+vim.g.neovide_remember_window_size = true
+vim.g.neovide_cursor_antialiasing = true
+--vim.g.neovide.neovide_floating_blur = 0
 
 vim.opt.fillchars = { eob = " " }
 vim.opt.termguicolors = true

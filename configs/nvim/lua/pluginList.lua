@@ -90,7 +90,7 @@ return packer.startup(function()
 
    use {
       "nvim-treesitter/playground",
-      after = "nord.nvim",
+      cmd = 'TSPlayground',
    }
 
    use {
@@ -255,6 +255,7 @@ return packer.startup(function()
    use {
       "kristijanhusak/orgmode.nvim",
       branch = 'tree-sitter',
+      wants = "nvim-treesitter",
       ft = { "org" },
       config = function()
          require("plugins.others").orgmode()

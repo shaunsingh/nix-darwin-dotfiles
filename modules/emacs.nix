@@ -9,6 +9,10 @@
     enableFontDir = true;
     fonts = with pkgs; [ alegreya overpass ];
   };
+  services.emacs = {
+    enable = true;
+    package = pkgs.emacs;
+  };
   # services.mbsync.enable = true;
   # services.mbsync.postExec = ''
   #   if pgrep -f 'mu server'; then
