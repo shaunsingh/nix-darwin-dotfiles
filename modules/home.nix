@@ -387,7 +387,7 @@
   home-manager.users.shauryasingh.programs.firefox.package = pkgs.runCommand "firefox-0.0.0" {} "mkdir $out";
   home-manager.users.shauryasingh.programs.firefox.profiles =
     let
-      userChrome = builtins.readFile ../confgs/userChrome.css;
+      userChrome = builtins.readFile ../configs/userChrome.css;
       settings = {
         "app.update.auto" = false;
         "browser.startup.homepage" = "https://lobste.rs";
