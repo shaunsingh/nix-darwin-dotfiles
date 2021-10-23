@@ -56,12 +56,13 @@
     gnutls
     gnuplot
     sqlite
+    maxima-ecl
     (aspellWithDicts (dicts: with dicts; [ en en-computers en-science ]))
-    (pkgs.texlive.combine {
-      inherit (pkgs.texlive)
+    (texlive.combine {
+      inherit (texlive)
         scheme-small dvipng dvisvgm l3packages xcolor soul adjustbox collectbox
         amsmath siunitx cancel mathalpha capt-of chemfig wrapfig mhchem fvextra
-        cleveref latexmk tcolorbox environ;
+        cleveref latexmk tcolorbox environ arev amsfonts simplekv;
     })
     sdcv
     emacs

@@ -387,10 +387,10 @@
     let
       userChrome = builtins.readFile ../configs/userChrome.css;
       settings = {
-        "app.update.auto" = false;
+        "app.update.auto" = true;
         "browser.startup.homepage" = "https://shaunsingh.github.io/startpage/";
-        "browser.search.region" = "GB";
-        "browser.search.countryCode" = "GB";
+        "browser.search.region" = "US";
+        "browser.search.countryCode" = "US";
         "browser.search.isUS" = false;
         "browser.ctrlTab.recentlyUsedOrder" = false;
         "browser.newtabpage.enabled" = false;
@@ -561,6 +561,7 @@
     cat = "bat";
     find = "fd";
     sed = "sd";
+    calc = "emacs -f full-calc";
     neovide = "/Applications/Neovide.app/Contents/MacOS/neovide --frameless --multigrid";
   };
   home-manager.users.shauryasingh.programs.bat = {

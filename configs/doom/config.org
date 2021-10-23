@@ -320,7 +320,7 @@ vc                           ; version-control and Emacs, sitting in a tree
 eshell                       ; the elisp shell that works everywhere
 ;;shell                      ; simple shell REPL for Emacs
 ;;term                       ; basic terminal emulator for Emacs
-;;vterm                      ; the best terminal emulation in Emacs
+vterm                        ; the best terminal emulation in Emacs
 #+end_src
 
 #+name: doom-checkers
@@ -524,11 +524,12 @@ When I'm not working in org, I'm probably exporting it to latex. Lets adjust
 that a bit too
 #+name: latex
 #+begin_src emacs-lisp
-;;(package! org-fragtog)
+(package! org-fragtog)
 (package! aas :recipe (:host github :repo "ymarco/auto-activating-snippets"))
 (package! laas :recipe (:host github :repo "tecosaur/LaTeX-auto-activating-snippets"))
 (package! engrave-faces :recipe (:host github :repo "tecosaur/engrave-faces"))
-(package! org-fragtog)
+(package! maxima :recipe (:host gitlab :repo "sasanidas/maxima" :files ("*")))
+(package! calctex :recipe (:host github :repo "johnbcoughlin/calctex" :files ("*.el" "calctex/*.el" "calctex-contrib/*.el" "org-calctex/*.el" "vendor")))
 #+end_src
 
 **** Web:
@@ -771,10 +772,10 @@ emacs bootloaders
 ** Themes
 Right now I'm using nord, but I use doom-one-light sometimes
 #+begin_src elisp
-;;(setq doom-theme 'doom-one-light)
+(setq doom-theme 'doom-one-light)
 (setq doom-one-light-padded-modeline t)
-(setq doom-theme 'doom-nord)
-(setq doom-nord-padded-modeline t)
+;;(setq doom-theme 'doom-nord)
+;;(setq doom-nord-padded-modeline t)
 #+end_src
 
 ** Very large files
@@ -3876,8 +3877,17 @@ emacs overall. Back to LatexMK for me
 
 (after! org
     (add-to-list 'org-preview-latex-process-alist xdvsvgm)
+    (setq org-format-latex-options
+      (plist-put org-format-latex-options :scale 1.4))
     (setq org-preview-latex-default-process 'xdvsvgm))
 #+end_src
+
+Looks crisp!
+\begin{align*}
+  f(x) &= x^2\\
+  g(x) &= \frac{1}{x}\\
+  F(x) &= \int^a_b \frac{1}{3}x^3
+\end{align*}
 
 **** Compilation
 #+begin_src emacs-lisp
@@ -3952,9 +3962,9 @@ non-monospace and SFMono for code
         ("" "capt-of" nil)
         ("dvipsnames" "xcolor" nil)
         ("colorlinks=true, linkcolor=Blue, citecolor=BrickRed, urlcolor=PineGreen" "hyperref" nil)
-    ("" "indentfirst" nil)
-    "\\setmainfont[Ligatures=TeX]{Alegreya}"
-    "\\setmonofont[Ligatures=TeX]{Liga SFMono Nerd Font}"))
+    ("" "indentfirst" nil)))
+    ;; "\\setmainfont[Ligatures=TeX]{Alegreya}"
+    ;; "\\setmonofont[Ligatures=TeX]{Liga SFMono Nerd Font}"))
 #+end_src
 
 *** Pretty code blocks
@@ -4144,6 +4154,134 @@ Run export processes in a background ... process
 Annoying having to gate these, so let's fix that
 #+begin_src emacs-lisp
 (setq org-export-with-sub-superscripts '{})
+#+end_src
+
+** Calc
+Everybody knows that mathematical expressions look best with LaTeX, so =calc='s
+ability to create LaTeX representations of its expressions provides a lovely
+opportunity which is taken advantage of in the CalcTeX package.
+
+We'd like to use CalcTeX too, so let's set that up, and fix some glaring
+inadequacies --- why on earth would you commit a hard-coded path to an executable
+that /only works on your local machine/, consequently breaking the package for
+everyone else!?
+#+begin_src emacs-lisp
+(use-package! calctex
+  :commands calctex-mode
+  :init
+  (add-hook 'calc-mode-hook #'calctex-mode)
+  :config
+  (setq calctex-imagemagick-enabledp nil)
+  (setq calctex-additional-latex-packages "
+\\usepackage[usenames]{xcolor}
+\\usepackage{soul}
+\\usepackage{adjustbox}
+\\usepackage{amsmath}
+\\usepackage{amssymb}
+\\usepackage{siunitx}
+\\usepackage{cancel}
+\\usepackage{mathtools}
+\\usepackage{mathalpha}
+\\usepackage{xparse}
+\\usepackage{arevmath}"
+        calctex-additional-latex-macros
+        (concat calctex-additional-latex-macros
+                "\n\\let\\evalto\\Rightarrow"))
+  (defadvice! no-messaging-a (orig-fn &rest args)
+    :around #'calctex-default-dispatching-render-process
+    (let ((inhibit-message t) message-log-max)
+      (apply orig-fn args)))
+  ;; Fix hardcoded dvichop path (whyyyyyyy)
+  (let ((vendor-folder (concat (file-truename doom-local-dir)
+                               "straight/"
+                               (format "build-%s" emacs-version)
+                               "/calctex/vendor/")))
+    (setq calctex-dvichop-sty (concat vendor-folder "texd/dvichop")
+          calctex-dvichop-bin (concat vendor-folder "texd/dvichop")))
+  (unless (file-exists-p calctex-dvichop-bin)
+    (message "CalcTeX: Building dvichop binary")
+    (let ((default-directory (file-name-directory calctex-dvichop-bin)))
+      (call-process "make" nil nil nil))))
+#+end_src
+*** Embedded calc
+Embedded calc is a lovely feature which let's us use calc to operate on LaTeX
+maths expressions. The standard keybinding is a bit janky however (=C-x * e=), so
+we'll add a localleader-based alternative.
+
+#+begin_src emacs-lisp
+(map! :map calc-mode-map
+      :after calc
+      :localleader
+      :desc "Embedded calc (toggle)" "e" #'calc-embedded)
+(map! :map org-mode-map
+      :after org
+      :localleader
+      :desc "Embedded calc (toggle)" "E" #'calc-embedded)
+(map! :map latex-mode-map
+      :after latex
+      :localleader
+      :desc "Embedded calc (toggle)" "e" #'calc-embedded)
+#+end_src
+
+Unfortunately this operates without the (rather informative) calculator and
+trail buffers, but we can advice it that we would rather like those in a side
+panel.
+
+#+begin_src emacs-lisp
+(defvar calc-embedded-trail-window nil)
+(defvar calc-embedded-calculator-window nil)
+
+(defadvice! calc-embedded-with-side-pannel (&rest _)
+  :after #'calc-do-embedded
+  (when calc-embedded-trail-window
+    (ignore-errors
+      (delete-window calc-embedded-trail-window))
+    (setq calc-embedded-trail-window nil))
+  (when calc-embedded-calculator-window
+    (ignore-errors
+      (delete-window calc-embedded-calculator-window))
+    (setq calc-embedded-calculator-window nil))
+  (when (and calc-embedded-info
+             (> (* (window-width) (window-height)) 1200))
+    (let ((main-window (selected-window))
+          (vertical-p (> (window-width) 80)))
+      (select-window
+       (setq calc-embedded-trail-window
+             (if vertical-p
+                 (split-window-horizontally (- (max 30 (/ (window-width) 3))))
+               (split-window-vertically (- (max 8 (/ (window-height) 4)))))))
+      (switch-to-buffer "*Calc Trail*")
+      (select-window
+       (setq calc-embedded-calculator-window
+             (if vertical-p
+                 (split-window-vertically -6)
+               (split-window-horizontally (- (/ (window-width) 2))))))
+      (switch-to-buffer "*Calculator*")
+      (select-window main-window))))
+#+end_src
+
+*** Maxima
+Sometimes I need to calculate stuff past what emacs-calc can do. I also prefer
+a "regular" method entry of entry when not doing quick calculations, which RPN
+excels in.
+#+begin_src elisp
+(use-package maxima
+  :commands maxima
+  :init
+  (add-hook 'maxima-mode-hook #'maxima-hook-function)
+  (add-hook 'maxima-inferior-mode-hook #'maxima-hook-function)
+  (setq maxima-display-maxima-buffer nil)
+  :mode ("\\.mac\\'" . maxima-mode)
+  :interpreter ("maxima" . maxima-mode))
+#+end_src
+
+Along with that, we want to insert and render latex images within org-mode,
+using org-babel.
+#+begin_src elisp
+(after! org
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((maxima . t))))
 #+end_src
 
 * Mu4e
