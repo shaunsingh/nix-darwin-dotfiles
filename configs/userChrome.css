@@ -36,10 +36,6 @@
 /*
  *  Minimal theme
  */
-#navigator-toolbox {
-    font-family: 'Liga SFMono Nerd Font' !important;
-}
-
 #navigator-toolbox toolbarspring {
     display: none;
 }

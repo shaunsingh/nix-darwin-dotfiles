@@ -41,8 +41,8 @@ cat /etc/nix/nix.conf
 Clone the repo, build it, install it
 #+begin_src sh
 git clone --depth 1 https://github.com/shaunsingh/nix-darwin-dotfiles.git ~/nix-darwin-dotfiles
-nix build ~/nix-darwin-dotfiles\#darwinConfigurations.shaunsingh-laptop.system --impure
-~/nix-darwin-dotfiles/result/sw/bin/darwin-rebuild switch --flake .#shaunsingh-laptop --impure
+nix build ~/nix-darwin-dotfiles\#darwinConfigurations.shaunsingh-laptop.system
+~/nix-darwin-dotfiles/result/sw/bin/darwin-rebuild switch --flake .#shaunsingh-laptop
 #+end_src
 
 Currently I don't know how to do symlinks with nix, so you will have to

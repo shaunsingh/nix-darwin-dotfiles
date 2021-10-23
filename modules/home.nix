@@ -382,15 +382,13 @@
     '';
   };
   home-manager.users.shauryasingh.programs.firefox.enable = true;
-  # Handled by the Homebrew module
-  # This populates a dummy package to satsify the requirement
   home-manager.users.shauryasingh.programs.firefox.package = pkgs.runCommand "firefox-0.0.0" {} "mkdir $out";
   home-manager.users.shauryasingh.programs.firefox.profiles =
     let
       userChrome = builtins.readFile ../configs/userChrome.css;
       settings = {
         "app.update.auto" = false;
-        "browser.startup.homepage" = "https://lobste.rs";
+        "browser.startup.homepage" = "https://shaunsingh.github.io/startpage/";
         "browser.search.region" = "GB";
         "browser.search.countryCode" = "GB";
         "browser.search.isUS" = false;
