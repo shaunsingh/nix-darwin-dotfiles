@@ -23,8 +23,8 @@
        hl-todo                      ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
        ;;hydra                      ; quick documentation for related commands
        ;;indent-guides              ; highlighted indent columns, notoriously slow
-       ligatures                    ; ligatures and symbols to make your code pretty again
-       ;; +extra)                   ; for those who dislike letters
+       (ligatures                   ; ligatures and symbols to make your code pretty again
+        +extra)                     ; for those who dislike letters
        minimap                      ; show a map of the code on the side
        (modeline                    ; snazzy, Atom-inspired modeline, plus API
         +light)                     ; the doom modeline is a bit much, the default is a bit little
@@ -39,7 +39,7 @@
        treemacs                     ; a project drawer, like neotree but cooler
        ;;tree-sitter                ; ... sitting in a tree
        ;;unicode                    ; extended unicode support for various languages
-       ;;vc-gutter                  ; vcs diff in the fringe
+       vc-gutter                    ; vcs diff in the fringe
        ;;vi-tilde-fringe            ; fringe tildes to mark beyond EOB
        ;;(window-select +numbers)   ; visually switch windows
        workspaces                   ; tab emulation, persistence & separate workspaces
@@ -82,22 +82,22 @@
        ;;debugger                   ; FIXME stepping through code, to help you add bugs
        ;;direnv                     ; be direct about your environment
        ;;docker                     ; port everything to containers
-       ;;editorconfig               ; let someone else argue about tabs vs spaces
+       editorconfig                 ; let someone else argue about tabs vs spaces
        ;;ein                        ; tame Jupyter notebooks with emacs
-       ;;(eval +overlay)            ; run code, run (also, repls)
+       (eval +overlay)              ; run code, run (also, repls)
        ;;gist                       ; interacting with github gists
        (lookup                      ; helps you navigate your code and documentation
         +dictionary                 ; dictionary/thesaurus is nice
         +docsets)                   ; ...or in Dash docsets locally
        lsp                          ; Language Server Protocol
-       ;;macos                      ; MacOS-specific commands
+       (:if IS-MAC macos)           ; MacOS-specific commands
        (magit                       ; a git porcelain for Emacs
         +forge)                     ; interface with git forges
        ;;make                       ; run make tasks from Emacs
        ;;pass                       ; password manager for nerds
-       ;;pdf                        ; pdf enhancements
+       pdf                          ; pdf enhancements
        ;;prodigy                    ; FIXME managing external services & code builders
-       ;;rgb                        ; creating color strings
+       rgb                          ; creating color strings
        ;;taskrunner                 ; taskrunner for all your projects
        ;;terraform                  ; infrastructure as code
        ;;tmux                       ; an API for interacting with tmux
@@ -145,8 +145,8 @@
        ;;lean                       ; proof that mathematicians need help
        ;;factor                     ; for when scripts are stacked against you
        ;;ledger                     ; an accounting system in Emacs
-       ;;(lua +lsp)                 ; one-based indices? one-based indices
-       ;;markdown                   ; writing docs for people to ignore
+       (lua +lsp)                   ; one-based indices? one-based indices
+       (markdown +grip)             ; writing docs for people to ignore
        ;;nim                        ; python + lisp at the speed of c
        nix                          ; I hereby declare "nix geht mehr!"
        ;;ocaml                      ; an objective camel
@@ -171,10 +171,10 @@
        ;;rest                       ; Emacs as a REST client
        ;;rst                        ; ReST in peace
        ;;(ruby +rails)              ; 1.step {|i| p "Ruby is #{i.even? ? 'love' : 'life'}"}
-       ;;(rust +lsp)                ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
+       (rust +lsp)                  ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
        ;;scala                      ; java, but good
        ;;scheme                     ; a fully conniving family of lisps
-       ;;sh                         ; she sells {ba,z,fi}sh shells on the C xor
+       sh                           ; she sells {ba,z,fi}sh shells on the C xor
        ;;sml                        ; no, the /other/ ML
        ;;solidity                   ; do you need a blockchain? No.
        ;;swift                      ; who asked for emoji variables?
@@ -189,11 +189,11 @@
        ;;(wanderlust +gmail)
 
        :app
-       ;;calendar                   ; A dated approach to timetabling
+       calendar                     ; A dated approach to timetabling
        ;;emms                       ; Multimedia in Emacs is music to my ears
        ;;everywhere                 ; *leave* Emacs!? You must be joking.
-       ;;irc                          ; how neckbeards socialize
-       ;;(rss +org)                   ; emacs as an RSS reader
+       irc                          ; how neckbeards socialize
+       (rss +org)                   ; emacs as an RSS reader
        ;;twitter                    ; twitter client https://twitter.com/vnought
 
        :config
