@@ -80,18 +80,17 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 (set-char-table-range composition-function-table ?f '(["\\(?:ff?[fijlt]\\)" 0 font-shape-gstring]))
 (set-char-table-range composition-function-table ?T '(["\\(?:Th\\)" 0 font-shape-gstring]))
 
-(after! org
+(after! ox-latex
 (defvar org-latex-default-fontset 'alegreya
   "Fontset from `org-latex-fontsets' to use by default.
 As cm (computer modern) is TeX's default, that causes nothing
 to be added to the document.
 
 If \"nil\" no custom fonts will ever be used.")
-
 (eval '(cl-pushnew '(:latex-font-set nil "fontset" org-latex-default-fontset)
                    (org-export-backend-options (org-export-get-backend 'latex)))))
 
-(after! org
+(after! ox-latex
 (defun org-latex-fontset-entry ()
   "Get the fontset spec of the current file.
 Has format \"name\" or \"name-style\" where 'name' is one of
@@ -128,12 +127,12 @@ the cars in `org-latex-fontsets'."
              (:mono "\\renewcommand{\\familydefault}{\\ttdefault}\n"))))
       (error "Font-set %s is not provided in org-latex-fontsets" (car fontset-spec))))))
 
-(after! org
+(after! ox-latex
 (add-to-list 'org-latex-conditional-features '(org-latex-default-fontset . custom-font) t)
 (add-to-list 'org-latex-feature-implementations '(custom-font :snippet (org-latex-fontset :serif :sans :mono) :order 0) t)
 (add-to-list 'org-latex-feature-implementations '(.custom-maths-font :eager t :when (custom-font maths) :snippet (org-latex-fontset :maths) :order 0.3) t))
 
-(after! org
+(after! ox-latex
 (defvar org-latex-fontsets
   '((cm nil) ; computer modern
     (## nil) ; no font set
@@ -182,7 +181,7 @@ Each car is the name of the fontset (which cannot include \"-\").
 Each cdr is a plist with (optional) keys :serif, :sans, :mono, and :maths.
 A key's value is a LaTeX snippet which loads such a font."))
 
-(after! org
+(after! ox-latex
 (add-to-list 'org-latex-conditional-features '((string= (car (org-latex-fontset-entry)) "alegreya") . alegreya-typeface))
 (add-to-list 'org-latex-feature-implementations '(alegreya-typeface) t)
 (add-to-list 'org-latex-feature-implementations'(.alegreya-tabular-figures :eager t :when (alegreya-typeface table) :order 0.5 :snippet "
@@ -191,7 +190,7 @@ A key's value is a LaTeX snippet which loads such a font."))
 \\renewcommand{\\tabular}{\\AlegreyaTLF\\let\\@halignto\\@empty\\@tabular}
 \\makeatother\n") t))
 
-(after! org
+(after! ox-latex
 (add-to-list 'org-latex-conditional-features '("LaTeX" . latex-symbol))
 (add-to-list 'org-latex-feature-implementations '(latex-symbol :when alegreya-typeface :order 0.5 :snippet "
 \\makeatletter
@@ -241,7 +240,9 @@ A key's value is a LaTeX snippet which loads such a font."))
 (setq doom-theme 'doom-one-light)
 (setq doom-one-light-padded-modeline t)
 ;;(setq doom-theme 'doom-nord)
-;;(setq doom-nord-padded-modeline t)
+(setq doom-nord-padded-modeline t)
+;;(setq doom-theme 'doom-vibrant)
+(setq doom-vibrant-padded-modeline t)
 
 ;;(use-package! vlf-setup
   ;;:defer-incrementally vlf-tune vlf-base vlf-write vlf-search vlf-occur vlf-follow vlf-ediff vlf)
@@ -414,6 +415,14 @@ Return nil otherwise."
         lsp-ui-peek-enable t
         lsp-ui-peek-fontify 'on-demand
         lsp-enable-symbol-highlighting nil))
+
+(after! lsp-rust
+  (setq lsp-rust-server 'rust-analyzer
+  lsp-rust-analyzer-display-chaining-hints t
+  lsp-rust-analyzer-display-parameter-hints t
+  lsp-rust-analyzer-server-display-inlay-hints t
+  lsp-rust-analyzer-cargo-watch-command "clippy"
+  rustic-format-on-save t))
 
 (setq undo-limit 80000000                          ;I mess up too much
       evil-want-fine-undo t                        ;By default while in insert all changes are one big blob. Be more granular
@@ -1332,7 +1341,7 @@ Must be run as part of `org-font-lock-set-keywords-hook'."
 (use-package! ox-gfm
   :after org)
 
-(after! org
+(after! ox-html
   (define-minor-mode org-fancy-html-export-mode
   "Toggle my fabulous org export tweaks. While this mode itself does a little bit,
 the vast majority of the change in behaviour comes from switch statements in:
@@ -3176,20 +3185,6 @@ This is done according to `org-latex-feature-implementations'"
                (split-window-horizontally (- (/ (window-width) 2))))))
       (switch-to-buffer "*Calculator*")
       (select-window main-window))))
-
-(use-package maxima
-  :commands maxima
-  :init
-  (add-hook 'maxima-mode-hook #'maxima-hook-function)
-  (add-hook 'maxima-inferior-mode-hook #'maxima-hook-function)
-  (setq maxima-display-maxima-buffer nil)
-  :mode ("\\.mac\\'" . maxima-mode)
-  :interpreter ("maxima" . maxima-mode))
-
-(after! org
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((maxima . t))))
 
 (setq mu4e-update-interval 300)
 

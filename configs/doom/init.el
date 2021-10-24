@@ -90,9 +90,9 @@
         +dictionary                 ; dictionary/thesaurus is nice
         +docsets)                   ; ...or in Dash docsets locally
        lsp                          ; Language Server Protocol
-       (:if IS-MAC macos)           ; MacOS-specific commands
-       (magit                       ; a git porcelain for Emacs
-        +forge)                     ; interface with git forges
+       ;;(:if IS-MAC macos)         ; MacOS-specific commands
+       magit                        ; a git porcelain for Emacs
+        ;;+forge)                   ; interface with git forges
        ;;make                       ; run make tasks from Emacs
        ;;pass                       ; password manager for nerds
        pdf                          ; pdf enhancements

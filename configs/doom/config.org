@@ -341,9 +341,9 @@ editorconfig                 ; let someone else argue about tabs vs spaces
  +dictionary                 ; dictionary/thesaurus is nice
  +docsets)                   ; ...or in Dash docsets locally
 lsp                          ; Language Server Protocol
-(:if IS-MAC macos)           ; MacOS-specific commands
-(magit                       ; a git porcelain for Emacs
- +forge)                     ; interface with git forges
+;;(:if IS-MAC macos)         ; MacOS-specific commands
+magit                        ; a git porcelain for Emacs
+ ;;+forge)                   ; interface with git forges
 ;;make                       ; run make tasks from Emacs
 ;;pass                       ; password manager for nerds
 pdf                          ; pdf enhancements
@@ -525,7 +525,6 @@ that a bit too
 (package! aas :recipe (:host github :repo "ymarco/auto-activating-snippets"))
 (package! laas :recipe (:host github :repo "tecosaur/LaTeX-auto-activating-snippets"))
 (package! engrave-faces :recipe (:host github :repo "tecosaur/engrave-faces"))
-;;(package! maxima :recipe (:host gitlab :repo "sasanidas/maxima" :files ("*")))
 (package! calctex :recipe (:host github :repo "johnbcoughlin/calctex" :files ("*.el" "calctex/*.el" "calctex-contrib/*.el" "org-calctex/*.el" "vendor")))
 #+end_src
 
@@ -736,14 +735,13 @@ To start with I'll create a default state variable and register =fontset= as par
 of =#+options=.
 
 #+begin_src emacs-lisp
-(after! org
+(after! ox-latex
 (defvar org-latex-default-fontset 'alegreya
   "Fontset from `org-latex-fontsets' to use by default.
 As cm (computer modern) is TeX's default, that causes nothing
 to be added to the document.
 
 If \"nil\" no custom fonts will ever be used.")
-
 (eval '(cl-pushnew '(:latex-font-set nil "fontset" org-latex-default-fontset)
                    (org-export-backend-options (org-export-get-backend 'latex)))))
 #+end_src
@@ -758,7 +756,7 @@ don't let any fontset names have =-= in them, I can use =-sans= and =-mono= as
 suffixes that specify the document font to use.
 
 #+begin_src emacs-lisp
-(after! org
+(after! ox-latex
 (defun org-latex-fontset-entry ()
   "Get the fontset spec of the current file.
 Has format \"name\" or \"name-style\" where 'name' is one of
@@ -800,7 +798,7 @@ Now that all the functionality has been implemented, we should hook it into our
 preamble generation.
 
 #+begin_src emacs-lisp
-(after! org
+(after! ox-latex
 (add-to-list 'org-latex-conditional-features '(org-latex-default-fontset . custom-font) t)
 (add-to-list 'org-latex-feature-implementations '(custom-font :snippet (org-latex-fontset :serif :sans :mono) :order 0) t)
 (add-to-list 'org-latex-feature-implementations '(.custom-maths-font :eager t :when (custom-font maths) :snippet (org-latex-fontset :maths) :order 0.3) t))
@@ -809,7 +807,7 @@ preamble generation.
 Finally, we just need to add some fonts.
 
 #+begin_src emacs-lisp
-(after! org
+(after! ox-latex
 (defvar org-latex-fontsets
   '((cm nil) ; computer modern
     (## nil) ; no font set
@@ -863,7 +861,7 @@ When we're using Alegreya we can apply a lovely little tweak to =tabular= which
 (locally) changes the figures used to lining fixed-width.
 
 #+begin_src emacs-lisp
-(after! org
+(after! ox-latex
 (add-to-list 'org-latex-conditional-features '((string= (car (org-latex-fontset-entry)) "alegreya") . alegreya-typeface))
 (add-to-list 'org-latex-feature-implementations '(alegreya-typeface) t)
 (add-to-list 'org-latex-feature-implementations'(.alegreya-tabular-figures :eager t :when (alegreya-typeface table) :order 0.5 :snippet "
@@ -877,7 +875,7 @@ Due to the Alegreya's metrics, the =\LaTeX= symbol doesn't quite look right. We
 can correct for this by redefining it with subtlety shifted kerning.
 
 #+begin_src emacs-lisp
-(after! org
+(after! ox-latex
 (add-to-list 'org-latex-conditional-features '("LaTeX" . latex-symbol))
 (add-to-list 'org-latex-feature-implementations '(latex-symbol :when alegreya-typeface :order 0.5 :snippet "
 \\makeatletter
@@ -934,12 +932,14 @@ emacs bootloaders
 #+end_src
 
 ** Themes
-Right now I'm using nord, but I use doom-one-light sometimes
+Right now I'm using vibrant, but I use doom-nord sometimes
 #+begin_src elisp
 (setq doom-theme 'doom-one-light)
 (setq doom-one-light-padded-modeline t)
 ;;(setq doom-theme 'doom-nord)
-;;(setq doom-nord-padded-modeline t)
+(setq doom-nord-padded-modeline t)
+;;(setq doom-theme 'doom-vibrant)
+(setq doom-vibrant-padded-modeline t)
 #+end_src
 
 ** Very large files
@@ -1154,6 +1154,17 @@ I think the LSP is a bit intrusive (especially with inline suggestions), so lets
         lsp-ui-peek-enable t
         lsp-ui-peek-fontify 'on-demand
         lsp-enable-symbol-highlighting nil))
+#+end_src
+
+The rust language server also has some extra features I would like to enable
+#+begin_src elisp
+(after! lsp-rust
+  (setq lsp-rust-server 'rust-analyzer
+  lsp-rust-analyzer-display-chaining-hints t
+  lsp-rust-analyzer-display-parameter-hints t
+  lsp-rust-analyzer-server-display-inlay-hints t
+  lsp-rust-analyzer-cargo-watch-command "clippy"
+  rustic-format-on-save t))
 #+end_src
 
 ** Better Defaults
@@ -2292,7 +2303,7 @@ org-ol-tree is nice for viewing the structure of an org file
 :END:
 For some reason this only works if you have org first
 #+begin_src elisp
-(after! org
+(after! ox-html
   (define-minor-mode org-fancy-html-export-mode
   "Toggle my fabulous org export tweaks. While this mode itself does a little bit,
 the vast majority of the change in behaviour comes from switch statements in:
@@ -4351,30 +4362,6 @@ panel.
                (split-window-horizontally (- (/ (window-width) 2))))))
       (switch-to-buffer "*Calculator*")
       (select-window main-window))))
-#+end_src
-
-*** Maxima
-Sometimes I need to calculate stuff past what emacs-calc can do. I also prefer
-a "regular" method entry of entry when not doing quick calculations, which RPN
-excels in.
-#+begin_src elisp
-(use-package maxima
-  :commands maxima
-  :init
-  (add-hook 'maxima-mode-hook #'maxima-hook-function)
-  (add-hook 'maxima-inferior-mode-hook #'maxima-hook-function)
-  (setq maxima-display-maxima-buffer nil)
-  :mode ("\\.mac\\'" . maxima-mode)
-  :interpreter ("maxima" . maxima-mode))
-#+end_src
-
-Along with that, we want to insert and render latex images within org-mode,
-using org-babel.
-#+begin_src elisp
-(after! org
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((maxima . t))))
 #+end_src
 
 * Mu4e
