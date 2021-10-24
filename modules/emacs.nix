@@ -1,4 +1,4 @@
-{ pkgs, lib, config, ... }: {
+{ pkgs, config, ... }: {
   system.activationScripts.postUserActivation.text = ''
     # Clone to $XDG_CONFIG_HOME because Emacs expects this location.
     if [[ ! -d "~/.config/emacs" ]]; then
@@ -53,10 +53,10 @@
   #   ''}";
   # };
   home-manager.users.shauryasingh.home.packages = with pkgs; [
+    (ripgrep.override { withPCRE2 = true; })
     gnutls
     gnuplot
     sqlite
-    maxima-ecl
     (aspellWithDicts (dicts: with dicts; [ en en-computers en-science ]))
     (texlive.combine {
       inherit (texlive)
@@ -67,5 +67,18 @@
     })
     sdcv
     emacs
+
+    # Language stuff
+    python39Packages.grip
+    python39Packages.pyflakes
+    python39Packages.isort
+    python39Packages.pytest
+    nodePackages.pyright
+    pipenv
+    nixfmt
+    black
+    rust-analyzer
+    rustup
+    shellcheck
   ];
 }

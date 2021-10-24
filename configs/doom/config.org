@@ -1,3 +1,6 @@
+:PROPERTIES:
+:ID:       c7d3a762-4717-4f5c-9836-ad2d5dec73a9
+:END:
 #+title: Doom Emacs Configuration
 #+author: Shaurya Singh
 #+latex_header: \let\textls\relax

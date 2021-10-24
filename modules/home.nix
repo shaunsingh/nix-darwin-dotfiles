@@ -569,7 +569,6 @@
     config = { theme = "Nord"; };
   };
   home-manager.users.shauryasingh.home.packages = with pkgs; [
-    (ripgrep.override { withPCRE2 = true; })
     wget
     exa
     tree
@@ -577,7 +576,7 @@
     sd
     discocss
     neovim
-    ## neovide
+    # neovide
   ];
   programs.fish.interactiveShellInit = ''
     set -g fish_greeting ""
