@@ -7,7 +7,7 @@
   '';
   fonts = {
     enableFontDir = true;
-    fonts = with pkgs; [ alegreya overpass ];
+    fonts = with pkgs; [ alegreya overpass alegreya-sans ibm-plex ];
   };
   services.emacs = {
     enable = true;
@@ -62,7 +62,8 @@
       inherit (texlive)
         scheme-small dvipng dvisvgm l3packages xcolor soul adjustbox collectbox
         amsmath siunitx cancel mathalpha capt-of chemfig wrapfig mhchem fvextra
-        cleveref latexmk tcolorbox environ arev amsfonts simplekv;
+        cleveref latexmk tcolorbox environ arev amsfonts simplekv alegreya
+        sourcecodepro newpx;
     })
     sdcv
     emacs

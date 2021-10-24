@@ -268,7 +268,8 @@ doom-quit                    ; DOOM quit-message prompts when you quit Emacs
 hl-todo                      ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
 ;;hydra                      ; quick documentation for related commands
 ;;indent-guides              ; highlighted indent columns, notoriously slow
-(ligatures +extra)           ; ligatures and symbols to make your code pretty again
+ligatures                    ; ligatures and symbols to make your code pretty again
+;; +extra)                   ; for those who dislike letters
 minimap                      ; show a map of the code on the side
 (modeline                    ; snazzy, Atom-inspired modeline, plus API
  +light)                     ; the doom modeline is a bit much, the default is a bit little
@@ -283,7 +284,7 @@ ophints                      ; highlight the region an operation acts on
 treemacs                     ; a project drawer, like neotree but cooler
 ;;tree-sitter                ; ... sitting in a tree
 ;;unicode                    ; extended unicode support for various languages
-vc-gutter                    ; vcs diff in the fringe
+;;vc-gutter                  ; vcs diff in the fringe
 ;;vi-tilde-fringe            ; fringe tildes to mark beyond EOB
 ;;(window-select +numbers)   ; visually switch windows
 workspaces                   ; tab emulation, persistence & separate workspaces
@@ -317,7 +318,7 @@ vc                           ; version-control and Emacs, sitting in a tree
 
 #+name: doom-term
 #+begin_src emacs-lisp
-eshell                       ; the elisp shell that works everywhere
+;;eshell                     ; the elisp shell that works everywhere
 ;;shell                      ; simple shell REPL for Emacs
 ;;term                       ; basic terminal emulator for Emacs
 vterm                        ; the best terminal emulation in Emacs
@@ -349,7 +350,7 @@ lsp                          ; Language Server Protocol
  +forge)                     ; interface with git forges
 ;;make                       ; run make tasks from Emacs
 ;;pass                       ; password manager for nerds
-pdf                          ; pdf enhancements
+;;pdf                        ; pdf enhancements
 ;;prodigy                    ; FIXME managing external services & code builders
 ;;rgb                        ; creating color strings
 ;;taskrunner                 ; taskrunner for all your projects
@@ -396,7 +397,7 @@ emacs-lisp                   ; drown in parentheses
 ;;hy                         ; readability of scheme w/ speed of python
 ;;idris                      ;
 ;;json                       ; At least it ain't XML
-(java +lsp)                  ; the poster child for carpal tunnel syndrome
+;;(java +lsp)                ; the poster child for carpal tunnel syndrome
 ;;(javascript +lsp)          ; all(hope(abandon(ye(who(enter(here))))))
 ;;(julia +lsp)               ; Python, R, and MATLAB in a blender
 ;;(kotlin +lsp)              ; a better, slicker Java(Script)
@@ -528,7 +529,7 @@ that a bit too
 (package! aas :recipe (:host github :repo "ymarco/auto-activating-snippets"))
 (package! laas :recipe (:host github :repo "tecosaur/LaTeX-auto-activating-snippets"))
 (package! engrave-faces :recipe (:host github :repo "tecosaur/engrave-faces"))
-(package! maxima :recipe (:host gitlab :repo "sasanidas/maxima" :files ("*")))
+;;(package! maxima :recipe (:host gitlab :repo "sasanidas/maxima" :files ("*")))
 (package! calctex :recipe (:host github :repo "johnbcoughlin/calctex" :files ("*.el" "calctex/*.el" "calctex-contrib/*.el" "org-calctex/*.el" "vendor")))
 #+end_src
 
@@ -725,10 +726,177 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 
 Harfbuzz is missing the beautiful ff ffi ffj ffl fft fi fj ft Th ligatures,
 lets add those back in with the help of composition-function-table
-
 #+begin_src elisp
 (set-char-table-range composition-function-table ?f '(["\\(?:ff?[fijlt]\\)" 0 font-shape-gstring]))
 (set-char-table-range composition-function-table ?T '(["\\(?:Th\\)" 0 font-shape-gstring]))
+#+end_src
+
+*** Font collections
+Using the lovely conditional preamble, I'll define a number of font collections
+that can be used for LaTeX exports. Who knows, maybe I'll use it with other
+export formats too at some point.
+
+To start with I'll create a default state variable and register =fontset= as part
+of =#+options=.
+
+#+begin_src emacs-lisp
+(after! org
+(defvar org-latex-default-fontset 'alegreya
+  "Fontset from `org-latex-fontsets' to use by default.
+As cm (computer modern) is TeX's default, that causes nothing
+to be added to the document.
+
+If \"nil\" no custom fonts will ever be used.")
+
+(eval '(cl-pushnew '(:latex-font-set nil "fontset" org-latex-default-fontset)
+                   (org-export-backend-options (org-export-get-backend 'latex)))))
+#+end_src
+
+Then a function is needed to generate a LaTeX snippet which applies the fontset. It
+would be nice if this could be done for individual styles and use different
+styles as the main document font. If the individual typefaces for a fontset are
+defined individually as
+src_elisp{:serif}, src_elisp{:sans}, src_elisp{:mono}, and src_elisp{:maths}.
+I can use those to generate LaTeX for subsets of the full fontset. Then, if I
+don't let any fontset names have =-= in them, I can use =-sans= and =-mono= as
+suffixes that specify the document font to use.
+
+#+begin_src emacs-lisp
+(after! org
+(defun org-latex-fontset-entry ()
+  "Get the fontset spec of the current file.
+Has format \"name\" or \"name-style\" where 'name' is one of
+the cars in `org-latex-fontsets'."
+  (let ((fontset-spec
+         (symbol-name
+          (or (car (delq nil
+                         (mapcar
+                          (lambda (opt-line)
+                            (plist-get (org-export--parse-option-keyword opt-line 'latex)
+                                       :latex-font-set))
+                          (cdar (org-collect-keywords '("OPTIONS"))))))
+              org-latex-default-fontset))))
+    (cons (intern (car (split-string fontset-spec "-")))
+          (when (cadr (split-string fontset-spec "-"))
+            (intern (concat ":" (cadr (split-string fontset-spec "-"))))))))
+
+(defun org-latex-fontset (&rest desired-styles)
+  "Generate a LaTeX preamble snippet which applies the current fontset for DESIRED-STYLES."
+  (let* ((fontset-spec (org-latex-fontset-entry))
+         (fontset (alist-get (car fontset-spec) org-latex-fontsets)))
+    (if fontset
+        (concat
+         (mapconcat
+          (lambda (style)
+            (when (plist-get fontset style)
+              (concat (plist-get fontset style) "\n")))
+          desired-styles
+          "")
+         (when (memq (cdr fontset-spec) desired-styles)
+           (pcase (cdr fontset-spec)
+             (:serif "\\renewcommand{\\familydefault}{\\rmdefault}\n")
+             (:sans "\\renewcommand{\\familydefault}{\\sfdefault}\n")
+             (:mono "\\renewcommand{\\familydefault}{\\ttdefault}\n"))))
+      (error "Font-set %s is not provided in org-latex-fontsets" (car fontset-spec))))))
+#+end_src
+
+Now that all the functionality has been implemented, we should hook it into our
+preamble generation.
+
+#+begin_src emacs-lisp
+(after! org
+(add-to-list 'org-latex-conditional-features '(org-latex-default-fontset . custom-font) t)
+(add-to-list 'org-latex-feature-implementations '(custom-font :snippet (org-latex-fontset :serif :sans :mono) :order 0) t)
+(add-to-list 'org-latex-feature-implementations '(.custom-maths-font :eager t :when (custom-font maths) :snippet (org-latex-fontset :maths) :order 0.3) t))
+#+end_src
+
+Finally, we just need to add some fonts.
+
+#+begin_src emacs-lisp
+(after! org
+(defvar org-latex-fontsets
+  '((cm nil) ; computer modern
+    (## nil) ; no font set
+    (alegreya
+     :serif "\\usepackage[osf]{Alegreya}"
+     :sans "\\usepackage{AlegreyaSans}"
+     :mono "\\usepackage[scale=0.88]{sourcecodepro}"
+     :maths "\\usepackage[varbb]{newpxmath}")
+    (biolinum
+     :serif "\\usepackage[osf]{libertineRoman}"
+     :sans "\\usepackage[sfdefault,osf]{biolinum}"
+     :mono "\\usepackage[scale=0.88]{sourcecodepro}"
+     :maths "\\usepackage[libertine,varvw]{newtxmath}")
+    (fira
+     :sans "\\usepackage[sfdefault,scale=0.85]{FiraSans}"
+     :mono "\\usepackage[scale=0.80]{FiraMono}"
+     :maths "\\usepackage{newtxsf} % change to firamath in future?")
+    (kp
+     :serif "\\usepackage{kpfonts}")
+    (newpx
+     :serif "\\usepackage{newpxtext}"
+     :sans "\\usepackage{gillius}"
+     :mono "\\usepackage[scale=0.9]{sourcecodepro}"
+     :maths "\\usepackage[varbb]{newpxmath}")
+    (noto
+     :serif "\\usepackage[osf]{noto-serif}"
+     :sans "\\usepackage[osf]{noto-sans}"
+     :mono "\\usepackage[scale=0.96]{noto-mono}"
+     :maths "\\usepackage{notomath}")
+    (plex
+     :serif "\\usepackage{plex-serif}"
+     :sans "\\usepackage{plex-sans}"
+     :mono "\\usepackage[scale=0.95]{plex-mono}"
+     :maths "\\usepackage{newtxmath}") ; may be plex-based in future
+    (source
+     :serif "\\usepackage[osf]{sourceserifpro}"
+     :sans "\\usepackage[osf]{sourcesanspro}"
+     :mono "\\usepackage[scale=0.95]{sourcecodepro}"
+     :maths "\\usepackage{newtxmath}") ; may be sourceserifpro-based in future
+    (times
+     :serif "\\usepackage{newtxtext}"
+     :maths "\\usepackage{newtxmath}"))
+  "Alist of fontset specifications.
+Each car is the name of the fontset (which cannot include \"-\").
+
+Each cdr is a plist with (optional) keys :serif, :sans, :mono, and :maths.
+A key's value is a LaTeX snippet which loads such a font."))
+#+end_src
+
+When we're using Alegreya we can apply a lovely little tweak to =tabular= which
+(locally) changes the figures used to lining fixed-width.
+
+#+begin_src emacs-lisp
+(after! org
+(add-to-list 'org-latex-conditional-features '((string= (car (org-latex-fontset-entry)) "alegreya") . alegreya-typeface))
+(add-to-list 'org-latex-feature-implementations '(alegreya-typeface) t)
+(add-to-list 'org-latex-feature-implementations'(.alegreya-tabular-figures :eager t :when (alegreya-typeface table) :order 0.5 :snippet "
+\\makeatletter
+% tabular lining figures in tables
+\\renewcommand{\\tabular}{\\AlegreyaTLF\\let\\@halignto\\@empty\\@tabular}
+\\makeatother\n") t))
+#+end_src
+
+Due to the Alegreya's metrics, the =\LaTeX= symbol doesn't quite look right. We
+can correct for this by redefining it with subtlety shifted kerning.
+
+#+begin_src emacs-lisp
+(after! org
+(add-to-list 'org-latex-conditional-features '("LaTeX" . latex-symbol))
+(add-to-list 'org-latex-feature-implementations '(latex-symbol :when alegreya-typeface :order 0.5 :snippet "
+\\makeatletter
+% Kerning around the A needs adjusting
+\\DeclareRobustCommand{\\LaTeX}{L\\kern-.24em%
+        {\\sbox\\z@ T%
+         \\vbox to\\ht\\z@{\\hbox{\\check@mathfonts
+                              \\fontsize\\sf@size\\z@
+                              \\math@fontsfalse\\selectfont
+                              A}%
+                        \\vss}%
+        }%
+        \\kern-.10em%
+        \\TeX}
+\\makeatother\n") t))
 #+end_src
 
 Just in case the fonts aren't there, lets add check to notify the user of the
@@ -1126,56 +1294,12 @@ Typewriter go br
 
 * Visual configuration
 ** Modeline
-Tecosaurs PDF improvements:
-#+begin_src elisp
-(after! doom-modeline
-  (doom-modeline-def-segment buffer-name
-    "Display the current buffer's name, without any other information."
-    (concat
-     (doom-modeline-spc)
-     (doom-modeline--buffer-name)))
-
-  (doom-modeline-def-segment pdf-icon
-    "PDF icon from all-the-icons."
-    (concat
-     (doom-modeline-spc)
-     (doom-modeline-icon 'octicon "file-pdf" nil nil
-                         :face (if (doom-modeline--active)
-                                   'all-the-icons-red
-                                 'mode-line-inactive)
-                         :v-adjust 0.02)))
-
-  (defun doom-modeline-update-pdf-pages ()
-    "Update PDF pages."
-    (setq doom-modeline--pdf-pages
-          (let ((current-page-str (number-to-string (eval `(pdf-view-current-page))))
-                (total-page-str (number-to-string (pdf-cache-number-of-pages))))
-            (concat
-             (propertize
-              (concat (make-string (- (length total-page-str) (length current-page-str)) ? )
-                      " P" current-page-str)
-              'face 'mode-line)
-             (propertize (concat "/" total-page-str) 'face 'doom-modeline-buffer-minor-mode)))))
-
-  (doom-modeline-def-segment pdf-pages
-    "Display PDF pages."
-    (if (doom-modeline--active) doom-modeline--pdf-pages
-      (propertize doom-modeline--pdf-pages 'face 'mode-line-inactive)))
-
-  (doom-modeline-def-modeline 'pdf
-    '(bar window-number pdf-pages pdf-icon buffer-name)
-    '(misc-info matches major-mode process vcs)))
-#+end_src
-
 Doom modeline already looks good, but it can be better. Lets add some icons, the battery status, and make sure we don't lose track of time
 #+begin_src elisp
 (after! doom-modeline
   (display-time-mode 1)                              ;Enable time in the mode-line
   (display-battery-mode 1)                           ;display the battery
-  (setq doom-modeline-major-mode-icon t              ;Show major mode name
-        doom-modeline-enable-word-count t            ;Show word count
-        doom-modeline-modal-icon t                   ;Show vim mode icon
-        inhibit-compacting-font-caches t))           ;Don't compact font caches in gc
+  (setq doom-modeline-enable-word-count t))          ;Show word count
 #+end_src
 
 The encoding is always UTF-8, so its a bit redundant. Lets take that out
@@ -1598,7 +1722,7 @@ We can then have quote blocks stand out a bit more by making them /italic/.
 #+end_src
 
 Org files can be rather nice to look at, particularly with some of the
-customisations here. This comes at a cost however, expensive font-lock.
+customizations here. This comes at a cost however, expensive font-lock.
 Feeling like you're typing through molasses in large files is no fun, but there
 is a way I can defer font-locking when typing to make the experience more
 responsive.
@@ -2111,11 +2235,6 @@ Some hooks are a bit annoying, so lets make them shut up
   (ignore-errors (apply orig-fn args)))
 #+end_src
 
-I prefer to preview my images
-#+begin_src elisp
-(setq org-startup-with-inline-images t)
-#+end_src
-
 Lets add org pretty table as well
 #+begin_src elisp
 (use-package! org-pretty-table
@@ -2151,29 +2270,9 @@ I want to slightly change the default args for babel
         (:comments . "link")))
 #+end_src
 
-Add auto-fill-mode too
-#+begin_src elisp
-(add-hook 'text-mode-hook #'auto-fill-mode)
-#+end_src
-
-Lastly, some nice maps for org-mode, using g + arrows to move up/down headings
-#+begin_src elisp
-(map! :map evil-org-mode-map
-      :after evil-org
-      :n "g <up>" #'org-backward-heading-same-level
-      :n "g <down>" #'org-forward-heading-same-level
-      :n "g <left>" #'org-up-element
-      :n "g <right>" #'org-down-element)
-#+end_src
-
 I also want to change the order of bullets
 #+begin_src elisp
 (setq org-list-demote-modify-bullet '(("+" . "-") ("-" . "+") ("*" . "+") ("1." . "a.")))
-#+end_src
-
-Lets add some spellcheck
-#+begin_src elisp
-(add-hook 'org-mode-hook 'turn-on-flyspell)
 #+end_src
 
 org-ol-tree is nice for viewing the structure of an org file
@@ -2946,7 +3045,6 @@ no modeline.
 
 #+begin_src emacs-lisp
 (setf (alist-get 'height +org-capture-frame-parameters) 15)
-;; (alist-get 'name +org-capture-frame-parameters) "❖ Capture") ;; ATM hardcoded in other places, so changing breaks stuff
 (setq +org-capture-fn
       (lambda ()
         (interactive)
@@ -3402,51 +3500,50 @@ SQL can be either the emacsql vector representation, or a string."
 Now to just have this register with org
 #+begin_src emacs-lisp
 (after! org
-	(org-link-set-parameters "xkcd"
-	                         :image-data-fun #'+org-xkcd-image-fn
-	                         :follow #'+org-xkcd-open-fn
-	                         :export #'+org-xkcd-export
-	                         :complete #'+org-xkcd-complete)
-	
-	(defun +org-xkcd-open-fn (link)
-	  (+org-xkcd-image-fn nil link nil))
-	
-	(defun +org-xkcd-image-fn (protocol link description)
-	  "Get image data for xkcd num LINK"
-	  (let* ((xkcd-info (+xkcd-fetch-info (string-to-number link)))
-	         (img (plist-get xkcd-info :img))
-	         (alt (plist-get xkcd-info :alt)))
-	    (message alt)
-	    (+org-image-file-data-fn protocol (xkcd-download img (string-to-number link)) description)))
-	
-	(defun +org-xkcd-export (num desc backend _com)
-	  "Convert xkcd to html/LaTeX form"
-	  (let* ((xkcd-info (+xkcd-fetch-info (string-to-number num)))
-	         (img (plist-get xkcd-info :img))
-	         (alt (plist-get xkcd-info :alt))
-	         (title (plist-get xkcd-info :title))
-	         (file (xkcd-download img (string-to-number num))))
-	    (cond ((org-export-derived-backend-p backend 'html)
-	           (format "<img class='invertible' src='%s' title=\"%s\" alt='%s'>" img (subst-char-in-string ?\" ?“ alt) title))
-	          ((org-export-derived-backend-p backend 'latex)
-	           (format "\\begin{figure}[!htb]
-	  \\centering
-	  \\includegraphics[scale=0.4]{%s}%s
-	\\end{figure}" file (if (equal desc (format "xkcd:%s" num)) ""
-	                      (format "\n  \\caption*{\\label{xkcd:%s} %s}"
-	                              num
-	                              (or desc
-	                                  (format "\\textbf{%s} %s" title alt))))))
-	          (t (format "https://xkcd.com/%s" num)))))
-	
-	(defun +org-xkcd-complete (&optional arg)
-	  "Complete xkcd using `+xkcd-stored-info'"
-	  (format "xkcd:%d" (+xkcd-select))))
+  (org-link-set-parameters "xkcd"
+                           :image-data-fun #'+org-xkcd-image-fn
+                           :follow #'+org-xkcd-open-fn
+                           :export #'+org-xkcd-export
+                           :complete #'+org-xkcd-complete)
+
+  (defun +org-xkcd-open-fn (link)
+    (+org-xkcd-image-fn nil link nil))
+
+  (defun +org-xkcd-image-fn (protocol link description)
+    "Get image data for xkcd num LINK"
+    (let* ((xkcd-info (+xkcd-fetch-info (string-to-number link)))
+           (img (plist-get xkcd-info :img))
+           (alt (plist-get xkcd-info :alt)))
+      (message alt)
+      (+org-image-file-data-fn protocol (xkcd-download img (string-to-number link)) description)))
+
+  (defun +org-xkcd-export (num desc backend _com)
+    "Convert xkcd to html/LaTeX form"
+    (let* ((xkcd-info (+xkcd-fetch-info (string-to-number num)))
+           (img (plist-get xkcd-info :img))
+           (alt (plist-get xkcd-info :alt))
+           (title (plist-get xkcd-info :title))
+           (file (xkcd-download img (string-to-number num))))
+      (cond ((org-export-derived-backend-p backend 'html)
+             (format "<img class='invertible' src='%s' title=\"%s\" alt='%s'>" img (subst-char-in-string ?\" ?“ alt) title))
+            ((org-export-derived-backend-p backend 'latex)
+             (format "\\begin{figure}[!htb]
+    \\centering
+    \\includegraphics[scale=0.4]{%s}%s
+  \\end{figure}" file (if (equal desc (format "xkcd:%s" num)) ""
+                        (format "\n  \\caption*{\\label{xkcd:%s} %s}"
+                                num
+                                (or desc
+                                    (format "\\textbf{%s} %s" title alt))))))
+            (t (format "https://xkcd.com/%s" num)))))
+
+  (defun +org-xkcd-complete (&optional arg)
+    "Complete xkcd using `+xkcd-stored-info'"
+    (format "xkcd:%d" (+xkcd-select))))
 #+end_src
 ** View Exported File
 I have to export files pretty often, lets setup some keybindings to make it easier
 #+begin_src elisp
-;;spc+v = view exported file
 (map! :map org-mode-map
       :localleader
       :desc "View exported file" "v" #'org-view-output-file)

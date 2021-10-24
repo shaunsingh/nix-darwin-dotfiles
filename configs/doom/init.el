@@ -23,7 +23,8 @@
        hl-todo                      ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
        ;;hydra                      ; quick documentation for related commands
        ;;indent-guides              ; highlighted indent columns, notoriously slow
-       (ligatures +extra)           ; ligatures and symbols to make your code pretty again
+       ligatures                    ; ligatures and symbols to make your code pretty again
+       ;; +extra)                   ; for those who dislike letters
        minimap                      ; show a map of the code on the side
        (modeline                    ; snazzy, Atom-inspired modeline, plus API
         +light)                     ; the doom modeline is a bit much, the default is a bit little
@@ -38,7 +39,7 @@
        treemacs                     ; a project drawer, like neotree but cooler
        ;;tree-sitter                ; ... sitting in a tree
        ;;unicode                    ; extended unicode support for various languages
-       vc-gutter                    ; vcs diff in the fringe
+       ;;vc-gutter                  ; vcs diff in the fringe
        ;;vi-tilde-fringe            ; fringe tildes to mark beyond EOB
        ;;(window-select +numbers)   ; visually switch windows
        workspaces                   ; tab emulation, persistence & separate workspaces
@@ -66,7 +67,7 @@
        vc                           ; version-control and Emacs, sitting in a tree
 
        :term
-       eshell                       ; the elisp shell that works everywhere
+       ;;eshell                     ; the elisp shell that works everywhere
        ;;shell                      ; simple shell REPL for Emacs
        ;;term                       ; basic terminal emulator for Emacs
        vterm                        ; the best terminal emulation in Emacs
@@ -94,7 +95,7 @@
         +forge)                     ; interface with git forges
        ;;make                       ; run make tasks from Emacs
        ;;pass                       ; password manager for nerds
-       pdf                          ; pdf enhancements
+       ;;pdf                        ; pdf enhancements
        ;;prodigy                    ; FIXME managing external services & code builders
        ;;rgb                        ; creating color strings
        ;;taskrunner                 ; taskrunner for all your projects
@@ -132,7 +133,7 @@
        ;;hy                         ; readability of scheme w/ speed of python
        ;;idris                      ;
        ;;json                       ; At least it ain't XML
-       (java +lsp)                  ; the poster child for carpal tunnel syndrome
+       ;;(java +lsp)                ; the poster child for carpal tunnel syndrome
        ;;(javascript +lsp)          ; all(hope(abandon(ye(who(enter(here))))))
        ;;(julia +lsp)               ; Python, R, and MATLAB in a blender
        ;;(kotlin +lsp)              ; a better, slicker Java(Script)

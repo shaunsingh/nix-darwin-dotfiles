@@ -80,6 +80,134 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
 (set-char-table-range composition-function-table ?f '(["\\(?:ff?[fijlt]\\)" 0 font-shape-gstring]))
 (set-char-table-range composition-function-table ?T '(["\\(?:Th\\)" 0 font-shape-gstring]))
 
+(after! org
+(defvar org-latex-default-fontset 'alegreya
+  "Fontset from `org-latex-fontsets' to use by default.
+As cm (computer modern) is TeX's default, that causes nothing
+to be added to the document.
+
+If \"nil\" no custom fonts will ever be used.")
+
+(eval '(cl-pushnew '(:latex-font-set nil "fontset" org-latex-default-fontset)
+                   (org-export-backend-options (org-export-get-backend 'latex)))))
+
+(after! org
+(defun org-latex-fontset-entry ()
+  "Get the fontset spec of the current file.
+Has format \"name\" or \"name-style\" where 'name' is one of
+the cars in `org-latex-fontsets'."
+  (let ((fontset-spec
+         (symbol-name
+          (or (car (delq nil
+                         (mapcar
+                          (lambda (opt-line)
+                            (plist-get (org-export--parse-option-keyword opt-line 'latex)
+                                       :latex-font-set))
+                          (cdar (org-collect-keywords '("OPTIONS"))))))
+              org-latex-default-fontset))))
+    (cons (intern (car (split-string fontset-spec "-")))
+          (when (cadr (split-string fontset-spec "-"))
+            (intern (concat ":" (cadr (split-string fontset-spec "-"))))))))
+
+(defun org-latex-fontset (&rest desired-styles)
+  "Generate a LaTeX preamble snippet which applies the current fontset for DESIRED-STYLES."
+  (let* ((fontset-spec (org-latex-fontset-entry))
+         (fontset (alist-get (car fontset-spec) org-latex-fontsets)))
+    (if fontset
+        (concat
+         (mapconcat
+          (lambda (style)
+            (when (plist-get fontset style)
+              (concat (plist-get fontset style) "\n")))
+          desired-styles
+          "")
+         (when (memq (cdr fontset-spec) desired-styles)
+           (pcase (cdr fontset-spec)
+             (:serif "\\renewcommand{\\familydefault}{\\rmdefault}\n")
+             (:sans "\\renewcommand{\\familydefault}{\\sfdefault}\n")
+             (:mono "\\renewcommand{\\familydefault}{\\ttdefault}\n"))))
+      (error "Font-set %s is not provided in org-latex-fontsets" (car fontset-spec))))))
+
+(after! org
+(add-to-list 'org-latex-conditional-features '(org-latex-default-fontset . custom-font) t)
+(add-to-list 'org-latex-feature-implementations '(custom-font :snippet (org-latex-fontset :serif :sans :mono) :order 0) t)
+(add-to-list 'org-latex-feature-implementations '(.custom-maths-font :eager t :when (custom-font maths) :snippet (org-latex-fontset :maths) :order 0.3) t))
+
+(after! org
+(defvar org-latex-fontsets
+  '((cm nil) ; computer modern
+    (## nil) ; no font set
+    (alegreya
+     :serif "\\usepackage[osf]{Alegreya}"
+     :sans "\\usepackage{AlegreyaSans}"
+     :mono "\\usepackage[scale=0.88]{sourcecodepro}"
+     :maths "\\usepackage[varbb]{newpxmath}")
+    (biolinum
+     :serif "\\usepackage[osf]{libertineRoman}"
+     :sans "\\usepackage[sfdefault,osf]{biolinum}"
+     :mono "\\usepackage[scale=0.88]{sourcecodepro}"
+     :maths "\\usepackage[libertine,varvw]{newtxmath}")
+    (fira
+     :sans "\\usepackage[sfdefault,scale=0.85]{FiraSans}"
+     :mono "\\usepackage[scale=0.80]{FiraMono}"
+     :maths "\\usepackage{newtxsf} % change to firamath in future?")
+    (kp
+     :serif "\\usepackage{kpfonts}")
+    (newpx
+     :serif "\\usepackage{newpxtext}"
+     :sans "\\usepackage{gillius}"
+     :mono "\\usepackage[scale=0.9]{sourcecodepro}"
+     :maths "\\usepackage[varbb]{newpxmath}")
+    (noto
+     :serif "\\usepackage[osf]{noto-serif}"
+     :sans "\\usepackage[osf]{noto-sans}"
+     :mono "\\usepackage[scale=0.96]{noto-mono}"
+     :maths "\\usepackage{notomath}")
+    (plex
+     :serif "\\usepackage{plex-serif}"
+     :sans "\\usepackage{plex-sans}"
+     :mono "\\usepackage[scale=0.95]{plex-mono}"
+     :maths "\\usepackage{newtxmath}") ; may be plex-based in future
+    (source
+     :serif "\\usepackage[osf]{sourceserifpro}"
+     :sans "\\usepackage[osf]{sourcesanspro}"
+     :mono "\\usepackage[scale=0.95]{sourcecodepro}"
+     :maths "\\usepackage{newtxmath}") ; may be sourceserifpro-based in future
+    (times
+     :serif "\\usepackage{newtxtext}"
+     :maths "\\usepackage{newtxmath}"))
+  "Alist of fontset specifications.
+Each car is the name of the fontset (which cannot include \"-\").
+
+Each cdr is a plist with (optional) keys :serif, :sans, :mono, and :maths.
+A key's value is a LaTeX snippet which loads such a font."))
+
+(after! org
+(add-to-list 'org-latex-conditional-features '((string= (car (org-latex-fontset-entry)) "alegreya") . alegreya-typeface))
+(add-to-list 'org-latex-feature-implementations '(alegreya-typeface) t)
+(add-to-list 'org-latex-feature-implementations'(.alegreya-tabular-figures :eager t :when (alegreya-typeface table) :order 0.5 :snippet "
+\\makeatletter
+% tabular lining figures in tables
+\\renewcommand{\\tabular}{\\AlegreyaTLF\\let\\@halignto\\@empty\\@tabular}
+\\makeatother\n") t))
+
+(after! org
+(add-to-list 'org-latex-conditional-features '("LaTeX" . latex-symbol))
+(add-to-list 'org-latex-feature-implementations '(latex-symbol :when alegreya-typeface :order 0.5 :snippet "
+\\makeatletter
+% Kerning around the A needs adjusting
+\\DeclareRobustCommand{\\LaTeX}{L\\kern-.24em%
+        {\\sbox\\z@ T%
+         \\vbox to\\ht\\z@{\\hbox{\\check@mathfonts
+                              \\fontsize\\sf@size\\z@
+                              \\math@fontsfalse\\selectfont
+                              A}%
+                        \\vss}%
+        }%
+        \\kern-.10em%
+        \\TeX}
+\\makeatother\n") t))
+
 (defvar required-fonts '("Overpass" "Liga SFMono Nerd Font" "Alegreya" ))
 (defvar available-fonts
   (delete-dups (or (font-family-list)
@@ -375,50 +503,9 @@ Return nil otherwise."
   :commands selectric-mode)
 
 (after! doom-modeline
-  (doom-modeline-def-segment buffer-name
-    "Display the current buffer's name, without any other information."
-    (concat
-     (doom-modeline-spc)
-     (doom-modeline--buffer-name)))
-
-  (doom-modeline-def-segment pdf-icon
-    "PDF icon from all-the-icons."
-    (concat
-     (doom-modeline-spc)
-     (doom-modeline-icon 'octicon "file-pdf" nil nil
-                         :face (if (doom-modeline--active)
-                                   'all-the-icons-red
-                                 'mode-line-inactive)
-                         :v-adjust 0.02)))
-
-  (defun doom-modeline-update-pdf-pages ()
-    "Update PDF pages."
-    (setq doom-modeline--pdf-pages
-          (let ((current-page-str (number-to-string (eval `(pdf-view-current-page))))
-                (total-page-str (number-to-string (pdf-cache-number-of-pages))))
-            (concat
-             (propertize
-              (concat (make-string (- (length total-page-str) (length current-page-str)) ? )
-                      " P" current-page-str)
-              'face 'mode-line)
-             (propertize (concat "/" total-page-str) 'face 'doom-modeline-buffer-minor-mode)))))
-
-  (doom-modeline-def-segment pdf-pages
-    "Display PDF pages."
-    (if (doom-modeline--active) doom-modeline--pdf-pages
-      (propertize doom-modeline--pdf-pages 'face 'mode-line-inactive)))
-
-  (doom-modeline-def-modeline 'pdf
-    '(bar window-number pdf-pages pdf-icon buffer-name)
-    '(misc-info matches major-mode process vcs)))
-
-(after! doom-modeline
   (display-time-mode 1)                              ;Enable time in the mode-line
   (display-battery-mode 1)                           ;display the battery
-  (setq doom-modeline-major-mode-icon t              ;Show major mode name
-        doom-modeline-enable-word-count t            ;Show word count
-        doom-modeline-modal-icon t                   ;Show vim mode icon
-        inhibit-compacting-font-caches t))           ;Don't compact font caches in gc
+  (setq doom-modeline-enable-word-count t))          ;Show word count
 
 (defun doom-modeline-conditional-buffer-encoding ()
   "We expect the encoding to be LF UTF-8, so only show the modeline when this is not the case"
@@ -1210,8 +1297,6 @@ Must be run as part of `org-font-lock-set-keywords-hook'."
   :around #'org-superstar-mode
   (ignore-errors (apply orig-fn args)))
 
-(setq org-startup-with-inline-images t)
-
 (use-package! org-pretty-table
   :commands (org-pretty-table-mode global-org-pretty-table-mode))
 
@@ -1235,18 +1320,7 @@ Must be run as part of `org-font-lock-set-keywords-hook'."
         (:tangle . "no")
         (:comments . "link")))
 
-(add-hook 'text-mode-hook #'auto-fill-mode)
-
-(map! :map evil-org-mode-map
-      :after evil-org
-      :n "g <up>" #'org-backward-heading-same-level
-      :n "g <down>" #'org-forward-heading-same-level
-      :n "g <left>" #'org-up-element
-      :n "g <right>" #'org-down-element)
-
 (setq org-list-demote-modify-bullet '(("+" . "-") ("-" . "+") ("*" . "+") ("1." . "a.")))
-
-(add-hook 'org-mode-hook 'turn-on-flyspell)
 
 (use-package! org-ol-tree
   :commands org-ol-tree)
@@ -1958,7 +2032,6 @@ is selected, only the bare key is returned."
 (advice-add 'org-mks :override #'org-mks-pretty)
 
 (setf (alist-get 'height +org-capture-frame-parameters) 15)
-;; (alist-get 'name +org-capture-frame-parameters) "❖ Capture") ;; ATM hardcoded in other places, so changing breaks stuff
 (setq +org-capture-fn
       (lambda ()
         (interactive)
@@ -2384,48 +2457,47 @@ SQL can be either the emacsql vector representation, or a string."
                            )))))
 
 (after! org
-	(org-link-set-parameters "xkcd"
-	                         :image-data-fun #'+org-xkcd-image-fn
-	                         :follow #'+org-xkcd-open-fn
-	                         :export #'+org-xkcd-export
-	                         :complete #'+org-xkcd-complete)
-	
-	(defun +org-xkcd-open-fn (link)
-	  (+org-xkcd-image-fn nil link nil))
-	
-	(defun +org-xkcd-image-fn (protocol link description)
-	  "Get image data for xkcd num LINK"
-	  (let* ((xkcd-info (+xkcd-fetch-info (string-to-number link)))
-	         (img (plist-get xkcd-info :img))
-	         (alt (plist-get xkcd-info :alt)))
-	    (message alt)
-	    (+org-image-file-data-fn protocol (xkcd-download img (string-to-number link)) description)))
-	
-	(defun +org-xkcd-export (num desc backend _com)
-	  "Convert xkcd to html/LaTeX form"
-	  (let* ((xkcd-info (+xkcd-fetch-info (string-to-number num)))
-	         (img (plist-get xkcd-info :img))
-	         (alt (plist-get xkcd-info :alt))
-	         (title (plist-get xkcd-info :title))
-	         (file (xkcd-download img (string-to-number num))))
-	    (cond ((org-export-derived-backend-p backend 'html)
-	           (format "<img class='invertible' src='%s' title=\"%s\" alt='%s'>" img (subst-char-in-string ?\" ?“ alt) title))
-	          ((org-export-derived-backend-p backend 'latex)
-	           (format "\\begin{figure}[!htb]
-	  \\centering
-	  \\includegraphics[scale=0.4]{%s}%s
-	\\end{figure}" file (if (equal desc (format "xkcd:%s" num)) ""
-	                      (format "\n  \\caption*{\\label{xkcd:%s} %s}"
-	                              num
-	                              (or desc
-	                                  (format "\\textbf{%s} %s" title alt))))))
-	          (t (format "https://xkcd.com/%s" num)))))
-	
-	(defun +org-xkcd-complete (&optional arg)
-	  "Complete xkcd using `+xkcd-stored-info'"
-	  (format "xkcd:%d" (+xkcd-select))))
+  (org-link-set-parameters "xkcd"
+                           :image-data-fun #'+org-xkcd-image-fn
+                           :follow #'+org-xkcd-open-fn
+                           :export #'+org-xkcd-export
+                           :complete #'+org-xkcd-complete)
 
-;;spc+v = view exported file
+  (defun +org-xkcd-open-fn (link)
+    (+org-xkcd-image-fn nil link nil))
+
+  (defun +org-xkcd-image-fn (protocol link description)
+    "Get image data for xkcd num LINK"
+    (let* ((xkcd-info (+xkcd-fetch-info (string-to-number link)))
+           (img (plist-get xkcd-info :img))
+           (alt (plist-get xkcd-info :alt)))
+      (message alt)
+      (+org-image-file-data-fn protocol (xkcd-download img (string-to-number link)) description)))
+
+  (defun +org-xkcd-export (num desc backend _com)
+    "Convert xkcd to html/LaTeX form"
+    (let* ((xkcd-info (+xkcd-fetch-info (string-to-number num)))
+           (img (plist-get xkcd-info :img))
+           (alt (plist-get xkcd-info :alt))
+           (title (plist-get xkcd-info :title))
+           (file (xkcd-download img (string-to-number num))))
+      (cond ((org-export-derived-backend-p backend 'html)
+             (format "<img class='invertible' src='%s' title=\"%s\" alt='%s'>" img (subst-char-in-string ?\" ?“ alt) title))
+            ((org-export-derived-backend-p backend 'latex)
+             (format "\\begin{figure}[!htb]
+    \\centering
+    \\includegraphics[scale=0.4]{%s}%s
+  \\end{figure}" file (if (equal desc (format "xkcd:%s" num)) ""
+                        (format "\n  \\caption*{\\label{xkcd:%s} %s}"
+                                num
+                                (or desc
+                                    (format "\\textbf{%s} %s" title alt))))))
+            (t (format "https://xkcd.com/%s" num)))))
+
+  (defun +org-xkcd-complete (&optional arg)
+    "Complete xkcd using `+xkcd-stored-info'"
+    (format "xkcd:%d" (+xkcd-select))))
+
 (map! :map org-mode-map
       :localleader
       :desc "View exported file" "v" #'org-view-output-file)
