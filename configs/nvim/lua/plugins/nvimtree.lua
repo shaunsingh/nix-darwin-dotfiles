@@ -6,6 +6,9 @@ end
 
 vim.o.termguicolors = true
 
+vim.cmd [[highlight NvimTreeNormal guifg=#D8DEE9  guibg=#2a2e39]]
+vim.cmd [[ autocmd BufEnter,BufWinEnter,FileType,WinEnter * lua require("options").hide_statusline() ]]
+
 vim.g.nvim_tree_add_trailing = 0 -- append a trailing slash to folder names
 vim.g.nvim_tree_hide_dotfiles = 0
 vim.g.nvim_tree_highlight_opened_files = 0
@@ -59,7 +62,7 @@ nvimtree.setup {
    view = {
       allow_resize = true,
       side = "left",
-      width = 25,
+      width = 30,
    },
 }
 

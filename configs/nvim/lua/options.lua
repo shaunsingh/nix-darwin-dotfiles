@@ -64,4 +64,28 @@ M.packer_lazy_load = function(plugin, timer)
       end, timer)
    end
 end
+M.hide_statusline = function()
+   local hidden = {
+            "help",
+            "dashboard",
+            "NvimTree",
+            "terminal",
+         }
+   local shown = {}
+   local api = vim.api
+   local buftype = api.nvim_buf_get_option("%", "ft")
+
+   -- shown table from config has the highest priority
+   if vim.tbl_contains(shown, buftype) then
+      api.nvim_set_option("laststatus", 2)
+      return
+   end
+
+   if vim.tbl_contains(hidden, buftype) then
+      api.nvim_set_option("laststatus", 0)
+      return
+   else
+      api.nvim_set_option("laststatus", 2)
+   end
+end
 return M

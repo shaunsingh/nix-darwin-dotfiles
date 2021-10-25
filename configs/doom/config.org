@@ -281,7 +281,6 @@ ophints                      ; highlight the region an operation acts on
 ;;(tabs                      ; an tab bar for Emacs
 ;;  +centaur-tabs)           ; ... with prettier tabs
 treemacs                     ; a project drawer, like neotree but cooler
-;;tree-sitter                ; ... sitting in a tree
 ;;unicode                    ; extended unicode support for various languages
 vc-gutter                    ; vcs diff in the fringe
 ;;vi-tilde-fringe            ; fringe tildes to mark beyond EOB
@@ -355,6 +354,7 @@ rgb                          ; creating color strings
 ;;taskrunner                 ; taskrunner for all your projects
 ;;terraform                  ; infrastructure as code
 ;;tmux                       ; an API for interacting with tmux
+;;tree-sitter                ; ... sitting in a tree
 ;;upload                     ; map local to remote projects via ssh/ftp
 #+end_src
 
@@ -672,9 +672,10 @@ I also want to hook Delta into Magit
 #+end_src
 
 **** Ligatures
-Use ligatures from within vterm (and eshell), we do this by redefining the variable where /not/ to show ligatures
+Use ligatures from within vterm (and eshell), we do this by redefining the variable where /not/ to show ligatures. On the other hand, in select modes we want to use extra ligatures, so lets enable that.
 #+begin_src elisp
 (setq +ligatures-in-modes t)
+(setq +ligatures-extras-in-modes '(org-mode emacs-lisp-mode))
 #+end_src
 
 ** Fonts
@@ -1303,6 +1304,18 @@ Typewriter go br
 #+end_src
 
 * Visual configuration
+** Treesitter
+Nvim-treesitter is based on three interlocking features: language parsers, queries, and modules, where modules provide features – e.g., highlighting – based on queries for syntax objects extracted from a given buffer by language parsers. Allowing this to work in doom will reduce the lag introduced by fontlock as well as improve textobjects.
+
+Since I use an apple silicon mac, I prefer if nix handles compiling the parsers for me
+#+begin_src elisp
+;; (use-package! tree-sitter
+;;   :config
+;;   (cl-pushnew (expand-file-name "~/.config/tree-sitter") tree-sitter-load-path)
+;;   (require 'tree-sitter-langs)
+;;   (global-tree-sitter-mode)
+;;   (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
+#+end_src
 ** Modeline
 Doom modeline already looks good, but it can be better. Lets add some icons, the battery status, and make sure we don't lose track of time
 #+begin_src elisp

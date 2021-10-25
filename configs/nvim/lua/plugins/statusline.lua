@@ -18,7 +18,11 @@ local colors = {
    magenta = "#BF616A",
    blue = "#5E81AC",
    red = "#BF616A",
+   none = "2E3440"
 }
+
+--hide inactive statusline
+vim.cmd[[hi StatusLineNC gui=underline guibg=#2E3440  guifg=#2E3440]]
 
 -- Local helper functions
 local mode_color = function()
@@ -206,12 +210,28 @@ gls.right[2] = {
 }
 
 -- Short status line
-gls.short_line_right[1] = {
-   FileFormat = {
+gls.short_line_left[1] = {
+   ViModeShort = {
       provider = function()
-         return vim.bo.filetype
+         local alias = {
+            n = "λ",
+            i = "",
+            c = "",
+            V = "麗",
+            [""] = "麗",
+            v = "麗",
+            R = "",
+         }
+         vim.api.nvim_command("hi GalaxyViMode guibg=" .. mode_color())
+         local alias_mode = alias[vim.fn.mode()]
+         if alias_mode == nil then
+            alias_mode = vim.fn.mode()
+         end
+         return "  " .. alias_mode .. " "
       end,
-      highlight = { colors.bg, colors.bg },
+      highlight = { colors.none, colors.bg },
+      separator = " ",
+      separator_highlight = { colors.none, colors.none },
    },
 }
 

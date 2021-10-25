@@ -9,7 +9,7 @@ vim.cmd "function! Doom_bufferline_quitvim(a,b,c,d) \n qa \n endfunction"
 local colors = {
    bg = "NONE",
    black = "#2E3440",
-   black2 = "#3b4252",
+   black2 = "#2a2e38",
    white = "#ECEFF4",
    fg = "#E5E9F0",
    yellow = "#EBCB8B",

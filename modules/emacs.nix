@@ -1,4 +1,4 @@
-{ pkgs, config, ... }: {
+{ pkgs, lib, config, ... }: {
   system.activationScripts.postUserActivation.text = ''
     # Clone to $XDG_CONFIG_HOME because Emacs expects this location.
     if [[ ! -d "~/.config/emacs" ]]; then
@@ -52,11 +52,17 @@
   #     TODO: write shell script to grab gmail pass
   #   ''}";
   # };
+  home-manager.users.shauryasingh.home.file."~/.config/tree-sitter".source = (pkgs.runCommand "grammars" {} ''
+    mkdir -p $out/bin
+    ${lib.concatStringsSep "\n"
+      (lib.mapAttrsToList (name: src: "name=${name}; ln -s ${src}/parser $out/bin/\${name#tree-sitter-}.so") pkgs.tree-sitter.builtGrammars)};
+  '');
   home-manager.users.shauryasingh.home.packages = with pkgs; [
     (ripgrep.override { withPCRE2 = true; })
     gnutls
     gnuplot
     sqlite
+    tree-sitter
     (aspellWithDicts (dicts: with dicts; [ en en-computers en-science ]))
     (texlive.combine {
       inherit (texlive)
@@ -67,7 +73,6 @@
     })
     sdcv
     emacs
-
     # Language stuff
     python39Packages.grip
     python39Packages.pyflakes
