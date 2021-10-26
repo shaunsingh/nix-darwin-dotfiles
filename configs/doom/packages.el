@@ -38,8 +38,7 @@
 
 ;;emacs additions
 ;;(package! vlf :recipe (:host github :repo "m00natic/vlfi" :files ("*.el")))
-(package! screenshot :recipe (:host github :repo "tecosaur/screenshot"))
-(package! lexic :recipe (:host github :repo "tecosaur/lexic"))
+(package! lexic)
 (package! magit-delta :recipe (:host github :repo "dandavison/magit-delta"))
 
 ;;lsp

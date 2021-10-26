@@ -1,17 +1,7 @@
 { pkgs, lib, config, ... }: {
-  system.activationScripts.postUserActivation.text = ''
-    # Clone to $XDG_CONFIG_HOME because Emacs expects this location.
-    if [[ ! -d "~/.config/emacs" ]]; then
-      git clone --depth 1 https://github.com/hlissner/doom-emacs "~/.config/emacs"
-    fi
-  '';
   fonts = {
     enableFontDir = true;
     fonts = with pkgs; [ alegreya overpass alegreya-sans ibm-plex ];
-  };
-  services.emacs = {
-    enable = true;
-    package = pkgs.emacs;
   };
   # services.mbsync.enable = true;
   # services.mbsync.postExec = ''
@@ -72,7 +62,7 @@
         sourcecodepro newpx;
     })
     sdcv
-    emacs
+    emacsGcc
     # Language stuff
     python39Packages.grip
     python39Packages.pyflakes

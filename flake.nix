@@ -12,7 +12,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     emacs = {
-      url = "github:shaunsingh/emacs";
+      url = "github:nix-community/emacs-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nix-doom-emacs = {
+      url = "github:vlaci/nix-doom-emacs/develop";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     darwin = {
@@ -25,7 +29,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, spacebar, neovim, emacs, darwin, home-manager, ...
+  outputs = { self, nixpkgs, spacebar, neovim, emacs, nix-doom-emacs, darwin, home-manager, ...
     }@inputs: {
       darwinConfigurations."shaunsingh-laptop" = darwin.lib.darwinSystem {
         system = "aarch64-darwin";
@@ -37,9 +41,15 @@
           ./modules/mbsync.nix
           home-manager.darwinModule
           {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.shauryasingh = { pkgs, ... }: {
+              imports = [ nix-doom-emacs.hmModule ];
+              programs.doom-emacs = {
+                enable = true;
+                doomPrivateDir = ./configs/doom;
+                emacsPackage = pkgs.emacsGcc;
+              };
             };
           }
           ({ pkgs, lib, ... }: {

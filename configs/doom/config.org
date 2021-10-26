@@ -563,8 +563,7 @@ screenshot capabilities are nice, and using the same dictionaries accross
 #+name: emacs
 #+begin_src emacs-lisp
 ;;(package! vlf :recipe (:host github :repo "m00natic/vlfi" :files ("*.el")))
-(package! screenshot :recipe (:host github :repo "tecosaur/screenshot"))
-(package! lexic :recipe (:host github :repo "tecosaur/lexic"))
+(package! lexic)
 (package! magit-delta :recipe (:host github :repo "dandavison/magit-delta"))
 #+end_src
 
@@ -2025,14 +2024,6 @@ transparency)  and focused windows remain opaque
                100)
           '(100 . 85) '(100 . 100)))))
  (global-set-key (kbd "C-c t") 'toggle-transparency)
-#+end_src
-
-** Screenshots
-Make it easy to take nice screenshots. I need to figure out how to make
-clipboard work though.
-#+begin_src elisp
-(use-package! screenshot
-  :defer t)
 #+end_src
 
 ** RSS
