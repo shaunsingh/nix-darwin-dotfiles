@@ -3,10 +3,7 @@
 
 ;;org
 (package! org-appear)
-(package! doct :recipe (:host github :repo "progfolio/doct"))
-(package! org-padding :recipe (:host github :repo "TonCherAmi/org-padding"))
-(package! org-ol-tree :recipe (:host github :repo "Townk/org-ol-tree"))
-(package! org-pretty-table :recipe (:host github :repo "Fuco1/org-pretty-table"))
+(package! doct)
 (package! org-roam-ui :recipe (:host github :repo "org-roam/org-roam-ui" :files ("*.el" "out")))
 (package! org-pandoc-import
   :recipe (:host github
@@ -15,10 +12,9 @@
 
 ;;latex
 (package! org-fragtog)
-(package! aas :recipe (:host github :repo "ymarco/auto-activating-snippets"))
-(package! laas :recipe (:host github :repo "tecosaur/LaTeX-auto-activating-snippets"))
-(package! engrave-faces :recipe (:host github :repo "tecosaur/engrave-faces"))
-(package! calctex :recipe (:host github :repo "johnbcoughlin/calctex" :files ("*.el" "calctex/*.el" "calctex-contrib/*.el" "org-calctex/*.el" "vendor")))
+(package! aas)
+(package! laas)
+(package! engrave-faces)
 
 ;;markdown and html
 (package! ox-gfm)
@@ -33,13 +29,14 @@
 ;;looks
 (unpin! doom-themes)
 (unpin! doom-modeline)
+(package! modus-themes)
 (package! solaire-mode :disable t)
 (package! ox-chameleon :recipe (:host github :repo "tecosaur/ox-chameleon"))
 
 ;;emacs additions
-;;(package! vlf :recipe (:host github :repo "m00natic/vlfi" :files ("*.el")))
 (package! lexic)
 (package! magit-delta :recipe (:host github :repo "dandavison/magit-delta"))
+(package! pdf-tools :recipe (:host github :repo "shaunsingh/pdf-tools")) ;has a nix-shell fix
 
 ;;lsp
 (unpin! lsp-ui)

@@ -236,17 +236,52 @@ A key's value is a LaTeX snippet which loads such a font."))
                          (sleep-for 0.5))))))
   ";; No missing fonts detected")
 
-;; No missing fonts detected
+(unless noninteractive
+  (add-hook! 'doom-init-ui-hook
+    (run-at-time nil nil
+		 (lambda nil
+		   (message "%s missing the following fonts: %s"
+			    (propertize "Warning!" 'face
+					'(bold warning))
+			    (mapconcat
+			     (lambda
+			       (font)
+			       (propertize font 'face 'font-lock-variable-name-face))
+			     '("Overpass" "Liga SFMono Nerd Font" "Alegreya")
+			     ", "))
+		   (sleep-for 0.5)))))
 
+(setq doom-theme 'doom-flatwhite)
+(setq doom-fw-padded-modeline t)
 ;;(setq doom-theme 'doom-one-light)
 (setq doom-one-light-padded-modeline t)
 ;;(setq doom-theme 'doom-nord)
 (setq doom-nord-padded-modeline t)
-(setq doom-theme 'doom-vibrant)
+;;(setq doom-theme 'doom-vibrant)
 (setq doom-vibrant-padded-modeline t)
 
-;;(use-package! vlf-setup
-  ;;:defer-incrementally vlf-tune vlf-base vlf-write vlf-search vlf-occur vlf-follow vlf-ediff vlf)
+;; (use-package modus-themes
+;;   :init
+;;   ;; Add all your customizations prior to loading the themes
+;;   (setq modus-themes-italic-constructs t
+;;         modus-themes-completions 'opinionated
+;;         modus-themes-variable-pitch-headings t
+;;         modus-themes-scale-headings t
+;;         modus-themes-variable-pitch-ui nil
+;;         modus-themes-org-agenda
+;;         '((header-block . (variable-pitch scale-title))
+;;           (header-date . (grayscale bold-all)))
+;;         modus-themes-org-blocks
+;;         '(grayscale)
+;;         modus-themes-mode-line
+;;         '(borderless)
+;;         modus-themes-region '(bg-only no-extend))
+
+;;   ;; Load the theme files before enabling a theme
+;;   (modus-themes-load-themes)
+;;   :config
+;;   (modus-themes-load-vivendi)
+;;  :bind ("<f5>" . modus-themes-toggle))
 
 (after! company
    (setq company-idle-delay 0.1
@@ -1103,9 +1138,6 @@ Must be run as part of `org-font-lock-set-keywords-hook'."
          '(100 . 85) '(100 . 100)))))
 (global-set-key (kbd "C-c t") 'toggle-transparency)
 
-(use-package! screenshot
-  :defer t)
-
 (map! :map elfeed-search-mode-map
       :after elfeed-search
       [remap kill-this-buffer] "q"
@@ -1303,19 +1335,10 @@ Must be run as part of `org-font-lock-set-keywords-hook'."
             (url-copy-file pdf file)
             (funcall file-view-function file)))))))
 
-(use-package! org-padding
-  :hook (org-mode-hook . org-padding-mode)
-  :defer t)
-(setq org-padding-block-begin-line-padding '(1.15 . 0.15))
-(setq org-padding-block-end-line-padding '(1.15 . 0.15))
-
 (defadvice! shut-up-org-problematic-hooks (orig-fn &rest args)
   :around #'org-fancy-priorities-mode
   :around #'org-superstar-mode
   (ignore-errors (apply orig-fn args)))
-
-(use-package! org-pretty-table
-  :commands (org-pretty-table-mode global-org-pretty-table-mode))
 
 (use-package! org-pandoc-import
   :after org)
@@ -1338,13 +1361,6 @@ Must be run as part of `org-font-lock-set-keywords-hook'."
         (:comments . "link")))
 
 (setq org-list-demote-modify-bullet '(("+" . "-") ("-" . "+") ("*" . "+") ("1." . "a.")))
-
-(use-package! org-ol-tree
-  :commands org-ol-tree)
-(map! :map org-mode-map
-      :after org
-      :localleader
-      :desc "Outline" "O" #'org-ol-tree)
 
 (use-package! ox-gfm
   :after org)
@@ -3112,43 +3128,6 @@ This is done according to `org-latex-feature-implementations'"
 (setq org-export-in-background t)
 
 (setq org-export-with-sub-superscripts '{})
-
-(use-package! calctex
-  :commands calctex-mode
-  :init
-  (add-hook 'calc-mode-hook #'calctex-mode)
-  :config
-  (setq calctex-imagemagick-enabledp nil)
-  (setq calctex-additional-latex-packages "
-\\usepackage[usenames]{xcolor}
-\\usepackage{soul}
-\\usepackage{adjustbox}
-\\usepackage{amsmath}
-\\usepackage{amssymb}
-\\usepackage{siunitx}
-\\usepackage{cancel}
-\\usepackage{mathtools}
-\\usepackage{mathalpha}
-\\usepackage{xparse}
-\\usepackage{arevmath}"
-        calctex-additional-latex-macros
-        (concat calctex-additional-latex-macros
-                "\n\\let\\evalto\\Rightarrow"))
-  (defadvice! no-messaging-a (orig-fn &rest args)
-    :around #'calctex-default-dispatching-render-process
-    (let ((inhibit-message t) message-log-max)
-      (apply orig-fn args)))
-  ;; Fix hardcoded dvichop path (whyyyyyyy)
-  (let ((vendor-folder (concat (file-truename doom-local-dir)
-                               "straight/"
-                               (format "build-%s" emacs-version)
-                               "/calctex/vendor/")))
-    (setq calctex-dvichop-sty (concat vendor-folder "texd/dvichop")
-          calctex-dvichop-bin (concat vendor-folder "texd/dvichop")))
-  (unless (file-exists-p calctex-dvichop-bin)
-    (message "CalcTeX: Building dvichop binary")
-    (let ((default-directory (file-name-directory calctex-dvichop-bin)))
-      (call-process "make" nil nil nil))))
 
 (map! :map calc-mode-map
       :after calc

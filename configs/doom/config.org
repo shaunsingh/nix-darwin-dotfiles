@@ -522,9 +522,9 @@ that a bit too
 #+name: latex
 #+begin_src emacs-lisp
 (package! org-fragtog)
-(package! aas :recipe (:host github :repo "ymarco/auto-activating-snippets"))
-(package! laas :recipe (:host github :repo "tecosaur/LaTeX-auto-activating-snippets"))
-(package! engrave-faces :recipe (:host github :repo "tecosaur/engrave-faces"))
+(package! aas)
+(package! laas)
+(package! engrave-faces)
 #+end_src
 
 **** Web:
@@ -548,6 +548,7 @@ Making emacs look good is first priority, actually working in it is second
 #+begin_src emacs-lisp
 (unpin! doom-themes)
 (unpin! doom-modeline)
+(package! modus-themes)
 (package! solaire-mode :disable t)
 (package! ox-chameleon :recipe (:host github :repo "tecosaur/ox-chameleon"))
 #+end_src
@@ -558,9 +559,9 @@ screenshot capabilities are nice, and using the same dictionaries accross
 +operating systems+ bootloaders would be nice too!
 #+name: emacs
 #+begin_src emacs-lisp
-;;(package! vlf :recipe (:host github :repo "m00natic/vlfi" :files ("*.el")))
 (package! lexic)
 (package! magit-delta :recipe (:host github :repo "dandavison/magit-delta"))
+(package! pdf-tools :recipe (:host github :repo "shaunsingh/pdf-tools")) ;has a nix-shell fix
 #+end_src
 
 **** LSP:
@@ -933,19 +934,41 @@ emacs bootloaders
 ** Themes
 Right now I'm using vibrant, but I use doom-nord sometimes
 #+begin_src elisp
+(setq doom-theme 'doom-flatwhite)
+(setq doom-fw-padded-modeline t)
 ;;(setq doom-theme 'doom-one-light)
 (setq doom-one-light-padded-modeline t)
 ;;(setq doom-theme 'doom-nord)
 (setq doom-nord-padded-modeline t)
-(setq doom-theme 'doom-vibrant)
+;;(setq doom-theme 'doom-vibrant)
 (setq doom-vibrant-padded-modeline t)
 #+end_src
 
-** Very large files
-Emacs gets super slow with large files, this helps with that
+*** Modus Themes
+Generally I use doom-themes, but I also like the new Modus-themes bundled with emacs28/29
 #+begin_src elisp
-;;(use-package! vlf-setup
-  ;;:defer-incrementally vlf-tune vlf-base vlf-write vlf-search vlf-occur vlf-follow vlf-ediff vlf)
+;; (use-package modus-themes
+;;   :init
+;;   ;; Add all your customizations prior to loading the themes
+;;   (setq modus-themes-italic-constructs t
+;;         modus-themes-completions 'opinionated
+;;         modus-themes-variable-pitch-headings t
+;;         modus-themes-scale-headings t
+;;         modus-themes-variable-pitch-ui nil
+;;         modus-themes-org-agenda
+;;         '((header-block . (variable-pitch scale-title))
+;;           (header-date . (grayscale bold-all)))
+;;         modus-themes-org-blocks
+;;         '(grayscale)
+;;         modus-themes-mode-line
+;;         '(borderless)
+;;         modus-themes-region '(bg-only no-extend))
+
+;;   ;; Load the theme files before enabling a theme
+;;   (modus-themes-load-themes)
+;;   :config
+;;   (modus-themes-load-vivendi)
+;;  :bind ("<f5>" . modus-themes-toggle))
 #+end_src
 
 ** Company
