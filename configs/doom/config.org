@@ -560,8 +560,8 @@ screenshot capabilities are nice, and using the same dictionaries accross
 #+name: emacs
 #+begin_src emacs-lisp
 (package! lexic)
-(package! magit-delta :recipe (:host github :repo "dandavison/magit-delta"))
-(package! pdf-tools :recipe (:host github :repo "shaunsingh/pdf-tools")) ;has a nix-shell fix
+(package! magit-delta)
+(package! pdf-tools)
 #+end_src
 
 **** LSP:
@@ -591,6 +591,11 @@ I want to run emacs28's new native-compiler with -O3, if available
 #+begin_src emacs-lisp
 (when 'native-comp-compiler-options
                  (setq native-comp-compiler-options '("-O3")))
+#+end_src
+
+Trying it out, dumb solution but I restart emacs very often
+#+begin_src emacs-lisp
+(setq gc-cons-threshold most-positive-fixnum)
 #+end_src
 
 ** Personal information
@@ -934,13 +939,10 @@ emacs bootloaders
 ** Themes
 Right now I'm using vibrant, but I use doom-nord sometimes
 #+begin_src elisp
-(setq doom-theme 'doom-flatwhite)
+(setq doom-theme 'doom-vibrant)
 (setq doom-fw-padded-modeline t)
-;;(setq doom-theme 'doom-one-light)
 (setq doom-one-light-padded-modeline t)
-;;(setq doom-theme 'doom-nord)
 (setq doom-nord-padded-modeline t)
-;;(setq doom-theme 'doom-vibrant)
 (setq doom-vibrant-padded-modeline t)
 #+end_src
 

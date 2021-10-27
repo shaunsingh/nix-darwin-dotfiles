@@ -16,7 +16,7 @@ cmp.setup {
    formatting = {
       format = function(entry, vim_item)
          vim_item.menu = ({
-	    buffer = "Buffer",
+	    rg = "rg",
 	    nvim_lsp = "LSP",
 	    nvim_lua = "Lua",
 	    Path = "Path",
@@ -86,7 +86,7 @@ cmp.setup {
    sources = {
       { name = "nvim_lsp" },
       { name = "luasnip" },
-      { name = "buffer" },
+      { name = "rg" },
       { name = "nvim_lua" },
       { name = "orgmode" },
    },

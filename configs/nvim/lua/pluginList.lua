@@ -178,13 +178,13 @@ return packer.startup(function()
    }
 
    use {
-      "hrsh7th/cmp-buffer",
+      "lukas-reineke/cmp-rg",
       after = "cmp-nvim-lsp",
    }
 
    use {
       "hrsh7th/cmp-path",
-      after = "cmp-buffer",
+      after = "cmp-rg",
    }
 
    use {

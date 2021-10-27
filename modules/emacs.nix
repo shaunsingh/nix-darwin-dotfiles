@@ -47,6 +47,10 @@
     ${lib.concatStringsSep "\n"
       (lib.mapAttrsToList (name: src: "name=${name}; ln -s ${src}/parser $out/bin/\${name#tree-sitter-}.so") pkgs.tree-sitter.builtGrammars)};
   '');
+  services.emacs = {
+    package = pkgs.emacsGcc;
+    enable = true;
+  };
   home-manager.users.shauryasingh.home.packages = with pkgs; [
     (ripgrep.override { withPCRE2 = true; })
     gnutls

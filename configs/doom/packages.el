@@ -35,8 +35,8 @@
 
 ;;emacs additions
 (package! lexic)
-(package! magit-delta :recipe (:host github :repo "dandavison/magit-delta"))
-(package! pdf-tools :recipe (:host github :repo "shaunsingh/pdf-tools")) ;has a nix-shell fix
+(package! magit-delta)
+(package! pdf-tools)
 
 ;;lsp
 (unpin! lsp-ui)
