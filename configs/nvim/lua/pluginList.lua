@@ -124,6 +124,11 @@ return packer.startup(function()
    }
 
    use {
+      "github/copilot.vim",
+      event = "InsertEnter",
+   }
+
+   use {
       "williamboman/nvim-lsp-installer",
    }
 
