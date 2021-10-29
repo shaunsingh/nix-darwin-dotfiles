@@ -46,7 +46,7 @@
             home-manager.users.shauryasingh = { pkgs, ... }: {
               imports = [ nix-doom-emacs.hmModule ];
               programs.doom-emacs = {
-                enable = false;
+                enable = true;
                 doomPrivateDir = ./configs/doom;
                 emacsPackage = pkgs.emacsGcc;
               };

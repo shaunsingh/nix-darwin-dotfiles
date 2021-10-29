@@ -89,6 +89,7 @@ unrivaled in extensibility.
 
 #+attr_html: :class invertible :alt Radar chart comparing my thoughts on a few editors.
 [[file:./misc/editor-comparison.jpeg]]
+
 ** Why Emacs?
 Emacs is [[https://www.eigenbahn.com/2020/01/12/emacs-is-no-editor][not a text editor]], this is a common misnomer. It is far more apt to
 describe Emacs as /a Lisp machine providing a generic user-centric text
@@ -590,12 +591,7 @@ Make this file run (slightly) faster with lexical binding
 I want to run emacs28's new native-compiler with -O3, if available
 #+begin_src emacs-lisp
 (when 'native-comp-compiler-options
-                 (setq native-comp-compiler-options '("-O3")))
-#+end_src
-
-Trying it out, dumb solution but I restart emacs very often
-#+begin_src emacs-lisp
-(setq gc-cons-threshold most-positive-fixnum)
+                 (setq native-comp-compiler-options '("-Ofast")))
 #+end_src
 
 ** Personal information
@@ -992,7 +988,6 @@ I think company is a bit too quick to recommend some stuff
     gfm-mode)
   '(:seperate
     company-yasnippet
-    company-ispell
     company-files))
 
 ;;nested snippets
@@ -3132,8 +3127,6 @@ Sprinkle in some =doct= utility functions
 #+end_src
 
 ** ORG Plot
-
-[[xkcd:523]]
 
 You can't ever have too many graphs! Lets make it look prettier, and tell it to use the doom theme colors
 #+begin_src elisp

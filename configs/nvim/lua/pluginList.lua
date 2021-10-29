@@ -27,7 +27,7 @@ return packer.startup(function()
       event = "InsertEnter",
       config = function()
         require("better_escape").setup {
-          mapping = {"jk", "jj"}, 
+          mapping = {"jk", "jj"},
           timeout = vim.o.timeoutlen,
           clear_empty_lines = true,
           keys = "<Esc>",
@@ -39,7 +39,8 @@ return packer.startup(function()
       "shaunsingh/nord.nvim",
       after = "packer.nvim",
       config = function()
-         vim.cmd [[colorscheme nord]]
+         require('nord').set()
+         --vim.cmd [[colorscheme nord]]
       end,
    }
 

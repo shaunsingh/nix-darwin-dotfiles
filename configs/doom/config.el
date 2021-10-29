@@ -4,12 +4,8 @@
 
 ;; [[file:../../nix-darwin-dotfiles/configs/doom/config.org::*Basic Configuration][Basic Configuration:2]]
 (when 'native-comp-compiler-options
-                 (setq native-comp-compiler-options '("-O3")))
+                 (setq native-comp-compiler-options '("-Ofast")))
 ;; Basic Configuration:2 ends here
-
-;; [[file:../../nix-darwin-dotfiles/configs/doom/config.org::*Basic Configuration][Basic Configuration:3]]
-(setq gc-cons-threshold most-positive-fixnum)
-;; Basic Configuration:3 ends here
 
 ;; [[file:../../nix-darwin-dotfiles/configs/doom/config.org::*Personal information][Personal information:1]]
 (setq user-full-name "Shaurya Singh"
@@ -336,7 +332,6 @@ A key's value is a LaTeX snippet which loads such a font."))
     gfm-mode)
   '(:seperate
     company-yasnippet
-    company-ispell
     company-files))
 
 ;;nested snippets
