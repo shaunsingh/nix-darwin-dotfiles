@@ -15,7 +15,6 @@
         sourcecodepro newpx;
     })
     sdcv
-    emacsGcc
     
     # Language deps
     python39Packages.grip

@@ -236,4 +236,3 @@ gls.short_line_left[1] = {
 }
 
 
-

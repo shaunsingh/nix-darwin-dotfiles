@@ -26,10 +26,10 @@
       url = "github:nix-community/emacs-overlay";
       inputs.nixpkgs.follows = "unstable";
     };
-    # nix-doom-emacs = {
-    #   url = "github:vlaci/nix-doom-emacs/develop";
-    #   inputs.nixpkgs.follows = "unstable";
-    # };
+    nix-doom-emacs = {
+      url = "github:vlaci/nix-doom-emacs/develop";
+      inputs.nixpkgs.follows = "unstable";
+    };
     darwin = {
       url = "github:LnL7/nix-darwin/master";
       inputs.nixpkgs.follows = "unstable";
@@ -40,7 +40,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, spacebar, neovim, emacs, darwin, home-manager, ...
+  outputs = { self, nixpkgs, spacebar, neovim, nix-doom-emacs, emacs, darwin, home-manager, ...
     }@inputs: {
       darwinConfigurations."shaunsingh-laptop" = darwin.lib.darwinSystem {
         system = "aarch64-darwin";
@@ -56,14 +56,14 @@
               useGlobalPkgs = true;
               useUserPackages = true;
             };
-            # home-manager.users.shauryasingh = { pkgs, ... }: {
-            #   imports = [ nix-doom-emacs.hmModule ];
-            #   programs.doom-emacs = {
-            #     enable = false;
-            #     doomPrivateDir = ./configs/doom;
-            #     emacsPackage = pkgs.emacsGcc;
-            #   };
-            # };
+            home-manager.users.shauryasingh = { pkgs, ... }: {
+              imports = [ nix-doom-emacs.hmModule ];
+              programs.doom-emacs = {
+                enable = true;
+                doomPrivateDir = ./configs/doom;
+                emacsPackage = pkgs.emacsGcc;
+              };
+            };
           }
           ({ pkgs, lib, ... }: {
             services.nix-daemon.enable = true;
