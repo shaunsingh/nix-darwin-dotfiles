@@ -510,11 +510,11 @@ tweaking org then
 #+begin_src emacs-lisp
 (package! org-appear)
 (package! doct)
-(package! org-roam-ui :recipe (:host github :repo "org-roam/org-roam-ui" :files ("*.el" "out")))
-(package! org-pandoc-import
-  :recipe (:host github
-           :repo "tecosaur/org-pandoc-import"
-           :files ("*.el" "filters" "preprocessors")))
+;; (package! org-roam-ui :recipe (:host github :repo "org-roam/org-roam-ui" :files ("*.el" "out")))
+;; (package! org-pandoc-import
+;;   :recipe (:host github
+;;            :repo "tecosaur/org-pandoc-import"
+;;            :files ("*.el" "filters" "preprocessors")))
 #+end_src
 
 **** \LaTeX:
@@ -551,7 +551,7 @@ Making emacs look good is first priority, actually working in it is second
 (unpin! doom-modeline)
 (package! modus-themes)
 (package! solaire-mode :disable t)
-(package! ox-chameleon :recipe (:host github :repo "tecosaur/ox-chameleon"))
+;; (package! ox-chameleon :recipe (:host github :repo "tecosaur/ox-chameleon"))
 #+end_src
 
 **** Emacs Tweaks:
@@ -689,7 +689,7 @@ prefer a rounder font for plain text, so I'll go with Overpass for that. I have 
       doom-serif-font (font-spec :family "Liga SFMono Nerd Font" :weight 'light))
 #+end_src
 
-For mixed pitch, I would go with something comfier. I like Alegreya, so lets go with that
+For mixed pitch, I would go with something comfier. I like Alegreya Sans for a minimalist feel, so lets go with that
 #+begin_src elisp
 ;;mixed pitch modes
 (defvar mixed-pitch-modes '(org-mode LaTeX-mode markdown-mode gfm-mode Info-mode)
@@ -711,7 +711,7 @@ Also immediately enables `mixed-pitch-modes' if currently in one of the modes."
     "A variable-pitch face with serifs."
     :group 'basic-faces)
   (setq mixed-pitch-set-height t)
-  (setq variable-pitch-serif-font (font-spec :family "Alegreya" :size 16))
+  (setq variable-pitch-serif-font (font-spec :family "Alegreya Sans" :size 16 :weight 'Medium))
   (set-face-attribute 'variable-pitch-serif nil :font variable-pitch-serif-font)
   (defun mixed-pitch-serif-mode (&optional arg)
     "Change the default face of the current buffer to a serifed variable pitch, while keeping some faces fixed pitch."
@@ -2257,8 +2257,8 @@ Some hooks are a bit annoying, so lets make them shut up
 
 Sadly I can't always work in org, but I can import stuff into it!
 #+begin_src emacs-lisp
-(use-package! org-pandoc-import
-  :after org)
+;; (use-package! org-pandoc-import
+;;   :after org)
 #+end_src
 
 I prefer /org as my directory. Lets change some other defaults too
@@ -2884,18 +2884,18 @@ I would like to get into the habit of using org-roam for my notes, mainly becaus
 
 Lets set up the org-roam-ui as well
 #+begin_src elisp
-(use-package! websocket
-  :after org-roam)
+;; (use-package! websocket
+;;   :after org-roam)
 
-(use-package! org-roam-ui
-  :after org-roam
-  :commands org-roam-ui-open
-  :hook (org-roam . org-roam-ui-mode)
-  :config
-      (setq org-roam-ui-sync-theme t
-            org-roam-ui-follow t
-            org-roam-ui-update-on-save t
-            org-roam-ui-open-on-start t))
+;; (use-package! org-roam-ui
+;;   :after org-roam
+;;   :commands org-roam-ui-open
+;;   :hook (org-roam . org-roam-ui-mode)
+;;   :config
+;;       (setq org-roam-ui-sync-theme t
+;;             org-roam-ui-follow t
+;;             org-roam-ui-update-on-save t
+;;             org-roam-ui-open-on-start t))
 #+end_src
 
 The doom-modeline is a bit messy with roam, lets adjust that
@@ -4239,8 +4239,8 @@ Teco is the goto for this, so basically just ripping off him. Engrave faces ftw
 *** ox-chameleon
 Nice little package to color stuff for us.
 #+begin_src emacs-lisp
-(use-package! ox-chameleon
-  :after ox)
+;; (use-package! ox-chameleon
+;;   :after ox)
 #+end_src
 
 *** Async

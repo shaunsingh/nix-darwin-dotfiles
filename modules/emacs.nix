@@ -51,33 +51,4 @@
     package = pkgs.emacsGcc;
     enable = true;
   };
-  home-manager.users.shauryasingh.home.packages = with pkgs; [
-    (ripgrep.override { withPCRE2 = true; })
-    gnutls
-    gnuplot
-    sqlite
-    tree-sitter
-    (aspellWithDicts (dicts: with dicts; [ en en-computers en-science ]))
-    (texlive.combine {
-      inherit (texlive)
-        scheme-small dvipng dvisvgm l3packages xcolor soul adjustbox collectbox
-        amsmath siunitx cancel mathalpha capt-of chemfig wrapfig mhchem fvextra
-        cleveref latexmk tcolorbox environ arev amsfonts simplekv alegreya
-        sourcecodepro newpx;
-    })
-    sdcv
-    emacsGcc
-    # Language stuff
-    python39Packages.grip
-    python39Packages.pyflakes
-    python39Packages.isort
-    python39Packages.pytest
-    nodePackages.pyright
-    pipenv
-    nixfmt
-    black
-    rust-analyzer
-    rustup
-    shellcheck
-  ];
 }

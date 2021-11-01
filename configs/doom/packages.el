@@ -4,11 +4,11 @@
 ;;org
 (package! org-appear)
 (package! doct)
-(package! org-roam-ui :recipe (:host github :repo "org-roam/org-roam-ui" :files ("*.el" "out")))
-(package! org-pandoc-import
-  :recipe (:host github
-           :repo "tecosaur/org-pandoc-import"
-           :files ("*.el" "filters" "preprocessors")))
+;; (package! org-roam-ui :recipe (:host github :repo "org-roam/org-roam-ui" :files ("*.el" "out")))
+;; (package! org-pandoc-import
+;;   :recipe (:host github
+;;            :repo "tecosaur/org-pandoc-import"
+;;            :files ("*.el" "filters" "preprocessors")))
 
 ;;latex
 (package! org-fragtog)
@@ -31,7 +31,7 @@
 (unpin! doom-modeline)
 (package! modus-themes)
 (package! solaire-mode :disable t)
-(package! ox-chameleon :recipe (:host github :repo "tecosaur/ox-chameleon"))
+;; (package! ox-chameleon :recipe (:host github :repo "tecosaur/ox-chameleon"))
 
 ;;emacs additions
 (package! lexic)
