@@ -2,13 +2,11 @@
   description = "Shaurya's Nix Environment";
 
   nixConfig = {
-    extra-substituters = [
-        "https://cachix.cachix.org"
-        "https://nix-community.cachix.org"
-    ];
+    extra-substituters =
+      [ "https://cachix.cachix.org" "https://nix-community.cachix.org" ];
     extra-trusted-public-keys = [
-        "cachix.cachix.org-1:eWNHQldwUO7G2VkjpnjDbWwy4KQ/HNxht7H4SSoMckM="
-        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      "cachix.cachix.org-1:eWNHQldwUO7G2VkjpnjDbWwy4KQ/HNxht7H4SSoMckM="
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
     ];
   };
 
@@ -40,8 +38,8 @@
     };
   };
 
-  outputs = { self, nixpkgs, spacebar, neovim, nix-doom-emacs, emacs, darwin, home-manager, ...
-    }@inputs: {
+  outputs = { self, nixpkgs, spacebar, neovim, nix-doom-emacs, emacs, darwin
+    , home-manager, ... }@inputs: {
       darwinConfigurations."shaunsingh-laptop" = darwin.lib.darwinSystem {
         system = "aarch64-darwin";
         modules = [

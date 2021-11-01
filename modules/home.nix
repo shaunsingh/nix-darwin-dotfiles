@@ -15,7 +15,7 @@
         sourcecodepro newpx;
     })
     sdcv
-    
+
     # Language deps
     python39Packages.grip
     python39Packages.pyflakes
@@ -28,7 +28,7 @@
     rust-analyzer
     rustup
     shellcheck
-    
+
     # Terminal utils
     wget
     exa
@@ -421,55 +421,54 @@
     '';
   };
   home-manager.users.shauryasingh.programs.firefox.enable = true;
-  home-manager.users.shauryasingh.programs.firefox.package = pkgs.runCommand "firefox-0.0.0" {} "mkdir $out";
-  home-manager.users.shauryasingh.programs.firefox.profiles =
-    let
-      userChrome = builtins.readFile ../configs/userChrome.css;
-      settings = {
-        "app.update.auto" = true;
-        "browser.startup.homepage" = "https://shaunsingh.github.io/startpage/";
-        "browser.search.region" = "US";
-        "browser.search.countryCode" = "US";
-        "browser.search.isUS" = false;
-        "browser.ctrlTab.recentlyUsedOrder" = false;
-        "browser.newtabpage.enabled" = false;
-        "browser.bookmarks.showMobileBookmarks" = true;
-        "browser.uidensity" = 1;
-        "browser.urlbar.placeholderName" = "DuckDuckGo";
-        "browser.urlbar.update1" = true;
-        "distribution.searchplugins.defaultLocale" = "en-GB";
-        "general.useragent.locale" = "en-GB";
-        "identity.fxaccounts.account.device.name" = config.networking.hostName;
-        "privacy.trackingprotection.enabled" = true;
-        "privacy.trackingprotection.socialtracking.enabled" = true;
-        "privacy.trackingprotection.socialtracking.annotate.enabled" = true;
-        "reader.color_scheme" = "sepia";
-        "services.sync.declinedEngines" = "addons,passwords,prefs";
-        "services.sync.engine.addons" = false;
-        "services.sync.engineStatusChanged.addons" = true;
-        "services.sync.engine.passwords" = false;
-        "services.sync.engine.prefs" = false;
-        "services.sync.engineStatusChanged.prefs" = true;
-        "signon.rememberSignons" = false;
-        "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
-      };
-    in
-      {
-        home = {
-          inherit settings;
-          inherit userChrome;
-          id = 0;
-        };
+  home-manager.users.shauryasingh.programs.firefox.package =
+    pkgs.runCommand "firefox-0.0.0" { } "mkdir $out";
+  home-manager.users.shauryasingh.programs.firefox.profiles = let
+    userChrome = builtins.readFile ../configs/userChrome.css;
+    settings = {
+      "app.update.auto" = true;
+      "browser.startup.homepage" = "https://shaunsingh.github.io/startpage/";
+      "browser.search.region" = "US";
+      "browser.search.countryCode" = "US";
+      "browser.search.isUS" = false;
+      "browser.ctrlTab.recentlyUsedOrder" = false;
+      "browser.newtabpage.enabled" = false;
+      "browser.bookmarks.showMobileBookmarks" = true;
+      "browser.uidensity" = 1;
+      "browser.urlbar.placeholderName" = "DuckDuckGo";
+      "browser.urlbar.update1" = true;
+      "distribution.searchplugins.defaultLocale" = "en-GB";
+      "general.useragent.locale" = "en-GB";
+      "identity.fxaccounts.account.device.name" = config.networking.hostName;
+      "privacy.trackingprotection.enabled" = true;
+      "privacy.trackingprotection.socialtracking.enabled" = true;
+      "privacy.trackingprotection.socialtracking.annotate.enabled" = true;
+      "reader.color_scheme" = "sepia";
+      "services.sync.declinedEngines" = "addons,passwords,prefs";
+      "services.sync.engine.addons" = false;
+      "services.sync.engineStatusChanged.addons" = true;
+      "services.sync.engine.passwords" = false;
+      "services.sync.engine.prefs" = false;
+      "services.sync.engineStatusChanged.prefs" = true;
+      "signon.rememberSignons" = false;
+      "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
+    };
+  in {
+    home = {
+      inherit settings;
+      inherit userChrome;
+      id = 0;
+    };
 
-        work = {
-          inherit userChrome;
-          id = 1;
-          settings = settings // {
-            "browser.startup.homepage" = "about:blank";
-            "browser.urlbar.placeholderName" = "Google";
-          };
-        };
+    work = {
+      inherit userChrome;
+      id = 1;
+      settings = settings // {
+        "browser.startup.homepage" = "about:blank";
+        "browser.urlbar.placeholderName" = "Google";
       };
+    };
+  };
   home-manager.users.shauryasingh.programs.htop.settings = {
     color_scheme = 0;
     cpu_count_from_one = 0;
@@ -486,7 +485,7 @@
   home-manager.users.shauryasingh.programs.alacritty = {
     enable = true;
     # We need to give it a dummy package 
-    package = pkgs.runCommand "alacritty-0.0.0" {} "mkdir $out";
+    package = pkgs.runCommand "alacritty-0.0.0" { } "mkdir $out";
     settings = {
       window.padding.x = 45;
       window.padding.y = 45;
@@ -593,14 +592,16 @@
     ":q" = "exit";
     vi = "emacsclient -c";
     git-rebsae = "git rebase -i HEAD~2";
-    ll = "exa -lF --color-scale --no-user --no-time --no-permissions --group-directories-first --icons -a";
+    ll =
+      "exa -lF --color-scale --no-user --no-time --no-permissions --group-directories-first --icons -a";
     ls = "exa -lF --group-directories-first --icons -a";
     tree = "tree -a -C";
     cat = "bat";
     find = "fd";
     sed = "sd";
     calc = "emacs -f full-calc";
-    neovide = "/Applications/Neovide.app/Contents/MacOS/neovide --frameless --multigrid";
+    neovide =
+      "/Applications/Neovide.app/Contents/MacOS/neovide --frameless --multigrid";
   };
   home-manager.users.shauryasingh.home.file = {
     "~/.config/nvim" = {
