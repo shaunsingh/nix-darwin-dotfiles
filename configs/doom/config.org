@@ -317,7 +317,7 @@ vc                           ; version-control and Emacs, sitting in a tree
 
 #+name: doom-term
 #+begin_src emacs-lisp
-;;eshell                     ; the elisp shell that works everywhere
+eshell                       ; the elisp shell that works everywhere
 ;;shell                      ; simple shell REPL for Emacs
 ;;term                       ; basic terminal emulator for Emacs
 vterm                        ; the best terminal emulation in Emacs
@@ -333,7 +333,7 @@ syntax                       ; tasing you for every semicolon you forget
 #+name: doom-tools
 #+begin_src emacs-lisp
 ;;ansible                    ; a crucible for infrastructure as code
-biblio                       ; Writes a PhD for you (citation needed)
+;;biblio                     ; Writes a PhD for you (citation needed)
 ;;debugger                   ; FIXME stepping through code, to help you add bugs
 ;;direnv                     ; be direct about your environment
 ;;docker                     ; port everything to containers
@@ -461,11 +461,11 @@ I couldn't resist the Email and Feed modules.
 
 #+name: doom-app
 #+begin_src emacs-lisp
-calendar                     ; A dated approach to timetabling
+;;calendar                   ; A dated approach to timetabling
 ;;emms                       ; Multimedia in Emacs is music to my ears
 ;;everywhere                 ; *leave* Emacs!? You must be joking.
-irc                          ; how neckbeards socialize
-(rss +org)                   ; emacs as an RSS reader
+;;irc                        ; how neckbeards socialize
+;;(rss +org)                 ; emacs as an RSS reader
 ;;twitter                    ; twitter client https://twitter.com/vnought
 #+end_src
 
@@ -587,12 +587,6 @@ We do a little trolling
 Make this file run (slightly) faster with lexical binding
 #+begin_src elisp
 ;;; config.el -*- lexical-binding: t; -*-
-#+end_src
-
-I want to run emacs28's new native-compiler with -O3, if available
-#+begin_src emacs-lisp
-(when 'native-comp-compiler-options
-                 (setq native-comp-compiler-options '("-Ofast")))
 #+end_src
 
 ** Personal information

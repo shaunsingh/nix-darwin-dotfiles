@@ -2,11 +2,14 @@
   home-manager.users.shauryasingh.home.packages = with pkgs; [
     # Emacs deps
     (ripgrep.override { withPCRE2 = true; })
+    binutils
     gnutls
     gnuplot
     sqlite
     tree-sitter
-    (aspellWithDicts (dicts: with dicts; [ en en-computers en-science ]))
+    (aspellWithDicts (ds: with ds; [
+      en en-computers en-science
+    ]))
     (texlive.combine {
       inherit (texlive)
         scheme-small dvipng dvisvgm l3packages xcolor soul adjustbox collectbox
@@ -37,7 +40,25 @@
     sd
     discocss
     neovim-nightly
+    ((emacsPackagesNgGen emacsGcc).emacsWithPackages (epkgs: [
+      epkgs.vterm
+    ]))
   ];
+  fonts = {
+    enableFontDir = true;
+    fonts = with pkgs; [ alegreya overpass alegreya-sans ibm-plex emacs-all-the-icons-fonts ];
+  };
+  home-manager.users.shauryasingh.home.file = {
+    "~/.config/doom" = {
+      recursive = true;
+      source = ../configs/doom;
+    };
+  };
+  system.activationScripts.postUserActivation.text = ''
+    if [ -d $HOME/.config/emacs ]; then
+      git clone --depth 1 https://github.com/hlissner/doom-emacs $HOME/.config/emacs
+    fi
+  '';
   home-manager.users.shauryasingh.programs.git = {
     package = pkgs.gitFull;
     enable = true;
