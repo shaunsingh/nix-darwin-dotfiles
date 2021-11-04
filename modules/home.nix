@@ -54,11 +54,11 @@
       source = ../configs/doom;
     };
   };
-  system.activationScripts.postUserActivation.text = ''
-    if [ -d $HOME/.config/emacs ]; then
-      git clone --depth 1 https://github.com/hlissner/doom-emacs $HOME/.config/emacs
-    fi
-  '';
+  #  system.activationScripts.postUserActivation.text = ''
+  #    if [ -d $HOME/.config/emacs ]; then
+  #      git clone --depth 1 https://github.com/hlissner/doom-emacs $HOME/.config/emacs
+  #    fi
+  #  '';
   home-manager.users.shauryasingh.programs.git = {
     package = pkgs.gitFull;
     enable = true;
@@ -613,16 +613,15 @@
     ":q" = "exit";
     vi = "emacsclient -c";
     git-rebsae = "git rebase -i HEAD~2";
-    ll =
-      "exa -lF --color-scale --no-user --no-time --no-permissions --group-directories-first --icons -a";
+    ll = "exa -lF --color-scale --no-user --no-time --no-permissions --group-directories-first --icons -a";
     ls = "exa -lF --group-directories-first --icons -a";
     tree = "tree -a -C";
     cat = "bat";
     find = "fd";
     sed = "sd";
     calc = "emacs -f full-calc";
-    neovide =
-      "/Applications/Neovide.app/Contents/MacOS/neovide --frameless --multigrid";
+    neovide = "/Applications/Neovide.app/Contents/MacOS/neovide --frameless --multigrid";
+    nix-fish = "nix-shell --command fish";
   };
   home-manager.users.shauryasingh.home.file = {
     "~/.config/nvim" = {
@@ -645,6 +644,7 @@
     set -x PATH ~/.config/scripts $PATH
   '';
   programs.fish.promptInit = ''
+
     set -g fish_greeting ""
 
     set -U fish_color_autosuggestion      brblack
@@ -723,12 +723,19 @@
     function fish_prompt
         set -l last_status $status
 
+        set -l nix_shell_info (
+          if test -n "$IN_NIX_SHELL"
+            echo -n " [nix-shell]"
+          end
+        )
+
         if test $HOME != $PWD
             _print_in_color ""(prompt_pwd) blue
         end
         __fish_git_prompt " (%s)"
 
-        _print_in_color " λ " (_prompt_color_for_status $last_status)
+        _print_in_color "$nix_shell_info λ " (_prompt_color_for_status $last_status) ]
+
     end
   '';
   programs.tmux.enable = true;
