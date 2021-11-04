@@ -169,6 +169,7 @@
               '';
             };
             environment.systemPackages = with pkgs; [
+              # Emacs deps 
               ((emacsPackagesNgGen emacsGcc).emacsWithPackages
                 (epkgs: [ epkgs.vterm ]))
               (ripgrep.override { withPCRE2 = true; })
