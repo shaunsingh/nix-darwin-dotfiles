@@ -1,53 +1,4 @@
 { pkgs, lib, config, home-manager, nix-darwin, ... }: {
-  home-manager.users.shauryasingh.home.packages = with pkgs; [
-    # Emacs deps
-    (ripgrep.override { withPCRE2 = true; })
-    binutils
-    gnutls
-    gnuplot
-    sqlite
-    tree-sitter
-    (aspellWithDicts (ds: with ds; [
-      en en-computers en-science
-    ]))
-    (texlive.combine {
-      inherit (texlive)
-        scheme-small dvipng dvisvgm l3packages xcolor soul adjustbox collectbox
-        amsmath siunitx cancel mathalpha capt-of chemfig wrapfig mhchem fvextra
-        cleveref latexmk tcolorbox environ arev amsfonts simplekv alegreya
-        sourcecodepro newpx;
-    })
-    sdcv
-
-    # Language deps
-    python39Packages.grip
-    python39Packages.pyflakes
-    python39Packages.isort
-    python39Packages.pytest
-    nodePackages.pyright
-    pipenv
-    nixfmt
-    black
-    rust-analyzer
-    rustup
-    shellcheck
-
-    # Terminal utils
-    wget
-    exa
-    tree
-    fd
-    sd
-    discocss
-    neovim-nightly
-    ((emacsPackagesNgGen emacsGcc).emacsWithPackages (epkgs: [
-      epkgs.vterm
-    ]))
-  ];
-  fonts = {
-    enableFontDir = true;
-    fonts = with pkgs; [ alegreya overpass alegreya-sans ibm-plex emacs-all-the-icons-fonts ];
-  };
   home-manager.users.shauryasingh.home.file = {
     "~/.config/doom" = {
       recursive = true;
@@ -613,14 +564,16 @@
     ":q" = "exit";
     vi = "emacsclient -c";
     git-rebsae = "git rebase -i HEAD~2";
-    ll = "exa -lF --color-scale --no-user --no-time --no-permissions --group-directories-first --icons -a";
+    ll =
+      "exa -lF --color-scale --no-user --no-time --no-permissions --group-directories-first --icons -a";
     ls = "exa -lF --group-directories-first --icons -a";
     tree = "tree -a -C";
     cat = "bat";
     find = "fd";
     sed = "sd";
     calc = "emacs -f full-calc";
-    neovide = "/Applications/Neovide.app/Contents/MacOS/neovide --frameless --multigrid";
+    neovide =
+      "/Applications/Neovide.app/Contents/MacOS/neovide --frameless --multigrid";
     nix-fish = "nix-shell --command fish";
   };
   home-manager.users.shauryasingh.home.file = {

@@ -49,61 +49,61 @@
       url = "github:hlissner/doom-snippets/";
       flake = false;
     };
-    emacs-so-long =  {
-        url = "github:hlissner/emacs-so-long";
-        flake = false;
+    emacs-so-long = {
+      url = "github:hlissner/emacs-so-long";
+      flake = false;
     };
-    evil-markdown =  {
-        url = "github:Somelauw/evil-markdown";
-        flake = false;
+    evil-markdown = {
+      url = "github:Somelauw/evil-markdown";
+      flake = false;
     };
-    evil-org-mode =  {
-        url = "github:hlissner/evil-org-mode";
-        flake = false;
+    evil-org-mode = {
+      url = "github:hlissner/evil-org-mode";
+      flake = false;
     };
-    evil-quick-diff =  {
-        url = "github:rgrinberg/evil-quick-diff";
-        flake = false;
+    evil-quick-diff = {
+      url = "github:rgrinberg/evil-quick-diff";
+      flake = false;
     };
-    explain-pause-mode =  {
-        url = "github:lastquestion/explain-pause-mode";
-        flake = false;
+    explain-pause-mode = {
+      url = "github:lastquestion/explain-pause-mode";
+      flake = false;
     };
-    nix-straight =  {
-        url = "github:vlaci/nix-straight.el";
-        flake = false;
+    nix-straight = {
+      url = "github:vlaci/nix-straight.el";
+      flake = false;
     };
-    nose =  {
-        url = "github:emacsattic/nose";
-        flake = false;
+    nose = {
+      url = "github:emacsattic/nose";
+      flake = false;
     };
-    ob-racket =  {
-        url = "github:xchrishawk/ob-racket";
-        flake = false;
+    ob-racket = {
+      url = "github:xchrishawk/ob-racket";
+      flake = false;
     };
-    org =  {
-        url = "github:emacs-straight/org-mode";
-        flake = false;
+    org = {
+      url = "github:emacs-straight/org-mode";
+      flake = false;
     };
-    org-contrib =  {
-        url = "git+https://git.sr.ht/~bzg/org-contrib";
-        flake = false;
+    org-contrib = {
+      url = "git+https://git.sr.ht/~bzg/org-contrib";
+      flake = false;
     };
-    org-yt =  {
-        url = "github:TobiasZawada/org-yt";
-        flake = false;
+    org-yt = {
+      url = "github:TobiasZawada/org-yt";
+      flake = false;
     };
-    php-extras =  {
-        url = "github:arnested/php-extras";
-        flake = false;
+    php-extras = {
+      url = "github:arnested/php-extras";
+      flake = false;
     };
-    revealjs =  {
-        url = "github:hakimel/reveal.js";
-        flake = false;
+    revealjs = {
+      url = "github:hakimel/reveal.js";
+      flake = false;
     };
-    rotate-text =  {
-        url = "github:debug-ito/rotate-text.el";
-        flake = false;
+    rotate-text = {
+      url = "github:debug-ito/rotate-text.el";
+      flake = false;
     };
     nix-doom-emacs = {
       url = "github:vlaci/nix-doom-emacs/develop";
@@ -167,6 +167,57 @@
                 experimental-features = nix-command flakes
                 build-users-group = nixbld
               '';
+            };
+            environment.systemPackages = with pkgs; [
+              ((emacsPackagesNgGen emacsGcc).emacsWithPackages
+                (epkgs: [ epkgs.vterm ]))
+              (ripgrep.override { withPCRE2 = true; })
+              binutils
+              gnutls
+              gnuplot
+              sqlite
+              # tree-sitter
+              (aspellWithDicts (ds: with ds; [ en en-computers en-science ]))
+              (texlive.combine {
+                inherit (texlive)
+                  scheme-small dvipng dvisvgm l3packages xcolor soul adjustbox
+                  collectbox amsmath siunitx cancel mathalpha capt-of chemfig
+                  wrapfig mhchem fvextra cleveref latexmk tcolorbox environ arev
+                  amsfonts simplekv alegreya sourcecodepro newpx;
+              })
+              sdcv
+
+              # Language deps
+              python39Packages.grip
+              python39Packages.pyflakes
+              python39Packages.isort
+              python39Packages.pytest
+              nodePackages.pyright
+              pipenv
+              nixfmt
+              black
+              rust-analyzer
+              rustup
+              shellcheck
+
+              # Terminal utils
+              wget
+              exa
+              tree
+              fd
+              sd
+              discocss
+              neovim-nightly
+            ];
+            fonts = {
+              enableFontDir = true;
+              fonts = with pkgs; [
+                alegreya
+                overpass
+                alegreya-sans
+                ibm-plex
+                emacs-all-the-icons-fonts
+              ];
             };
           })
         ];
