@@ -1340,6 +1340,9 @@ Must be run as part of `org-font-lock-set-keywords-hook'."
     (add-to-list '+lookup-definition-functions #'+lookup/dictionary-definition)
     (add-hook 'nov-mode-hook #'+nov-mode-setup)))
 
+(use-package! screenshot
+  :defer t)
+
 (defadvice! shut-up-org-problematic-hooks (orig-fn &rest args)
   :around #'org-fancy-priorities-mode
   :around #'org-superstar-mode

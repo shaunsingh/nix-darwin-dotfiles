@@ -1,0 +1,8 @@
+# Compiled
+*.elc
+
+# Packaging
+.cask
+
+# macOS
+.DS_Store

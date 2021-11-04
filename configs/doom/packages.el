@@ -37,6 +37,7 @@
 (package! lexic)
 (package! magit-delta)
 (package! pdf-tools)
+(package! screenshot :recipe (:host github :repo "Jimmysit0/screenshot"))
 
 ;;lsp
 (unpin! lsp-ui)
@@ -46,4 +47,4 @@
 (package! nov)
 (package! xkcd)
 (package! keycast)
-(package! selectric-mode)
+(package! selectric-mode :recipe (:local-repo "lisp/selectric-mode"))

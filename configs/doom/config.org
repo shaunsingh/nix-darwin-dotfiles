@@ -564,7 +564,11 @@ screenshot capabilities are nice, and using the same dictionaries accross
 (package! lexic)
 (package! magit-delta)
 (package! pdf-tools)
+(package! screenshot :recipe (:host github :repo "Jimmysit0/screenshot"))
 #+end_src
+
+#+RESULTS: emacs
+| screenshot | :modules | ((:private . config) (:private . modules)) | :recipe | (:host github :repo Jimmysit0/screenshot) |
 
 **** LSP:
 I like to live life on the edge
@@ -581,7 +585,7 @@ We do a little trolling (and reading)
 (package! nov)
 (package! xkcd)
 (package! keycast)
-(package! selectric-mode)
+(package! selectric-mode :recipe (:local-repo "lisp/selectric-mode"))
 #+end_src
 
 * Basic Configuration
@@ -1328,6 +1332,7 @@ Since I use an apple silicon mac, I prefer if nix handles compiling the parsers 
 ;;   (global-tree-sitter-mode)
 ;;   (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
 #+end_src
+
 ** Modeline
 Doom modeline already looks good, but it can be better. Lets add some icons, the battery status, and make sure we don't lose track of time
 #+begin_src elisp
@@ -2266,6 +2271,13 @@ To actually read the ebooks we use =nov=.
     (visual-fill-column-mode 1)
     (add-to-list '+lookup-definition-functions #'+lookup/dictionary-definition)
     (add-hook 'nov-mode-hook #'+nov-mode-setup)))
+#+end_src
+
+** Screenshot
+Testing
+#+begin_src emacs-lisp
+(use-package! screenshot
+  :defer t)
 #+end_src
 
 * Org
