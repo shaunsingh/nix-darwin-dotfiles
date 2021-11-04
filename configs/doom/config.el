@@ -1370,6 +1370,19 @@ Must be run as part of `org-font-lock-set-keywords-hook'."
 
 (setq org-list-demote-modify-bullet '(("+" . "-") ("-" . "+") ("*" . "+") ("1." . "a.")))
 
+(after! ox
+(org-link-set-parameters "yt" :export #'+org-export-yt)
+(defun +org-export-yt (path desc backend _com)
+  (cond ((org-export-derived-backend-p backend 'html)
+         (format "<iframe width='440' \
+height='335' \
+src='https://www.youtube.com/embed/%s' \
+frameborder='0' \
+allowfullscreen>%s</iframe>" path (or "" desc)))
+        ((org-export-derived-backend-p backend 'latex)
+         (format "\\href{https://youtu.be/%s}{%s}" path (or desc "youtube")))
+        (t (format "https://youtu.be/%s" path)))))
+
 (use-package! ox-gfm
   :after org)
 

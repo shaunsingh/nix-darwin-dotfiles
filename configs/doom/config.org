@@ -1312,8 +1312,13 @@ I like a bit of padding, both inside and outside, and lets make the line spacing
 (add-hook 'before-make-frame-hook 'window-divider-mode)
 #+end_src
 
-** Selectric mode
-Typewriter go br
+** +Selectric+ NK-Creams mode
+Instead of using the regular selectric-mode, I modified it with a few notable tweaks, mainly:
+ 1. Support for EVIL mode
+ 2. It uses NK Cream sounds instead of the typewritter ones
+The samples used here are taken from monketype, but heres a similar board
+[[yt:WmE4iwZy08g]]
+
 #+begin_src elisp
 (use-package! selectric-mode
   :commands selectric-mode)
@@ -2325,6 +2330,22 @@ I want to slightly change the default args for babel
 I also want to change the order of bullets
 #+begin_src elisp
 (setq org-list-demote-modify-bullet '(("+" . "-") ("-" . "+") ("*" . "+") ("1." . "a.")))
+#+end_src
+
+The =[[yt:...]]= links preview nicely, but don’t export nicely. Thankfully, we can fix that.
+#+begin_src elisp
+(after! ox
+(org-link-set-parameters "yt" :export #'+org-export-yt)
+(defun +org-export-yt (path desc backend _com)
+  (cond ((org-export-derived-backend-p backend 'html)
+         (format "<iframe width='440' \
+height='335' \
+src='https://www.youtube.com/embed/%s' \
+frameborder='0' \
+allowfullscreen>%s</iframe>" path (or "" desc)))
+        ((org-export-derived-backend-p backend 'latex)
+         (format "\\href{https://youtu.be/%s}{%s}" path (or desc "youtube")))
+        (t (format "https://youtu.be/%s" path)))))
 #+end_src
 
 *** HTML
