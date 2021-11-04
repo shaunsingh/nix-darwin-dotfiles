@@ -511,11 +511,11 @@ tweaking org then
 #+begin_src emacs-lisp
 (package! org-appear)
 (package! doct)
-;; (package! org-roam-ui :recipe (:host github :repo "org-roam/org-roam-ui" :files ("*.el" "out")))
-;; (package! org-pandoc-import
-;;   :recipe (:host github
-;;            :repo "tecosaur/org-pandoc-import"
-;;            :files ("*.el" "filters" "preprocessors")))
+(package! org-roam-ui :recipe (:host github :repo "org-roam/org-roam-ui" :files ("*.el" "out")))
+(package! org-pandoc-import
+  :recipe (:host github
+           :repo "tecosaur/org-pandoc-import"
+           :files ("*.el" "filters" "preprocessors")))
 #+end_src
 
 **** \LaTeX:
@@ -552,7 +552,7 @@ Making emacs look good is first priority, actually working in it is second
 (unpin! doom-modeline)
 (package! modus-themes)
 (package! solaire-mode :disable t)
-;; (package! ox-chameleon :recipe (:host github :repo "tecosaur/ox-chameleon"))
+(package! ox-chameleon :recipe (:host github :repo "tecosaur/ox-chameleon"))
 #+end_src
 
 **** Emacs Tweaks:
@@ -575,9 +575,10 @@ I like to live life on the edge
 #+end_src
 
 **** Fun:
-We do a little trolling
+We do a little trolling (and reading)
 #+name: fun
 #+begin_src emacs-lisp
+(package! nov)
 (package! xkcd)
 (package! keycast)
 (package! selectric-mode)
@@ -928,9 +929,9 @@ emacs bootloaders
 #+end_src
 
 ** Themes
-Right now I'm using vibrant, but I use doom-nord sometimes
+Right now I'm using nord, but I use doom-vibrant sometimes
 #+begin_src elisp
-(setq doom-theme 'doom-vibrant)
+(setq doom-theme 'doom-nord)
 (setq doom-fw-padded-modeline t)
 (setq doom-one-light-padded-modeline t)
 (setq doom-nord-padded-modeline t)
@@ -1196,7 +1197,8 @@ The defaults for emacs aren't so good nowadays. Lets fix that up a bit
 
 (fringe-mode 0) ;;disable fringe
 (global-subword-mode 1) ;;navigate through Camel Case words
-(tool-bar-mode 1) ;;re-enable the toolbar
+;; (tool-bar-mode +1) ;;re-enable the toolbar
+;; (setq tool-bar-style 'text)
 #+end_src
 
 There's issues with emacs flickering on mac (and sometimes wayland). This should
@@ -2236,6 +2238,35 @@ RSS is a nice simple way of getting my news. Lets set that up
             (url-copy-file pdf file)
             (funcall file-view-function file)))))))
 #+end_src
+** Ebooks
+[[xkcd:548]]
+
+To actually read the ebooks we use =nov=.
+#+begin_src emacs-lisp
+(use-package! nov
+  :mode ("\\.epub\\'" . nov-mode)
+  :config
+  (map! :map nov-mode-map
+        :n "RET" #'nov-scroll-up)
+
+  (advice-add 'nov-render-title :override #'ignore)
+  (defun +nov-mode-setup ()
+    (face-remap-add-relative 'variable-pitch
+                             :family "Overpass"
+                             :height 1.4
+                             :width 'semi-expanded)
+    (face-remap-add-relative 'default :height 1.3)
+    (setq-local line-spacing 0.2
+                next-screen-context-lines 4
+                shr-use-colors nil)
+    (require 'visual-fill-column nil t)
+    (setq-local visual-fill-column-center-text t
+                visual-fill-column-width 81
+                nov-text-width 80)
+    (visual-fill-column-mode 1)
+    (add-to-list '+lookup-definition-functions #'+lookup/dictionary-definition)
+    (add-hook 'nov-mode-hook #'+nov-mode-setup)))
+#+end_src
 
 * Org
 ** Org-Mode
@@ -2252,8 +2283,8 @@ Some hooks are a bit annoying, so lets make them shut up
 
 Sadly I can't always work in org, but I can import stuff into it!
 #+begin_src emacs-lisp
-;; (use-package! org-pandoc-import
-;;   :after org)
+(use-package! org-pandoc-import
+  :after org)
 #+end_src
 
 I prefer /org as my directory. Lets change some other defaults too
@@ -2879,18 +2910,18 @@ I would like to get into the habit of using org-roam for my notes, mainly becaus
 
 Lets set up the org-roam-ui as well
 #+begin_src elisp
-;; (use-package! websocket
-;;   :after org-roam)
+(use-package! websocket
+  :after org-roam)
 
-;; (use-package! org-roam-ui
-;;   :after org-roam
-;;   :commands org-roam-ui-open
-;;   :hook (org-roam . org-roam-ui-mode)
-;;   :config
-;;       (setq org-roam-ui-sync-theme t
-;;             org-roam-ui-follow t
-;;             org-roam-ui-update-on-save t
-;;             org-roam-ui-open-on-start t))
+(use-package! org-roam-ui
+  :after org-roam
+  :commands org-roam-ui-open
+  :hook (org-roam . org-roam-ui-mode)
+  :config
+      (setq org-roam-ui-sync-theme t
+            org-roam-ui-follow t
+            org-roam-ui-update-on-save t
+            org-roam-ui-open-on-start t))
 #+end_src
 
 The doom-modeline is a bit messy with roam, lets adjust that
@@ -4234,8 +4265,8 @@ Teco is the goto for this, so basically just ripping off him. Engrave faces ftw
 *** ox-chameleon
 Nice little package to color stuff for us.
 #+begin_src emacs-lisp
-;; (use-package! ox-chameleon
-;;   :after ox)
+(use-package! ox-chameleon
+  :after ox)
 #+end_src
 
 *** Async
