@@ -10,7 +10,6 @@ vim.cmd [[highlight NvimTreeNormal guifg=#D8DEE9  guibg=#2a2e39]]
 vim.cmd [[ autocmd BufEnter,BufWinEnter,FileType,WinEnter * lua require("options").hide_statusline() ]]
 
 vim.g.nvim_tree_add_trailing = 0 -- append a trailing slash to folder names
-vim.g.nvim_tree_hide_dotfiles = 0
 vim.g.nvim_tree_highlight_opened_files = 0
 vim.g.nvim_tree_indent_markers = 1
 vim.g.nvim_tree_ignore = { ".git", "node_modules", ".cache" }
@@ -48,6 +47,9 @@ vim.g.nvim_tree_icons = {
 }
 
 nvimtree.setup {
+   filters = {
+      dotfiles = false,
+   },
    disable_netrw = true,
    hijack_netrw = true,
    ignore_ft_on_setup = { "dashboard" },

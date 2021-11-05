@@ -30,6 +30,7 @@
 (unpin! doom-themes)
 (unpin! doom-modeline)
 (package! modus-themes)
+(package! stimmung-themes)
 (package! solaire-mode :disable t)
 (package! ox-chameleon :recipe (:host github :repo "tecosaur/ox-chameleon"))
 

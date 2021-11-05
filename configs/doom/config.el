@@ -278,7 +278,8 @@ A key's value is a LaTeX snippet which loads such a font."))
 ;; Font collections:8 ends here
 
 ;; [[file:../../nix-darwin-dotfiles/configs/doom/config.org::*Themes][Themes:1]]
-(setq doom-theme 'doom-nord)
+;;(setq doom-theme 'doom-nord)
+(setq doom-theme 'stimmung-themes-light)
 (setq doom-fw-padded-modeline t)
 (setq doom-one-light-padded-modeline t)
 (setq doom-nord-padded-modeline t)

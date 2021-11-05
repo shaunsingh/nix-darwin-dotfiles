@@ -18,7 +18,6 @@
   View on GitHub</a>
 #+end_export
 
-
 #+begin_quote
 Let us change our traditional attitude to the construction of programs:
 Instead of imagining that our main task is to instruct a computer what to do,
@@ -552,6 +551,7 @@ Making emacs look good is first priority, actually working in it is second
 (unpin! doom-themes)
 (unpin! doom-modeline)
 (package! modus-themes)
+(package! stimmung-themes)
 (package! solaire-mode :disable t)
 (package! ox-chameleon :recipe (:host github :repo "tecosaur/ox-chameleon"))
 #+end_src
@@ -936,7 +936,8 @@ emacs bootloaders
 ** Themes
 Right now I'm using nord, but I use doom-vibrant sometimes
 #+begin_src elisp
-(setq doom-theme 'doom-nord)
+;;(setq doom-theme 'doom-nord)
+(setq doom-theme 'stimmung-themes-light)
 (setq doom-fw-padded-modeline t)
 (setq doom-one-light-padded-modeline t)
 (setq doom-nord-padded-modeline t)
