@@ -551,7 +551,6 @@ Making emacs look good is first priority, actually working in it is second
 (unpin! doom-themes)
 (unpin! doom-modeline)
 (package! modus-themes)
-(package! stimmung-themes)
 (package! solaire-mode :disable t)
 (package! ox-chameleon :recipe (:host github :repo "tecosaur/ox-chameleon"))
 #+end_src
@@ -567,9 +566,6 @@ screenshot capabilities are nice, and using the same dictionaries accross
 (package! pdf-tools)
 (package! screenshot :recipe (:host github :repo "Jimmysit0/screenshot"))
 #+end_src
-
-#+RESULTS: emacs
-| screenshot | :modules | ((:private . config) (:private . modules)) | :recipe | (:host github :repo Jimmysit0/screenshot) |
 
 **** LSP:
 I like to live life on the edge
@@ -936,8 +932,7 @@ emacs bootloaders
 ** Themes
 Right now I'm using nord, but I use doom-vibrant sometimes
 #+begin_src elisp
-;;(setq doom-theme 'doom-nord)
-(setq doom-theme 'stimmung-themes-light)
+(setq doom-theme 'doom-nord)
 (setq doom-fw-padded-modeline t)
 (setq doom-one-light-padded-modeline t)
 (setq doom-nord-padded-modeline t)
