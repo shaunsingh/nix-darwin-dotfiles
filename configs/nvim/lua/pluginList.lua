@@ -14,7 +14,7 @@ return packer.startup(function()
       "wbthomason/packer.nvim",
       event = "VimEnter",
    }
-   
+
    -- optimizations
    use {
       "nvim-lua/plenary.nvim",
@@ -52,7 +52,6 @@ return packer.startup(function()
       after = "packer.nvim",
       config = function()
          require('nord').set()
-         --vim.cmd [[colorscheme nord]]
       end,
    }
 
@@ -113,13 +112,7 @@ return packer.startup(function()
 
    use {
       "lewis6991/gitsigns.nvim",
-      opt = true,
-      setup = function()
-         require("options").packer_lazy_load "gitsigns.nvim"
-      end,
-      config = function()
-         require "plugins.gitsigns"
-      end,
+      after = "nord.nvim",
    }
 
    use {
@@ -133,26 +126,10 @@ return packer.startup(function()
    -- LSP
    use {
       "neovim/nvim-lspconfig",
-      opt = true,
-      setup = function()
-         require("options").packer_lazy_load "nvim-lspconfig"
-         vim.defer_fn(function()
-            vim.cmd 'if &ft == "packer" | echo "" | else | silent! e %'
-         end, 0)
-      end,
-      config = function()
-         require "plugins.lspconfig"
-      end,
    }
-
 
    use {
       "williamboman/nvim-lsp-installer",
-   }
-
-   use {
-      "weilbith/nvim-code-action-menu",
-      cmd = 'CodeActionMenu',
    }
 
    use {
@@ -208,11 +185,6 @@ return packer.startup(function()
    use {
       "hrsh7th/cmp-path",
       after = "cmp-rg",
-   }
-
-   use {
-      "windwp/nvim-autopairs",
-      after = "nvim-cmp",
    }
 
    use {
