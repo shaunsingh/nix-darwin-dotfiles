@@ -90,7 +90,7 @@ summary {
   --text-gray: #616E88;
   --text-medium: #81A1C1;
   --text-dark: #E5E9F0;
-  --switch-icon: "🌝";
+  --switch-icon: "🔆";
   --switch-shadow-color: #EBCB8B;
   --switch-text: "light mode?"; }
 
@@ -109,7 +109,7 @@ summary {
   --text-gray: #444;
   --text-medium: #222;
   --text-dark: #000;
-  --switch-icon: "🌚";
+  --switch-icon: "🌙";
   --switch-shadow-color: #373d4e;
   --switch-text: "dark mode?"; }
 

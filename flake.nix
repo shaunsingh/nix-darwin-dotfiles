@@ -112,6 +112,8 @@
               sd
               discocss
               neovim-nightly
+	      nodejs
+
             ];
             fonts = {
               enableFontDir = true;

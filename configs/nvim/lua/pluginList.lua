@@ -15,10 +15,13 @@ return packer.startup(function()
       event = "VimEnter",
    }
 
-   -- optimizations
+   -- Required for telescope
    use {
       "nvim-lua/plenary.nvim",
+      event = "VimEnter",
    }
+
+   -- Startup optimizations
 
    use {
       "nathom/filetype.nvim"
@@ -123,13 +126,23 @@ return packer.startup(function()
       end,
    }
 
-   -- LSP
+   -- LSP (and copilot
+   use {
+      "github/copilot.vim",
+      event = "InsertEnter",
+   }
+
    use {
       "neovim/nvim-lspconfig",
+      after = "nvim-lsp-installer",
+      config = function()
+         require "plugins.lspconfig"
+      end,
    }
 
    use {
       "williamboman/nvim-lsp-installer",
+      event = "InsertEnter",
    }
 
    use {
@@ -238,16 +251,17 @@ return packer.startup(function()
          require("hop").setup()
       end,
    }
+   
+   use {
+      "sindrets/diffview.nvim",
+      after = "neogit",
+   }
 
    use {
       "TimUntersberger/neogit",
       cmd = {
          "Neogit",
          "Neogit commit",
-      },
-      requires = {
-         "nvim-lua/plenary.nvim",
-         "sindrets/diffview.nvim",
       },
       config = function()
          require "plugins.neogit"
