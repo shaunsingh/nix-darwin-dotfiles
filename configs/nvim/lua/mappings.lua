@@ -1,3 +1,4 @@
+-- helper function for clean mappings
 local function map(mode, lhs, rhs, opts)
    local options = { noremap = true, silent = true }
    if opts then
@@ -26,6 +27,7 @@ map("n", "<c-j>", "<cmd>wincmd j<CR>")
 map("n", "<c-h>", "<cmd>wincmd h<CR>")
 map("n", "<c-l>", "<cmd>wincmd l<CR>")
 
+-- since we lazy load packer.nvim, we need to load it when we run packer-related commands
 vim.cmd "silent! command PackerCompile lua require 'pluginList' require('packer').compile()"
 vim.cmd "silent! command PackerInstall lua require 'pluginList' require('packer').install()"
 vim.cmd "silent! command PackerStatus lua require 'pluginList' require('packer').status()"

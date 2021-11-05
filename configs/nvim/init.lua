@@ -1,8 +1,11 @@
+--load impatient first
 local impatient, impatient = pcall(require, "impatient")
 if impatient then
+  -- NOTE: currently broken, will fix soon
   --impatient.enable_profile()
 end
 
+--disable builtin plugins
 local disabled_built_ins = {
    "2html_plugin",
    "getscript",
@@ -28,6 +31,7 @@ for _, plugin in pairs(disabled_built_ins) do
    vim.g["loaded_" .. plugin] = 1
 end
 
+-- load options, mappings, and plugins
 local doom_modules = {
    "options",
    "mappings",

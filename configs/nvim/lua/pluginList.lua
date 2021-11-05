@@ -240,16 +240,6 @@ return packer.startup(function()
    }
 
    use {
-      "kristijanhusak/orgmode.nvim",
-      branch = 'tree-sitter',
-      wants = "nvim-treesitter",
-      ft = { "org" },
-      config = function()
-         require("plugins.others").orgmode()
-      end,
-   }
-
-   use {
       "TimUntersberger/neogit",
       cmd = {
          "Neogit",

@@ -1,7 +1,7 @@
 vim.cmd "packadd packer.nvim"
-
 local present, packer = pcall(require, "packer")
 
+--clone packer if its missing
 if not present then
    local packer_path = vim.fn.stdpath "data" .. "/site/pack/packer/opt/packer.nvim"
 
@@ -27,7 +27,9 @@ if not present then
    end
 end
 
+-- packer settings
 return packer.init {
+   -- tell packer to put packer_compiled under the /lua folder so its cached by impatient
    compile_path = vim.fn.stdpath('config')..'/lua/packer_compiled.lua',
    display = {
       open_fn = function()
@@ -38,5 +40,4 @@ return packer.init {
    git = {
       clone_timeout = 600, -- Timeout, in seconds, for git clones
    },
-   auto_clean = true,
 }
