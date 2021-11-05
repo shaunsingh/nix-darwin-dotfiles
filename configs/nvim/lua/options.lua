@@ -3,7 +3,8 @@
 vim.g.neovide_cursor_vfx_mode = "pixiedust"
 vim.g.neovide_remember_window_size = true
 vim.g.neovide_cursor_antialiasing = true
---vim.g.neovide.neovide_floating_blur = 0
+-- Do not source the default filetype.vim
+vim.g.did_load_filetypes = 1
 
 vim.opt.fillchars = { eob = " " }
 vim.opt.termguicolors = true

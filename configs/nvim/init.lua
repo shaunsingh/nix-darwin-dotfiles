@@ -1,3 +1,5 @@
+require("impatient")
+
 local doom_modules = {
    "options",
    "mappings",

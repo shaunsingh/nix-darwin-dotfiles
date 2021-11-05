@@ -18,6 +18,7 @@
   View on GitHub</a>
 #+end_export
 
+
 #+begin_quote
 Let us change our traditional attitude to the construction of programs:
 Instead of imagining that our main task is to instruct a computer what to do,

@@ -8,13 +8,24 @@ end
 
 local use = packer.use
 return packer.startup(function()
+
+   -- Have packer manage itself
    use {
       "wbthomason/packer.nvim",
       event = "VimEnter",
    }
-
+   
+   -- optimizations
    use {
       "nvim-lua/plenary.nvim",
+   }
+
+   use {
+      "nathom/filetype.nvim"
+   }
+
+   use {
+      "lewis6991/impatient.nvim"
    }
 
    use {
@@ -22,6 +33,7 @@ return packer.startup(function()
      cmd = 'StartupTime',
    }
 
+   -- Use fancy plugin for JK escape
    use {
       "max397574/better-escape.nvim",
       event = "InsertEnter",
@@ -34,6 +46,7 @@ return packer.startup(function()
       end,
     }
 
+   -- Theme <3 and UI
    use {
       "shaunsingh/nord.nvim",
       after = "packer.nvim",
@@ -110,6 +123,15 @@ return packer.startup(function()
    }
 
    use {
+      "kyazdani42/nvim-tree.lua",
+      cmd = { "NvimTreeToggle", "NvimTreeFocus" },
+      config = function()
+         require "plugins.nvimtree"
+      end,
+   }
+
+   -- LSP
+   use {
       "neovim/nvim-lspconfig",
       opt = true,
       setup = function()
@@ -123,10 +145,6 @@ return packer.startup(function()
       end,
    }
 
-   use {
-      "github/copilot.vim",
-      event = "InsertEnter",
-   }
 
    use {
       "williamboman/nvim-lsp-installer",
@@ -195,14 +213,6 @@ return packer.startup(function()
    use {
       "windwp/nvim-autopairs",
       after = "nvim-cmp",
-   }
-
-   use {
-      "kyazdani42/nvim-tree.lua",
-      cmd = { "NvimTreeToggle", "NvimTreeFocus" },
-      config = function()
-         require "plugins.nvimtree"
-      end,
    }
 
    use {
