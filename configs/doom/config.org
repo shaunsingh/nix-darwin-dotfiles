@@ -1,11 +1,8 @@
-:PROPERTIES:
-:ID:       c7d3a762-4717-4f5c-9836-ad2d5dec73a9
-:END:
 #+title: Doom Emacs Configuration
 #+author: Shaurya Singh
+#+property: header-args:elisp :exports code
 #+latex_header: \let\textls\relax
 #+latex_class: chameleon
-#+property: header-args:elisp :exports code
 #+startup: fold
 
 #+begin_export html
@@ -79,7 +76,7 @@ Thats not to say using Emacs doesn't have its pitfalls. The performance leaves
 something to be desired, but the benefits far outweigh the drawbacks. Its
 unrivaled in extensibility.
 
-#+plot: transpose:yes type:radar min:0 max:5 ticks:5 file:"misc/editor-comparison.jpeg"
+#+plot: transpose:yes type:radar min:0 max:5 ticks:5 file:"misc/editor-comparison.svg"
 | Editor   | Extensibility | Ecosystem | Ease of Use | Comfort | Completion | Performance |
 |----------+---------------+-----------+-------------+---------+------------+-------------|
 | IDLE     |             1 |         1 |           3 |       1 |          1 |           2 |
@@ -88,7 +85,7 @@ unrivaled in extensibility.
 | (Neo)Vim |             4 |         3 |         2.5 |     3.5 |          4 |           5 |
 
 #+attr_html: :class invertible :alt Radar chart comparing my thoughts on a few editors.
-[[file:./misc/editor-comparison.jpeg]]
+[[file:./misc/editor-comparison.svg]]
 
 ** Why Emacs?
 Emacs is [[https://www.eigenbahn.com/2020/01/12/emacs-is-no-editor][not a text editor]], this is a common misnomer. It is far more apt to
@@ -511,8 +508,11 @@ tweaking org then
 #+begin_src emacs-lisp
 (package! org-appear)
 (package! doct)
-(package! org-roam-ui :recipe (:host github :repo "org-roam/org-roam-ui" :files ("*.el" "out")))
-(package! org-pandoc-import
+(package! org-roam-ui ;https://github.com/melpa/melpa/pull/7784
+  :recipe (:host github
+           :repo "org-roam/org-roam-ui"
+           :files ("*.el" "out")))
+(package! org-pandoc-import ;https://github.com/melpa/melpa/pull/7326
   :recipe (:host github
            :repo "tecosaur/org-pandoc-import"
            :files ("*.el" "filters" "preprocessors")))
@@ -552,7 +552,7 @@ Making emacs look good is first priority, actually working in it is second
 (unpin! doom-modeline)
 (package! modus-themes)
 (package! solaire-mode :disable t)
-(package! ox-chameleon :recipe (:host github :repo "tecosaur/ox-chameleon"))
+(package! ox-chameleon :recipe (:host github :repo "tecosaur/ox-chameleon")) ;soon :tm:
 #+end_src
 
 **** Emacs Tweaks:
@@ -564,7 +564,7 @@ screenshot capabilities are nice, and using the same dictionaries accross
 (package! lexic)
 (package! magit-delta)
 (package! pdf-tools)
-(package! screenshot :recipe (:host github :repo "Jimmysit0/screenshot"))
+(package! screenshot :recipe (:host github :repo "Jimmysit0/screenshot")) ;https://github.com/melpa/melpa/pull/7327
 #+end_src
 
 **** LSP:

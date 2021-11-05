@@ -4,8 +4,11 @@
 ;;org
 (package! org-appear)
 (package! doct)
-(package! org-roam-ui :recipe (:host github :repo "org-roam/org-roam-ui" :files ("*.el" "out")))
-(package! org-pandoc-import
+(package! org-roam-ui ;https://github.com/melpa/melpa/pull/7784
+  :recipe (:host github
+           :repo "org-roam/org-roam-ui"
+           :files ("*.el" "out")))
+(package! org-pandoc-import ;https://github.com/melpa/melpa/pull/7326
   :recipe (:host github
            :repo "tecosaur/org-pandoc-import"
            :files ("*.el" "filters" "preprocessors")))
@@ -31,13 +34,13 @@
 (unpin! doom-modeline)
 (package! modus-themes)
 (package! solaire-mode :disable t)
-(package! ox-chameleon :recipe (:host github :repo "tecosaur/ox-chameleon"))
+(package! ox-chameleon :recipe (:host github :repo "tecosaur/ox-chameleon")) ;soon :tm:
 
 ;;emacs additions
 (package! lexic)
 (package! magit-delta)
 (package! pdf-tools)
-(package! screenshot :recipe (:host github :repo "Jimmysit0/screenshot"))
+(package! screenshot :recipe (:host github :repo "Jimmysit0/screenshot")) ;https://github.com/melpa/melpa/pull/7327
 
 ;;lsp
 (unpin! lsp-ui)

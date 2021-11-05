@@ -1,9 +1,9 @@
 // Table of contents
 
 ::-webkit-scrollbar { width: 10px; height: 8px; }
-::-webkit-scrollbar-track { background:#9992; }
-::-webkit-scrollbar-thumb { background:#ccc; }
-::-webkit-scrollbar-thumb:hover { background:#888; }
+::-webkit-scrollbar-track { background:#2E3440; }
+::-webkit-scrollbar-thumb { background:#4C566A; }
+::-webkit-scrollbar-thumb:hover { background:#434C5E; }
 
 @media (min-width: 1280px) {
   #table-of-contents {
@@ -29,11 +29,11 @@
       }
       &::before {
         top: 0;
-        background: linear-gradient(180deg, $back-light 0%, $back-light 35%, rgba(0,0,0,0) 100%);
+        background: linear-gradient(180deg, $back-light 0%, $back-light 35%, rgba(46, 52, 64, 0) 0%);
       }
       &::after {
         bottom: 0;
-        background: linear-gradient(0deg, $back-light 0%, $back-light 35%, rgba(0,0,0,0) 100%);
+        background: linear-gradient(0deg, $back-light 0%, $back-light 35%, rgba(46, 52, 64, 0) 0%);
       }
       > ul {
         list-style: none;
