@@ -21,7 +21,7 @@ cmp.setup {
 	    nvim_lua = "Lua",
 	    Path = "Path",
 	    luasnip = "LuaSnip",
-	    orgmode = "Org",
+	    neorg = "Neorg",
          })[entry.source.name]
          vim_item.kind = ({
             Text = "",
@@ -88,6 +88,6 @@ cmp.setup {
       { name = "luasnip" },
       { name = "rg" },
       { name = "nvim_lua" },
-      { name = "orgmode" },
+      { name = "neorg" },
    },
 }

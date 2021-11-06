@@ -268,4 +268,19 @@ return packer.startup(function()
       end,
    }
 
+   use {
+      "nvim-neorg/neorg",
+      branch = 'unstable',
+      ft = "norg",
+      requires = "nvim-lua/plenary.nvim",
+      config = function()
+         require "plugins.neorg"
+      end,
+   }
+
+   use {
+      "nvim-neorg/neorg-telescope",
+      ft = "norg",
+   }
+
 end)
