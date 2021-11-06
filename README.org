@@ -7,6 +7,8 @@ fork this repository, review the code, and remove things you don't want
 or need. Don't blindly use my settings unless you know what that
 entails.
 
+Currently this only works on aarch64-darwin systems. It will likely work on x86_64-darwin systems with minimal modifications, but I haven't tested it.
+
 ** Install
 Install nix:
 #+begin_src sh
@@ -21,7 +23,7 @@ nix-shell -p nixUnstable git
 Clone, build, and switch to the dotfiles
 #+begin_src sh
 git clone --depth 1 https://github.com/shaunsingh/nix-darwin-dotfiles.git ~/nix-darwin-dotfiles/ && cd nix-darwin-dotfiles
-nix build ~/nix-darwin-dotfiles\#darwinConfigurations.shaunsingh-laptop.system
+nix build ~/nix-darwin-dotfiles\#darwinConfigurations.shaunsingh-laptop.system --extra-experimental-features nix-command --extra-experimental-features flakes
 ./result/sw/bin/darwin-rebuild switch --flake .#shaunsingh-laptop
 #+end_src
 
