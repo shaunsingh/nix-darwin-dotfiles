@@ -564,13 +564,13 @@
     ":q" = "exit";
     vi = "emacsclient -c";
     git-rebsae = "git rebase -i HEAD~2";
-    ll =
-      "exa -lF --color-scale --no-user --no-time --no-permissions --group-directories-first --icons -a";
+    ll = "exa -lF --color-scale --no-user --no-time --no-permissions --group-directories-first --icons -a";
     ls = "exa -lF --group-directories-first --icons -a";
+	ps = "ps";
     tree = "tree -a -C";
     cat = "bat";
+    top = "btm";
     find = "fd";
-    sed = "sd";
     calc = "emacs -f full-calc";
     neovide =
       "/Applications/Neovide.app/Contents/MacOS/neovide --frameless --multigrid";

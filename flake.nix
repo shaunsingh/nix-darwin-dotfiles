@@ -107,10 +107,11 @@
               # Terminal utils and rust alternatives :tm:
               wget
               exa
+			  procs
               tree
               fd
-              sd
 			  zoxide
+			  bottom
               discocss
               neovim-nightly
 	          nodejs

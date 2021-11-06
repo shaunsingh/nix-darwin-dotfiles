@@ -1,13 +1,13 @@
-* Dotfiles
-Managed via [[https://github.com/LnL7/nix-darwin][Nix-Darwin]], and [[https://github.com/nix-community/home-manager][Home-Manager]]
+#+title: Nix-Darwin-Dotfiles
+#+subtitle: Dotfiles managed via [[https://github.com/LnL7/nix-darwin][Nix-Darwin]], and [[https://github.com/nix-community/home-manager][Home-Manager]]
+#+author: shaunsingh
 
-** Installation
-*Warning:* If you want to give these dotfiles a try, you should first
-fork this repository, review the code, and remove things you don't want
-or need. Don't blindly use my settings unless you know what that
-entails.
+* Installation
+*Warning:* If you want to give these dotfiles a try, you should first fork this repository, review the code, and remove things you don't want or need. Don't blindly use my settings unless you know what that entails.
 
 Currently this only works on aarch64-darwin systems. It will likely work on x86_64-darwin systems with minimal modifications, but I haven't tested it.
+
+*Note:* If you previously installed nix, make sure to delete =/etc/nix/nix.conf=. Additionally, delete =/etc/shells= so Nix can manage it.
 
 ** Install
 Install nix:
@@ -27,7 +27,9 @@ nix build ~/nix-darwin-dotfiles\#darwinConfigurations.shaunsingh-laptop.system -
 ./result/sw/bin/darwin-rebuild switch --flake .#shaunsingh-laptop
 #+end_src
 
-Symlinking with nix (and =nix-doom-emacs=) is very finicky, so for now use the following:
+(note, =--extra-experimental-features= is only needed the first time around. After that the configuration will edit =/etc/nix/nix.conf= to enable flakes and nix-command by default)
+
+Symlinking with nix (and managing doom with =nix-doom-emacs=) is very finicky, so for now use the following:
 #+begin_src sh
 ln -s ~/nix-darwin-dotfiles/configs/doom/ ~/.config/doom
 ln -s ~/nix-darwin-dotfiles/configs/nvim/ ~/.config/nvim
@@ -40,7 +42,7 @@ git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.config/emacs
 ~/.config/emacs/bin/doom install
 #+end_src
 
-*** Emacs
+** Emacs
 If you want to use [[https://github.com/emacs-ng/emacs-ng][Emacs-NG]], use the following build options
 #+begin_src sh
   git clone --depth 1 https://github.com/emacs-ng/emacs-ng.git
@@ -58,11 +60,6 @@ If you want to use [[https://github.com/emacs-ng/emacs-ng][Emacs-NG]], use the f
   make install-strip
 #+end_src
 
-If you want to force recompile the literate configuration, you can run
-#+begin_src sh
-doom sync -u
-#+end_src
-
 If you want to update the doom configuration, you can run
 #+begin_src sh
 doom upgrade
@@ -70,27 +67,22 @@ doom upgrade
 
 If you modify your shell configuration, run =doom env= to regenerate env vars
 
-**** Mu4e and Gmail
+*** Mu4e and Gmail
 Email will have a few issues, since its hardcoded to my account. Replace instances of my name and email in =~/.doom.d/config.org=
 
-Indexed mail will go under =~/.mbsync/=, you can either manually run mbsync
-or use emacs to update mail.
+Indexed mail will go under =~/.mbsync/=, you can either manually run mbsync or use emacs to update mail.
 
-**** Org Mode
-My org mode config includes two additional plugins, org-agenda and
-org-roam. Both these plugins need a set directory. All org files can go
-under the created =~/org= dir. Roam files go under =~/org/roam=
+*** Org Mode
+My org mode config includes two additional plugins, org-agenda and org-roam. Both these plugins need a set directory. All org files can go under the created =~/org= dir. Roam files go under =~/org/roam=
 
-** Additional Configurations
-*** Fonts
- [[https://github.com/shaunsingh/SFMono-Nerd-Font-Ligaturized][SFMono]] must be installed seperately, currently both Overpass and Alegreya are
- managed via nix.
+* Additional Configurations
+** Fonts
+ [[https://github.com/shaunsingh/SFMono-Nerd-Font-Ligaturized][SFMono]] must be installed seperately, currently both Overpass and Alegreya are managed via nix.
 
-*** Neovim
+** Neovim
 Run =:PackerSync= to install packer and plugins. Run =:checkhealth= to check for possible issues.
 
-If you want to take advantage of the LSP and/or treesitter, you can install language
-servers and parsers using the following command:
+If you want to take advantage of the LSP and/or treesitter, you can install language servers and parsers using the following command:
 
 =:LspInstall (language)=
 =:TSInstall (language)=
@@ -99,6 +91,6 @@ servers and parsers using the following command:
 
 I also recommend installing [[https://github.com/Kethku/neovide][Neovide]]
 
-** Feedback
+* Feedback
 Suggestions/improvements
 [[https://github.com/shaunsingh/vimrc-dotfiles/issues][welcome]]!
