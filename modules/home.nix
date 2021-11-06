@@ -592,6 +592,8 @@
       tmux new-session -A -s main
     end
 
+    zoxide init fish --cmd cd | source
+
     set -x EDITOR "nvim"
     set -x PATH ~/.config/emacs/bin $PATH
     set -x PATH ~/.config/scripts $PATH

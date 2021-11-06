@@ -104,15 +104,16 @@
               rustup
               shellcheck
 
-              # Terminal utils
+              # Terminal utils and rust alternatives :tm:
               wget
               exa
               tree
               fd
               sd
+			  zoxide
               discocss
               neovim-nightly
-	      nodejs
+	          nodejs
 
             ];
             fonts = {
