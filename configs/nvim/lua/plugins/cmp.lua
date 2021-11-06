@@ -16,12 +16,12 @@ cmp.setup {
    formatting = {
       format = function(entry, vim_item)
          vim_item.menu = ({
-	    rg = "rg",
-	    nvim_lsp = "LSP",
-	    nvim_lua = "Lua",
-	    Path = "Path",
-	    luasnip = "LuaSnip",
-	    neorg = "Neorg",
+            rg = "rg",
+            nvim_lsp = "LSP",
+            nvim_lua = "Lua",
+            Path = "Path",
+            luasnip = "LuaSnip",
+            neorg = "Neorg",
          })[entry.source.name]
          vim_item.kind = ({
             Text = "",
@@ -75,7 +75,7 @@ cmp.setup {
       end,
       ["<S-Tab>"] = function(fallback)
          if cmp.visible() then
-             cmp.select_prev_item()
+            cmp.select_prev_item()
          elseif require("luasnip").jumpable(-1) then
             vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<Plug>luasnip-jump-prev", true, true, true), "")
          else

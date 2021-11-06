@@ -30,7 +30,7 @@ end
 -- packer settings
 return packer.init {
    -- tell packer to put packer_compiled under the /lua folder so its cached by impatient
-   compile_path = vim.fn.stdpath('config')..'/lua/packer_compiled.lua',
+   compile_path = vim.fn.stdpath "config" .. "/lua/packer_compiled.lua",
    display = {
       open_fn = function()
          return require("packer.util").float { border = "single" }

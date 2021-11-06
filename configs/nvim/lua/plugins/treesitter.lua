@@ -3,13 +3,13 @@ if not present then
    return
 end
 
-local parser_configs = require('nvim-treesitter.parsers').get_parser_configs()
+local parser_configs = require("nvim-treesitter.parsers").get_parser_configs()
 parser_configs.norg = {
-    install_info = {
-        url = "https://github.com/nvim-neorg/tree-sitter-norg",
-        files = { "src/parser.c", "src/scanner.cc" },
-        branch = "main"
-    },
+   install_info = {
+      url = "https://github.com/nvim-neorg/tree-sitter-norg",
+      files = { "src/parser.c", "src/scanner.cc" },
+      branch = "main",
+   },
 }
 
 ts_config.setup {
@@ -28,5 +28,5 @@ ts_config.setup {
       enable = true,
       updatetime = 25, -- Debounced time for highlighting nodes in the playground from source code
       persist_queries = false, -- Whether the query persists across vim sessions
-   }
+   },
 }

@@ -8,7 +8,6 @@ end
 
 local use = packer.use
 return packer.startup(function()
-
    -- Have packer manage itself
    use {
       "wbthomason/packer.nvim",
@@ -24,16 +23,16 @@ return packer.startup(function()
    -- Startup optimizations
 
    use {
-      "nathom/filetype.nvim"
+      "nathom/filetype.nvim",
    }
 
    use {
-      "lewis6991/impatient.nvim"
+      "lewis6991/impatient.nvim",
    }
 
    use {
-     'tweekmonster/startuptime.vim',
-     cmd = 'StartupTime',
+      "tweekmonster/startuptime.vim",
+      cmd = "StartupTime",
    }
 
    -- Use fancy plugin for JK escape
@@ -41,20 +40,20 @@ return packer.startup(function()
       "max397574/better-escape.nvim",
       event = "InsertEnter",
       config = function()
-        require("better_escape").setup {
-          mapping = {"jk", "jj"},
-          clear_empty_lines = true,
-          keys = "<Esc>",
-        }
+         require("better_escape").setup {
+            mapping = { "jk", "jj" },
+            clear_empty_lines = true,
+            keys = "<Esc>",
+         }
       end,
-    }
+   }
 
    -- Theme <3 and UI
    use {
       "shaunsingh/nord.nvim",
       after = "packer.nvim",
       config = function()
-         require('nord').set()
+         require("nord").set()
       end,
    }
 
@@ -89,7 +88,7 @@ return packer.startup(function()
 
    use {
       "norcalli/nvim-colorizer.lua",
-      cmd = 'ColorizerToggle',
+      cmd = "ColorizerToggle",
       config = function()
          require("plugins.others").colorizer()
       end,
@@ -105,7 +104,7 @@ return packer.startup(function()
 
    use {
       "nvim-treesitter/playground",
-      cmd = 'TSPlayground',
+      cmd = "TSPlayground",
    }
 
    use {
@@ -251,7 +250,7 @@ return packer.startup(function()
          require("hop").setup()
       end,
    }
-   
+
    use {
       "sindrets/diffview.nvim",
       after = "neogit",
@@ -270,7 +269,7 @@ return packer.startup(function()
 
    use {
       "nvim-neorg/neorg",
-      branch = 'unstable',
+      branch = "unstable",
       ft = "norg",
       requires = "nvim-lua/plenary.nvim",
       config = function()
@@ -282,5 +281,4 @@ return packer.startup(function()
       "nvim-neorg/neorg-telescope",
       ft = "norg",
    }
-
 end)

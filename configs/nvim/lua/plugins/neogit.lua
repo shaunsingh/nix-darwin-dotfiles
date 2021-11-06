@@ -9,12 +9,12 @@ neogit.setup {
    disable_commit_confirmation = false,
    -- customize displayed signs
    signs = {
-     -- { CLOSED, OPENED }
-     section = { "", "" },
-     item = { "", "" },
-     hunk = { "", "" },
+      -- { CLOSED, OPENED }
+      section = { "", "" },
+      item = { "", "" },
+      hunk = { "", "" },
    },
    integrations = {
-     diffview = true,
+      diffview = true,
    },
 }

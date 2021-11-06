@@ -18,11 +18,11 @@ local colors = {
    magenta = "#BF616A",
    blue = "#5E81AC",
    red = "#BF616A",
-   none = "2E3440"
+   none = "2E3440",
 }
 
 --hide inactive statusline
-vim.cmd[[hi StatusLineNC gui=underline guibg=#2E3440  guifg=#2E3440]]
+vim.cmd [[hi StatusLineNC gui=underline guibg=#2E3440  guifg=#2E3440]]
 
 -- Local helper functions
 local mode_color = function()
@@ -234,5 +234,3 @@ gls.short_line_left[1] = {
       separator_highlight = { colors.none, colors.none },
    },
 }
-
-

@@ -59,9 +59,9 @@ capabilities.textDocument.completion.completionItem.resolveSupport = {
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 
 lsp_installer.on_server_ready(function(server)
-    local opts = {}
-    server:setup(opts)
-    vim.cmd [[ do User LspAttachBuffers ]]
+   local opts = {}
+   server:setup(opts)
+   vim.cmd [[ do User LspAttachBuffers ]]
 end)
 
 -- replace the default lsp diagnostic symbols

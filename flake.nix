@@ -107,15 +107,14 @@
               # Terminal utils and rust alternatives :tm:
               wget
               exa
-			  procs
+              procs
               tree
               fd
-			  zoxide
-			  bottom
+              zoxide
+              bottom
               discocss
               neovim-nightly
-	          nodejs
-
+              nodejs
             ];
             fonts = {
               enableFontDir = true;

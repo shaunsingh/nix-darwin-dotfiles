@@ -66,5 +66,3 @@ nvimtree.setup {
       width = 30,
    },
 }
-
-

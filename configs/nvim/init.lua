@@ -1,8 +1,8 @@
 --load impatient first
 local impatient, impatient = pcall(require, "impatient")
 if impatient then
-  -- NOTE: currently broken, will fix soon
-  --impatient.enable_profile()
+   -- NOTE: currently broken, will fix soon
+   --impatient.enable_profile()
 end
 
 --disable builtin plugins
@@ -35,7 +35,7 @@ end
 local doom_modules = {
    "options",
    "mappings",
-   "packer_compiled"
+   "packer_compiled",
 }
 
 for i = 1, #doom_modules, 1 do
