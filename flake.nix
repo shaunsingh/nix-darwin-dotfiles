@@ -13,7 +13,7 @@
 
   inputs = {
     # All packages should follow latest nixpkgs home-manager & flake-utils
-    unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    unstable.url = "github:nixos/nixpkgs/master";
     darwin = {
       url = "github:LnL7/nix-darwin/master";
       inputs.nixpkgs.follows = "unstable";

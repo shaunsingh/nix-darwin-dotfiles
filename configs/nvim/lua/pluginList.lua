@@ -195,6 +195,11 @@ return packer.startup(function()
    }
 
    use {
+      "ray-x/cmp-treesitter",
+      after = "cmp-nvim-lsp",
+   }
+
+   use {
       "hrsh7th/cmp-path",
       after = "cmp-rg",
    }

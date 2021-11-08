@@ -22,6 +22,7 @@ cmp.setup {
             Path = "Path",
             luasnip = "LuaSnip",
             neorg = "Neorg",
+			treesitter = "ts"
          })[entry.source.name]
          vim_item.kind = ({
             Text = "",
@@ -89,5 +90,6 @@ cmp.setup {
       { name = "rg" },
       { name = "nvim_lua" },
       { name = "neorg" },
+      { name = 'treesitter' }
    },
 }
