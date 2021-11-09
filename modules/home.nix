@@ -804,8 +804,8 @@
     set -g mouse on
     # change prefix to C-a
     set -g prefix C-a
-    unbind C-b
     bind C-a send-prefix
+    unbind C-b
     # extend scrollback
     set-option -g history-limit 5000
     # vim-like pane resizing
@@ -818,17 +818,8 @@
     bind -r j select-pane -D
     bind -r h select-pane -L
     bind -r l select-pane -R
-    # and now unbind keys
-    unbind Up
-    unbind Down
-    unbind Left
-    unbind Right
-    unbind C-Up
-    unbind C-Down
-    unbind C-Left
     # styling
-    set -g status-bg default
-    set -g status-fg white
+    set -g status-style fg=white,bg=default
     set -g status-left ""
     set -g status-right ""
     set -g status-justify centre

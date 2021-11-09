@@ -1,10 +1,6 @@
 #+title: Nix-Darwin-Config +
 #+subtitle: Nix-powered declarative macOS configuration
 #+author: Shaurya Singh
-#+date: @@html:<!--@@{{{git-rev}}}@@html:-->@@@@latex:\\\Large\bfseries@@ {{{modification-time(%Y-%m-%d, t)}}} @@latex:\\\normalsize\mdseries@@{{{modification-time(%H:%M, t)}}} @@latex:\acr{\lowercase{@@{{{timezone}}}@@latex:}}\iffalse@@, {{{git-rev}}}@@latex:\fi@@
-#+macro: timezone (eval (substring (shell-command-to-string "date +%Z") 0 -1))
-#+macro: git-rev (eval (format "@@html:<a href=\"https://github.com/tecosaur/emacs-config/commit/%1$s\" style=\"text-decoration: none\"><code style=\"padding: 0; color: var(--text-light); font-size: inherit; opacity: 0.7\">%1$s</code></a>@@@@latex:\\href{https://github.com/tecosaur/emacs-config/commit/%1$s}{\\normalsize\\texttt{%1$s}}@@" (substring (shell-command-to-string "git rev-parse --short HEAD") 0 -1)))
-#+html_head: <link rel='shortcut icon' type='image/png' href='https://www.gnu.org/software/emacs/favicon.png'>
 #+latex_header: \let\textls\relax
 #+latex_class: chameleon
 #+startup: preview
@@ -1114,8 +1110,8 @@ Lastly, lets make tmux look just as pretty as our prompt, and enable truecolor s
     set -g mouse on
     # change prefix to C-a
     set -g prefix C-a
-    unbind C-b
     bind C-a send-prefix
+    unbind C-b
     # extend scrollback
     set-option -g history-limit 5000
     # vim-like pane resizing
@@ -1128,17 +1124,8 @@ Lastly, lets make tmux look just as pretty as our prompt, and enable truecolor s
     bind -r j select-pane -D
     bind -r h select-pane -L
     bind -r l select-pane -R
-    # and now unbind keys
-    unbind Up
-    unbind Down
-    unbind Left
-    unbind Right
-    unbind C-Up
-    unbind C-Down
-    unbind C-Left
     # styling
-    set -g status-bg default
-    set -g status-fg white
+    set -g status-style fg=white,bg=default
     set -g status-left ""
     set -g status-right ""
     set -g status-justify centre
