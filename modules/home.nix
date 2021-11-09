@@ -1,4 +1,19 @@
+# Home.nix
+# Home Manager allows you to use Nix’s declarative approach to manage your user-level configuration and packages. It works on any *nix system supported by Nix, including MacOS.
+
+# [[file:../nix-config.org::*Home.nix][Home.nix:1]]
 { pkgs, lib, config, home-manager, nix-darwin, ... }: {
+# Home.nix:1 ends here
+
+# Doom-emacs
+# Nix via doom-emacs is very, /very/ annoying. Initially I was using [[https://github.com/vlaci/nix-doom-emacs][Nix-doom-emacs]]. However, this has a few drawbacks
+# 1. It doesn't support straight =:recipe=, so all packages must be from melpa or elpa
+# 2. It pins the version of doom, so you need to update doom and its dependencies painstakingly manually
+# 3. It just ends up breaking anyways.
+
+# A simpler solution is just to have nix clone =doom-emacs= to =~/.config/emacs=, and the user can handle doom manually
+
+# [[file:../nix-config.org::*Doom-emacs][Doom-emacs:1]]
   home-manager.users.shauryasingh.home.file = {
     "~/.config/doom" = {
       recursive = true;
@@ -10,6 +25,12 @@
   #      git clone --depth 1 https://github.com/hlissner/doom-emacs $HOME/.config/emacs
   #    fi
   #  '';
+# Doom-emacs:1 ends here
+
+# Git
+# As opposed to what the xcode CLT provides, I want the /full/ package of git, and use =delta= instead of the default diff tool (rust alternatives go brr). MacOS is also quite annoying with its =.DS_Store='s everywhere, so lets ignore that
+
+# [[file:../nix-config.org::*Git][Git:1]]
   home-manager.users.shauryasingh.programs.git = {
     package = pkgs.gitFull;
     enable = true;
@@ -22,6 +43,12 @@
     };
     ignores = [ ".dir-locals.el" ".envrc" ".DS_Store" ];
   };
+# Git:1 ends here
+
+# IdeaVim
+# Intellij Idea ships with a very nice Vim emulation plugin. This is configured via a vimrc-like file (=~/.ideavimrc=). Since it doesn't have proper support in home-manger, we can just generate a file and symlink it into place
+
+# [[file:../nix-config.org::*IdeaVim][IdeaVim:1]]
   home-manager.users.shauryasingh.home.file = {
     ".ideavimrc".text = ''
       " settings
@@ -72,6 +99,12 @@
 
       nmap <leader>E :action Tool_External Tools_emacsclient<cr>
     '';
+# IdeaVim:1 ends here
+
+# Discocss
+# [[https://github.com/mlvzk/discocss][Discocss]] is a way to inject custom CSS into discord. Similar to ideavim, it doesn't have proper support but we can generate a file for =~/.config/discocss/custom.css=
+
+# [[file:../nix-config.org::*Discocss][Discocss:1]]
     ".config/discocss/custom.css".text = ''
       /*
           Discord Nord
@@ -392,9 +425,29 @@
                   width: 240px !important;
     '';
   };
+# Discocss:1 ends here
+
+# Firefox
+# Although safari is my main browser, firefox looks very appealing with its excellent privacy and speed
+
+# [[file:../nix-config.org::*Firefox][Firefox:1]]
   home-manager.users.shauryasingh.programs.firefox.enable = true;
+# Firefox:1 ends here
+
+
+
+# GUI apps are very finicky with nix, and so I create a fake package so that we can still use the configuration from =home-manager= without having to install it via nix. The user can then install firefox manually to =~/Applications=
+
+# [[file:../nix-config.org::*Firefox][Firefox:2]]
   home-manager.users.shauryasingh.programs.firefox.package =
     pkgs.runCommand "firefox-0.0.0" { } "mkdir $out";
+# Firefox:2 ends here
+
+
+
+# Now for the configuration. We want firefox to use the css at [[./configs/userChrome.css]], and we want to configure the UI. Lets also enable the (rust powered ftw) webrender/servo renderer.
+
+# [[file:../nix-config.org::*Firefox][Firefox:3]]
   home-manager.users.shauryasingh.programs.firefox.profiles = let
     userChrome = builtins.readFile ../configs/userChrome.css;
     settings = {
@@ -441,22 +494,15 @@
       };
     };
   };
-  home-manager.users.shauryasingh.programs.htop.settings = {
-    color_scheme = 0;
-    cpu_count_from_one = 0;
-    delay = 15;
-    tree_view = 1;
-    show_cpu_usage = 1;
-    hide_function_bar = 2;
-    highlight_base_name = 0;
-    highlight_megabytes = 1;
-    highlight_threads = 1;
-    highlight_changes = 0;
-    highlight_changes_delay_secs = 5;
-  };
+# Firefox:3 ends here
+
+# Alacritty
+# Alacritty is my terminal emulator of choice. Similar to firefox, we want to create a fake package, and then configure it as normal
+
+# [[file:../nix-config.org::*Alacritty][Alacritty:1]]
   home-manager.users.shauryasingh.programs.alacritty = {
     enable = true;
-    # We need to give it a dummy package 
+    # We need to give it a dummy package
     package = pkgs.runCommand "alacritty-0.0.0" { } "mkdir $out";
     settings = {
       window.padding.x = 45;
@@ -505,6 +551,12 @@
       };
     };
   };
+# Alacritty:1 ends here
+
+# Kitty
+# I no longer use kitty (its quite slow to start and has too many features I don't need), but I keep the config around just in case
+
+# [[file:../nix-config.org::*Kitty][Kitty:1]]
   # home-manager.users.shauryasingh.programs.kitty = {
   #   enable = true;
   #   package = builtins.path {
@@ -513,53 +565,71 @@
   #   };
   #   # enable = true;
   #   settings = {
-  #   font_family = "Liga SFMono Nerd Font";
-  #   	font_size = "14.0";
-  #   	adjust_line_height = "120%";
-  #   	disable_ligatures = "cursor";
-  #   	hide_window_decorations = "yes";
-  #   	scrollback_lines = "50000";
-  #   	cursor_blink_interval = "0.5";
-  #   	cursor_stop_blinking_after = "10.0";
-  #   	window_border_width = "0.7pt";
-  #   	draw_minimal_borders = "yes";
-  #   	macos_option_as_alt = "no";
-  #   	cursor_shape = "beam";
+  #     font_family = "Liga SFMono Nerd Font";
+  #     font_size = "14.0";
+  #     adjust_line_height = "120%";
+  #     disable_ligatures = "cursor";
+  #     hide_window_decorations = "yes";
+  #     scrollback_lines = "50000";
+  #     cursor_blink_interval = "0.5";
+  #     cursor_stop_blinking_after = "10.0";
+  #     window_border_width = "0.7pt";
+  #     draw_minimal_borders = "yes";
+  #     macos_option_as_alt = "no";
+  #     cursor_shape = "beam";
 
-  #   	foreground           =   "#D8DEE9";
-  #   	background           =   "#2E3440";
-  #   	selection_foreground =   "#000000";
-  #   	selection_background =   "#FFFACD";
-  #   	url_color            =   "#0087BD";
-  #   	cursor               =   "#81A1C1";
-  #   	color0               =   "#3B4252";
-  #   	color8               =   "#4C566A";
-  #   	color1               =   "#BF616A";
-  #   	color9               =   "#BF616A";
-  #   	color2               =   "#A3BE8C";
-  #   	color10              =   "#A3BE8C";
-  #   	color3               =   "#EBCB8B";
-  #   	color11              =   "#EBCB8B";
-  #   	color4               =   "#81A1C1";
-  #   	color12              =   "#81A1C1";
-  #   	color5               =   "#B48EAD";
-  #   	color13              =   "#B48EAD";
-  #   	color6               =   "#88C0D0";
-  #   	color14              =   "#8FBCBB";
-  #   	color7               =   "#E5E9F0";
-  #   	color15              =   "#B48EAD";
+  #     foreground           =   "#D8DEE9";
+  #     background           =   "#2E3440";
+  #     selection_foreground =   "#000000";
+  #     selection_background =   "#FFFACD";
+  #     url_color            =   "#0087BD";
+  #     cursor               =   "#81A1C1";
+  #     color0               =   "#3B4252";
+  #     color8               =   "#4C566A";
+  #     color1               =   "#BF616A";
+  #     color9               =   "#BF616A";
+  #     color2               =   "#A3BE8C";
+  #     color10              =   "#A3BE8C";
+  #     color3               =   "#EBCB8B";
+  #     color11              =   "#EBCB8B";
+  #     color4               =   "#81A1C1";
+  #     color12              =   "#81A1C1";
+  #     color5               =   "#B48EAD";
+  #     color13              =   "#B48EAD";
+  #     color6               =   "#88C0D0";
+  #     color14              =   "#8FBCBB";
+  #     color7               =   "#E5E9F0";
+  #     color15              =   "#B48EAD";
   #   };
   # };
+# Kitty:1 ends here
+
+# Fish
+# I like to use the fish shell. Although it isn't POSIX, it has the best autocompletion and highlighting I've seen.
+
+# [[file:../nix-config.org::*Fish][Fish:1]]
   programs.fish.enable = true;
   environment.shells = with pkgs; [ fish ];
   users.users.shauryasingh = {
     home = "/Users/shauryasingh";
     shell = pkgs.fish;
   };
+# Fish:1 ends here
+
+# Settings fish as default
+# On macOS nix doesn't set the fish shell to the main shell by default (like it does on NixOS), so lets do that manually
+
+# [[file:../nix-config.org::*Settings fish as default][Settings fish as default:1]]
   system.activationScripts.postActivation.text = ''
     # Set the default shell as fish for the user
-    sudo chsh -s ${lib.getBin pkgs.fish}/bin/fish shauryasingh 
+    sudo chsh -s ${lib.getBin pkgs.fish}/bin/fish shauryasingh
   '';
+# Settings fish as default:1 ends here
+
+# Aliases
+# I also like to alias common commands with other, better rust alternatives :tm:
+
+# [[file:../nix-config.org::*Aliases][Aliases:1]]
   programs.fish.shellAliases = with pkgs; {
     ":q" = "exit";
     vi = "emacsclient -c";
@@ -577,28 +647,12 @@
       "/Applications/Neovide.app/Contents/MacOS/neovide --frameless --multigrid";
     nix-fish = "nix-shell --command fish";
   };
-  home-manager.users.shauryasingh.home.file = {
-    "~/.config/nvim" = {
-      recursive = true;
-      source = ../configs/nvim;
-    };
-  };
-  home-manager.users.shauryasingh.programs.bat = {
-    enable = true;
-    config = { theme = "Nord"; };
-  };
-  programs.fish.interactiveShellInit = ''
-    set -g fish_greeting ""
-    if not set -q TMUX
-      tmux new-session -A -s main
-    end
+# Aliases:1 ends here
 
-    zoxide init fish --cmd cd | source
+# Prompt
+# I like to make my prompt look pretty (along with some =nix-shell= and =git= integration)
 
-    set -x EDITOR "nvim"
-    set -x PATH ~/.config/emacs/bin $PATH
-    set -x PATH ~/.config/scripts $PATH
-  '';
+# [[file:../nix-config.org::*Prompt][Prompt:1]]
   programs.fish.promptInit = ''
 
     set -g fish_greeting ""
@@ -694,8 +748,52 @@
 
     end
   '';
+# Prompt:1 ends here
+
+# Init
+# I also want to disable the default greeting, and use tmux with fish. Lets also set =nvim= as the default editor, and add emacs to my path
+
+# [[file:../nix-config.org::*Init][Init:1]]
+  programs.fish.interactiveShellInit = ''
+    set -g fish_greeting ""
+    if not set -q TMUX
+      tmux new-session -A -s main
+    end
+
+    zoxide init fish --cmd cd | source
+
+    set -x EDITOR "nvim"
+    set -x PATH ~/.config/emacs/bin $PATH
+  '';
+# Init:1 ends here
+
+# Neovim
+# Lastly, I didn't feel like nix-ifying my neovim lua config. Lets cheat a bit and just symlink it instead
+
+# [[file:../nix-config.org::*Neovim][Neovim:1]]
+  home-manager.users.shauryasingh.home.file = {
+    "~/.config/nvim" = {
+      recursive = true;
+      source = ../configs/nvim;
+    };
+  };
+# Neovim:1 ends here
+
+# Bat
+# Bat is another rust alternative :tm: to cat, and provides syntax highlighting. Lets theme it to match nord
+
+# [[file:../nix-config.org::*Bat][Bat:1]]
+  home-manager.users.shauryasingh.programs.bat = {
+    enable = true;
+    config = { theme = "Nord"; };
+  };
+# Bat:1 ends here
+
+# Tmux
+# Lastly, lets make tmux look just as pretty as our prompt, and enable truecolor support.
+
+# [[file:../nix-config.org::*Tmux][Tmux:1]]
   programs.tmux.enable = true;
-  programs.tmux.enableVim = true;
   programs.tmux.extraConfig = ''
     # make sure fish works in tmux
     set -g  default-terminal   "xterm-256color"
@@ -731,7 +829,6 @@
     # styling
     set -g status-bg default
     set -g status-fg white
-    set -g status-style fg=white,bg=default
     set -g status-left ""
     set -g status-right ""
     set -g status-justify centre
@@ -742,3 +839,4 @@
     set -g window-status-format "#[fg=magenta]#[fg=black]#[bg=magenta]#I #[bg=brightblack]#[fg=white] #W#[fg=brightblack]#[bg=default] "
   '';
 }
+# Tmux:1 ends here

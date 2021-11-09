@@ -1,0 +1,1413 @@
+#+title: Nix-Darwin-Config +
+#+subtitle: Nix-powered declarative macOS configuration
+#+author: Shaurya Singh
+#+date: @@html:<!--@@{{{git-rev}}}@@html:-->@@@@latex:\\\Large\bfseries@@ {{{modification-time(%Y-%m-%d, t)}}} @@latex:\\\normalsize\mdseries@@{{{modification-time(%H:%M, t)}}} @@latex:\acr{\lowercase{@@{{{timezone}}}@@latex:}}\iffalse@@, {{{git-rev}}}@@latex:\fi@@
+#+macro: timezone (eval (substring (shell-command-to-string "date +%Z") 0 -1))
+#+macro: git-rev (eval (format "@@html:<a href=\"https://github.com/tecosaur/emacs-config/commit/%1$s\" style=\"text-decoration: none\"><code style=\"padding: 0; color: var(--text-light); font-size: inherit; opacity: 0.7\">%1$s</code></a>@@@@latex:\\href{https://github.com/tecosaur/emacs-config/commit/%1$s}{\\normalsize\\texttt{%1$s}}@@" (substring (shell-command-to-string "git rev-parse --short HEAD") 0 -1)))
+#+html_head: <link rel='shortcut icon' type='image/png' href='https://www.gnu.org/software/emacs/favicon.png'>
+#+latex_header: \let\textls\relax
+#+latex_class: chameleon
+#+startup: preview
+#+startup: fold
+#+options: toc:5
+
+#+begin_export html
+<a href="https://github.com/shaunsingh/nix-darwin-dotfiles/"
+   style="font-family: 'Open Sans'; background-image: none; color: inherit;
+   text-decoration: none; position: relative; top: clamp(-26px, calc(1280px - 100vw), 0px); opacity: 0.7;">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg"
+       class="invertible" alt="GitHub Octicon"
+       style="height: 1em; position: relative; top: 0.1em;">
+  View on GitHub</a>
+#+end_export
+
+#+begin_quote
+Let us change our traditional attitude to the construction of programs:
+Instead of imagining that our main task is to instruct a computer what to do,
+let us concentrate rather on explaining to human beings what we want a
+computer to do. @@latex:\mbox{@@--- Donald Knuth@@latex:}@@
+#+end_quote
+
+* Introduction
+Once upon a time I was a wee little lad playing around with vim. After that, my "ricing" addiction grew, and soon it turned into a dotfiles repo. Since I moved machines often, I wanted a simple way to install all dependencies for my system. What started off as a simple =install.sh= script turned into a dotfiles repo managed via [[https://yadm.io][YADM]]. However this raised a few issues:
+1. It was slow and clunky. Apps like [[https://discord.com][Discord]] and [[https://www.mozilla.org/en-US/firefox/new/][Firefox]] started to clutter up my =~/.config= directory, and my =.gitignore= kept growing. With nix, my config is stored in one folder, and symlinked into place
+2. Applications were all configured using different languages. With home-manager for the most part I can stick to using nix,
+3. Building apps was a pain, and switching laptops was getting annoying.
+
+** Note On Installing
+If you like the look of this, that's marvellous, and I'm really happy that I've
+made something which you may find interesting, however:
+#+begin_warning
+This config is /insidious/. Copying the whole thing blindly can easily lead to
+undesired effects. I recommend copying chunks instead.
+#+end_warning
+
+Oh, did I mention that I started this config when I didn't know any =nix= or =lisp=, and
+this whole thing is a hack job? If you can suggest any improvements, please do
+so, no matter how much criticism you include I'll appreciate it :)
+
+** Why Nix?
+Nix consists of two parts: a package manager and a language. The language is a rather simple lazy (almost) pure functional language with dynamic typing that specializes in building packages. The package manager, on the other hand, is interesting and pretty unique. It all starts with one idea.
+
+Nix stems from the idea that FHS is fundamentally incompatible with reproducibility. Let me explain.
+
+Every time you see a path like /bin/python or /lib/libudev.so, there are a lot of things that you don’t know about the file that’s located there.
+
+What’s the version of the package it came from?
+What are the libraries it uses?
+What configure flags were enabled during the build?
+Answers to these questions can (and most likely will) change the behaviour of an application that uses those files. There are ways to get around this in FHS – for example, link directly to =/lib/libudev.so.1.6.3= or use =/bin/python3.7= in your shebang. However, there are still a lot of unknowns.
+
+This means that if we want to get any reproducibility and consistency, FHS does not work since there is no way to infer a lot of properties of a given file.
+
+One solution is tools like Docker, Snap, and Flatpak that create isolated FHS environments containing fixed versions of all the dependencies of a given application, and distribute those environments. However, this solution has a host of problems.
+
+What if we want to apply different configure flags to our application or change one of the dependencies? There is no guarantee that you would be able to get the build artifact from build instructions, since putting all the build artifacts in an isolated container guarantees consistency, not reproducibility, because during build-time, tools from host’s FHS are often used, and besides the dependencies that come from other isolated environments might change.
+
+For example, two people using the same docker image will always get the same results, but two people building the same Dockerfile can (and often do) end up with two different images.
+
+** Drawbacks of Nix (on macOS)
+
+* Installing and notes
+*NOTE: These are available as an executable script [[./extra/install.sh]]*
+
+Install Nix. I have it setup for multi-user, but you can remove the =--daemon= if you want a single user install
+    #+begin_src sh :comments both :tangle "./extra/install.sh" :shebang "#!/bin/bash"
+    sh <(curl -L https://nixos.org/nix/install) --daemon
+    #+end_src
+Launch an ephemeral shell with git, nixUnstable, and Emacs
+    #+begin_src sh :comments both :tangle "./extra/install.sh" :shebang "#!/bin/bash"
+    nix-shell -p nixUnstable git emacs
+    #+end_src
+Tangle the =.org= files (not needed, but recommend in case I forgot to update tangled files)
+    #+begin_src sh :comments both :tangle "./extra/install.sh" :shebang "#!/bin/bash"
+    emacs --batch --eval "(progn (require 'org) (setq org-confirm-babel-evaluate nil) (org-babel-tangle-file \"~/nix-darwin-dotfiles/nix-config.org\"))"
+    emacs --batch --eval "(progn (require 'org) (setq org-confirm-babel-evaluate nil) (org-babel-tangle-file \"~/nix-darwin-dotfiles/configs/doom/config.org\"))"
+    #+end_src
+Clone, build, and switch to the dotfiles
+    #+begin_src sh :comments both :tangle "./extra/install.sh" :shebang "#!/bin/bash"
+    git clone --depth 1 https://github.com/shaunsingh/nix-darwin-dotfiles.git ~/nix-darwin-dotfiles/ && cd nix-darwin-dotfiles
+    nix build ~/nix-darwin-dotfiles\#darwinConfigurations.shaunsingh-laptop.system --extra-experimental-features nix-command --extra-experimental-features flakes
+    ./result/sw/bin/darwin-rebuild switch --flake .#shaunsingh-laptop
+    #+end_src
+(note, =--extra-experimental-features= is only needed the first time around. After that the configuration will edit =/etc/nix/nix.conf= to enable flakes and nix-command by default)
+Symlinking with nix (and managing doom with =nix-doom-emacs=) is very finicky, so for now we need to manually symlink them
+    #+begin_src sh :comments both :tangle "./extra/install.sh" :shebang "#!/bin/bash"
+    ln -s ~/nix-darwin-dotfiles/configs/doom/ ~/.config/doom
+    ln -s ~/nix-darwin-dotfiles/configs/nvim/ ~/.config/nvim
+    #+end_src
+Install doom emacs
+    #+begin_src sh :comments both :tangle "./extra/install.sh" :shebang "#!/bin/bash"
+    git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.config/emacs
+    ~/.config/emacs/bin/doom install
+    #+end_src
+
+** Additional Configuration
+*** Emacs
+If you want to use [[https://github.com/emacs-ng/emacs-ng][Emacs-NG]], use the following build options
+#+begin_src sh
+  git clone --depth 1 https://github.com/emacs-ng/emacs-ng.git
+  cd emacs-ng
+  ./autogen.sh
+  ./configure CFLAGS="-Wl,-rpath,shared,--disable-new-dtags -g -O3 -mtune=native -march=native -fomit-frame-pointer" \
+              --prefix=/usr/local/ \
+              --with-json --with-modules --with-compress-install \
+              --with-threads --with-included-regex --with-zlib --with-libsystemd \
+              --with-rsvg --with-native-compilation --with-webrender --without-javascript \
+              --without-sound --without-imagemagick --without-makeinfo --without-gpm --without-dbus \
+              --without-pop --without-toolkit-scroll-bars --without-mailutils --without-gsettings \
+              --with-all
+  make -j$(($(nproc) * 2)) NATIVE_FULL_AOT=1
+  make install-strip
+#+end_src
+
+If you want to update the doom configuration, you can run
+#+begin_src sh
+doom upgrade
+#+end_src
+
+If you modify your shell configuration, please do run =doom env= to regenerate env vars
+
+**** Mu4e and Gmail
+Email will have a few issues, since its hardcoded to my account. Replace instances of my name and email in =~/.doom.d/config.org=
+Indexed mail will go under =~/.mbsync/=, you can either manually run mbsync or use emacs to update mail.
+
+**** Org Mode
+My org mode config includes two additional plugins, org-agenda and org-roam. Both these plugins need a set directory. All org files can go under the created =~/org= dir. Roam files go under =~/org/roam=
+
+*** Fonts
+ [[https://github.com/shaunsingh/SFMono-Nerd-Font-Ligaturized][SFMono]] must be installed seperately due to liscensing issues, all other fonts are managed via nix.
+
+*** Neovim
+Run =:PackerSync= to install packer and plugins. Run =:checkhealth= to check for possible issues.
+If you want to take advantage of the LSP and/or treesitter, you can install language servers and parsers using the following command:
+=:LspInstall (language)=
+=:TSInstall (language)=
+*NOTE:* If you want to use neorg's treesitter parser on macOS, you need to link GCC to CC. Instructions [[https://github.com/nvim-neorg/neorg/issues/74#issuecomment-906627223][here]].
+I also recommend installing [[https://github.com/Kethku/neovide][Neovide]]
+
+* Flakes
+** Why Flakes
+Once upon a time, Nix pioneered reproducible builds: it tries hard to ensure that two builds of the same derivation graph produce an identical result. Unfortunately, the evaluation of Nix files into such a derivation graph isn’t nearly as reproducible, despite the language being nominally purely functional.
+
+For example, Nix files can access arbitrary files (such as =~/.config/nixpkgs/config.nix=), environment variables, Git repositories, files in the Nix search path (=$NIX_PATH=), command-line arguments (=--arg=) and the system type (=builtins.currentSystem=). In other words, evaluation isn’t as hermetic as it could be. In practice, ensuring reproducible evaluation of things like NixOS system configurations requires special care.
+
+Furthermore, there is no standard way to compose Nix-based projects. It’s rare that everything you need is in Nixpkgs; consider for instance projects that use Nix as a build tool, or NixOS system configurations. Typical ways to compose Nix files are to rely on the Nix search path (e.g. =import <nixpkgs>=) or to use =fetchGit= or =fetchTarball=. The former has poor reproducibility, while the latter provides a bad user experience because of the need to manually update Git hashes to update dependencies.
+
+There is also no easy way to deliver Nix-based projects to users. Nix has a “channel” mechanism (essentially a tarball containing Nix files), but it’s not easy to create channels and they are not composable. Finally, Nix-based projects lack a standardized structure. There are some conventions (e.g. =shell.nix= or =release.nix=) but they don’t cover many common use cases; for instance, there is no way to discover the NixOS modules provided by a repository.
+
+Flakes are a solution to these problems. A flake is simply a source tree (such as a Git repository) containing a file named =flake.nix= that provides a standardized interface to Nix artifacts such as packages or NixOS modules. Flakes can have dependencies on other flakes, with a “lock file” pinning those dependencies to exact revisions to ensure reproducible evaluation.
+
+When you clone this flake and install it, your system should theoretically be the /exactly/ the same as mine, down to the commit of nixpkgs. There are also other benefits, such as that nix evaluations are cached.
+
+** Notes on using the flake
+When you install this config, there are 3 useful commands you need to know
+
+- Updating the flake. This will update the =flake.lock= lockfile to the latest commit of nixpkgs, emacs-overlay, etc
+#+begin_src sh
+nix flake update
+#+end_src
+
+- Building and Installing the flake. This will first build and download everything you need, then =rebuild= your machine, so it "installs"
+#+begin_src sh
+nix build ~/nix-darwin-dotfiles\#darwinConfigurations.shaunsingh-laptop.system --extra-experimental-features nix-command --extra-experimental-features flakes
+    ./result/sw/bin/darwin-rebuild switch --flake .#shaunsingh-laptop
+#+end_src
+
+- Testing the flake. If you have any errors when you play around with this config, then this will let you know what went wrong.
+#+begin_src sh
+nix flake check
+#+end_src
+
+The =flake.nix= below does the following:
+1. Add a binary cache for =nix-community= overlays
+2. Add inputs (=nixpkgs-master=, =nix-darwin=, =home-manager,= and =spacebar=)
+3. Add overlays to get the latest versions of =neovim= (nightly) and =emacs= (emacs29)
+4. Create a nix-darwin configuration for my hostname
+5. Source the [[./modules/mac.nix][mac]], [[./modules/home.nix][home]], and [[./modules/pam.nix][pam]] modules
+6. Configure home-manager and the nix-daemon
+7. Enable the use of touch-id for sudo authentication
+8. Configure =nixpkgs= to use the overlays above, and allow unfree packages
+9. Configure =nix= to enable =flakes= and =nix-command= by default, and add =x86-64-darwin= as a platform (to install packages through rosetta)
+10. Install my packages and config dependencies
+11. Install the required fonts
+#+begin_src nix :comments both :tangle "flake.nix"
+{
+  description = "Shaurya's Nix Environment";
+
+  nixConfig = {
+    # Add binary cache for neovim-nightly/emacsGcc
+    extra-substituters =
+      [ "https://cachix.cachix.org" "https://nix-community.cachix.org" ];
+    extra-trusted-public-keys = [
+      "cachix.cachix.org-1:eWNHQldwUO7G2VkjpnjDbWwy4KQ/HNxht7H4SSoMckM="
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+    ];
+  };
+
+  inputs = {
+    # All packages should follow latest nixpkgs home-manager & flake-utils
+    unstable.url = "github:nixos/nixpkgs/master";
+    darwin = {
+      url = "github:LnL7/nix-darwin/master";
+      inputs.nixpkgs.follows = "unstable";
+    };
+    home-manager = {
+      url = "github:nix-community/home-manager/master";
+      inputs.nixpkgs.follows = "unstable";
+    };
+    # Bar
+    spacebar = {
+      url = "github:shaunsingh/spacebar/master";
+      inputs.nixpkgs.follows = "unstable";
+    };
+    # Editors
+    neovim = {
+      url = "github:nix-community/neovim-nightly-overlay";
+      inputs.nixpkgs.follows = "unstable";
+    };
+    emacs = {
+      url = "github:nix-community/emacs-overlay";
+      inputs.nixpkgs.follows = "unstable";
+    };
+  };
+
+  outputs = { self, nixpkgs, spacebar, neovim, emacs, darwin, home-manager, ...
+    }@inputs: {
+      darwinConfigurations."shaunsingh-laptop" = darwin.lib.darwinSystem {
+        system = "aarch64-darwin";
+        modules = [
+          ./modules/mac.nix
+          ./modules/home.nix
+          ./modules/pam.nix
+          home-manager.darwinModule
+          {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+            };
+          }
+          ({ pkgs, lib, ... }: {
+            services.nix-daemon.enable = true;
+            security.pam.enableSudoTouchIdAuth = true;
+            nixpkgs = {
+              overlays = [ spacebar.overlay neovim.overlay emacs.overlay ];
+              config.allowUnfree = true;
+            };
+            nix = {
+              package = pkgs.nixUnstable;
+              extraOptions = ''
+                system = aarch64-darwin
+                extra-platforms = aarch64-darwin x86_64-darwin
+                experimental-features = nix-command flakes
+                build-users-group = nixbld
+              '';
+            };
+            environment.systemPackages = with pkgs; [
+              # Emacs deps
+              ((emacsPackagesNgGen emacsGcc).emacsWithPackages
+                (epkgs: [ epkgs.vterm epkgs.pdf-tools ]))
+              ## make sure ripgrep supports pcre2 (for vertico)
+              (ripgrep.override { withPCRE2 = true; })
+              binutils
+              gnutls
+              gnuplot
+              sqlite
+              sdcv
+              (aspellWithDicts (ds: with ds; [ en en-computers en-science ]))
+              (texlive.combine {
+                inherit (texlive)
+                  scheme-small dvipng dvisvgm l3packages xcolor soul adjustbox
+                  collectbox amsmath siunitx cancel mathalpha capt-of chemfig
+                  wrapfig mhchem fvextra cleveref latexmk tcolorbox environ arev
+                  amsfonts simplekv alegreya sourcecodepro newpx svg catchfile
+                  transparent;
+              })
+
+              # Neovim deps
+              neovim-nightly
+              nodejs
+              tree-sitter
+
+              # Language deps
+              python39Packages.grip
+              python39Packages.pyflakes
+              python39Packages.isort
+              python39Packages.pytest
+              nodePackages.pyright
+              pipenv
+              nixfmt
+              black
+              rust-analyzer
+              rustup
+              shellcheck
+
+              # Terminal utils and rust alternatives :tm:
+              wget
+              exa
+              procs
+              tree
+              fd
+              zoxide
+              bottom
+              discocss
+            ];
+            fonts = {
+              enableFontDir = true;
+              fonts = with pkgs; [
+                alegreya
+                overpass
+                alegreya-sans
+                ibm-plex
+                emacs-all-the-icons-fonts
+              ];
+            };
+          })
+        ];
+      };
+    };
+}
+#+end_src
+
+* Modules
+** Home.nix
+Home Manager allows you to use Nix’s declarative approach to manage your user-level configuration and packages. It works on any *nix system supported by Nix, including MacOS.
+#+begin_src nix :comments both :tangle "./modules/home.nix"
+{ pkgs, lib, config, home-manager, nix-darwin, ... }: {
+#+end_src
+
+*** Doom-emacs
+Nix via doom-emacs is very, /very/ annoying. Initially I was using [[https://github.com/vlaci/nix-doom-emacs][Nix-doom-emacs]]. However, this has a few drawbacks
+1. It doesn't support straight =:recipe=, so all packages must be from melpa or elpa
+2. It pins the version of doom, so you need to update doom and its dependencies painstakingly manually
+3. It just ends up breaking anyways.
+
+A simpler solution is just to have nix clone =doom-emacs= to =~/.config/emacs=, and the user can handle doom manually
+#+begin_src nix :comments both :tangle "./modules/home.nix"
+  home-manager.users.shauryasingh.home.file = {
+    "~/.config/doom" = {
+      recursive = true;
+      source = ../configs/doom;
+    };
+  };
+  #  system.activationScripts.postUserActivation.text = ''
+  #    if [ -d $HOME/.config/emacs ]; then
+  #      git clone --depth 1 https://github.com/hlissner/doom-emacs $HOME/.config/emacs
+  #    fi
+  #  '';
+#+end_src
+
+*** Git
+As opposed to what the xcode CLT provides, I want the /full/ package of git, and use =delta= instead of the default diff tool (rust alternatives go brr). MacOS is also quite annoying with its =.DS_Store='s everywhere, so lets ignore that
+#+begin_src nix :comments both :tangle "./modules/home.nix"
+  home-manager.users.shauryasingh.programs.git = {
+    package = pkgs.gitFull;
+    enable = true;
+    userName = "shaunsingh";
+    userEmail = "shaunsingh0207@gmail.com";
+    lfs.enable = true;
+    delta = {
+      enable = true;
+      options = { syntax-theme = "Nord"; };
+    };
+    ignores = [ ".dir-locals.el" ".envrc" ".DS_Store" ];
+  };
+#+end_src
+
+*** IdeaVim
+Intellij Idea ships with a very nice Vim emulation plugin. This is configured via a vimrc-like file (=~/.ideavimrc=). Since it doesn't have proper support in home-manger, we can just generate a file and symlink it into place
+#+begin_src nix :comments both :tangle "./modules/home.nix"
+  home-manager.users.shauryasingh.home.file = {
+    ".ideavimrc".text = ''
+      " settings
+      set ignorecase
+      set smartcase
+      set scrolloff=3 " 3 lines above/below cursor when scrolling
+      set nonumber
+      set clipboard+=unnamed
+      set multiple-cursors
+      set numberwidth=2
+      set expandtab=true
+      set shiftwidth=4
+
+      " plugins
+      set easymotion
+      set NERDTree
+      set surround
+      set highlightedyank
+
+
+      " bindings
+      let mapleader = " "
+      nmap <leader>. :action GotoFile<cr>
+      nmap <leader>fr :action RecentFiles<cr>
+      nmap <leader>ww <Plug>(easymotion-w)
+      nmap <leader>tz :action Enter Zen Mode<cr>
+      nmap <leader>op :NERDTreeToggle<cr>
+      nmap <leader>ot :Terminal<cr>
+      nmap <leader>: :action SearchEverywhere<cr>
+      nmap <leader>/ :action Find<cr>
+
+      " use ; to enter command
+      nmap ; :
+
+      " use jk for escaping
+      inoremap jk <Esc>
+      cnoremap jk <Esc>
+
+      " move by visual lines"
+      nmap j gj
+      nmap k gk
+
+      " use C-hjkl to navigate splits
+      nmap <C-h> <c-w>h
+      nmap <C-l> <c-w>l
+      nmap <C-k> <c-w>k
+      nmap <C-j> <c-w>j
+
+      nmap <leader>E :action Tool_External Tools_emacsclient<cr>
+    '';
+#+end_src
+
+*** Discocss
+[[https://github.com/mlvzk/discocss][Discocss]] is a way to inject custom CSS into discord. Similar to ideavim, it doesn't have proper support but we can generate a file for =~/.config/discocss/custom.css=
+#+begin_src nix :comments both :tangle "./modules/home.nix"
+    ".config/discocss/custom.css".text = ''
+      /*
+          Discord Nord
+          https://github.com/joinemm/discord-css
+      ,*/
+
+      /* define colors */
+      :root {
+          --background-primary: #2E3440;
+          --background-secondary: #3B4252;
+          --background-secondary-alt: #3B4252;
+          --background-tertiary: #2E3440;
+          --background-accent: #2E3440;
+          --channeltextarea-background: #2E3440;
+          --text-normal: #D8DEE9;
+          --text-muted: #616E88;
+          --channels-default: #616E88;
+          --interactive-normal: #616E88;
+          --interactive-hover: #8FBCBB;
+          --interactive-active: #D8DEE9;
+          --interactive-muted: #81A1C1;
+          --header-primary: #D8DEE9;
+          --header-secondary: #8FBCBB;
+          --background-floating: #2E3440;
+          --scrollbar-auto-thumb: #3B4252;
+          --scrollbar-auto-track: #2E3440;
+          --text-link: #88C0D0;
+          --selection: #3B4252;
+      }
+
+      ,* {
+          font-family: Liga SFMono Nerd Font;
+          font-size: 11px;
+      }
+
+      /* main backgrounds */
+      .scrollerThemed-2oenus.themeDark-2cjlUp.scrollerTrack-1ZIpsv>.scroller-2FKFPG::-webkit-scrollbar-track,
+      .scrollerThemed-2oenus.themeDark-2cjlUp.scrollerTrack-1ZIpsv>.scrollerStore-390omS::-webkit-scrollbar-track,
+      .theme-dark .scrollerWrap-2lJEkd.scrollerTrack-1ZIpsv>.scroller-2FKFPG::-webkit-scrollbar-track,
+      .theme-dark .scrollerWrap-2lJEkd.scrollerTrack-1ZIpsv>.scrollerStore-390omS::-webkit-scrollbar-track,
+      .theme-dark .da-messageGroupWrapper,
+      .theme-dark .bodyInner-245q0L,
+      .theme-dark .bottomDivider-1K9Gao,
+      .theme-dark .headerNormal-T_seeN,
+      .theme-dark .root-1gCeng,
+      .tabBody-3YRQ8W,
+      .theme-dark .container-1D34oG
+      .theme-dark .uploadModal-2ifh8j,
+      .theme-dark .modal-yWgWj-,
+      .uploadModal-2ifh8j,
+      .theme-dark .emojiAliasInput-1y-NBz .emojiInput-1aLNse,
+      .theme-dark .selected-1Tbx07,
+      .theme-dark .option-96V44q.selected-rZcOL- {
+          background-color: var(--background-primary) !important;
+      }
+
+      .da-popouts .da-container,
+      .da-friendsTableHeader,
+      .da-friendsTable,
+      .da-autocomplete,
+      .da-themedPopout,
+      .da-footer,
+      .da-userPopout>*,
+      .da-autocompleteHeaderBackground,
+      .theme-dark .bar-2Qqk5Z,
+      .theme-dark .payment-xT17Mq,
+      .theme-dark .paymentPane-3bwJ6A,
+      .theme-dark .paginator-166-09,
+      .theme-dark .codeRedemptionRedirect-1wVR4b,
+      .theme-dark .scrollerThemed-2oenus.themedWithTrack-q8E3vB .scroller-2FKFPG::-webkit-scrollbar-thumb,
+      .theme-dark .footer-3mqk7D,
+      .theme-dark .footer-2gL1pp,
+      .scrollerThemed-2oenus.themeDark-2cjlUp .scroller-2FKFPG::-webkit-scrollbar-thumb,
+      .theme-dark .scrollerWrap-2lJEkd .scroller-2FKFPG::-webkit-scrollbar-thumb,
+      .theme-dark .inset-3sAvek,
+      .theme-dark .quickMessage-1yeL4E,
+      .wrapper-2aW0bm,
+      .theme-dark .autocomplete-1vrmpx,
+      .searchBar-3dMhjb,
+      .theme-dark .body-3iLsc4,
+      .theme-dark .footer-2gL1pp,
+      .theme-dark .footer-1fjuF6,
+      .cardPrimary-1Hv-to,
+      .theme-dark .card-FDVird:before,
+      .theme-dark .colorPickerCustom-2CWBn2 {
+          background-color: var(--background-secondary);
+      }
+
+      /* scrollbars */
+      .da-messagesWrapper .da-scroller::-webkit-scrollbar,
+      .da-messagesWrapper .da-scroller::-webkit-scrollbar-track-piece {
+          background-color: var(--background-tertiary) !important;
+          border-color: rgba(0, 0, 0, 0) !important;
+      }
+
+      .da-scrollerThemed .da-scroller::-webkit-scrollbar-thumb,
+      .da-scrollerWrap .da-scroller::-webkit-scrollbar-thumb {
+          background-color: var(--background-secondary) !important;
+          border-color: var(--background-tertiary) !important;
+      }
+
+      .theme-dark .scrollerThemed-2oenus.themedWithTrack-q8E3vB .scroller-2FKFPG::-webkit-scrollbar-track-piece {
+          background-color: var(--background-primary) !important;
+          border-color: rgba(0, 0, 0, 0) !important;
+      }
+
+      .theme-dark .selectorSelected-1_M1WV,
+      .newMessagesBar-mujexs,
+      .theme-dark .searchAnswer-3Dz2-q,
+      .theme-dark .searchFilter-2ESiM3,
+      .theme-dark .progress-1IcQ3A,
+      .themeDefault-24hCdX,
+      .theme-dark .lookFilled-1Gx00P.colorPrimary-3b3xI6 {
+          background-color: var(--background-accent);
+      }
+
+      .theme-dark .container-3ayLPN {
+          background-color: var(--background-tertiary);
+      }
+
+      .theme-dark .option-96V44q.selected-rZcOL- {
+          background-color: var(--background-floating);
+      }
+
+      .theme-dark .pageIndicator-1gAbyA,
+      .theme-dark .pageButtonNext-V2kUq0,
+      .theme-dark .pageButtonPrev-1Y-47D {
+          border-color: var(--background-accent);
+      }
+
+      .scroller-2FKFPG::-webkit-scrollbar,
+      .barButtonBase-3UKlW2,
+      .theme-dark .scrollerThemed-2oenus.themeGhostHairline-DBD-2d .scroller-2FKFPG::-webkit-scrollbar-thumb {
+          background: transparent;
+      }
+
+      /* remove gradients */
+      .theme-dark .da-option:after, .theme-dark .option-96V44q:after {
+          background-image: none !important;
+      }
+
+      /* search text */
+      .theme-dark .searchOption-zQ-1l6 .answer-1n6g43,
+      .theme-dark .option-96V44q .filter-3Y_im- {
+          color: var(--text-muted)
+      }
+
+      .theme-dark .searchOption-zQ-1l6 .filter-3Y_im- {
+          color: var(--text-normal)
+      }
+
+      /* side panel bottom section border */
+      .panels-j1Uci_ {
+          border-top: 2px solid var(--background-modifier-accent);
+      }
+
+      .container-1giJp5 {
+          border-width: 2px;
+      }
+
+      /* selected text */
+      ::selection {
+          background: var(--selection);
+      }
+
+      /* hide that stupid nitro gift button */
+      .button-38aScr[aria-label="Send a gift"] {
+          display: none;
+      }
+
+      /* hide blocked messages */
+      [class="groupStart-23k01U"] {
+      	display: none;
+      }
+
+      /* enhanceddiscord server count text */
+      .theme-dark .keybind-KpFkfr {
+          color: var(--channels-default)
+      }
+
+      /* unloaded emojis */
+      .theme-dark .imageLoading-bpSr0M {
+          background-image: none;
+          background: var(--background-primary);
+          border-radius: 50%;
+      }
+
+      .sprite-2iCowe {
+      	filter: none !important;
+      }
+
+      /* Nord style (dark) */
+
+      .hljs {
+        display: block;
+        overflow-x: auto;
+        padding: 0.5em;
+        background: #2E3440;
+      }
+
+      .hljs,
+      .hljs-subst {
+        color: #616E88;
+      }
+
+      /* Nord Red */
+      .hljs-deletion,
+      .hljs-formula,
+      .hljs-keyword,
+      .hljs-link,
+      .hljs-selector-tag {
+        color: #BF616A;
+      }
+
+      /* Nord Blue */
+      .hljs-built_in,
+      .hljs-emphasis,
+      .hljs-name,
+      .hljs-quote,
+      .hljs-strong,
+      .hljs-title,
+      .hljs-variable {
+        color: #E8CB8B;
+      }
+
+      /* Nord Yellow */
+      .hljs-attr,
+      .hljs-params,
+      .hljs-template-tag,
+      .hljs-type {
+        color: #81A1C1;
+      }
+
+      /* Nord Purple */
+      .hljs-builtin-name,
+      .hljs-doctag,
+      .hljs-literal,
+      .hljs-number {
+        color: #Bf616A;
+      }
+
+      /* Nord Orange */
+      .hljs-code,
+      .hljs-meta,
+      .hljs-regexp,
+      .hljs-selector-id,
+      .hljs-template-variable {
+        color: #D08770;
+      }
+
+      /* Nord Green */
+      .hljs-addition,
+      .hljs-meta-string,
+      .hljs-section,
+      .hljs-selector-attr,
+      .hljs-selector-class,
+      .hljs-string,
+      .hljs-symbol {
+        color: #A3Be8C;
+      }
+
+      /* Nord Aqua */
+      .hljs-attribute,
+      .hljs-bullet,
+      .hljs-class,
+      .hljs-function,
+      .hljs-function .hljs-keyword,
+      .hljs-meta-keyword,
+      .hljs-selector-pseudo,
+      .hljs-tag {
+        color: #E8CB8B;
+      }
+
+      /* Nord Gray */
+      .hljs-comment {
+        color: #616E88;
+      }
+
+      /* Nord Purple */
+      .hljs-link_label,
+      .hljs-literal,
+      .hljs-number {
+        color: #B48EAD;
+      }
+
+      .hljs-comment,
+      .hljs-emphasis {
+        font-style: italic;
+      }
+
+      .hljs-section,
+      .hljs-strong,
+      .hljs-tag {
+        font-weight: bold;
+      }
+
+      /* Auto Hide by \xynstr#0300 */
+          /* Transition */
+          .sidebar-2K8pFh:hover {
+              width: 240px !important;
+              transition: 0.1s ease !important;
+              transition-delay: 0.3s !important;
+          }
+          /* Detects screen size to show channels if screen is big enough */
+          @media screen and (max-width: 1100px) {
+              .sidebar-2K8pFh {
+                  width: 0px !important;
+                  transition: 0.3s ease !important;
+                  position: fixed !important;
+                  height: calc(100% - 47.988px) !important;
+                  z-index: 1 !important;
+                  bottom: 0px !important;
+              }
+              .wrapper-3NnKdC:hover + .base-3dtUhz > .content-98HsJk > .sidebar-2K8pFh {
+                  width: 240px !important;
+              }
+              .sidebar-2K8pFh:hover {
+                  width: 240px !important;
+    '';
+  };
+#+end_src
+
+*** Firefox
+Although safari is my main browser, firefox looks very appealing with its excellent privacy and speed
+#+begin_src nix :comments both :tangle "./modules/home.nix"
+  home-manager.users.shauryasingh.programs.firefox.enable = true;
+#+end_src
+
+GUI apps are very finicky with nix, and so I create a fake package so that we can still use the configuration from =home-manager= without having to install it via nix. The user can then install firefox manually to =~/Applications=
+#+begin_src nix :comments both :tangle "./modules/home.nix"
+  home-manager.users.shauryasingh.programs.firefox.package =
+    pkgs.runCommand "firefox-0.0.0" { } "mkdir $out";
+#+end_src
+
+Now for the configuration. We want firefox to use the css at [[./configs/userChrome.css]], and we want to configure the UI. Lets also enable the (rust powered ftw) webrender/servo renderer.
+#+begin_src nix :comments both :tangle "./modules/home.nix"
+  home-manager.users.shauryasingh.programs.firefox.profiles = let
+    userChrome = builtins.readFile ../configs/userChrome.css;
+    settings = {
+      "app.update.auto" = true;
+      "browser.startup.homepage" = "https://shaunsingh.github.io/startpage/";
+      "browser.search.region" = "US";
+      "browser.search.countryCode" = "US";
+      "browser.search.isUS" = false;
+      "browser.ctrlTab.recentlyUsedOrder" = false;
+      "browser.newtabpage.enabled" = false;
+      "browser.bookmarks.showMobileBookmarks" = true;
+      "browser.uidensity" = 1;
+      "browser.urlbar.placeholderName" = "DuckDuckGo";
+      "browser.urlbar.update1" = true;
+      "distribution.searchplugins.defaultLocale" = "en-GB";
+      "general.useragent.locale" = "en-GB";
+      "identity.fxaccounts.account.device.name" = config.networking.hostName;
+      "privacy.trackingprotection.enabled" = true;
+      "privacy.trackingprotection.socialtracking.enabled" = true;
+      "privacy.trackingprotection.socialtracking.annotate.enabled" = true;
+      "reader.color_scheme" = "sepia";
+      "services.sync.declinedEngines" = "addons,passwords,prefs";
+      "services.sync.engine.addons" = false;
+      "services.sync.engineStatusChanged.addons" = true;
+      "services.sync.engine.passwords" = false;
+      "services.sync.engine.prefs" = false;
+      "services.sync.engineStatusChanged.prefs" = true;
+      "signon.rememberSignons" = false;
+      "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
+    };
+  in {
+    home = {
+      inherit settings;
+      inherit userChrome;
+      id = 0;
+    };
+
+    work = {
+      inherit userChrome;
+      id = 1;
+      settings = settings // {
+        "browser.startup.homepage" = "about:blank";
+        "browser.urlbar.placeholderName" = "Google";
+      };
+    };
+  };
+#+end_src
+
+*** Alacritty
+Alacritty is my terminal emulator of choice. Similar to firefox, we want to create a fake package, and then configure it as normal
+#+begin_src nix :comments both :tangle "./modules/home.nix"
+  home-manager.users.shauryasingh.programs.alacritty = {
+    enable = true;
+    # We need to give it a dummy package
+    package = pkgs.runCommand "alacritty-0.0.0" { } "mkdir $out";
+    settings = {
+      window.padding.x = 45;
+      window.padding.y = 45;
+      window.decorations = "buttonless";
+      window.dynamic_title = true;
+      live_config_reload = true;
+      mouse.hide_when_typing = true;
+      use_thin_strokes = true;
+      cursor.style = "Beam";
+
+      font = {
+        size = 14;
+        normal.family = "Liga SFMono Nerd Font";
+        normal.style = "Light";
+        bold.family = "Liga SFMono Nerd Font";
+        bold.style = "Bold";
+        italic.family = "Liga SFMono Nerd Font";
+        italic.style = "Italic";
+      };
+
+      colors = {
+        cursor.cursor = "#81a1c1";
+        primary.background = "#2e3440";
+        primary.foreground = "#d8dee9";
+        normal = {
+          black = "#3B4252";
+          red = "#BF616A";
+          green = "#A3BE8C";
+          yellow = "#EBCB8B";
+          blue = "#81A1C1";
+          magenta = "#B48EAD";
+          cyan = "#88C0D0";
+          white = "#E5E9F0";
+        };
+        bright = {
+          black = "#4c566a";
+          red = "#bf616a";
+          green = "#a3be8c";
+          yellow = "#ebcb8b";
+          blue = "#81a1c1";
+          magenta = "#b48ead";
+          cyan = "#8fbcbb";
+          white = "#eceff4";
+        };
+      };
+    };
+  };
+#+end_src
+
+*** Kitty
+I no longer use kitty (its quite slow to start and has too many features I don't need), but I keep the config around just in case
+#+begin_src nix :comments both :tangle "./modules/home.nix"
+  # home-manager.users.shauryasingh.programs.kitty = {
+  #   enable = true;
+  #   package = builtins.path {
+  #     path = /Applications/kitty.app/Contents/MacOS;
+  #     filter = (path: type: type == "directory" || builtins.baseNameOf path == "kitty");
+  #   };
+  #   # enable = true;
+  #   settings = {
+  #     font_family = "Liga SFMono Nerd Font";
+  #     font_size = "14.0";
+  #     adjust_line_height = "120%";
+  #     disable_ligatures = "cursor";
+  #     hide_window_decorations = "yes";
+  #     scrollback_lines = "50000";
+  #     cursor_blink_interval = "0.5";
+  #     cursor_stop_blinking_after = "10.0";
+  #     window_border_width = "0.7pt";
+  #     draw_minimal_borders = "yes";
+  #     macos_option_as_alt = "no";
+  #     cursor_shape = "beam";
+
+  #     foreground           =   "#D8DEE9";
+  #     background           =   "#2E3440";
+  #     selection_foreground =   "#000000";
+  #     selection_background =   "#FFFACD";
+  #     url_color            =   "#0087BD";
+  #     cursor               =   "#81A1C1";
+  #     color0               =   "#3B4252";
+  #     color8               =   "#4C566A";
+  #     color1               =   "#BF616A";
+  #     color9               =   "#BF616A";
+  #     color2               =   "#A3BE8C";
+  #     color10              =   "#A3BE8C";
+  #     color3               =   "#EBCB8B";
+  #     color11              =   "#EBCB8B";
+  #     color4               =   "#81A1C1";
+  #     color12              =   "#81A1C1";
+  #     color5               =   "#B48EAD";
+  #     color13              =   "#B48EAD";
+  #     color6               =   "#88C0D0";
+  #     color14              =   "#8FBCBB";
+  #     color7               =   "#E5E9F0";
+  #     color15              =   "#B48EAD";
+  #   };
+  # };
+#+end_src
+
+*** Fish
+I like to use the fish shell. Although it isn't POSIX, it has the best autocompletion and highlighting I've seen.
+#+begin_src nix :comments both :tangle "./modules/home.nix"
+  programs.fish.enable = true;
+  environment.shells = with pkgs; [ fish ];
+  users.users.shauryasingh = {
+    home = "/Users/shauryasingh";
+    shell = pkgs.fish;
+  };
+#+end_src
+
+**** Settings fish as default
+On macOS nix doesn't set the fish shell to the main shell by default (like it does on NixOS), so lets do that manually
+#+begin_src nix :comments both :tangle "./modules/home.nix"
+  system.activationScripts.postActivation.text = ''
+    # Set the default shell as fish for the user
+    sudo chsh -s ${lib.getBin pkgs.fish}/bin/fish shauryasingh
+  '';
+#+end_src
+
+**** Aliases
+I also like to alias common commands with other, better rust alternatives :tm:
+#+begin_src nix :comments both :tangle "./modules/home.nix"
+  programs.fish.shellAliases = with pkgs; {
+    ":q" = "exit";
+    vi = "emacsclient -c";
+    git-rebsae = "git rebase -i HEAD~2";
+    ll =
+      "exa -lF --color-scale --no-user --no-time --no-permissions --group-directories-first --icons -a";
+    ls = "exa -lF --group-directories-first --icons -a";
+    ps = "ps";
+    tree = "tree -a -C";
+    cat = "bat";
+    top = "btm";
+    find = "fd";
+    calc = "emacs -f full-calc";
+    neovide =
+      "/Applications/Neovide.app/Contents/MacOS/neovide --frameless --multigrid";
+    nix-fish = "nix-shell --command fish";
+  };
+#+end_src
+
+**** Prompt
+I like to make my prompt look pretty (along with some =nix-shell= and =git= integration)
+#+begin_src nix :comments both :tangle "./modules/home.nix"
+  programs.fish.promptInit = ''
+
+    set -g fish_greeting ""
+
+    set -U fish_color_autosuggestion      brblack
+    set -U fish_color_cancel              -r
+    set -U fish_color_command             green
+    set -U fish_color_comment             magenta
+    set -U fish_color_cwd                 green
+    set -U fish_color_cwd_root            red
+    set -U fish_color_end                 magenta
+    set -U fish_color_error               red
+    set -U fish_color_escape              cyan
+    set -U fish_color_history_current     --bold
+    set -U fish_color_host                normal
+    set -U fish_color_normal              normal
+    set -U fish_color_operator            cyan
+    set -U fish_color_param               blue
+    set -U fish_color_quote               yellow
+    set -U fish_color_redirection         yellow
+    set -U fish_color_search_match        'yellow' '--background=brightblack'
+    set -U fish_color_selection           'white' '--bold' '--background=brightblack'
+    set -U fish_color_status              red
+    set -U fish_color_user                green
+    set -U fish_color_valid_path          --underline
+    set -U fish_pager_color_completion    normal
+    set -U fish_pager_color_description   yellow
+    set -U fish_pager_color_prefix        'white' '--bold' '--underline'
+    set -U fish_pager_color_progress      'white' '--background=cyan'
+
+    # prompt
+    set fish_prompt_pwd_dir_length 1
+    set __fish_git_prompt_show_informative_status 1
+
+    set fish_color_command green
+    set fish_color_param $fish_color_normal
+
+    set __fish_git_prompt_showdirtystate 'yes'
+    set __fish_git_prompt_showupstream 'yes'
+
+    set __fish_git_prompt_color_branch brown
+    set __fish_git_prompt_color_dirtystate FCBC47
+    set __fish_git_prompt_color_stagedstate yellow
+    set __fish_git_prompt_color_upstream cyan
+    set __fish_git_prompt_color_cleanstate green
+    set __fish_git_prompt_color_invalidstate red
+
+    set __fish_git_prompt_char_dirtystate '~~'
+    set __fish_git_prompt_char_stateseparator ' '
+    set __fish_git_prompt_char_untrackedfiles ' ...'
+    set __fish_git_prompt_char_cleanstate '✓'
+    set __fish_git_prompt_char_stagedstate '-> '
+    set __fish_git_prompt_char_conflictedstate "✕"
+
+    set __fish_git_prompt_char_upstream_prefix ""
+    set __fish_git_prompt_char_upstream_equal ""
+    set __fish_git_prompt_char_upstream_ahead '>>='
+    set __fish_git_prompt_char_upstream_behind '=<<'
+    set __fish_git_prompt_char_upstream_diverged '<=>'
+
+    function _print_in_color
+      set -l string $argv[1]
+      set -l color  $argv[2]
+
+      set_color $color
+      printf $string
+      set_color normal
+    end
+
+    function _prompt_color_for_status
+      if test $argv[1] -eq 0
+        echo magenta
+      else
+        echo red
+      end
+    end
+
+    function fish_prompt
+        set -l last_status $status
+
+        set -l nix_shell_info (
+          if test -n "$IN_NIX_SHELL"
+            echo -n " [nix-shell]"
+          end
+        )
+
+        if test $HOME != $PWD
+            _print_in_color ""(prompt_pwd) blue
+        end
+        __fish_git_prompt " (%s)"
+
+        _print_in_color "$nix_shell_info λ " (_prompt_color_for_status $last_status) ]
+
+    end
+  '';
+#+end_src
+
+**** Init
+I also want to disable the default greeting, and use tmux with fish. Lets also set =nvim= as the default editor, and add emacs to my path
+#+begin_src nix :comments both :tangle "./modules/home.nix"
+  programs.fish.interactiveShellInit = ''
+    set -g fish_greeting ""
+    if not set -q TMUX
+      tmux new-session -A -s main
+    end
+
+    zoxide init fish --cmd cd | source
+
+    set -x EDITOR "nvim"
+    set -x PATH ~/.config/emacs/bin $PATH
+  '';
+#+end_src
+
+*** Neovim
+Lastly, I didn't feel like nix-ifying my neovim lua config. Lets cheat a bit and just symlink it instead
+#+begin_src nix :comments both :tangle "./modules/home.nix"
+  home-manager.users.shauryasingh.home.file = {
+    "~/.config/nvim" = {
+      recursive = true;
+      source = ../configs/nvim;
+    };
+  };
+#+end_src
+
+*** Bat
+Bat is another rust alternative :tm: to cat, and provides syntax highlighting. Lets theme it to match nord
+#+begin_src nix :comments both :tangle "./modules/home.nix"
+  home-manager.users.shauryasingh.programs.bat = {
+    enable = true;
+    config = { theme = "Nord"; };
+  };
+#+end_src
+
+*** Tmux
+Lastly, lets make tmux look just as pretty as our prompt, and enable truecolor support.
+#+begin_src nix :comments both :tangle "./modules/home.nix"
+  programs.tmux.enable = true;
+  programs.tmux.extraConfig = ''
+    # make sure fish works in tmux
+    set -g  default-terminal   "xterm-256color"
+    set -sa terminal-overrides ',xterm-256color:RGB'
+    # so that escapes register immidiately in vim
+    set -sg escape-time 1
+    # mouse support
+    set -g mouse on
+    # change prefix to C-a
+    set -g prefix C-a
+    unbind C-b
+    bind C-a send-prefix
+    # extend scrollback
+    set-option -g history-limit 5000
+    # vim-like pane resizing
+    bind -r C-k resize-pane -U
+    bind -r C-j resize-pane -D
+    bind -r C-h resize-pane -L
+    bind -r C-l resize-pane -R
+    # vim-like pane switching
+    bind -r k select-pane -U
+    bind -r j select-pane -D
+    bind -r h select-pane -L
+    bind -r l select-pane -R
+    # and now unbind keys
+    unbind Up
+    unbind Down
+    unbind Left
+    unbind Right
+    unbind C-Up
+    unbind C-Down
+    unbind C-Left
+    # styling
+    set -g status-bg default
+    set -g status-fg white
+    set -g status-left ""
+    set -g status-right ""
+    set -g status-justify centre
+    set -g status-position bottom
+    set -g pane-active-border-style bg=default,fg=default
+    set -g pane-border-style fg=default
+    set -g window-status-current-format "#[fg=cyan]#[fg=black]#[bg=cyan]#I #[bg=brightblack]#[fg=white] #W#[fg=brightblack]#[bg=default] #[bg=default] #[fg=magenta]#[fg=black]#[bg=magenta]λ #[fg=white]#[bg=brightblack] %a %d %b #[fg=magenta]%R#[fg=brightblack]#[bg=default]"
+    set -g window-status-format "#[fg=magenta]#[fg=black]#[bg=magenta]#I #[bg=brightblack]#[fg=white] #W#[fg=brightblack]#[bg=default] "
+  '';
+}
+#+end_src
+
+** Mac.nix
+There are mac-specific tweaks I need to do. In the future if I switch to nixOS full-time, then I wuold likely need to remove the mac-specific packages. An easy way to do this is just keep them in a seperate file:
+#+begin_src nix :comments both :tangle "./modules/mac.nix"
+{ pkgs, lib, spacebar, ... }:
+#+end_src
+
+*** Yabai
+Yabai is my tiling WM of choice. As this is an m1 (=aarch64-darwin=) laptop, I use the donaldguy fork, which enables the SA addon on m1 machines
+#+begin_src nix :comments both :tangle "./modules/mac.nix"
+let
+  # yabai = pkgs.yabai.overrideAttrs (old: rec {
+  #   src = pkgs.fetchFromGitHub {
+  #     owner = "donaldguy";
+  #     repo = "yabai";
+  #     rev = "00bf5e46685df0cd3e961c155615ddecc75562ab";
+  #     sha256 = "sha256-WlUUuT+dtI0eY6egMt6XXjNB0Ca6KiUB9iRc5XPU5x4=";
+  #   };
+  # });
+#+end_src
+
+Now to configure the package via nix
+#+begin_src nix :comments both :tangle "./modules/mac.nix"
+in {
+  # services.yabai = {
+  #   enable = true;
+  #   enableScriptingAddition = false;
+  #   package = yabai;
+  #   config = {
+  #     window_border = "off";
+  #     # window_border_width = 5;
+  #     # active_window_border_color = "0xff3B4252";
+  #     # normal_window_border_color = "0xff2E3440";
+  #     focus_follows_mouse = "autoraise";
+  #     mouse_follows_focus = "off";
+  #     mouse_drop_action = "stack";
+  #     window_placement = "second_child";
+  #     window_opacity = "off";
+  #     window_topmost = "on";
+  #     window_shadow = "on";
+  #     active_window_opacity = "1.0";
+  #     normal_window_opacity = "1.0";
+  #     split_ratio = "0.50";
+  #     auto_balance = "on";
+  #     mouse_modifier = "fn";
+  #     mouse_action1 = "move";
+  #     mouse_action2 = "resize";
+  #     layout = "bsp";
+  #     top_padding = 18;
+  #     bottom_padding = 46;
+  #     left_padding = 18;
+  #     right_padding = 18;
+  #     window_gap = 18;
+  #   };
+  # };
+#+end_src
+
+*** Spacebar
+Spacebar is my bar of choice on macOS. Its lighter than any web-based ubersicht bar, and looks nice
+#+begin_src nix :comments both :tangle "./modules/mac.nix"
+  services.spacebar = {
+    enable = true;
+    package = pkgs.spacebar;
+    config = {
+      position = "bottom";
+      height = 28;
+      title = "on";
+      spaces = "on";
+      power = "on";
+      clock = "off";
+      right_shell = "off";
+      padding_left = 20;
+      padding_right = 20;
+      spacing_left = 25;
+      spacing_right = 25;
+      text_font = ''"Menlo:16.0"'';
+      icon_font = ''"Menlo:16.0"'';
+      background_color = "0xff2E3440";
+      foreground_color = "0xffD8DEE9";
+      space_icon_color = "0xff8fBcBB";
+      power_icon_strip = " ";
+      space_icon_strip = "I II III IV V VI VII VIII IX X";
+      spaces_for_all_displays = "on";
+      display_separator = "on";
+      display_separator_icon = "|";
+      clock_format = ''"%d/%m/%y %R"'';
+      right_shell_icon = " ";
+      right_shell_command = "whoami";
+    };
+  };
+#+end_src
+
+*** SKHD
+Skhd is the hotkey daemon for yabai. As yabai is disabled, it makes sense to disable skhd too for the time being
+#+begin_src nix :comments both :tangle "./modules/mac.nix"
+  # services.skhd = {
+  #   enable = true;
+  #   package = pkgs.skhd;
+  #   skhdConfig = ''
+  #     	ctrl + alt - h : yabai -m window --focus west
+  #     	ctrl + alt - j : yabai -m window --focus south
+  #     	ctrl + alt - k : yabai -m window --focus north
+  #     	ctrl + alt - l : yabai -m window --focus east
+
+  #     	# Fill space with window
+  #     	ctrl + alt - 0 : yabai -m window --grid 1:1:0:0:1:1
+
+  #     	# Move window
+  #     	ctrl + alt - e : yabai -m window --display 1; yabai -m display --focus 1
+  #     	ctrl + alt - d : yabai -m window --display 2; yabai -m display --focus 2
+  #     	ctrl + alt - f : yabai -m window --space next; yabai -m space --focus next
+  #     	ctrl + alt - s : yabai -m window --space prev; yabai -m space --focus prev
+
+  #     	# Close current window
+  #     	ctrl + alt - w : $(yabai -m window $(yabai -m query --windows --window | jq -re ".id") --close)
+
+  #     	# Rotate tree
+  #     	ctrl + alt - r : yabai -m space --rotate 90
+
+  #     	# Open application
+  #     	ctrl + alt - enter : alacritty
+  #     	ctrl + alt - e : emacs
+  #     	ctrl + alt - b : open -a Safari
+  #       ctrl + alt - t : yabai -m window --toggle float;\
+  #         yabai -m window --grid 4:4:1:1:2:2
+  #       ctrl + alt - p : yabai -m window --toggle sticky;\
+  #         yabai -m window --toggle topmost;\
+  #         yabai -m window --toggle pip
+  #   '';
+  # };
+#+end_src
+
+*** MacOS Settings
+I like my hostname to be the same as the flake's target
+#+begin_src nix :comments both :tangle "./modules/mac.nix"
+  networking.hostName = "shaunsingh-laptop";
+  system.stateVersion = 4;
+#+end_src
+
+Along with that, lets
+- Increase key repeat rate
+- Remap Caps to Esc
+- Save screenshots to =/tmp=
+- Autohide the dock and menubar
+- Show extensions in Finder (and allow it to "quit")
+- Set macOS to use the dark theme
+- Configure Trackpad and mouse behavior
+- Enable subpixel antialiasing on internal/external displays
+#+begin_src nix :comments both :tangle "./modules/mac.nix"
+  system.keyboard = {
+    enableKeyMapping = true;
+    remapCapsLockToEscape = true;
+  };
+  system.defaults = {
+    screencapture = { location = "/tmp"; };
+    dock = {
+      autohide = true;
+      showhidden = true;
+      mru-spaces = false;
+    };
+    finder = {
+      AppleShowAllExtensions = true;
+      QuitMenuItem = true;
+      FXEnableExtensionChangeWarning = true;
+    };
+    NSGlobalDomain = {
+      AppleInterfaceStyle = "Dark";
+      AppleKeyboardUIMode = 3;
+      ApplePressAndHoldEnabled = false;
+      AppleFontSmoothing = 1;
+      _HIHideMenuBar = true;
+      InitialKeyRepeat = 10;
+      KeyRepeat = 1;
+      "com.apple.mouse.tapBehavior" = 1;
+      "com.apple.swipescrolldirection" = true;
+    };
+  };
+}
+#+end_src
+
+** Pam.nix
+Apple's touchid is an excellent way of authenticating anything quickly and securely. Sadly, =sudo= doesn't support it by default, but its an easy fix. T do this, we edit =/etc/pam.d/sudo= via =sed= to include the relevent code to enable touchid.
+
+ We don't use =environment.etc= because this would require that the user manually delete
+ =/etc/pam.d/sudo= which seems unwise given that applying the nix-darwin configuration requires
+ =sudo=. We also can't use =system.patches= since it only runs once, and so won't patch in the
+ changes again after OS updates (which remove modifications to this file).
+
+ As such, we resort to line addition/deletion in place using =sed=. We add a comment to the
+ added line that includes the name of the option, to make it easier to identify the line that
+ should be deleted when the option is disabled.
+
+#+begin_src nix :comments both :tangle "./modules/pam.nix"
+{ config, lib, pkgs, ... }:
+
+with lib;
+
+let
+  cfg = config.security.pam;
+  mkSudoTouchIdAuthScript = isEnabled:
+    let
+      file = "/etc/pam.d/sudo";
+      option = "security.pam.enableSudoTouchIdAuth";
+    in ''
+      ${if isEnabled then ''
+        # Enable sudo Touch ID authentication, if not already enabled
+        if ! grep 'pam_tid.so' ${file} > /dev/null; then
+          sed -i "" '2i\
+        auth       sufficient     pam_tid.so # nix-darwin: ${option}
+          ' ${file}
+        fi
+      '' else ''
+        # Disable sudo Touch ID authentication, if added by nix-darwin
+        if grep '${option}' ${file} > /dev/null; then
+          sed -i "" '/${option}/d' ${file}
+        fi
+      ''}
+    '';
+
+in {
+  options = {
+    security.pam.enableSudoTouchIdAuth = mkEnableOption ''
+      Enable sudo authentication with Touch ID
+      When enabled, this option adds the following line to /etc/pam.d/sudo:
+          auth       sufficient     pam_tid.so
+      (Note that macOS resets this file when doing a system update. As such, sudo
+      authentication with Touch ID won't work after a system update until the nix-darwin
+      configuration is reapplied.)
+    '';
+  };
+
+  config = {
+    system.activationScripts.extraActivation.text = ''
+      # PAM settings
+      echo >&2 "setting up pam..."
+      ${mkSudoTouchIdAuthScript cfg.enableSudoTouchIdAuth}
+    '';
+  };
+}
+#+end_src
+
+* Editors
+** Emacs
+#+include: "./configs/doom/config.org"
+** Neovim
+
+* Extra :ATTACH:
+:PROPERTIES:
+:ID:       86261973-40ab-49f5-b78b-89514c2f6d9c
+:END:
+Wallpapers are in =./extra/wallpapers/
+Some of my favorites:
+
+[[attachment:_20211108_193854queen_chess.png]]
+
+
+[[attachment:_20211108_193915portal.png]]
+
+[[attachment:_20211108_193918Nord Minimal - D8DEE9.png]]
+
+[[attachment:_20211108_193920nixos.png]]

@@ -1,26 +1,8 @@
 #+title: Doom Emacs Configuration
-#+author: Shaurya Singh
 #+property: header-args:elisp :exports code
 #+latex_header: \let\textls\relax
 #+latex_class: chameleon
 #+startup: fold
-
-#+begin_export html
-<a href="https://github.com/shaunsingh/vimrc-dotfiles/"
-   style="font-family: 'Open Sans'; background-image: none; color: inherit;
-   text-decoration: none; position: relative; top: clamp(-26px, calc(1280px - 100vw), 0px); opacity: 0.7;">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg"
-       class="invertible" alt="GitHub Octicon"
-       style="height: 1em; position: relative; top: 0.1em;">
-  View on GitHub</a>
-#+end_export
-
-#+begin_quote
-Let us change our traditional attitude to the construction of programs:
-Instead of imagining that our main task is to instruct a computer what to do,
-let us concentrate rather on explaining to human beings what we want a
-computer to do. @@latex:\mbox{@@--- Donald Knuth@@latex:}@@
-#+end_quote
 
 * *Note:* If you want a proper Emacs Config, look here:
 https://tecosaur.github.io/emacs-config/config.html, this is just a compilation
@@ -76,7 +58,7 @@ Thats not to say using Emacs doesn't have its pitfalls. The performance leaves
 something to be desired, but the benefits far outweigh the drawbacks. Its
 unrivaled in extensibility.
 
-#+plot: transpose:yes type:radar min:0 max:5 ticks:5 file:"misc/editor-comparison.svg"
+#+plot: transpose:yes type:radar min:0 max:5 ticks:5 file:"misc/editor-comparison.jpeg"
 | Editor   | Extensibility | Ecosystem | Ease of Use | Comfort | Completion | Performance |
 |----------+---------------+-----------+-------------+---------+------------+-------------|
 | IDLE     |             1 |         1 |           3 |       1 |          1 |           2 |
@@ -85,7 +67,7 @@ unrivaled in extensibility.
 | (Neo)Vim |             4 |         3 |         2.5 |     3.5 |          4 |           5 |
 
 #+attr_html: :class invertible :alt Radar chart comparing my thoughts on a few editors.
-[[file:./misc/editor-comparison.svg]]
+[[file:./misc/editor-comparison.jpeg]]
 
 ** Why Emacs?
 Emacs is [[https://www.eigenbahn.com/2020/01/12/emacs-is-no-editor][not a text editor]], this is a common misnomer. It is far more apt to
@@ -130,22 +112,6 @@ applications which act like islands, but this often doesn't mirror how we
 users the power to bridge this gap.
 
 ** Notes for the unwary adventurer
-If you like the look of this, that's marvellous, and I'm really happy that I've
-made something which you may find interesting, however:
-#+begin_warning
-This config is /insidious/. Copying the whole thing blindly can easily lead to
-undesired effects. I recommend copying chunks instead.
-#+end_warning
-
-If you are so bold as to wish to steal bits of my config (or if I upgrade and
-wonder why things aren't working), here's a list of sections which rely on
-external setup (i.e. outside of this config).
-
-Oh, did I mention that I started this config when I didn't know any =lisp=, and
-this whole thing is a hack job? If you can suggest any improvements, please do
-so, no matter how much criticism you include I'll appreciate it :)
-
-*** Extra Requirements
 The lovely ~doom doctor~ is good at diagnosing most missing things, but here are a
 few extras.
 + A [[https://www.tug.org/texlive/][LaTeX Compiler]] is required for the mathematics rendering performed in [[https://orgmode.org/][org]],
@@ -932,7 +898,7 @@ emacs bootloaders
 ** Themes
 Right now I'm using nord, but I use doom-vibrant sometimes
 #+begin_src elisp
-(setq doom-theme 'doom-nord)
+(setq doom-theme 'doom-one-light)
 (setq doom-fw-padded-modeline t)
 (setq doom-one-light-padded-modeline t)
 (setq doom-nord-padded-modeline t)

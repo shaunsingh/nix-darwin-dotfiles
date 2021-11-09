@@ -1,4 +1,14 @@
+# Mac.nix
+# There are mac-specific tweaks I need to do. In the future if I switch to nixOS full-time, then I wuold likely need to remove the mac-specific packages. An easy way to do this is just keep them in a seperate file:
+
+# [[file:../nix-config.org::*Mac.nix][Mac.nix:1]]
 { pkgs, lib, spacebar, ... }:
+# Mac.nix:1 ends here
+
+# Yabai
+# Yabai is my tiling WM of choice. As this is an m1 (=aarch64-darwin=) laptop, I use the donaldguy fork, which enables the SA addon on m1 machines
+
+# [[file:../nix-config.org::*Yabai][Yabai:1]]
 let
   # yabai = pkgs.yabai.overrideAttrs (old: rec {
   #   src = pkgs.fetchFromGitHub {
@@ -8,7 +18,13 @@ let
   #     sha256 = "sha256-WlUUuT+dtI0eY6egMt6XXjNB0Ca6KiUB9iRc5XPU5x4=";
   #   };
   # });
+# Yabai:1 ends here
 
+
+
+# Now to configure the package via nix
+
+# [[file:../nix-config.org::*Yabai][Yabai:2]]
 in {
   # services.yabai = {
   #   enable = true;
@@ -41,6 +57,12 @@ in {
   #     window_gap = 18;
   #   };
   # };
+# Yabai:2 ends here
+
+# Spacebar
+# Spacebar is my bar of choice on macOS. Its lighter than any web-based ubersicht bar, and looks nice
+
+# [[file:../nix-config.org::*Spacebar][Spacebar:1]]
   services.spacebar = {
     enable = true;
     package = pkgs.spacebar;
@@ -71,6 +93,12 @@ in {
       right_shell_command = "whoami";
     };
   };
+# Spacebar:1 ends here
+
+# SKHD
+# Skhd is the hotkey daemon for yabai. As yabai is disabled, it makes sense to disable skhd too for the time being
+
+# [[file:../nix-config.org::*SKHD][SKHD:1]]
   # services.skhd = {
   #   enable = true;
   #   package = pkgs.skhd;
@@ -106,13 +134,33 @@ in {
   #         yabai -m window --toggle pip
   #   '';
   # };
+# SKHD:1 ends here
+
+# MacOS Settings
+# I like my hostname to be the same as the flake's target
+
+# [[file:../nix-config.org::*MacOS Settings][MacOS Settings:1]]
   networking.hostName = "shaunsingh-laptop";
   system.stateVersion = 4;
+# MacOS Settings:1 ends here
+
+
+
+# Along with that, lets
+# - Increase key repeat rate
+# - Remap Caps to Esc
+# - Save screenshots to =/tmp=
+# - Autohide the dock and menubar
+# - Show extensions in Finder (and allow it to "quit")
+# - Set macOS to use the dark theme
+# - Configure Trackpad and mouse behavior
+# - Enable subpixel antialiasing on internal/external displays
+
+# [[file:../nix-config.org::*MacOS Settings][MacOS Settings:2]]
   system.keyboard = {
     enableKeyMapping = true;
     remapCapsLockToEscape = true;
   };
-
   system.defaults = {
     screencapture = { location = "/tmp"; };
     dock = {
@@ -138,3 +186,4 @@ in {
     };
   };
 }
+# MacOS Settings:2 ends here
