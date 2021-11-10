@@ -146,7 +146,8 @@
        ;;lean                       ; proof that mathematicians need help
        ;;factor                     ; for when scripts are stacked against you
        ;;ledger                     ; an accounting system in Emacs
-       (lua +lsp)                   ; one-based indices? one-based indices
+       (lua                         ; one-based indices? one-based indices
+        +lsp)
        (markdown +grip)             ; writing docs for people to ignore
        ;;nim                        ; python + lisp at the speed of c
        nix                          ; I hereby declare "nix geht mehr!"

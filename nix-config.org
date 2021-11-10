@@ -1,10 +1,12 @@
 #+title: Nix-Darwin-Config +
 #+subtitle: Nix-powered declarative macOS configuration
 #+author: Shaurya Singh
+#+options: broken-links:t
 #+latex_header: \let\textls\relax
 #+latex_class: chameleon
 #+startup: preview
 #+startup: fold
+#+options: broken-links:t
 #+options: toc:5
 
 #+begin_export html
@@ -45,9 +47,7 @@ so, no matter how much criticism you include I'll appreciate it :)
 ** Why Nix?
 Nix consists of two parts: a package manager and a language. The language is a rather simple lazy (almost) pure functional language with dynamic typing that specializes in building packages. The package manager, on the other hand, is interesting and pretty unique. It all starts with one idea.
 
-Nix stems from the idea that FHS is fundamentally incompatible with reproducibility. Let me explain.
-
-Every time you see a path like /bin/python or /lib/libudev.so, there are a lot of things that you don’t know about the file that’s located there.
+Nix stems from the idea that FHS is fundamentally incompatible with reproducibility. Every time you see a path like =/bin/python= or =/lib/libudev.so=, there are a lot of things that you don’t know about the file that’s located there.
 
 What’s the version of the package it came from?
 What are the libraries it uses?
@@ -63,6 +63,54 @@ What if we want to apply different configure flags to our application or change 
 For example, two people using the same docker image will always get the same results, but two people building the same Dockerfile can (and often do) end up with two different images.
 
 ** Drawbacks of Nix (on macOS)
+The biggest issue with Nix on darwin is that NixOS (and Nix on linux) takes priority. This means:
+ 1. Apps aren't guaranteed to build on macOS
+ 2. External dependencies and overlays (e.g. =home-manager=) aren't guaranteed to work perfectly on darwin
+ 3. GUI application support is almost nonexistent
+
+MacOS is also quite locked down compared to linux, which limits the customization you can do. You also need =nix-darwin= to manage flake configurations and macOS settings. Be prepared for nix (and other package managers) to break in a future macOS update.
+On top of this, =aarch64-darwin= is a Tier 4 platform, if packages that are failing the test aren't critical, they get merged. You will run into packages that don't run on m1 at all, and will likely have to PR or open an issue to get them fixed.
+Lastly, remember that =aarch64-darwin= is fairly new. Especially if you use the stable channel, expect to have to build the majority of packages from source. Even if you use the unstable/master channels, you will likely end up building some packages from source
+
+** Nix vs Homebrew, Pkgsrc, and Macports
+The main package managers on macOS are:
+1. [[https://github.com/NixOS/nix][Nix]]
+2. [[https://www.macports.org][Macports]]
+3. [[https://pkgsrc.joyent.com/install-on-osx/ ][Pkgsrc]]
+4. [[https://brew.sh][Homebrew]]
+
+#+plot: transpose:yes type:radar min:0 max:5 ticks:5 file:"./extra/assets/pm-comparison.jpeg"
+| Pkg Manager    | Pkg Availability | Pkg Freshness | Ease of Use | Features | Performance |
+|----------------+------------------+---------------+-------------+----------+-------------|
+| Nix (Unstable) |                5 |             5 |         2.5 |      4.5 |           4 |
+| Macports       |              3.5 |             3 |           3 |        3 |           4 |
+| Pkgsrc         |                2 |             2 |           2 |        4 |           5 |
+| Homebrew       |              3.5 |           4.5 |         4.5 |        2 |           2 |
+
+#+attr_html: :alt Radar chart comparing my thoughts on a few macOS package managers
+[[./extra/assets/pm-comparison.jpeg]]
+
+Package management on macOS has a somewhat complex history, mostly owing to the fact that unlike most Linux distributions, macOS does not ship with a default package manager out of the box. It’s not surprising that one of the first projects to solve the problem of package management, Fink, was created very early, with its initial releases predating that of Mac OS X 10.0 by several months. Using Debian’s =dpkg= and =apt= as its backend, Fink is still actively maintained, though I haven’t looked at it very closely.
+
+MacPorts, on the other hand, was released in 2002 as part of OpenDarwin, while Homebrew was released seven years later as a “solution” to many of the shortcomings that the author saw in MacPorts. Pkgsrc is an older package manager for UNIX-like systems, and supports several BSD's, as well as Linux and MacOS.  Nix is a cross-platform package manager that utilizes a purely functional deployment model where software is installed into unique directories generated through cryptographic hashes. It is also the name of the tool's programming language. A package's hash takes into account the dependencies. This package management model advertises more reliable, reproducible, and portable packages.
+
+Homebrew makes several questionable design decisions, but one of these deserves its own section: the choice to explicitly eschew root (in fact, it will refuse to work at all if run this way). This fundamentally is a very bad idea: package managers that install software for all users of your computer, as Homebrew does by default, should always require elevated privileges to function correctly. This decision has important consequences for both security and usability, especially with the advent of System Integrity Protection in OS X El Capitan.
+
+For quite a while, Homebrew essentially considered itself the owner of =/usr/local= (both metaphorically and literally, as it would change the permissions of the directory), to the point where it would do things like plop its README down directly into this folder. After rootless was introduced, it moved most of its files to subdirectories; however, to maintain the charade of “sudo-less” installation, Homebrew will still trash the permissions of folders inside =/usr/local=. Homebrew’s troubleshooting guide lists these out, because reinstalling macOS sets the permissions back to what they’re supposed to be and breaks Homebrew in the process.
+
+#+begin_quote
+If commands fail with permissions errors, check the permissions of /usr/local’s subdirectories. If you’re unsure what to do, you can run cd /usr/local && sudo chown -R $(whoami) bin etc include lib sbin share var opt Cellar Caskroom Frameworks.
+#+end_quote
+
+MacPorts, on the other hand, swings so far in the other direction that it’s actually borderline inconvenient to use in some sense. Philosophically, MacPorts has a very different perspective of how it should work: it tries to prevent conflicts with the system as much as possible. To achieve this, it sets up a hierarchy under =/opt= (which is the annoying bit, because this directory is not on =$PATH= by default, nor is picked up by compilers without some prodding).
+
+Of course, this design means that there is a single shared installation is among users, so running =port= requires elevated privileges whenever performing an operation that affects all users (which, admittedly, is most of the time). MacPorts is smart about this, though: it will shed permissions and run as the =macports= user whenever possible.
+
+In line with their stated philosophy to prevent conflicts with macOS, MacPorts will set up its own tools in isolation from those provided by the system (in fact, builds run in “sandboxes” under the =macports= user, where attempts to access files outside of the build directory–which includes system tools–are intercepted and blocked). This means MacPorts needs to install some “duplicate” tools (whereas Homebrew will try to use the ones that come with your system where possible), the downside of which is that there is an one-time “up-front” cost as it installs base packages. The upside is that this approach is significantly more contained, which makes it easier to manage and more likely to continue working as macOS changes under it.
+
+Finally, MacPorts just seems to have a lot of thought put into it with regards to certain aspects: for example, the MacPorts Registry database is backed by SQLite by default, which makes easily introspectable in case something goes wrong. Another useful feature is built-in “livechecks” for most ports, which codify upstream version checks and make it easy to see when MacPorts’s package index need to be updated.
+
+I won't delve too much into why I choose nix in the end (as I've covered it before), but I feel like nix takes the best of both worlds and more. You have the ease of use that homebrew provides, the sandboxing and though that was put into MacPorts, while having excellent sandboxing and the seperate =nixbld= user.
 
 * Installing and notes
 *NOTE: These are available as an executable script [[./extra/install.sh]]*
@@ -1382,12 +1430,64 @@ in {
 ** Emacs
 #+include: "./configs/doom/config.org"
 ** Neovim
+There are many neovim configurations that exist (i.e. NvChad, Lunar Vim, etc.). However, many of these configurations suffer from a host of problems:
+
+Some configurations (like NvChad), have very abstracted and complex codebases. Others rely on having as much overall functionality as possible (like LunarVim). While none of this is bad, there are some problems that can arise from these choices:
+
+Complex codebases lead to less freedom for end-user extensiblity and configuration, as there is more reliance on the maintainer of said code. Users may not use half of what is made avalible to them simply because they don't need all of that functionality, so all of it may not be necessary. This config provides a solution to these problems by providing only the necessary code in order to make a functioning configuration. The end goal of this personal neovim config is to be used as a base config for users to extend and add upon, leading to a more unique editing experience.
+
+The configuration was originally based off of [[https://github.com/NvChad/NvChad/tree/29f04fcc9d7a5e0cc9ef3a59ce5860d4cfa60f85][commit 29f04fc]] of NvChad, but this config has evolved to be much more than that.
+
+*** Init
+The init.lua first loads impatient.nvim if available (so we can cache the =.lua= files). It then disables builtin vim plugins, and loads the required modules for startup (=packer_compiled.lua=, =mappings.lua=, and =options.lua=)
+#+include: "./configs/nvim/init.lua" src lua
+*** Packer
+My packer configuration is broken into two files: =packerInit= and =pluginList=.
+=packerInit= downloads packer if it isn't present, lazy loads it if it is, and configures packer. Notably:
+ - Put the =packer_compiled= file under =/nvim/lua= instead of =/nvim/plugin= so it can be chached by impatient.nvim
+ - Use packer in a floating window instead of a split, and remove the borders
+ - Increaes =clone_timeout=, just in case I'm on a more finicky network
+=pluginList= contains the list of plugins, as well lazy loads and defines their configuration files.
+#+include: "./configs/nvim/lua/packerInit.lua" src lua
+#+include: "./configs/nvim/lua/pluginList.lua" src lua
+*** Settings
+As I said earlier, there are 3 required modules for startup (=packer_compiled.lua=, =mappings.lua=, and =options.lua=). Of that, =packer_compiled.lua= is generated using =:PackerCompile=, so we will focus on the other two.
+ - =mappings.lua= contains all of my mappings. All of the mappings are the same as the defaults for Doom Emacs (with a few exceptions). To list all of the keybinds, run =SPC h b b= in doom (or =SPC h b f= for major-mode specific binds). The file also contains some commands, which allow for the lazy loading of packer.
+ - =options.lua= contains all the basic options I want set before loading a buffer. Additionally, I want to disable the tilde fringe and =filetype.vim= (replaced with =filetype.nvim=).
+#+include: "./configs/nvim/lua/mappings.lua" src lua
+#+include: "./configs/nvim/lua/options.lua" src lua
+*** Plugin Configuration
+**** Bufferline
+
+#+include: "./configs/nvim/lua/plugins/bufferline.lua" src lua
+**** Nvim-cmp
+#+include: "./configs/nvim/lua/plugins/cmp.lua" src lua
+**** Gitsigns
+#+include: "./configs/nvim/lua/plugins/gitsigns.lua" src lua
+**** Lspconfig
+#+include: "./configs/nvim/lua/plugins/lspconfig.lua" src lua
+**** Neogit
+#+include: "./configs/nvim/lua/plugins/neogit.lua" src lua
+**** Neorg
+#+include: "./configs/nvim/lua/plugins/neorg.lua" src lua
+**** Nvimtree
+#+include: "./configs/nvim/lua/plugins/nvimtree.lua" src lua
+**** Others
+#+include: "./configs/nvim/lua/plugins/others.lua" src lua
+**** Statusline
+#+include: "./configs/nvim/lua/plugins/statusline.lua" src lua
+**** Telescope
+#+include: "./configs/nvim/lua/plugins/telescope.lua" src lua
+**** Treesitter
+#+include: "./configs/nvim/lua/plugins/treesitter.lua" src lua
+**** Zenmode
+#+include: "./configs/nvim/lua/plugins/zenmode.lua" src lua
 
 * Extra :ATTACH:
 :PROPERTIES:
 :ID:       86261973-40ab-49f5-b78b-89514c2f6d9c
 :END:
-Wallpapers are in =./extra/wallpapers/
+Wallpapers are in =./extra/wallpapers/=
 Some of my favorites:
 
 [[attachment:_20211108_193854queen_chess.png]]
