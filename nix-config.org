@@ -251,36 +251,42 @@ The =flake.nix= below does the following:
 
   inputs = {
     # All packages should follow latest nixpkgs home-manager & flake-utils
-    unstable.url = "github:nixos/nixpkgs/master";
+    nixpkgs.url = "github:nixos/nixpkgs/master";
     darwin = {
       url = "github:LnL7/nix-darwin/master";
-      inputs.nixpkgs.follows = "unstable";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
     home-manager = {
       url = "github:nix-community/home-manager/master";
-      inputs.nixpkgs.follows = "unstable";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
     # Bar
     spacebar = {
       url = "github:shaunsingh/spacebar/master";
-      inputs.nixpkgs.follows = "unstable";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
     # Editors
     neovim = {
-      url = "github:nix-community/neovim-nightly-overlay";
-      inputs.nixpkgs.follows = "unstable";
+      url = "github:neovim/neovim?dir=contrib";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
     emacs = {
       url = "github:nix-community/emacs-overlay";
-      inputs.nixpkgs.follows = "unstable";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    # attempt to use yabai-git
+    nixpkgs-overlays = {
+        url = "path:./overlays/";
+        inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = { self, nixpkgs, spacebar, neovim, emacs, darwin, home-manager, ...
+  outputs = { self, nixpkgs, nixpkgs-overlays, spacebar, neovim, emacs, darwin, home-manager, ...
     }@inputs: {
       darwinConfigurations."shaunsingh-laptop" = darwin.lib.darwinSystem {
         system = "aarch64-darwin";
         modules = [
+          { nixpkgs.overlays = [ nixpkgs-overlays.overlay ]; }
           ./modules/mac.nix
           ./modules/home.nix
           ./modules/pam.nix
@@ -295,7 +301,11 @@ The =flake.nix= below does the following:
             services.nix-daemon.enable = true;
             security.pam.enableSudoTouchIdAuth = true;
             nixpkgs = {
-              overlays = [ spacebar.overlay neovim.overlay emacs.overlay ];
+              overlays = with inputs; [
+                spacebar.overlay
+                neovim.overlay
+                emacs.overlay
+              ];
               config.allowUnfree = true;
             };
             nix = {
@@ -314,7 +324,6 @@ The =flake.nix= below does the following:
               ## make sure ripgrep supports pcre2 (for vertico)
               (ripgrep.override { withPCRE2 = true; })
               binutils
-              gnutls
               gnuplot
               sqlite
               sdcv
@@ -328,9 +337,12 @@ The =flake.nix= below does the following:
                   transparent hanging;
               })
 
+              # Jetbrains deps
+              jdk
+
               # Neovim deps
-              neovim-nightly
-              nodejs
+              neovim
+              # nodejs
               tree-sitter
 
               # Language deps
@@ -347,7 +359,6 @@ The =flake.nix= below does the following:
               shellcheck
 
               # Terminal utils and rust alternatives :tm:
-              wget
               exa
               procs
               tree
@@ -359,10 +370,9 @@ The =flake.nix= below does the following:
             fonts = {
               enableFontDir = true;
               fonts = with pkgs; [
-                alegreya
                 overpass
+                alegreya
                 alegreya-sans
-                ibm-plex
                 emacs-all-the-icons-fonts
               ];
             };
@@ -371,6 +381,111 @@ The =flake.nix= below does the following:
       };
     };
 }
+#+end_src
+
+** Overlays
+Sometimes there are packages that I want from git, or that aren't available from =nixpkgs=. This overlay adds the following:
+- Yabai (mac) from https://github.com/donaldguy/yabai
+- Eww (linux) from https://github.com/elkowar/eww
+- Alacritty-ligatures (linux) from https://github.com/zenixls2/alacritty/tree/ligature
+#+begin_src nix :comments both :tangle "./overlays/flake.nix"
+{
+  description = "overlays";
+
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/master";
+    flake-utils.url = "github:numtide/flake-utils";
+    flake-compat = { url = "github:edolstra/flake-compat"; flake = false; };
+    flake-compat-ci.url = "github:hercules-ci/flake-compat-ci";
+    eww.url = "github:elkowar/eww";
+    alacritty-src = { url = "github:zenixls2/alacritty/ligature"; flake = false; };
+    yabai-src = { url = "github:donaldguy/yabai/canon"; flake = false; };
+
+  };
+
+  outputs = args@{ self, flake-utils, nixpkgs, ... }:
+    {
+      ciNix = args.flake-compat-ci.lib.recurseIntoFlake self;
+
+      overlay = final: prev: {
+        inherit (self.packages.${final.system})
+          eww
+          alacritty-ligatures
+          yabai-git;
+      };
+    }
+    // flake-utils.lib.eachSystem [ "aarch64-darwin" ] (system:
+      let
+        pkgs = import nixpkgs {
+          inherit system;
+          allowBroken = true;
+          allowUnsupportedSystem = true;
+        };
+        version = "999-unstable";
+      in
+      {
+
+        defaultPackage = self.packages.${system}.eww;
+
+        packages = rec {
+
+        eww = args.eww.defaultPackage.${system};
+
+        alacritty-ligatures = with pkgs; (alacritty.overrideAttrs (old: rec {
+            src = args.alacritty-src;
+
+            postInstall = ''
+              install -D extra/linux/Alacritty.desktop -t $out/share/applications/
+              install -D extra/logo/compat/alacritty-term.svg $out/share/icons/hicolor/scalable/apps/Alacritty.svg
+              strip -S $out/bin/alacritty
+              patchelf --set-rpath "${lib.makeLibraryPath old.buildInputs}:${stdenv.cc.cc.lib}/lib${lib.optionalString stdenv.is64bit "64"}" $out/bin/alacritty
+              installShellCompletion --zsh extra/completions/_alacritty
+              installShellCompletion --bash extra/completions/alacritty.bash
+              installShellCompletion --fish extra/completions/alacritty.fish
+              install -dm755 "$out/share/man/man1"
+              gzip -c extra/alacritty.man > "$out/share/man/man1/alacritty.1.gz"
+              install -Dm644 alacritty.yml $out/share/doc/alacritty.yml
+              install -dm755 "$terminfo/share/terminfo/a/"
+              tic -xe alacritty,alacritty-direct -o "$terminfo/share/terminfo" extra/alacritty.info
+              mkdir -p $out/nix-support
+              echo "$terminfo" >> $out/nix-support/propagated-user-env-packages
+            '';
+
+            cargoDeps = old.cargoDeps.overrideAttrs (_: {
+              inherit src;
+              outputHash = "sha256-tY5sle1YUlUidJcq7RgTzkPsGLnWyG/3rtPqy2GklkY=";
+            });
+          }));
+
+          yabai-git = (pkgs.yabai.overrideAttrs (old: {
+            inherit version;
+            src = args.yabai-src;
+            buildInputs = (old.buildInputs or [ ]) ++ (with pkgs; [
+              SkyLight xcode
+            ]);
+          }));
+        };
+      }
+    );
+}
+#+end_src
+#+begin_src nix :comments both :tangle "./overlays/compat.nix"
+(import
+  (
+    let
+      lock = builtins.fromJSON (builtins.readFile ./flake.lock);
+    in
+    fetchTarball {
+      url = "https://github.com/edolstra/flake-compat/archive/${lock.nodes.flake-compat.locked.rev}.tar.gz";
+      sha256 = lock.nodes.flake-compat.locked.narHash;
+    }
+  )
+  {
+    src = ./.;
+  }).defaultNix
+#+end_src
+#+begin_src nix :comments both :tangle "./overlays/default.nix"
+final: prev: (import ./compat.nix).overlay final prev
 #+end_src
 
 * Modules
@@ -1189,57 +1304,45 @@ Lastly, lets make tmux look just as pretty as our prompt, and enable truecolor s
 ** Mac.nix
 There are mac-specific tweaks I need to do. In the future if I switch to nixOS full-time, then I wuold likely need to remove the mac-specific packages. An easy way to do this is just keep them in a seperate file:
 #+begin_src nix :comments both :tangle "./modules/mac.nix"
-{ pkgs, lib, spacebar, ... }:
+{ pkgs, lib, spacebar, ... }: {
 #+end_src
 
 *** Yabai
-Yabai is my tiling WM of choice. As this is an m1 (=aarch64-darwin=) laptop, I use the donaldguy fork, which enables the SA addon on m1 machines
-#+begin_src nix :comments both :tangle "./modules/mac.nix"
-let
-  # yabai = pkgs.yabai.overrideAttrs (old: rec {
-  #   src = pkgs.fetchFromGitHub {
-  #     owner = "donaldguy";
-  #     repo = "yabai";
-  #     rev = "00bf5e46685df0cd3e961c155615ddecc75562ab";
-  #     sha256 = "sha256-WlUUuT+dtI0eY6egMt6XXjNB0Ca6KiUB9iRc5XPU5x4=";
-  #   };
-  # });
-#+end_src
+Yabai is my tiling WM of choice. As this is an m1 (=aarch64-darwin=) laptop, I use the =the-future= branch, which enables the SA addon on m1 machines and monterey support
 
 Now to configure the package via nix
 #+begin_src nix :comments both :tangle "./modules/mac.nix"
-in {
-  # services.yabai = {
-  #   enable = true;
-  #   enableScriptingAddition = false;
-  #   package = yabai;
-  #   config = {
-  #     window_border = "off";
-  #     # window_border_width = 5;
-  #     # active_window_border_color = "0xff3B4252";
-  #     # normal_window_border_color = "0xff2E3440";
-  #     focus_follows_mouse = "autoraise";
-  #     mouse_follows_focus = "off";
-  #     mouse_drop_action = "stack";
-  #     window_placement = "second_child";
-  #     window_opacity = "off";
-  #     window_topmost = "on";
-  #     window_shadow = "on";
-  #     active_window_opacity = "1.0";
-  #     normal_window_opacity = "1.0";
-  #     split_ratio = "0.50";
-  #     auto_balance = "on";
-  #     mouse_modifier = "fn";
-  #     mouse_action1 = "move";
-  #     mouse_action2 = "resize";
-  #     layout = "bsp";
-  #     top_padding = 18;
-  #     bottom_padding = 46;
-  #     left_padding = 18;
-  #     right_padding = 18;
-  #     window_gap = 18;
-  #   };
-  # };
+  services.yabai = {
+    enable = true;
+    enableScriptingAddition = false;
+    package = pkgs.yabai;
+    config = {
+      window_border = "off";
+      # window_border_width = 5;
+      # active_window_border_color = "0xff3B4252";
+      # normal_window_border_color = "0xff2E3440";
+      focus_follows_mouse = "autoraise";
+      mouse_follows_focus = "off";
+      mouse_drop_action = "stack";
+      window_placement = "second_child";
+      window_opacity = "off";
+      window_topmost = "on";
+      window_shadow = "on";
+      active_window_opacity = "1.0";
+      normal_window_opacity = "1.0";
+      split_ratio = "0.50";
+      auto_balance = "on";
+      mouse_modifier = "fn";
+      mouse_action1 = "move";
+      mouse_action2 = "resize";
+      layout = "bsp";
+      top_padding = 18;
+      bottom_padding = 46;
+      left_padding = 18;
+      right_padding = 18;
+      window_gap = 18;
+    };
+  };
 #+end_src
 
 *** Spacebar
@@ -1280,41 +1383,41 @@ Spacebar is my bar of choice on macOS. Its lighter than any web-based ubersicht 
 *** SKHD
 Skhd is the hotkey daemon for yabai. As yabai is disabled, it makes sense to disable skhd too for the time being
 #+begin_src nix :comments both :tangle "./modules/mac.nix"
-  # services.skhd = {
-  #   enable = true;
-  #   package = pkgs.skhd;
-  #   skhdConfig = ''
-  #     	ctrl + alt - h : yabai -m window --focus west
-  #     	ctrl + alt - j : yabai -m window --focus south
-  #     	ctrl + alt - k : yabai -m window --focus north
-  #     	ctrl + alt - l : yabai -m window --focus east
+  services.skhd = {
+    enable = true;
+    package = pkgs.skhd;
+    skhdConfig = ''
+      ctrl + alt - h : yabai -m window --focus west
+      ctrl + alt - j : yabai -m window --focus south
+      ctrl + alt - k : yabai -m window --focus north
+      ctrl + alt - l : yabai -m window --focus east
 
-  #     	# Fill space with window
-  #     	ctrl + alt - 0 : yabai -m window --grid 1:1:0:0:1:1
+      # Fill space with window
+      ctrl + alt - 0 : yabai -m window --grid 1:1:0:0:1:1
 
-  #     	# Move window
-  #     	ctrl + alt - e : yabai -m window --display 1; yabai -m display --focus 1
-  #     	ctrl + alt - d : yabai -m window --display 2; yabai -m display --focus 2
-  #     	ctrl + alt - f : yabai -m window --space next; yabai -m space --focus next
-  #     	ctrl + alt - s : yabai -m window --space prev; yabai -m space --focus prev
+      # Move window
+      ctrl + alt - e : yabai -m window --display 1; yabai -m display --focus 1
+      ctrl + alt - d : yabai -m window --display 2; yabai -m display --focus 2
+      ctrl + alt - f : yabai -m window --space next; yabai -m space --focus next
+      ctrl + alt - s : yabai -m window --space prev; yabai -m space --focus prev
 
-  #     	# Close current window
-  #     	ctrl + alt - w : $(yabai -m window $(yabai -m query --windows --window | jq -re ".id") --close)
+      # Close current window
+      ctrl + alt - w : $(yabai -m window $(yabai -m query --windows --window | jq -re ".id") --close)
 
-  #     	# Rotate tree
-  #     	ctrl + alt - r : yabai -m space --rotate 90
+      # Rotate tree
+      ctrl + alt - r : yabai -m space --rotate 90
 
-  #     	# Open application
-  #     	ctrl + alt - enter : alacritty
-  #     	ctrl + alt - e : emacs
-  #     	ctrl + alt - b : open -a Safari
-  #       ctrl + alt - t : yabai -m window --toggle float;\
-  #         yabai -m window --grid 4:4:1:1:2:2
-  #       ctrl + alt - p : yabai -m window --toggle sticky;\
-  #         yabai -m window --toggle topmost;\
-  #         yabai -m window --toggle pip
-  #   '';
-  # };
+      # Open application
+      ctrl + alt - enter : alacritty
+      ctrl + alt - e : emacs
+      ctrl + alt - b : open -a Safari
+      ctrl + alt - t : yabai -m window --toggle float;\
+        yabai -m window --grid 4:4:1:1:2:2
+      ctrl + alt - p : yabai -m window --toggle sticky;\
+        yabai -m window --toggle topmost;\
+        yabai -m window --toggle pip
+    '';
+  };
 #+end_src
 
 *** MacOS Settings

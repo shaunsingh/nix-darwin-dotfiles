@@ -29,36 +29,42 @@
 
   inputs = {
     # All packages should follow latest nixpkgs home-manager & flake-utils
-    unstable.url = "github:nixos/nixpkgs/master";
+    nixpkgs.url = "github:nixos/nixpkgs/master";
     darwin = {
       url = "github:LnL7/nix-darwin/master";
-      inputs.nixpkgs.follows = "unstable";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
     home-manager = {
       url = "github:nix-community/home-manager/master";
-      inputs.nixpkgs.follows = "unstable";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
     # Bar
     spacebar = {
       url = "github:shaunsingh/spacebar/master";
-      inputs.nixpkgs.follows = "unstable";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
     # Editors
     neovim = {
-      url = "github:nix-community/neovim-nightly-overlay";
-      inputs.nixpkgs.follows = "unstable";
+      url = "github:neovim/neovim?dir=contrib";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
     emacs = {
       url = "github:nix-community/emacs-overlay";
-      inputs.nixpkgs.follows = "unstable";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    # attempt to use yabai-git
+    nixpkgs-overlays = {
+        url = "path:./overlays/";
+        inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = { self, nixpkgs, spacebar, neovim, emacs, darwin, home-manager, ...
+  outputs = { self, nixpkgs, nixpkgs-overlays, spacebar, neovim, emacs, darwin, home-manager, ...
     }@inputs: {
       darwinConfigurations."shaunsingh-laptop" = darwin.lib.darwinSystem {
         system = "aarch64-darwin";
         modules = [
+          { nixpkgs.overlays = [ nixpkgs-overlays.overlay ]; }
           ./modules/mac.nix
           ./modules/home.nix
           ./modules/pam.nix
@@ -73,9 +79,12 @@
             services.nix-daemon.enable = true;
             security.pam.enableSudoTouchIdAuth = true;
             nixpkgs = {
-              overlays = [ spacebar.overlay neovim.overlay emacs.overlay ];
+              overlays = with inputs; [
+                spacebar.overlay
+                neovim.overlay
+                emacs.overlay
+              ];
               config.allowUnfree = true;
-              config.allowUnsupportedSystem = true;
             };
             nix = {
               package = pkgs.nixUnstable;
@@ -93,11 +102,9 @@
               ## make sure ripgrep supports pcre2 (for vertico)
               (ripgrep.override { withPCRE2 = true; })
               binutils
-              gnutls
               gnuplot
               sqlite
               sdcv
-              zotero
               (aspellWithDicts (ds: with ds; [ en en-computers en-science ]))
               (texlive.combine {
                 inherit (texlive)
@@ -108,9 +115,12 @@
                   transparent hanging;
               })
 
+              # Jetbrains deps
+              jdk
+
               # Neovim deps
-              neovim-nightly
-              nodejs
+              neovim
+              # nodejs
               tree-sitter
 
               # Language deps
@@ -127,7 +137,6 @@
               shellcheck
 
               # Terminal utils and rust alternatives :tm:
-              wget
               exa
               procs
               tree
@@ -139,10 +148,9 @@
             fonts = {
               enableFontDir = true;
               fonts = with pkgs; [
-                alegreya
                 overpass
+                alegreya
                 alegreya-sans
-                ibm-plex
                 emacs-all-the-icons-fonts
               ];
             };
