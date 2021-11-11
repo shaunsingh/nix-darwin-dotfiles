@@ -250,51 +250,43 @@ The =flake.nix= below does the following:
   };
 
   inputs = {
-    # All packages should follow latest nixpkgs home-manager & flake-utils
-    nixpkgs.url = "github:nixos/nixpkgs/master";
+    # All packages should follow latest nixpkgs
+    unstable.url = "github:nixos/nixpkgs/master";
     darwin = {
       url = "github:LnL7/nix-darwin/master";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "unstable";
     };
     home-manager = {
       url = "github:nix-community/home-manager/master";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "unstable";
     };
     # Bar
     spacebar = {
       url = "github:shaunsingh/spacebar/master";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "unstable";
     };
     # Editors
     neovim = {
-      url = "github:neovim/neovim?dir=contrib";
-      inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:nix-community/neovim-nightly-overlay";
+      inputs.nixpkgs.follows = "unstable";
     };
     emacs = {
       url = "github:nix-community/emacs-overlay";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "unstable";
     };
+    # overlays
     rust-overlay = {
-        url = "github:oxalica/rust-overlay";
-        inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:oxalica/rust-overlay";
+      inputs.nixpkgs.follows = "unstable";
     };
     nixpkgs-overlays = {
-        url = "path:./overlays/";
-        inputs.nixpkgs.follows = "nixpkgs";
+      url = "path:./overlays/";
+      inputs.nixpkgs.follows = "unstable";
     };
   };
 
-  outputs = {
-    self,
-    nixpkgs,
-    nixpkgs-overlays,
-    spacebar,
-    neovim,
-    emacs,
-    darwin,
-    home-manager,
-    ...
-    }@inputs: {
+  outputs = { self, nixpkgs, nixpkgs-overlays, spacebar, neovim, emacs, darwin
+    , home-manager, ... }@inputs: {
       darwinConfigurations."shaunsingh-laptop" = darwin.lib.darwinSystem {
         system = "aarch64-darwin";
         modules = [
@@ -354,8 +346,8 @@ The =flake.nix= below does the following:
               jdk
 
               # Neovim deps
-              neovim
-              neovide-git
+              neovim-nightly
+              # neovide-git
               nodejs
               tree-sitter
 
@@ -433,12 +425,9 @@ Sometimes there are packages that I want from git, or that aren't available from
   outputs = args@{ self, flake-utils, nixpkgs, rust-nightly, ... }:
     {
       overlay = final: prev: {
-        inherit (self.packages.${final.system})
-          yabai-git
-          neovide-git;
+        inherit (self.packages.${final.system}) yabai-git neovide-git;
       };
-    }
-    // flake-utils.lib.eachSystem [ "aarch64-darwin" ] (system:
+    } // flake-utils.lib.eachSystem [ "aarch64-darwin" ] (system:
       let
         pkgs = import nixpkgs {
           inherit system;
@@ -447,32 +436,28 @@ Sometimes there are packages that I want from git, or that aren't available from
           # allowUnsupportedSystem = true;
         };
         version = "999-unstable";
-      in
-      {
+      in {
 
         defaultPackage = self.packages.${system}.neovide-git;
 
         packages = rec {
 
-        yabai-git = (pkgs.yabai.overrideAttrs (old: {
+          yabai-git = (pkgs.yabai.overrideAttrs (old: {
             inherit version;
             src = args.yabai-src;
             # buildInputs = [ Carbon Cocoa ScriptingBridge xxd ];
-            buildInputs = (old.buildInputs or [ ]) ++ (with pkgs; [
-              xcodebuild
-            ]);
+            buildInputs = (old.buildInputs or [ ])
+              ++ (with pkgs; [ xcodebuild ]);
           }));
 
-        neovide-git = (pkgs.neovide.overrideAttrs (old: {
+          neovide-git = (pkgs.neovide.overrideAttrs (old: {
             inherit version;
             src = args.neovide-src;
-            buildInputs = (old.buildInputs or [ ]) ++ (with pkgs; [
-              rust-bin.nightly.latest.default
-            ]);
+            buildInputs = (old.buildInputs or [ ])
+              ++ (with pkgs; [ rust-bin.nightly.latest.default ]);
           }));
         };
-      }
-    );
+      });
 }
 #+end_src
 

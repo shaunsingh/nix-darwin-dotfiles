@@ -3,7 +3,7 @@
     "darwin": {
       "inputs": {
         "nixpkgs": [
-          "nixpkgs"
+          "unstable"
         ]
       },
       "locked": {
@@ -33,6 +33,22 @@
       "original": {
         "owner": "nix-community",
         "repo": "emacs-overlay",
+        "type": "github"
+      }
+    },
+    "flake-compat": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1627913399,
+        "narHash": "sha256-hY8g6H2KFL8ownSiFeMOjwPC8P0ueXpCVEbxgda3pko=",
+        "owner": "edolstra",
+        "repo": "flake-compat",
+        "rev": "12c64ca55c1014cdc1b16ed5a804aa8576601ff2",
+        "type": "github"
+      },
+      "original": {
+        "owner": "edolstra",
+        "repo": "flake-compat",
         "type": "github"
       }
     },
@@ -99,7 +115,7 @@
     "home-manager": {
       "inputs": {
         "nixpkgs": [
-          "nixpkgs"
+          "unstable"
         ]
       },
       "locked": {
@@ -135,8 +151,31 @@
     },
     "neovim": {
       "inputs": {
+        "flake-compat": "flake-compat",
+        "neovim-flake": "neovim-flake",
+        "nixpkgs": [
+          "unstable"
+        ]
+      },
+      "locked": {
+        "lastModified": 1636618419,
+        "narHash": "sha256-+ltg217pbtss6a3dhupwx4mS6mZqN56MCa41K4oOpRE=",
+        "owner": "nix-community",
+        "repo": "neovim-nightly-overlay",
+        "rev": "d93da6ae01cffcaadecc6b1cd119d0f21001bce3",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "neovim-nightly-overlay",
+        "type": "github"
+      }
+    },
+    "neovim-flake": {
+      "inputs": {
         "flake-utils": "flake-utils",
         "nixpkgs": [
+          "neovim",
           "nixpkgs"
         ]
       },
@@ -158,18 +197,16 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1636652883,
-        "narHash": "sha256-7pt4l3iHGKI16n79Zob+sfjGp3xNy9JYbAiyYhfrzoU=",
-        "owner": "nixos",
+        "lastModified": 1636653979,
+        "narHash": "sha256-Pl19x9+tbjkEsQ/YKLRbGxRpsLrrCZSCpjqaAAQ5WAA=",
+        "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "ac359cc654f84b0c5299a8e485c3147eca1c1585",
+        "rev": "5259293c102a416ec34776732d980c44c4e5fd91",
         "type": "github"
       },
       "original": {
-        "owner": "nixos",
-        "ref": "master",
-        "repo": "nixpkgs",
-        "type": "github"
+        "id": "nixpkgs",
+        "type": "indirect"
       }
     },
     "nixpkgs-overlays": {
@@ -177,7 +214,7 @@
         "flake-utils": "flake-utils_2",
         "neovide-src": "neovide-src",
         "nixpkgs": [
-          "nixpkgs"
+          "unstable"
         ],
         "rust-nightly": "rust-nightly",
         "yabai-src": "yabai-src"
@@ -201,7 +238,8 @@
         "nixpkgs": "nixpkgs",
         "nixpkgs-overlays": "nixpkgs-overlays",
         "rust-overlay": "rust-overlay",
-        "spacebar": "spacebar"
+        "spacebar": "spacebar",
+        "unstable": "unstable"
       }
     },
     "rust-nightly": {
@@ -230,7 +268,7 @@
       "inputs": {
         "flake-utils": "flake-utils_4",
         "nixpkgs": [
-          "nixpkgs"
+          "unstable"
         ]
       },
       "locked": {
@@ -250,7 +288,7 @@
     "spacebar": {
       "inputs": {
         "nixpkgs": [
-          "nixpkgs"
+          "unstable"
         ]
       },
       "locked": {
@@ -265,6 +303,22 @@
         "owner": "shaunsingh",
         "ref": "master",
         "repo": "spacebar",
+        "type": "github"
+      }
+    },
+    "unstable": {
+      "locked": {
+        "lastModified": 1636652883,
+        "narHash": "sha256-7pt4l3iHGKI16n79Zob+sfjGp3xNy9JYbAiyYhfrzoU=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "ac359cc654f84b0c5299a8e485c3147eca1c1585",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "master",
+        "repo": "nixpkgs",
         "type": "github"
       }
     },

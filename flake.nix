@@ -28,51 +28,43 @@
   };
 
   inputs = {
-    # All packages should follow latest nixpkgs home-manager & flake-utils
-    nixpkgs.url = "github:nixos/nixpkgs/master";
+    # All packages should follow latest nixpkgs
+    unstable.url = "github:nixos/nixpkgs/master";
     darwin = {
       url = "github:LnL7/nix-darwin/master";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "unstable";
     };
     home-manager = {
       url = "github:nix-community/home-manager/master";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "unstable";
     };
     # Bar
     spacebar = {
       url = "github:shaunsingh/spacebar/master";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "unstable";
     };
     # Editors
     neovim = {
-      url = "github:neovim/neovim?dir=contrib";
-      inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:nix-community/neovim-nightly-overlay";
+      inputs.nixpkgs.follows = "unstable";
     };
     emacs = {
       url = "github:nix-community/emacs-overlay";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "unstable";
     };
+    # overlays
     rust-overlay = {
-        url = "github:oxalica/rust-overlay";
-        inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:oxalica/rust-overlay";
+      inputs.nixpkgs.follows = "unstable";
     };
     nixpkgs-overlays = {
-        url = "path:./overlays/";
-        inputs.nixpkgs.follows = "nixpkgs";
+      url = "path:./overlays/";
+      inputs.nixpkgs.follows = "unstable";
     };
   };
 
-  outputs = {
-    self,
-    nixpkgs,
-    nixpkgs-overlays,
-    spacebar,
-    neovim,
-    emacs,
-    darwin,
-    home-manager,
-    ...
-    }@inputs: {
+  outputs = { self, nixpkgs, nixpkgs-overlays, spacebar, neovim, emacs, darwin
+    , home-manager, ... }@inputs: {
       darwinConfigurations."shaunsingh-laptop" = darwin.lib.darwinSystem {
         system = "aarch64-darwin";
         modules = [
@@ -132,8 +124,8 @@
               jdk
 
               # Neovim deps
-              neovim
-              neovide-git
+              neovim-nightly
+              # neovide-git
               nodejs
               tree-sitter
 

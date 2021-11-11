@@ -35,12 +35,9 @@
   outputs = args@{ self, flake-utils, nixpkgs, rust-nightly, ... }:
     {
       overlay = final: prev: {
-        inherit (self.packages.${final.system})
-          yabai-git
-          neovide-git;
+        inherit (self.packages.${final.system}) yabai-git neovide-git;
       };
-    }
-    // flake-utils.lib.eachSystem [ "aarch64-darwin" ] (system:
+    } // flake-utils.lib.eachSystem [ "aarch64-darwin" ] (system:
       let
         pkgs = import nixpkgs {
           inherit system;
@@ -49,31 +46,27 @@
           # allowUnsupportedSystem = true;
         };
         version = "999-unstable";
-      in
-      {
+      in {
 
         defaultPackage = self.packages.${system}.neovide-git;
 
         packages = rec {
 
-        yabai-git = (pkgs.yabai.overrideAttrs (old: {
+          yabai-git = (pkgs.yabai.overrideAttrs (old: {
             inherit version;
             src = args.yabai-src;
             # buildInputs = [ Carbon Cocoa ScriptingBridge xxd ];
-            buildInputs = (old.buildInputs or [ ]) ++ (with pkgs; [
-              xcodebuild
-            ]);
+            buildInputs = (old.buildInputs or [ ])
+              ++ (with pkgs; [ xcodebuild ]);
           }));
 
-        neovide-git = (pkgs.neovide.overrideAttrs (old: {
+          neovide-git = (pkgs.neovide.overrideAttrs (old: {
             inherit version;
             src = args.neovide-src;
-            buildInputs = (old.buildInputs or [ ]) ++ (with pkgs; [
-              rust-bin.nightly.latest.default
-            ]);
+            buildInputs = (old.buildInputs or [ ])
+              ++ (with pkgs; [ rust-bin.nightly.latest.default ]);
           }));
         };
-      }
-    );
+      });
 }
 # Overlays:1 ends here
