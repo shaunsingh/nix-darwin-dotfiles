@@ -12,9 +12,9 @@
 
 # [[file:../nix-config.org::*Yabai][Yabai:1]]
   services.yabai = {
-    enable = true;
+    enable = false;
     enableScriptingAddition = false;
-    package = pkgs.yabai;
+    package = pkgs.yabai-git;
     config = {
       window_border = "off";
       # window_border_width = 5;
@@ -85,7 +85,7 @@
 
 # [[file:../nix-config.org::*SKHD][SKHD:1]]
   services.skhd = {
-    enable = true;
+    enable = false;
     package = pkgs.skhd;
     skhdConfig = ''
       ctrl + alt - h : yabai -m window --focus west

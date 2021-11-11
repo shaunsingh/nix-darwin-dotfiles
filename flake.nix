@@ -52,14 +52,26 @@
       url = "github:nix-community/emacs-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # attempt to use yabai-git
+    rust-overlay = {
+        url = "github:oxalica/rust-overlay";
+        inputs.nixpkgs.follows = "nixpkgs";
+    };
     nixpkgs-overlays = {
         url = "path:./overlays/";
         inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = { self, nixpkgs, nixpkgs-overlays, spacebar, neovim, emacs, darwin, home-manager, ...
+  outputs = {
+    self,
+    nixpkgs,
+    nixpkgs-overlays,
+    spacebar,
+    neovim,
+    emacs,
+    darwin,
+    home-manager,
+    ...
     }@inputs: {
       darwinConfigurations."shaunsingh-laptop" = darwin.lib.darwinSystem {
         system = "aarch64-darwin";
@@ -83,6 +95,7 @@
                 spacebar.overlay
                 neovim.overlay
                 emacs.overlay
+                rust-overlay.overlay
               ];
               config.allowUnfree = true;
             };
@@ -120,7 +133,8 @@
 
               # Neovim deps
               neovim
-              # nodejs
+              neovide-git
+              nodejs
               tree-sitter
 
               # Language deps
@@ -133,7 +147,7 @@
               nixfmt
               black
               rust-analyzer
-              rustup
+              rust-bin.nightly.latest.default
               shellcheck
 
               # Terminal utils and rust alternatives :tm:

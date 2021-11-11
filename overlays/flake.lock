@@ -1,0 +1,61 @@
+{
+  "nodes": {
+    "flake-utils": {
+      "locked": {
+        "lastModified": 1634851050,
+        "narHash": "sha256-N83GlSGPJJdcqhUxSCS/WwW5pksYf3VP1M13cDRTSVA=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "c91f3de5adaf1de973b797ef7485e441a65b8935",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1636645118,
+        "narHash": "sha256-L8HYr0TF7no6l3XednVXqgVMYkkt1jijT/zlGz9FauQ=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "72eda5248a71641b552ca8bed598c2f5df2ef67f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "master",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "flake-utils": "flake-utils",
+        "nixpkgs": "nixpkgs",
+        "yabai-src": "yabai-src"
+      }
+    },
+    "yabai-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1636306181,
+        "narHash": "sha256-BDF7V6oN9cCoadoIYcE7XH/diAVh11IZNqVK+kZv8xM=",
+        "owner": "koekeishiya",
+        "repo": "yabai",
+        "rev": "8ff93d5a7cf8d4d7709bd1e3ee433f2706d70c06",
+        "type": "github"
+      },
+      "original": {
+        "owner": "koekeishiya",
+        "ref": "the-future",
+        "repo": "yabai",
+        "type": "github"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}
