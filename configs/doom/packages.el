@@ -12,6 +12,10 @@
   :recipe (:host github
            :repo "tecosaur/org-pandoc-import"
            :files ("*.el" "filters" "preprocessors")))
+;; org cite additions
+(package! citar)
+(package! citeproc)
+(package! org-cite-csl-activate :recipe (:host github :repo "andras-simonyi/org-cite-csl-activate"))
 
 ;;latex
 (package! org-fragtog)

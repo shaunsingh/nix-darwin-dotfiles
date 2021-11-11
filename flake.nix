@@ -75,6 +75,7 @@
             nixpkgs = {
               overlays = [ spacebar.overlay neovim.overlay emacs.overlay ];
               config.allowUnfree = true;
+              config.allowUnsupportedSystem = true;
             };
             nix = {
               package = pkgs.nixUnstable;
@@ -96,6 +97,7 @@
               gnuplot
               sqlite
               sdcv
+              zotero
               (aspellWithDicts (ds: with ds; [ en en-computers en-science ]))
               (texlive.combine {
                 inherit (texlive)
@@ -103,7 +105,7 @@
                   collectbox amsmath siunitx cancel mathalpha capt-of chemfig
                   wrapfig mhchem fvextra cleveref latexmk tcolorbox environ arev
                   amsfonts simplekv alegreya sourcecodepro newpx svg catchfile
-                  transparent;
+                  transparent hanging;
               })
 
               # Neovim deps

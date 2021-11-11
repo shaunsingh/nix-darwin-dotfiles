@@ -325,7 +325,7 @@ The =flake.nix= below does the following:
                   collectbox amsmath siunitx cancel mathalpha capt-of chemfig
                   wrapfig mhchem fvextra cleveref latexmk tcolorbox environ arev
                   amsfonts simplekv alegreya sourcecodepro newpx svg catchfile
-                  transparent;
+                  transparent hanging;
               })
 
               # Neovim deps
@@ -1458,7 +1458,6 @@ As I said earlier, there are 3 required modules for startup (=packer_compiled.lu
 #+include: "./configs/nvim/lua/options.lua" src lua
 *** Plugin Configuration
 **** Bufferline
-
 #+include: "./configs/nvim/lua/plugins/bufferline.lua" src lua
 **** Nvim-cmp
 #+include: "./configs/nvim/lua/plugins/cmp.lua" src lua
