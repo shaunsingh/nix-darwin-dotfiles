@@ -488,18 +488,15 @@
     userChrome = builtins.readFile ../configs/userChrome.css;
     settings = {
       "app.update.auto" = true;
-      "browser.startup.homepage" = "https://shaunsingh.github.io/startpage/";
+      "browser.startup.homepage" = "https://searx.xyz";
       "browser.search.region" = "US";
       "browser.search.countryCode" = "US";
-      "browser.search.isUS" = false;
       "browser.ctrlTab.recentlyUsedOrder" = false;
       "browser.newtabpage.enabled" = false;
       "browser.bookmarks.showMobileBookmarks" = true;
       "browser.uidensity" = 1;
-      "browser.urlbar.placeholderName" = "DuckDuckGo";
+      "browser.urlbar.placeholderName" = "SearX";
       "browser.urlbar.update1" = true;
-      "distribution.searchplugins.defaultLocale" = "en-GB";
-      "general.useragent.locale" = "en-GB";
       "identity.fxaccounts.account.device.name" = config.networking.hostName;
       "privacy.trackingprotection.enabled" = true;
       "privacy.trackingprotection.socialtracking.enabled" = true;
@@ -512,6 +509,7 @@
       "services.sync.engine.prefs" = false;
       "services.sync.engineStatusChanged.prefs" = true;
       "signon.rememberSignons" = false;
+      "gfx.webrender.all" = true;
       "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
     };
   in {
@@ -519,15 +517,6 @@
       inherit settings;
       inherit userChrome;
       id = 0;
-    };
-
-    work = {
-      inherit userChrome;
-      id = 1;
-      settings = settings // {
-        "browser.startup.homepage" = "about:blank";
-        "browser.urlbar.placeholderName" = "Google";
-      };
     };
   };
 # Firefox:3 ends here
