@@ -488,7 +488,7 @@
     userChrome = builtins.readFile ../configs/userChrome.css;
     settings = {
       "app.update.auto" = true;
-      "browser.startup.homepage" = "https://searx.xyz";
+      "browser.startup.homepage" = "https://tilde.cade.me";
       "browser.search.region" = "US";
       "browser.search.countryCode" = "US";
       "browser.ctrlTab.recentlyUsedOrder" = false;
