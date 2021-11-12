@@ -1,0 +1,57 @@
+div.table {
+  position: relative;
+  .gutter {
+    left: calc(20px - 2.5rem);
+    padding-top: 18px;
+  }
+  .tabular {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+}
+
+table {
+  border-color: $text-light;
+  border-left: transparent;
+  border-right: transparent;
+  border-style: solid;
+  border-width: 2px;
+  border-collapse: collapse;
+  font-size: 15px;
+  font-family: $sans-font;
+  margin: 20px;
+  padding: 20px;
+
+  thead {
+    @include light-meta();
+    font-size: 15px;
+    tr th {
+      padding: 4px 10px;
+      background-color: #9991;
+    }
+    tr:last-of-type th {
+      border-bottom: solid 1px $text-light;
+    }
+  }
+  
+  tr,th,td {
+    border: none;
+  }
+
+  tbody tr td {
+    border-top: 0;
+    padding: 0 10px;
+  }
+
+  tr {
+    line-height: 1.9;
+  }
+
+  caption {
+    .table-number {
+      @include light-meta();
+    }
+    margin-bottom: 10px;
+    @include light-para(15px);
+  }
+}

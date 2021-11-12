@@ -1,0 +1,125 @@
+// Lists
+ul, ol, dl {
+  list-style: none;
+  list-style-position: outside;
+  padding: 0;
+
+  li::before, dt::before {
+    display: inline-block;
+    width: 1em;
+    @include light-para(15px);
+  }
+
+  li {
+    margin: 5px 0;
+    font-size: 14px;
+
+    p {
+      // Revert inside p
+      font-size: 15px;
+    }
+  }
+}
+
+ul {
+  li::before {
+    content: "•";
+    margin-left: -1em;
+  }
+}
+
+ol {
+  counter-reset: li;
+  li::before {
+    content: counter(li);
+    margin-left: -1.5em;
+    margin-right: 0.5em;
+    text-align: right;
+    direction: rtl;
+  }
+  li {
+    counter-increment: li;
+  }
+}
+
+ul ul, ol ol {
+  padding-left: 20px;
+}
+
+// Only go three levels deep
+ul ul ul, ol ol ol {
+  padding-left: 30px;
+}
+
+li p:first-child {
+  display: inline-block;
+  margin-bottom: 0;
+}
+
+// Definition lists
+dl {
+  dt::before {
+    content: "•";
+    margin-left: -1em;
+  }
+
+  dt {
+    font-weight: normal;
+    margin-bottom: 10px;
+  }
+
+  dd {
+    font-style: italic;
+    margin-bottom: 20px;
+  }
+}
+
+// checkboxes
+li .checkbox {
+    display: inline-block;
+    width: 0.9em;
+    height: 0.9em;
+    border-radius: 3px;
+    margin: 3px;
+    top: 4px;
+    position: relative;
+}
+li.on > .checkbox { background: $green; box-shadow: 0 0 2px $green; }
+li.trans > .checkbox { background: $orange; box-shadow: 0 0 2px $orange; }
+li.off > .checkbox { background: $red; box-shadow: 0 0 2px $red; top: 6px }
+li.on > .checkbox::after {
+    content: '';
+    height: 0.45em;
+    width: 0.225em;
+    -webkit-transform-origin: left top;
+    transform-origin: left top;
+    transform: scaleX(-1) rotate(135deg);
+    border-right: 2.8px solid#fff;
+    border-top: 2.8px solid#fff;
+    opacity: 0.9;
+    left: 0.10em;
+    top: 0.45em;
+    position: absolute;
+}
+li.trans > .checkbox::after {
+    content: '';
+    font-weight: bold;
+    font-size: 1.6em;
+    position: absolute;
+    top: 0.2em;
+    left: 0.11em;
+    width: 0.35em;
+    height: 0.12em;
+    background:#fff;
+    opacity: 0.9;
+    border-radius: 0.1em;
+}
+li.off > .checkbox::after {
+    content: '✖';
+    color:#fff;
+    opacity: 0.9;
+    position: relative;
+    top: -0.50rem;
+    left: 0.17em;
+    font-size: 0.75em;
+}
