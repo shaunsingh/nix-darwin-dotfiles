@@ -1,3 +1,8 @@
+
+
+/* And of course for the css itself */
+
+/* [[file:../nix-config.org::*Firefox][Firefox:4]] */
 /*
  *  Hide window controls
  */
@@ -14,17 +19,17 @@
  *  Hide all the clutter in the navbar
  */
 #main-window :-moz-any(#back-button,
-		       #forward-button,
-		       #stop-reload-button,
-		       #home-button,
-		       #library-button,
-		       #sidebar-button,
-		       #star-button,
-		       #pocket-button,
-		       #permissions-granted-icon,
-		       #fxa-toolbar-menu-button,
-		       #_d7742d87-e61d-4b78-b8a1-b469842139fa_-browser-action, /* Vimium */
-		       #ublock0_raymondhill_net-browser-action) { display: none !important; }
+      #forward-button,
+      #stop-reload-button,
+      #home-button,
+      #library-button,
+      #sidebar-button,
+      #star-button,
+      #pocket-button,
+      #permissions-granted-icon,
+      #fxa-toolbar-menu-button,
+      #_d7742d87-e61d-4b78-b8a1-b469842139fa_-browser-action, /* Vimium */
+      #ublock0_raymondhill_net-browser-action) { display: none !important; }
 
 /*
  *  Hide tabs if only one tab
@@ -213,3 +218,4 @@
 
 /* Fix customization view */
 #customization-panelWrapper > .panel-arrowbox > .panel-arrow{ margin-inline-end: initial !important; }
+/* Firefox:4 ends here */

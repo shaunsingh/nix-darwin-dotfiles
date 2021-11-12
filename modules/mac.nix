@@ -65,9 +65,9 @@
       spacing_right = 25;
       text_font = ''"Menlo:16.0"'';
       icon_font = ''"Menlo:16.0"'';
-      background_color = "0xff2E3440";
-      foreground_color = "0xffD8DEE9";
-      space_icon_color = "0xff8fBcBB";
+      background_color = "0xff242730";
+      foreground_color = "0xffbbc2cf";
+      space_icon_color = "0xff51afef";
       power_icon_strip = " ";
       space_icon_strip = "I II III IV V VI VII VIII IX X";
       spaces_for_all_displays = "on";

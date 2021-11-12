@@ -43,6 +43,15 @@
       url = "github:shaunsingh/spacebar/master";
       inputs.nixpkgs.follows = "unstable";
     };
+    # Themeing
+    # base16 = {
+    #   url = "github:alukardbf/base16-nix";
+    #   inputs.nixpkgs.follows = "unstable";
+    # };
+    # base16-doom-vibrant = {
+    #   url = "github:shaunsingh/base16-doom-vibrant";
+    #   flake = false;
+    # };
     # Editors
     neovim = {
       url = "github:nix-community/neovim-nightly-overlay";
@@ -63,8 +72,17 @@
     };
   };
 
-  outputs = { self, nixpkgs, nixpkgs-overlays, spacebar, neovim, emacs, darwin
-    , home-manager, ... }@inputs: {
+  outputs = {
+    self,
+    nixpkgs,
+    nixpkgs-overlays,
+    spacebar,
+    # base16,
+    # base16-doom-vibrant,
+    neovim,
+    emacs,
+    darwin,
+    home-manager, ... }@inputs: {
       darwinConfigurations."shaunsingh-laptop" = darwin.lib.darwinSystem {
         system = "aarch64-darwin";
         modules = [
@@ -72,6 +90,7 @@
           ./modules/mac.nix
           ./modules/home.nix
           ./modules/pam.nix
+          # (import inputs.base16.hmModule)
           home-manager.darwinModule
           {
             home-manager = {
@@ -159,6 +178,7 @@
                 alegreya
                 alegreya-sans
                 emacs-all-the-icons-fonts
+                # sf-mono-liga-bin
               ];
             };
           })

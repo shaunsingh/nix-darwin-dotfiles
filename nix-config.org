@@ -265,6 +265,15 @@ The =flake.nix= below does the following:
       url = "github:shaunsingh/spacebar/master";
       inputs.nixpkgs.follows = "unstable";
     };
+    # Themeing
+    # base16 = {
+    #   url = "github:alukardbf/base16-nix";
+    #   inputs.nixpkgs.follows = "unstable";
+    # };
+    # base16-doom-vibrant = {
+    #   url = "github:shaunsingh/base16-doom-vibrant";
+    #   flake = false;
+    # };
     # Editors
     neovim = {
       url = "github:nix-community/neovim-nightly-overlay";
@@ -285,8 +294,17 @@ The =flake.nix= below does the following:
     };
   };
 
-  outputs = { self, nixpkgs, nixpkgs-overlays, spacebar, neovim, emacs, darwin
-    , home-manager, ... }@inputs: {
+  outputs = {
+    self,
+    nixpkgs,
+    nixpkgs-overlays,
+    spacebar,
+    # base16,
+    # base16-doom-vibrant,
+    neovim,
+    emacs,
+    darwin,
+    home-manager, ... }@inputs: {
       darwinConfigurations."shaunsingh-laptop" = darwin.lib.darwinSystem {
         system = "aarch64-darwin";
         modules = [
@@ -294,6 +312,7 @@ The =flake.nix= below does the following:
           ./modules/mac.nix
           ./modules/home.nix
           ./modules/pam.nix
+          # (import inputs.base16.hmModule)
           home-manager.darwinModule
           {
             home-manager = {
@@ -381,6 +400,7 @@ The =flake.nix= below does the following:
                 alegreya
                 alegreya-sans
                 emacs-all-the-icons-fonts
+                # sf-mono-liga-bin
               ];
             };
           })
@@ -394,6 +414,7 @@ The =flake.nix= below does the following:
 Sometimes there are packages that I want from git, or that aren't available from =nixpkgs=. This overlay adds the following:
 - Yabai (mac) from https://github.com/donaldguy/yabai
 - Neovide (mac) from https://github.com/neovide/neovide
+- SFmono Nerd Font Ligaturized from https://github.com/shaunsingh/SFMono-Nerd-Font-Ligaturized
 #+begin_src nix :comments both :tangle "./overlays/flake.nix"
 {
   description = "Shaunsingh's stash of fresh packages";
@@ -426,7 +447,7 @@ Sometimes there are packages that I want from git, or that aren't available from
   outputs = args@{ self, flake-utils, nixpkgs, rust-nightly, ... }:
     {
       overlay = final: prev: {
-        inherit (self.packages.${final.system}) yabai-git neovide-git;
+        inherit (self.packages.${final.system}) yabai-git neovide-git sf-mono-liga-bin;
       };
     } // flake-utils.lib.eachSystem [ "aarch64-darwin" ] (system:
       let
@@ -439,9 +460,11 @@ Sometimes there are packages that I want from git, or that aren't available from
         version = "999-unstable";
       in {
 
-        defaultPackage = self.packages.${system}.neovide-git;
+        defaultPackage = self.packages.${system}.sf-mono-liga-bin;
 
         packages = rec {
+
+          sf-mono-liga-bin = pkgs.callPackage ./pkgs/sf-mono-liga-bin { };
 
           yabai-git = (pkgs.yabai.overrideAttrs (old: {
             inherit version;
@@ -462,11 +485,49 @@ Sometimes there are packages that I want from git, or that aren't available from
 }
 #+end_src
 
+Now to create the package for the SFmono font itself
+#+begin_src nix :comments both :tangle "./overlays/pkgs/sf-mono-liga-bin/default.nix"
+{ lib, fetchFromGitHub }:
+let version = "2021-07-29";
+in fetchFromGitHub rec {
+  name = "sf-mono-liga-bin-${version}";
+
+  owner = "shaunsingh";
+  repo = "SFMono-Nerd-Font-Ligaturized";
+  rev = "83d887c6ec4989897fff19131a5de84766ecfdc9";
+  sha256 = "sha256-hH5pLXD1NWqpKuQSqfDn50u2NPJmLlqOqllo2j3x2ag=";
+
+  postFetch = ''
+    mkdir -p $out/share/fonts/opentype
+    tar xf $downloadedFile -C $out/share/fonts/opentype
+  '';
+
+  meta = with lib; {
+    description = "Ligaturized SF Mono";
+    homepage = "https://github.com/shaunsingh/SFMono-Nerd-Font-Ligaturized";
+    license = licenses.asl20;
+    platforms = platforms.all;
+    maintainers = with maintainers; [ boppyt ];
+  };
+}
+#+end_src
+
 * Modules
 ** Home.nix
 Home Manager allows you to use Nix’s declarative approach to manage your user-level configuration and packages. It works on any *nix system supported by Nix, including MacOS.
 #+begin_src nix :comments both :tangle "./modules/home.nix"
-{ pkgs, lib, config, home-manager, nix-darwin, ... }: {
+{ pkgs, lib, config, home-manager, nix-darwin, inputs, ... }: {
+#+end_src
+
+*** Theme
+#+begin_src nix :comments both :tangle "./modules/home.nix"
+   # home-manager.users.shauryasingh.home.themes.base16 = {
+   #   enable = true;
+   #   customScheme = {
+   #     enable = true;
+   #     path = "${inputs.base16-doom-vibrant}/doom-vibrant.yaml";
+   #   };
+   # };
 #+end_src
 
 *** Doom-emacs
@@ -501,7 +562,32 @@ As opposed to what the xcode CLT provides, I want the /full/ package of git, and
     lfs.enable = true;
     delta = {
       enable = true;
-      options = { syntax-theme = "Nord"; };
+      options = {
+        syntax-theme = "Nord";
+        line-numbers = true;
+
+        width = 1;
+        navigate = false;
+
+        hunk-header-style = "file line-number syntax";
+        hunk-header-decoration-style = "bold black";
+
+        file-modified-label = "modified:";
+
+        zero-style = "dim";
+
+        minus-style = "bold red";
+        minus-non-emph-style = "dim red";
+        minus-emph-style = "bold red";
+        minus-empty-line-marker-style = "normal normal";
+
+        plus-style = "green normal bold";
+        plus-non-emph-style = "dim green";
+        plus-emph-style = "bold green";
+        plus-empty-line-marker-style = "normal normal";
+
+        whitespace-error-style = "reverse red";
+      };
     };
     ignores = [ ".dir-locals.el" ".envrc" ".DS_Store" ];
   };
@@ -573,26 +659,26 @@ Intellij Idea ships with a very nice Vim emulation plugin. This is configured vi
 
       /* define colors */
       :root {
-          --background-primary: #2E3440;
-          --background-secondary: #3B4252;
-          --background-secondary-alt: #3B4252;
-          --background-tertiary: #2E3440;
-          --background-accent: #2E3440;
-          --channeltextarea-background: #2E3440;
-          --text-normal: #D8DEE9;
-          --text-muted: #616E88;
-          --channels-default: #616E88;
-          --interactive-normal: #616E88;
-          --interactive-hover: #8FBCBB;
-          --interactive-active: #D8DEE9;
-          --interactive-muted: #81A1C1;
-          --header-primary: #D8DEE9;
-          --header-secondary: #8FBCBB;
-          --background-floating: #2E3440;
-          --scrollbar-auto-thumb: #3B4252;
-          --scrollbar-auto-track: #2E3440;
-          --text-link: #88C0D0;
-          --selection: #3B4252;
+          --background-primary: #242730;
+          --background-secondary: #2a2e38;
+          --background-secondary-alt: #2a2e38;
+          --background-tertiary: #242730;
+          --background-accent: #242730;
+          --channeltextarea-background: #242730;
+          --text-normal: #6c605a;
+          --text-muted: #ce9c85;
+          --channels-default: #a09c80;
+          --interactive-normal: #242730;
+          --interactive-hover: #a09c80;
+          --interactive-active: #a09c80;
+          --interactive-muted: #665c54;
+          --header-primary: #6c605a;
+          --header-secondary: #5c605a;
+          --background-floating: #242730;
+          --scrollbar-auto-thumb: #1d2021;
+          --scrollbar-auto-track: #3c3836;
+          --text-link: #8f8678;
+          --selection: #92837480;
       }
 
       ,* {
@@ -756,30 +842,30 @@ Intellij Idea ships with a very nice Vim emulation plugin. This is configured vi
       	filter: none !important;
       }
 
-      /* Nord style (dark) */
+      /* Doom style (dark) (c) Pavel Pertsev (original style at https://github.com/morhetz/gruvbox) */
 
       .hljs {
         display: block;
         overflow-x: auto;
         padding: 0.5em;
-        background: #2E3440;
+        background: #242730;
       }
 
       .hljs,
       .hljs-subst {
-        color: #616E88;
+        color: #ebdbb2;
       }
 
-      /* Nord Red */
+      /* Doom Red */
       .hljs-deletion,
       .hljs-formula,
       .hljs-keyword,
       .hljs-link,
       .hljs-selector-tag {
-        color: #BF616A;
+        color: #fb4934;
       }
 
-      /* Nord Blue */
+      /* Doom Blue */
       .hljs-built_in,
       .hljs-emphasis,
       .hljs-name,
@@ -787,35 +873,35 @@ Intellij Idea ships with a very nice Vim emulation plugin. This is configured vi
       .hljs-strong,
       .hljs-title,
       .hljs-variable {
-        color: #E8CB8B;
+        color: #83a598;
       }
 
-      /* Nord Yellow */
+      /* Doom Yellow */
       .hljs-attr,
       .hljs-params,
       .hljs-template-tag,
       .hljs-type {
-        color: #81A1C1;
+        color: #fabd2f;
       }
 
-      /* Nord Purple */
+      /* Doom Purple */
       .hljs-builtin-name,
       .hljs-doctag,
       .hljs-literal,
       .hljs-number {
-        color: #Bf616A;
+        color: #8f3f71;
       }
 
-      /* Nord Orange */
+      /* Doom Orange */
       .hljs-code,
       .hljs-meta,
       .hljs-regexp,
       .hljs-selector-id,
       .hljs-template-variable {
-        color: #D08770;
+        color: #fe8019;
       }
 
-      /* Nord Green */
+      /* Doom Green */
       .hljs-addition,
       .hljs-meta-string,
       .hljs-section,
@@ -823,10 +909,10 @@ Intellij Idea ships with a very nice Vim emulation plugin. This is configured vi
       .hljs-selector-class,
       .hljs-string,
       .hljs-symbol {
-        color: #A3Be8C;
+        color: #b8bb26;
       }
 
-      /* Nord Aqua */
+      /* Doom Aqua */
       .hljs-attribute,
       .hljs-bullet,
       .hljs-class,
@@ -835,21 +921,20 @@ Intellij Idea ships with a very nice Vim emulation plugin. This is configured vi
       .hljs-meta-keyword,
       .hljs-selector-pseudo,
       .hljs-tag {
-        color: #E8CB8B;
+        color: #8ec07c;
       }
 
-      /* Nord Gray */
+      /* Doom Gray */
       .hljs-comment {
-        color: #616E88;
+        color: #928374;
       }
 
-      /* Nord Purple */
+      /* Doom Purple */
       .hljs-link_label,
       .hljs-literal,
       .hljs-number {
-        color: #B48EAD;
+        color: #d3869b;
       }
-
       .hljs-comment,
       .hljs-emphasis {
         font-style: italic;
@@ -949,6 +1034,225 @@ Now for the configuration. We want firefox to use the css at [[./configs/userChr
   };
 #+end_src
 
+And of course for the css itself
+#+begin_src css :comments both :tangle "./configs/userChrome.css"
+/*
+ *  Hide window controls
+ */
+.titlebar-buttonbox-container{
+    display: none !important;
+}
+
+.titlebar-placeholder,
+#TabsToolbar .titlebar-spacer{ display: none; }
+#navigator-toolbox::after{ display: none !important; }
+
+
+/*
+ *  Hide all the clutter in the navbar
+ */
+#main-window :-moz-any(#back-button,
+      #forward-button,
+      #stop-reload-button,
+      #home-button,
+      #library-button,
+      #sidebar-button,
+      #star-button,
+      #pocket-button,
+      #permissions-granted-icon,
+      #fxa-toolbar-menu-button,
+      #_d7742d87-e61d-4b78-b8a1-b469842139fa_-browser-action, /* Vimium */
+      #ublock0_raymondhill_net-browser-action) { display: none !important; }
+
+/*
+ *  Hide tabs if only one tab
+ */
+#titlebar .tabbrowser-tab[first-visible-tab="true"][last-visible-tab="true"]{
+    display: none !important;
+}
+
+/*
+ *  Minimal theme
+ */
+#navigator-toolbox toolbarspring {
+    display: none;
+}
+
+/* Hide filler */
+#customizableui-special-spring2{
+	display:none;
+}
+
+.tab-background{
+	padding-bottom: 0 !important;
+}
+
+#navigator-toolbox #urlbar-container {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+#navigator-toolbox #urlbar {
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+
+#navigator-toolbox #PanelUI-button {
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+}
+
+#navigator-toolbox #nav-bar {
+    box-shadow: none !important;
+}
+
+#navigator-toolbox #pageActionButton {
+    display: none;
+}
+
+#navigator-toolbox #pageActionSeparator {
+    display: none;
+}
+
+#fullscr-toggler {
+    height: 0 !important;
+}
+
+#navigator-toolbox .urlbar-history-dropmarker {
+    display: none;
+}
+
+#navigator-toolbox #tracking-protection-icon-container {
+    padding-right: 0 !important;
+    border: none !important;
+    display: none !important;
+}
+
+#navigator-toolbox .tab-close-button, #navigator-toolbox #tabs-newtab-button {
+    display: none;
+}
+
+#navigator-toolbox #urlbar {
+    padding: 0 !important;
+    padding-left: 1ch !important;
+    font-size: 13px;
+}
+
+#navigator-toolbox #urlbar-background {
+    border: none !important;
+    margin: 0 !important;
+}
+
+#navigator-toolbox .toolbarbutton-1 {
+    width: 22px;
+}
+
+#navigator-toolbox .tabbrowser-tab {
+    font-size: 14px
+}
+
+#navigator-toolbox .tab-background {
+    box-shadow: none!important;
+    border: none !important;
+}
+
+#navigator-toolbox .tabbrowser-tab::after {
+    display: none !important;
+}
+
+#navigator-toolbox #urlbar-zoom-button {
+    border: none !important;
+}
+
+#appMenu-fxa-container, #appMenu-fxa-container + toolbarseparator {
+    display: none !important;
+}
+
+#sync-setup {
+    display: none !important;
+}
+
+/*
+ *  Hamburger menu to the left
+ */
+
+#PanelUI-button {
+    -moz-box-ordinal-group: 0;
+    border-left: none !important;
+    border-right: none !important;
+    position: absolute;
+}
+
+#toolbar-context-menu .viewCustomizeToolbar {
+    display: none !important;
+}
+
+:root[uidensity=compact] #PanelUI-button {
+    margin-top: -30px;
+}
+
+#PanelUI-button {
+    margin-top: -30px;
+}
+
+:root[uidensity=touch] #PanelUI-button {
+    margin-top: -36px;
+}
+
+/*
+ *  Tabs to the right of the urlbar
+ */
+
+/* Modify these to change relative widths or default height */
+#navigator-toolbox{
+    --uc-navigationbar-width: 40vw;
+    --uc-toolbar-height: 40px;
+}
+/* Override for other densities */
+:root[uidensity="compact"] #navigator-toolbox{ --uc-toolbar-height: 30px; }
+:root[uidensity="touch"] #navigator-toolbox{ --uc-toolbar-height: 40px; }
+
+:root[uidensity=compact] #urlbar-container.megabar{
+    --urlbar-container-height: var(--uc-toolbar-height) !important;
+    padding-block: 0 !important;
+}
+:root[uidensity=compact] #urlbar.megabar{
+    --urlbar-toolbar-height: var(--uc-toolbar-height) !important;
+}
+
+/* prevent urlbar overflow on narrow windows */
+/* Dependent on how many items are in navigation toolbar ADJUST AS NEEDED */
+@media screen and (max-width: 1300px){
+    #urlbar-container{ min-width:unset !important }
+}
+
+#TabsToolbar{ margin-left: var(--uc-navigationbar-width); }
+#tabbrowser-tabs{ --tab-min-height: var(--uc-toolbar-height) !important; }
+
+/* This isn't useful when tabs start in the middle of the window */
+.titlebar-placeholder[type="pre-tabs"],
+.titlebar-spacer[type="pre-tabs"]{ display: none }
+
+#navigator-toolbox > #nav-bar{
+    margin-right:calc(100vw - var(--uc-navigationbar-width));
+    margin-top: calc(0px - var(--uc-toolbar-height));
+}
+
+/* Zero window drag space  */
+:root[tabsintitlebar="true"] #nav-bar{ padding-left: 0px !important; padding-right: 0px !important; }
+
+/* 1px margin on touch density causes tabs to be too high */
+.tab-close-button{ margin-top: 0 !important }
+
+/* Hide dropdown placeholder */
+#urlbar-container:not(:hover) .urlbar-history-dropmarker{ margin-inline-start: -30px; }
+
+/* Fix customization view */
+#customization-panelWrapper > .panel-arrowbox > .panel-arrow{ margin-inline-end: initial !important; }
+#+end_src
+
 *** Alacritty
 Alacritty is my terminal emulator of choice. Similar to firefox, we want to create a fake package, and then configure it as normal
 #+begin_src nix :comments both :tangle "./modules/home.nix"
@@ -977,28 +1281,28 @@ Alacritty is my terminal emulator of choice. Similar to firefox, we want to crea
       };
 
       colors = {
-        cursor.cursor = "#81a1c1";
-        primary.background = "#2e3440";
-        primary.foreground = "#d8dee9";
+        cursor.cursor = "#bbc2cf";
+        primary.background = "#242730";
+        primary.foreground = "#bbc2cf";
         normal = {
-          black = "#3B4252";
-          red = "#BF616A";
-          green = "#A3BE8C";
-          yellow = "#EBCB8B";
-          blue = "#81A1C1";
-          magenta = "#B48EAD";
-          cyan = "#88C0D0";
-          white = "#E5E9F0";
+          black =   "#2a2e38";
+          red =     "#ff665c";
+          green =   "#7bc275";
+          yellow =  "#FCCE7B";
+          blue =    "#5cEfFF";
+          magenta = "#C57BDB";
+          cyan =    "#51afef";
+          white =   "#bbc2cf";
         };
         bright = {
-          black = "#4c566a";
-          red = "#bf616a";
-          green = "#a3be8c";
-          yellow = "#ebcb8b";
-          blue = "#81a1c1";
-          magenta = "#b48ead";
-          cyan = "#8fbcbb";
-          white = "#eceff4";
+          black =    "#484854";
+          red =      "#ff665c";
+          green =    "#7bc275";
+          yellow =   "#fcce7b";
+          blue =     "#5cefff";
+          magenta =  "#c57bdb";
+          cyan =     "#51afef";
+          white =    "#bbc2cf";
         };
       };
     };
@@ -1339,9 +1643,9 @@ Spacebar is my bar of choice on macOS. Its lighter than any web-based ubersicht 
       spacing_right = 25;
       text_font = ''"Menlo:16.0"'';
       icon_font = ''"Menlo:16.0"'';
-      background_color = "0xff2E3440";
-      foreground_color = "0xffD8DEE9";
-      space_icon_color = "0xff8fBcBB";
+      background_color = "0xff242730";
+      foreground_color = "0xffbbc2cf";
+      space_icon_color = "0xff51afef";
       power_icon_strip = " ";
       space_icon_strip = "I II III IV V VI VII VIII IX X";
       spaces_for_all_displays = "on";

@@ -2,6 +2,7 @@
 # Sometimes there are packages that I want from git, or that aren't available from =nixpkgs=. This overlay adds the following:
 # - Yabai (mac) from https://github.com/donaldguy/yabai
 # - Neovide (mac) from https://github.com/neovide/neovide
+# - SFmono Nerd Font Ligaturized from https://github.com/shaunsingh/SFMono-Nerd-Font-Ligaturized
 
 # [[file:../nix-config.org::*Overlays][Overlays:1]]
 {
@@ -35,7 +36,7 @@
   outputs = args@{ self, flake-utils, nixpkgs, rust-nightly, ... }:
     {
       overlay = final: prev: {
-        inherit (self.packages.${final.system}) yabai-git neovide-git;
+        inherit (self.packages.${final.system}) yabai-git neovide-git sf-mono-liga-bin;
       };
     } // flake-utils.lib.eachSystem [ "aarch64-darwin" ] (system:
       let
@@ -48,9 +49,11 @@
         version = "999-unstable";
       in {
 
-        defaultPackage = self.packages.${system}.neovide-git;
+        defaultPackage = self.packages.${system}.sf-mono-liga-bin;
 
         packages = rec {
+
+          sf-mono-liga-bin = pkgs.callPackage ./pkgs/sf-mono-liga-bin { };
 
           yabai-git = (pkgs.yabai.overrideAttrs (old: {
             inherit version;

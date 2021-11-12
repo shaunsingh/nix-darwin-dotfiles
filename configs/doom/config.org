@@ -903,7 +903,7 @@ emacs bootloaders
 ** Themes
 Right now I'm using nord, but I use doom-vibrant sometimes
 #+begin_src elisp
-(setq doom-theme 'doom-one-light)
+(setq doom-theme 'doom-vibrant)
 (setq doom-fw-padded-modeline t)
 (setq doom-one-light-padded-modeline t)
 (setq doom-nord-padded-modeline t)

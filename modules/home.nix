@@ -2,8 +2,20 @@
 # Home Manager allows you to use Nix’s declarative approach to manage your user-level configuration and packages. It works on any *nix system supported by Nix, including MacOS.
 
 # [[file:../nix-config.org::*Home.nix][Home.nix:1]]
-{ pkgs, lib, config, home-manager, nix-darwin, ... }: {
+{ pkgs, lib, config, home-manager, nix-darwin, inputs, ... }: {
 # Home.nix:1 ends here
+
+# Theme
+
+# [[file:../nix-config.org::*Theme][Theme:1]]
+   # home-manager.users.shauryasingh.home.themes.base16 = {
+   #   enable = true;
+   #   customScheme = {
+   #     enable = true;
+   #     path = "${inputs.base16-doom-vibrant}/doom-vibrant.yaml";
+   #   };
+   # };
+# Theme:1 ends here
 
 # Doom-emacs
 # Nix via doom-emacs is very, /very/ annoying. Initially I was using [[https://github.com/vlaci/nix-doom-emacs][Nix-doom-emacs]]. However, this has a few drawbacks
@@ -39,7 +51,32 @@
     lfs.enable = true;
     delta = {
       enable = true;
-      options = { syntax-theme = "Nord"; };
+      options = {
+        syntax-theme = "Nord";
+        line-numbers = true;
+
+        width = 1;
+        navigate = false;
+
+        hunk-header-style = "file line-number syntax";
+        hunk-header-decoration-style = "bold black";
+
+        file-modified-label = "modified:";
+
+        zero-style = "dim";
+
+        minus-style = "bold red";
+        minus-non-emph-style = "dim red";
+        minus-emph-style = "bold red";
+        minus-empty-line-marker-style = "normal normal";
+
+        plus-style = "green normal bold";
+        plus-non-emph-style = "dim green";
+        plus-emph-style = "bold green";
+        plus-empty-line-marker-style = "normal normal";
+
+        whitespace-error-style = "reverse red";
+      };
     };
     ignores = [ ".dir-locals.el" ".envrc" ".DS_Store" ];
   };
@@ -113,26 +150,26 @@
 
       /* define colors */
       :root {
-          --background-primary: #2E3440;
-          --background-secondary: #3B4252;
-          --background-secondary-alt: #3B4252;
-          --background-tertiary: #2E3440;
-          --background-accent: #2E3440;
-          --channeltextarea-background: #2E3440;
-          --text-normal: #D8DEE9;
-          --text-muted: #616E88;
-          --channels-default: #616E88;
-          --interactive-normal: #616E88;
-          --interactive-hover: #8FBCBB;
-          --interactive-active: #D8DEE9;
-          --interactive-muted: #81A1C1;
-          --header-primary: #D8DEE9;
-          --header-secondary: #8FBCBB;
-          --background-floating: #2E3440;
-          --scrollbar-auto-thumb: #3B4252;
-          --scrollbar-auto-track: #2E3440;
-          --text-link: #88C0D0;
-          --selection: #3B4252;
+          --background-primary: #242730;
+          --background-secondary: #2a2e38;
+          --background-secondary-alt: #2a2e38;
+          --background-tertiary: #242730;
+          --background-accent: #242730;
+          --channeltextarea-background: #242730;
+          --text-normal: #6c605a;
+          --text-muted: #ce9c85;
+          --channels-default: #a09c80;
+          --interactive-normal: #242730;
+          --interactive-hover: #a09c80;
+          --interactive-active: #a09c80;
+          --interactive-muted: #665c54;
+          --header-primary: #6c605a;
+          --header-secondary: #5c605a;
+          --background-floating: #242730;
+          --scrollbar-auto-thumb: #1d2021;
+          --scrollbar-auto-track: #3c3836;
+          --text-link: #8f8678;
+          --selection: #92837480;
       }
 
       * {
@@ -296,30 +333,30 @@
       	filter: none !important;
       }
 
-      /* Nord style (dark) */
+      /* Doom style (dark) (c) Pavel Pertsev (original style at https://github.com/morhetz/gruvbox) */
 
       .hljs {
         display: block;
         overflow-x: auto;
         padding: 0.5em;
-        background: #2E3440;
+        background: #242730;
       }
 
       .hljs,
       .hljs-subst {
-        color: #616E88;
+        color: #ebdbb2;
       }
 
-      /* Nord Red */
+      /* Doom Red */
       .hljs-deletion,
       .hljs-formula,
       .hljs-keyword,
       .hljs-link,
       .hljs-selector-tag {
-        color: #BF616A;
+        color: #fb4934;
       }
 
-      /* Nord Blue */
+      /* Doom Blue */
       .hljs-built_in,
       .hljs-emphasis,
       .hljs-name,
@@ -327,35 +364,35 @@
       .hljs-strong,
       .hljs-title,
       .hljs-variable {
-        color: #E8CB8B;
+        color: #83a598;
       }
 
-      /* Nord Yellow */
+      /* Doom Yellow */
       .hljs-attr,
       .hljs-params,
       .hljs-template-tag,
       .hljs-type {
-        color: #81A1C1;
+        color: #fabd2f;
       }
 
-      /* Nord Purple */
+      /* Doom Purple */
       .hljs-builtin-name,
       .hljs-doctag,
       .hljs-literal,
       .hljs-number {
-        color: #Bf616A;
+        color: #8f3f71;
       }
 
-      /* Nord Orange */
+      /* Doom Orange */
       .hljs-code,
       .hljs-meta,
       .hljs-regexp,
       .hljs-selector-id,
       .hljs-template-variable {
-        color: #D08770;
+        color: #fe8019;
       }
 
-      /* Nord Green */
+      /* Doom Green */
       .hljs-addition,
       .hljs-meta-string,
       .hljs-section,
@@ -363,10 +400,10 @@
       .hljs-selector-class,
       .hljs-string,
       .hljs-symbol {
-        color: #A3Be8C;
+        color: #b8bb26;
       }
 
-      /* Nord Aqua */
+      /* Doom Aqua */
       .hljs-attribute,
       .hljs-bullet,
       .hljs-class,
@@ -375,21 +412,20 @@
       .hljs-meta-keyword,
       .hljs-selector-pseudo,
       .hljs-tag {
-        color: #E8CB8B;
+        color: #8ec07c;
       }
 
-      /* Nord Gray */
+      /* Doom Gray */
       .hljs-comment {
-        color: #616E88;
+        color: #928374;
       }
 
-      /* Nord Purple */
+      /* Doom Purple */
       .hljs-link_label,
       .hljs-literal,
       .hljs-number {
-        color: #B48EAD;
+        color: #d3869b;
       }
-
       .hljs-comment,
       .hljs-emphasis {
         font-style: italic;
@@ -525,28 +561,28 @@
       };
 
       colors = {
-        cursor.cursor = "#81a1c1";
-        primary.background = "#2e3440";
-        primary.foreground = "#d8dee9";
+        cursor.cursor = "#bbc2cf";
+        primary.background = "#242730";
+        primary.foreground = "#bbc2cf";
         normal = {
-          black = "#3B4252";
-          red = "#BF616A";
-          green = "#A3BE8C";
-          yellow = "#EBCB8B";
-          blue = "#81A1C1";
-          magenta = "#B48EAD";
-          cyan = "#88C0D0";
-          white = "#E5E9F0";
+          black =   "#2a2e38";
+          red =     "#ff665c";
+          green =   "#7bc275";
+          yellow =  "#FCCE7B";
+          blue =    "#5cEfFF";
+          magenta = "#C57BDB";
+          cyan =    "#51afef";
+          white =   "#bbc2cf";
         };
         bright = {
-          black = "#4c566a";
-          red = "#bf616a";
-          green = "#a3be8c";
-          yellow = "#ebcb8b";
-          blue = "#81a1c1";
-          magenta = "#b48ead";
-          cyan = "#8fbcbb";
-          white = "#eceff4";
+          black =    "#484854";
+          red =      "#ff665c";
+          green =    "#7bc275";
+          yellow =   "#fcce7b";
+          blue =     "#5cefff";
+          magenta =  "#c57bdb";
+          cyan =     "#51afef";
+          white =    "#bbc2cf";
         };
       };
     };
