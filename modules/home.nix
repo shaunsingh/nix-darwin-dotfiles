@@ -528,7 +528,8 @@
   home-manager.users.shauryasingh.programs.alacritty = {
     enable = true;
     # We need to give it a dummy package
-    package = pkgs.runCommand "alacritty-0.0.0" { } "mkdir $out";
+    ## package = pkgs.runCommand "alacritty-0.0.0" { } "mkdir $out";
+    package = pkgs.alacritty-ligatures;
     settings = {
       window.padding.x = 45;
       window.padding.y = 45;
@@ -666,6 +667,7 @@
     tree = "tree -a -C";
     cat = "bat";
     top = "btm";
+    cp = "xcp";
     find = "fd";
     calc = "emacs -f full-calc";
     neovide =

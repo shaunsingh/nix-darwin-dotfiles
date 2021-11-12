@@ -125,11 +125,12 @@
                 (epkgs: [ epkgs.vterm epkgs.pdf-tools ]))
               ## make sure ripgrep supports pcre2 (for vertico)
               (ripgrep.override { withPCRE2 = true; })
-              binutils
-              gnuplot
               sqlite
               zstd
-              sdcv
+              ## Required for plots but not installed by default
+              # gnuplot
+              ## Required for dictionaries but not installed by default
+              # sdcv
               (aspellWithDicts (ds: with ds; [ en en-computers en-science ]))
               (texlive.combine {
                 inherit (texlive)
@@ -141,12 +142,12 @@
               })
 
               # Jetbrains deps
-              jdk
+              # jdk
 
               # Neovim deps
               neovim-nightly
               # neovide-git
-              nodejs
+              # nodejs
               tree-sitter
 
               # Language deps
@@ -163,6 +164,8 @@
               shellcheck
 
               # Terminal utils and rust alternatives :tm:
+              uutils-coreutils
+              xcp
               exa
               procs
               tree
@@ -178,7 +181,7 @@
                 alegreya
                 alegreya-sans
                 emacs-all-the-icons-fonts
-                # sf-mono-liga-bin
+                sf-mono-liga-bin
               ];
             };
           })
