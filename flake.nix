@@ -109,6 +109,7 @@
               binutils
               gnuplot
               sqlite
+              zstd
               sdcv
               (aspellWithDicts (ds: with ds; [ en en-computers en-science ]))
               (texlive.combine {

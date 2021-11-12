@@ -4343,7 +4343,9 @@ Teco is the goto for this, so basically just ripping off him. Engrave faces ftw
 Nice little package to color stuff for us.
 #+begin_src emacs-lisp
 (use-package! ox-chameleon
-  :after ox)
+  :after ox
+  :config
+  (setq ox-chameleon-snap-fgbg-to-bw nil))
 #+end_src
 
 *** Async
