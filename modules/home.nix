@@ -528,8 +528,7 @@
   home-manager.users.shauryasingh.programs.alacritty = {
     enable = true;
     # We need to give it a dummy package
-    ## package = pkgs.runCommand "alacritty-0.0.0" { } "mkdir $out";
-    package = pkgs.alacritty-ligatures;
+    package = pkgs.runCommand "alacritty-0.0.0" { } "mkdir $out";
     settings = {
       window.padding.x = 45;
       window.padding.y = 45;

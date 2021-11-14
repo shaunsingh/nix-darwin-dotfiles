@@ -67,7 +67,7 @@
       inputs.nixpkgs.follows = "unstable";
     };
     nixpkgs-overlays = {
-      url = "path:./overlays/";
+      url = "github:shaunsingh/nixpkgs-s2k";
       inputs.nixpkgs.follows = "unstable";
     };
   };
