@@ -4,10 +4,7 @@
 ;;org
 (package! org-appear)
 (package! doct)
-(package! org-roam-ui ;https://github.com/melpa/melpa/pull/7784
-  :recipe (:host github
-           :repo "org-roam/org-roam-ui"
-           :files ("*.el" "out")))
+(package! org-roam-ui)
 (package! org-pandoc-import ;https://github.com/melpa/melpa/pull/7326
   :recipe (:host github
            :repo "tecosaur/org-pandoc-import"

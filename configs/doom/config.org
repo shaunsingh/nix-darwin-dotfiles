@@ -475,10 +475,7 @@ tweaking org then
 #+begin_src emacs-lisp
 (package! org-appear)
 (package! doct)
-(package! org-roam-ui ;https://github.com/melpa/melpa/pull/7784
-  :recipe (:host github
-           :repo "org-roam/org-roam-ui"
-           :files ("*.el" "out")))
+(package! org-roam-ui)
 (package! org-pandoc-import ;https://github.com/melpa/melpa/pull/7326
   :recipe (:host github
            :repo "tecosaur/org-pandoc-import"
@@ -867,37 +864,37 @@ issue. Seems like I forget ot install fonts every time I switch between +distros
 emacs bootloaders
 #+name: detect-missing-fonts
 #+begin_src elisp
-(defvar required-fonts '("Overpass" "Liga SFMono Nerd Font" "Alegreya" ))
-(defvar available-fonts
-  (delete-dups (or (font-family-list)
-                   (split-string (shell-command-to-string "fc-list : family")
-                                 "[,\n]"))))
-(defvar missing-fonts
-  (delq nil (mapcar
-             (lambda (font)
-               (unless (delq nil (mapcar (lambda (f)
-                           (string-match-p (format "^%s$" font) f))
-                                         available-fonts))
-                                         font))
-                                         required-fonts)))
-(if missing-fonts
-    (pp-to-string
-     `(unless noninteractive
-        (add-hook! 'doom-init-ui-hook
-          (run-at-time nil nil
-                       (lambda ()
-                         (message "%s missing the following fonts: %s"
-                                  (propertize "Warning!" 'face '(bold warning))
-                                  (mapconcat (lambda (font)
-                                               (propertize font 'face 'font-lock-variable-name-face))
-                                             ',missing-fonts
-                                             ", "))
-                         (sleep-for 0.5))))))
-  ";; No missing fonts detected")
+;; (defvar required-fonts '("Overpass" "Liga SFMono Nerd Font" "Alegreya" ))
+;; (defvar available-fonts
+;;   (delete-dups (or (font-family-list)
+;;                    (split-string (shell-command-to-string "fc-list : family")
+;;                                  "[,\n]"))))
+;; (defvar missing-fonts
+;;   (delq nil (mapcar
+;;              (lambda (font)
+;;                (unless (delq nil (mapcar (lambda (f)
+;;                            (string-match-p (format "^%s$" font) f))
+;;                                          available-fonts))
+;;                                          font))
+;;                                          required-fonts)))
+;; (if missing-fonts
+;;     (pp-to-string
+;;      `(unless noninteractive
+;;         (add-hook! 'doom-init-ui-hook
+;;           (run-at-time nil nil
+;;                        (lambda ()
+;;                          (message "%s missing the following fonts: %s"
+;;                                   (propertize "Warning!" 'face '(bold warning))
+;;                                   (mapconcat (lambda (font)
+;;                                                (propertize font 'face 'font-lock-variable-name-face))
+;;                                              ',missing-fonts
+;;                                              ", "))
+;;                          (sleep-for 0.5))))))
+;;  ";; No missing fonts detected")
 #+end_src
 
 #+begin_src emacs-lisp :noweb no-export
-<<detect-missing-fonts()>>
+;; <<detect-missing-fonts()>>
 #+end_src
 
 ** Themes
