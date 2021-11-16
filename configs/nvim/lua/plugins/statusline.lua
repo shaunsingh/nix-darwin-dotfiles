@@ -6,19 +6,19 @@ gl.short_line_list = { "NvimTree", "packer" }
 
 -- Colors
 local colors = {
-   bg = "#3B4252",
-   fg = "#E5E9F0",
-   section_bg = "#434C5E",
-   section_bg2 = "#4C566A",
-   yellow = "#EBCB8B",
-   cyan = "#8FBCBB",
-   darkblue = "#81A1C1",
-   green = "#A3BE8C",
-   orange = "#D08770",
-   magenta = "#BF616A",
-   blue = "#5E81AC",
-   red = "#BF616A",
-   none = "2E3440",
+   bg = "#242730",
+   fg = "#bbc2cf",
+   section_bg = "#484854",
+   section_bg2 = "#2a2e38",
+   yellow = "#FCCE7B",
+   cyan = "#4db5bd",
+   darkblue = "#51afef",
+   green = "#7bc275",
+   orange = "#e69055",
+   magenta = "#C57BDB",
+   blue = "#51afef",
+   red = "#ff665c",
+   none = "#242730",
 }
 
 --hide inactive statusline

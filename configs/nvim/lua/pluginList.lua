@@ -50,7 +50,8 @@ return packer.startup(function()
 
    -- Theme <3 and UI
    use {
-      "shaunsingh/nord.nvim",
+      --"shaunsingh/nord.nvim",
+      "Clutch-Squad-10669/nord.nvim",
       after = "packer.nvim",
       config = function()
          require("nord").set()
