@@ -12,19 +12,20 @@
 # Launch an ephemeral shell with git, nixUnstable, and Emacs
 
 # [[file:../nix-config.org::*Installing and notes][Installing and notes:2]]
-    nix-shell -p nixUnstable emacs
+    nix-shell -p nixUnstable git emacs
 # Installing and notes:2 ends here
 
 
 # Tangle the =.org= files (not needed, but recommend in case I forgot to update tangled files)
 
 # [[file:../nix-config.org::*Installing and notes][Installing and notes:3]]
-    git clone --depth 1 https://github.com/shaunsingh/nix-darwin-dotfiles.git ~/nix-darwin-dotfiles/ && cd ~/nix-darwin-dotfiles
+    git clone --depth 1 https://github.com/shaunsingh/nix-darwin-dotfiles.git ~/nix-darwin-dotfiles/ && cd nix-darwin-dotfiles
     emacs --batch --eval "(progn (require 'org) (setq org-confirm-babel-evaluate nil) (org-babel-tangle-file \"~/nix-darwin-dotfiles/nix-config.org\"))"
     emacs --batch --eval "(progn (require 'org) (setq org-confirm-babel-evaluate nil) (org-babel-tangle-file \"~/nix-darwin-dotfiles/configs/doom/config.org\"))"
 # Installing and notes:3 ends here
 
 
+# 	(if emacs asks you for comment syntax, put `# ` for everything)
 # Build, and switch to the dotfiles
 
 # [[file:../nix-config.org::*Installing and notes][Installing and notes:4]]

@@ -30,6 +30,7 @@
   inputs = {
     # All packages should follow latest nixpkgs
     unstable.url = "github:nixos/nixpkgs/master";
+    nur.url = "github:nix-community/NUR";
     darwin = {
       url = "github:LnL7/nix-darwin/master";
       inputs.nixpkgs.follows = "unstable";
@@ -43,15 +44,6 @@
       url = "github:shaunsingh/spacebar/master";
       inputs.nixpkgs.follows = "unstable";
     };
-    # Themeing
-    # base16 = {
-    #   url = "github:alukardbf/base16-nix";
-    #   inputs.nixpkgs.follows = "unstable";
-    # };
-    # base16-doom-vibrant = {
-    #   url = "github:shaunsingh/base16-doom-vibrant";
-    #   flake = false;
-    # };
     # Editors
     neovim = {
       url = "github:nix-community/neovim-nightly-overlay";
@@ -66,31 +58,22 @@
       url = "github:oxalica/rust-overlay";
       inputs.nixpkgs.follows = "unstable";
     };
-    nixpkgs-overlays = {
+
+    nixpkgs-s2k = {
       url = "github:shaunsingh/nixpkgs-s2k";
       inputs.nixpkgs.follows = "unstable";
     };
   };
 
-  outputs = {
-    self,
-    nixpkgs,
-    nixpkgs-overlays,
-    spacebar,
-    # base16,
-    # base16-doom-vibrant,
-    neovim,
-    emacs,
-    darwin,
-    home-manager, ... }@inputs: {
+  outputs = { self, nixpkgs, nixpkgs-s2k, darwin, home-manager, ...
+    }@inputs: {
       darwinConfigurations."shaunsingh-laptop" = darwin.lib.darwinSystem {
         system = "aarch64-darwin";
         modules = [
-          { nixpkgs.overlays = [ nixpkgs-overlays.overlay ]; }
+          { nixpkgs.overlays = [ nixpkgs-s2k.overlay ]; }
           ./modules/mac.nix
           ./modules/home.nix
           ./modules/pam.nix
-          # (import inputs.base16.hmModule)
           home-manager.darwinModule
           {
             home-manager = {
@@ -103,6 +86,7 @@
             security.pam.enableSudoTouchIdAuth = true;
             nixpkgs = {
               overlays = with inputs; [
+                nur.overlay
                 spacebar.overlay
                 neovim.overlay
                 emacs.overlay
@@ -128,9 +112,9 @@
               sqlite
               zstd
               ## Required for plots but not installed by default
-              # gnuplot
+              gnuplot
               ## Required for dictionaries but not installed by default
-              # sdcv
+              sdcv
               (aspellWithDicts (ds: with ds; [ en en-computers en-science ]))
               (texlive.combine {
                 inherit (texlive)
@@ -142,7 +126,7 @@
               })
 
               # Jetbrains deps
-              # jdk
+              jdk
 
               # Neovim deps
               neovim-nightly
@@ -162,6 +146,7 @@
               rust-analyzer
               rust-bin.nightly.latest.default
               shellcheck
+              languagetool
 
               # Terminal utils and rust alternatives :tm:
               uutils-coreutils
@@ -173,6 +158,7 @@
               zoxide
               bottom
               discocss
+              # eww
             ];
             fonts = {
               enableFontDir = true;

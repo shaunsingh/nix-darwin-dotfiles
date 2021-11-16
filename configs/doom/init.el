@@ -28,7 +28,7 @@
        minimap                      ; show a map of the code on the side
        (modeline                    ; snazzy, Atom-inspired modeline, plus API
         +light)                     ; the doom modeline is a bit much, the default is a bit little
-       ;;nav-flash                  ; blink the current line after jumping
+       nav-flash                    ; blink the current line after jumping
        ;;neotree                    ; a project drawer, like NERDTree for vim
        ophints                      ; highlight the region an operation acts on
        (popup                       ; tame sudden yet inevitable temporary windows
@@ -72,14 +72,14 @@
        vterm                        ; the best terminal emulation in Emacs
 
        :checkers
-       syntax                       ; tasing you for every semicolon you forget
-       (:if (executable-find "aspell") spell) ; tasing you for misspelling mispelling
-       ;;grammar                    ; tasing grammar mistake every you make
+       syntax                                         ; tasing you for every semicolon you forget
+       (:if (executable-find "aspell") spell)         ; tasing you for misspelling mispelling
+       (:if (executable-find "languagetool") grammar) ; tasing grammar mistake every you make
 
        :tools
        ;;ansible                    ; a crucible for infrastructure as code
        ;;biblio                     ; Writes a PhD for you (citation needed)
-       ;;debugger                   ; FIXME stepping through code, to help you add bugs
+       (debugger +lsp)              ; FIXME stepping through code, to help you add bugs
        ;;direnv                     ; be direct about your environment
        ;;docker                     ; port everything to containers
        editorconfig                 ; let someone else argue about tabs vs spaces
@@ -91,8 +91,8 @@
         +docsets)                   ; ...or in Dash docsets locally
        lsp                          ; Language Server Protocol
        ;;(:if IS-MAC macos)         ; MacOS-specific commands
-       magit                        ; a git porcelain for Emacs
-        ;;+forge)                   ; interface with git forges
+       (magit                       ; a git porcelain for Emacs
+        +forge)                     ; interface with git forges
        ;;make                       ; run make tasks from Emacs
        ;;pass                       ; password manager for nerds
        pdf                          ; pdf enhancements
@@ -106,7 +106,7 @@
 
        :os
        (:if IS-MAC macos)           ; improve compatibility with macOS
-       ;;tty                        ; improve the terminal Emacs experience
+       tty                          ; improve the terminal Emacs experience
 
        :lang
        ;;agda                       ; types of types of types of types...
@@ -194,8 +194,8 @@
        ;;calendar                   ; A dated approach to timetabling
        ;;emms                       ; Multimedia in Emacs is music to my ears
        ;;everywhere                 ; *leave* Emacs!? You must be joking.
-       ;;irc                        ; how neckbeards socialize
-       ;;(rss +org)                 ; emacs as an RSS reader
+       irc                          ; how neckbeards socialize
+       (rss +org)                   ; emacs as an RSS reader
        ;;twitter                    ; twitter client https://twitter.com/vnought
 
        :config

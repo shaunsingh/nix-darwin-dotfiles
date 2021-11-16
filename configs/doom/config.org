@@ -114,8 +114,67 @@ users the power to bridge this gap.
 ** Notes for the unwary adventurer
 The lovely ~doom doctor~ is good at diagnosing most missing things, but here are a
 few extras.
+
+#+begin_note
+My nix config should handle installing all these dependencies, If you aren't using it, here is the list of packages you may need:
+#+end_note
+
+#+begin_src nix :tangle no
+environment.systemPackages = with pkgs; [
+  # Emacs deps
+  ((emacsPackagesNgGen emacsGcc).emacsWithPackages
+    (epkgs: [ epkgs.vterm epkgs.pdf-tools ]))
+  ## make sure ripgrep supports pcre2 (for vertico)
+  (ripgrep.override { withPCRE2 = true; })
+  sqlite
+  zstd
+  ## Required for plots but not installed by default
+  gnuplot
+  ## Required for dictionaries but not installed by default
+  sdcv
+  # aspell and \latex
+  (aspellWithDicts (ds: with ds; [ en en-computers en-science ]))
+  (texlive.combine {
+    inherit (texlive)
+      scheme-small dvipng dvisvgm l3packages xcolor soul adjustbox
+      collectbox amsmath siunitx cancel mathalpha capt-of chemfig
+      wrapfig mhchem fvextra cleveref latexmk tcolorbox environ arev
+      amsfonts simplekv alegreya sourcecodepro newpx svg catchfile
+      transparent hanging;
+  })
+
+  # Language deps
+  tree-sitter
+  python39Packages.grip
+  python39Packages.pyflakes
+  python39Packages.isort
+  python39Packages.pytest
+  nodePackages.pyright
+  pipenv
+  nixfmt
+  black
+  rust-analyzer
+  rust-bin.nightly.latest.default
+  shellcheck
+  # jdk
+
+  # Terminal utils and rust alternatives :tm:
+  fd
+];
+fonts = {
+  enableFontDir = true;
+  fonts = with pkgs; [
+    overpass
+    alegreya
+    alegreya-sans
+    emacs-all-the-icons-fonts
+    sf-mono-liga-bin
+  ];
+};
+#+end_src
+
 + A [[https://www.tug.org/texlive/][LaTeX Compiler]] is required for the mathematics rendering performed in [[https://orgmode.org/][org]],
-  and that wonderful pdf/html export we have going. I recommend [[https://github.com/tectonic-typesetting/tectonic][Tectonic]].
+  and that wonderful pdf/html export we have going. I recommend [[https://github.com/tectonic-typesetting/tectonic][Tectonic]] if you are new, this config uses XeLaTeX.
 + I use the [[https://overpassfont.org/][Overpass]] font as a go-to sans serif.
   It's used as my ~doom-variable-pitch-font~
   I have chosen it because it possesses a few characteristics I consider
@@ -205,6 +264,69 @@ literate
 (default +bindings +smartparens)
 #+end_src
 
+***** Asynchronous config tangling
+Doom adds an =org-mode= hook ~+literate-enable-recompile-h~. This is a nice idea,
+but it's too blocking for my taste. Since I trust my tangling to be fairly
+straightforward, I'll just redefine it to a simpler, async, function.
+#+begin_src emacs-lisp
+(defvar +literate-tangle--proc nil)
+(defvar +literate-tangle--proc-start-time nil)
+
+(defadvice! +literate-tangle-async-h ()
+  "A very simplified version of `+literate-tangle-h', but async."
+  :override #'+literate-tangle-h
+  (unless (getenv "__NOTANGLE")
+    (let ((default-directory doom-private-dir))
+      (when +literate-tangle--proc
+        (message "Killing outdated tangle process...")
+        (set-process-sentinel +literate-tangle--proc #'ignore)
+        (kill-process +literate-tangle--proc)
+        (sit-for 0.3)) ; ensure the message is seen for a bit
+      (setq +literate-tangle--proc-start-time (float-time)
+            +literate-tangle--proc
+            (start-process "tangle-config"
+                           (get-buffer-create " *tangle config*")
+                           "emacs" "--batch" "--eval"
+                           (format "(progn \
+(require 'ox) \
+(require 'ob-tangle) \
+(setq org-confirm-babel-evaluate nil \
+      org-inhibit-startup t \
+      org-mode-hook nil \
+      write-file-functions nil \
+      before-save-hook nil \
+      after-save-hook nil \
+      vc-handled-backends nil \
+      org-startup-folded nil \
+      org-startup-indented nil) \
+(org-babel-tangle-file \"%s\" \"%s\"))"
+                                   +literate-config-file
+                                   (expand-file-name (concat doom-module-config-file ".el")))))
+      (set-process-sentinel +literate-tangle--proc #'+literate-tangle--sentinel)
+      (run-at-time nil nil (lambda () (message "Tangling config.org"))) ; ensure shown after a save message
+      "Tangling config.org...")))
+
+(defun +literate-tangle--sentinel (process signal)
+  (cond
+   ((and (eq 'exit (process-status process))
+         (= 0 (process-exit-status process)))
+    (message "Tangled config.org sucessfully (took %.1fs)"
+             (- (float-time) +literate-tangle--proc-start-time))
+    (setq +literate-tangle--proc nil))
+   ((memq (process-status process) (list 'exit 'signal))
+    (+popup-buffer (get-buffer " *tangle config*"))
+    (message "Failed to tangle config.org (after %.1fs)"
+             (- (float-time) +literate-tangle--proc-start-time))
+    (setq +literate-tangle--proc nil))))
+
+(defun +literate-tangle-check-finished ()
+  (when (and (process-live-p +literate-tangle--proc)
+             (yes-or-no-p "Config is currently retangling, would you please wait a few seconds?"))
+    (switch-to-buffer " *tangle config*")
+    (signal 'quit nil)))
+(add-hook! 'kill-emacs-hook #'+literate-tangle-check-finished)
+#+end_src
+
 **** Interface
 There's a lot that can be done to enhance Emacs' capabilities.
 I reckon enabling half the modules Doom provides should do it.
@@ -236,7 +358,7 @@ hl-todo                      ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
 minimap                      ; show a map of the code on the side
 (modeline                    ; snazzy, Atom-inspired modeline, plus API
  +light)                     ; the doom modeline is a bit much, the default is a bit little
-;;nav-flash                  ; blink the current line after jumping
+nav-flash                    ; blink the current line after jumping
 ;;neotree                    ; a project drawer, like NERDTree for vim
 ophints                      ; highlight the region an operation acts on
 (popup                       ; tame sudden yet inevitable temporary windows
@@ -288,16 +410,16 @@ vterm                        ; the best terminal emulation in Emacs
 
 #+name: doom-checkers
 #+begin_src emacs-lisp
-syntax                       ; tasing you for every semicolon you forget
-(:if (executable-find "aspell") spell) ; tasing you for misspelling mispelling
-;;grammar                    ; tasing grammar mistake every you make
+syntax                                         ; tasing you for every semicolon you forget
+(:if (executable-find "aspell") spell)         ; tasing you for misspelling mispelling
+(:if (executable-find "languagetool") grammar) ; tasing grammar mistake every you make
 #+end_src
 
 #+name: doom-tools
 #+begin_src emacs-lisp
 ;;ansible                    ; a crucible for infrastructure as code
 ;;biblio                     ; Writes a PhD for you (citation needed)
-;;debugger                   ; FIXME stepping through code, to help you add bugs
+(debugger +lsp)              ; FIXME stepping through code, to help you add bugs
 ;;direnv                     ; be direct about your environment
 ;;docker                     ; port everything to containers
 editorconfig                 ; let someone else argue about tabs vs spaces
@@ -309,8 +431,8 @@ editorconfig                 ; let someone else argue about tabs vs spaces
  +docsets)                   ; ...or in Dash docsets locally
 lsp                          ; Language Server Protocol
 ;;(:if IS-MAC macos)         ; MacOS-specific commands
-magit                        ; a git porcelain for Emacs
- ;;+forge)                   ; interface with git forges
+(magit                       ; a git porcelain for Emacs
+ +forge)                     ; interface with git forges
 ;;make                       ; run make tasks from Emacs
 ;;pass                       ; password manager for nerds
 pdf                          ; pdf enhancements
@@ -326,7 +448,7 @@ pdf                          ; pdf enhancements
 #+name: doom-os
 #+begin_src emacs-lisp
 (:if IS-MAC macos)           ; improve compatibility with macOS
-;;tty                        ; improve the terminal Emacs experience
+tty                          ; improve the terminal Emacs experience
 #+end_src
 
 **** Language support
@@ -428,8 +550,8 @@ I couldn't resist the Email and Feed modules.
 ;;calendar                   ; A dated approach to timetabling
 ;;emms                       ; Multimedia in Emacs is music to my ears
 ;;everywhere                 ; *leave* Emacs!? You must be joking.
-;;irc                        ; how neckbeards socialize
-;;(rss +org)                 ; emacs as an RSS reader
+irc                          ; how neckbeards socialize
+(rss +org)                   ; emacs as an RSS reader
 ;;twitter                    ; twitter client https://twitter.com/vnought
 #+end_src
 
@@ -1158,16 +1280,16 @@ The defaults for emacs aren't so good nowadays. Lets fix that up a bit
       evil-want-fine-undo t                        ;By default while in insert all changes are one big blob. Be more granular
       scroll-margin 2                              ;having a little margin is nice
       auto-save-default t                          ;I dont like to lose work
+      ;; display-line-numbers-type 'relative       ;If I have to use line numbers, at least make them relative
       display-line-numbers-type nil                ;I dislike line numbers
       history-length 25                            ;Slight speedup
       delete-by-moving-to-trash t                  ;delete to system trash instead
-      browse-url-browser-function 'xwidget-webkit-browse-url
+      browser-url-browser-function 'eww-browse-url ; use the builtin eww to browse links
       truncate-string-ellipsis "…")                ;default ellipses suck
 
 (fringe-mode 0) ;;disable fringe
 (global-subword-mode 1) ;;navigate through Camel Case words
-;; (tool-bar-mode +1) ;;re-enable the toolbar
-;; (setq tool-bar-style 'text)
+(tool-bar-mode +1) ;;re-enable the toolbar
 #+end_src
 
 There's issues with emacs flickering on mac (and sometimes wayland). This should
@@ -1197,7 +1319,9 @@ Ask where to open splits
 The default bindings of doom are pretty good. I'm not so good with motions though, so lets make life easier with avy
 #+begin_src elisp
 (map! :leader
-      :desc "hop to word" "w w" #'avy-goto-word-0)
+      :desc "hop to word" "w w" #'avy-goto-word-or-subword-1)
+(map! :leader
+      :desc "hop to word" "w W" #'avy-goto-char-2)
 (map! :leader
       :desc "hop to line"
       "l" #'avy-goto-line)
@@ -1221,12 +1345,6 @@ Doom looks much cleaner with the dividers removed. Not sure why it isn't the def
 #+begin_src elisp
 (custom-set-faces!
   `(vertical-border :background ,(doom-color 'bg) :foreground ,(doom-color 'bg)))
-
-(when (boundp 'window-divider-mode)
-  (setq window-divider-default-places nil
-        window-divider-default-bottom-width 0
-        window-divider-default-right-width 0)
-  (window-divider-mode -1))
 #+end_src
 
 I don't like seeing the cursorline, especially while writing. Lets disable that
@@ -1244,16 +1362,8 @@ Doom has a weird bug with emacs-plus where the cursor will just turn white on a 
   (evil-set-cursor-color (face-foreground 'warning)))
 #+end_src
 
-I like using the minimap, even if its slow. Looks cool in my opinion, lets make it a little cooler by removing the scroll highlighting
-#+begin_src elisp
-(setq minimap-highlight-line nil)
-(custom-set-faces!
-  `(minimap-active-region-background :background unspecified))
-#+end_src
-
 I like a bit of padding, both inside and outside, and lets make the line spacing comfier
 #+begin_src elisp
-;; Make a clean & minimalist frame
 (use-package frame
   :config
   (setq-default default-frame-alist
@@ -1263,18 +1373,10 @@ I like a bit of padding, both inside and outside, and lets make the line spacing
                 '(right-fringe   . 0)
                 '(tool-bar-lines . 0)
                 '(menu-bar-lines . 0)
-                '(line-spacing . 0.35)
+                '(line-spacing . 0.24)
                 '(vertical-scroll-bars . nil))))
   (setq-default window-resize-pixelwise t)
-  (setq-default frame-resize-pixelwise t)
-  :custom
-  (window-divider-default-right-width 24)
-  (window-divider-default-bottom-width 12)
-  (window-divider-default-places 'right-only)
-  (window-divider-mode t))
-
-;; Make sure new frames use window-divider
-(add-hook 'before-make-frame-hook 'window-divider-mode)
+  (setq-default frame-resize-pixelwise t))
 #+end_src
 
 ** +Selectric+ NK-Creams mode
@@ -1310,18 +1412,6 @@ Doom modeline already looks good, but it can be better. Lets add some icons, the
   (display-time-mode 1)                              ;Enable time in the mode-line
   (display-battery-mode 1)                           ;display the battery
   (setq doom-modeline-enable-word-count t))          ;Show word count
-#+end_src
-
-The encoding is always UTF-8, so its a bit redundant. Lets take that out
-#+begin_src elisp
-(defun doom-modeline-conditional-buffer-encoding ()
-  "We expect the encoding to be LF UTF-8, so only show the modeline when this is not the case"
-  (setq-local doom-modeline-buffer-encoding
-              (unless (and (memq (plist-get (coding-system-plist buffer-file-coding-system) :category)
-                                 '(coding-category-undecided coding-category-utf-8))
-                           (not (memq (coding-system-eol-type buffer-file-coding-system) '(1 2))))
-                t)))
-(add-hook 'after-change-major-mode-hook #'doom-modeline-conditional-buffer-encoding) ;;remove encoding
 #+end_src
 
 ** Centaur tabs
@@ -1743,14 +1833,6 @@ responsive.
                 jit-lock-stealth-time 1)))
 
 (add-hook 'org-mode-hook #'locally-defer-font-lock)
-#+end_src
-
-I dislike that end/begin statements in org mode are the same color as the
-background. I've changed them to use a darker color
-#+begin_src elisp
-(custom-set-faces!
-  `(org-block-end-line :background ,(doom-color 'base2))
-  `(org-block-begin-line :background ,(doom-color 'base2)))
 #+end_src
 
 *** Fontifying inline src blocks
@@ -3152,7 +3234,8 @@ Sprinkle in some =doct= utility functions
 ** Org-Cite
 #+begin_src elisp
 (use-package! citar
-  :when (featurep! :completion vertico))
+  :when (featurep! :completion vertico)
+  :after org)
 
 (use-package! citeproc
   :defer t)
@@ -3164,7 +3247,7 @@ Sprinkle in some =doct= utility functions
       :desc "Insert citation" "@" #'org-cite-insert)
 
 (use-package! oc
-  :after org citar
+  :after citar
   :config
   (require 'ox)
   (setq org-cite-global-bibliography

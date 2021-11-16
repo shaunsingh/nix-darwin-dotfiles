@@ -5,18 +5,6 @@
 { pkgs, lib, config, home-manager, nix-darwin, inputs, ... }: {
 # Home.nix:1 ends here
 
-# Theme
-
-# [[file:../nix-config.org::*Theme][Theme:1]]
-   # home-manager.users.shauryasingh.home.themes.base16 = {
-   #   enable = true;
-   #   customScheme = {
-   #     enable = true;
-   #     path = "${inputs.base16-doom-vibrant}/doom-vibrant.yaml";
-   #   };
-   # };
-# Theme:1 ends here
-
 # Doom-emacs
 # Nix via doom-emacs is very, /very/ annoying. Initially I was using [[https://github.com/vlaci/nix-doom-emacs][Nix-doom-emacs]]. However, this has a few drawbacks
 # 1. It doesn't support straight =:recipe=, so all packages must be from melpa or elpa
@@ -477,6 +465,14 @@
 # [[file:../nix-config.org::*Firefox][Firefox:2]]
   home-manager.users.shauryasingh.programs.firefox.package =
     pkgs.runCommand "firefox-0.0.0" { } "mkdir $out";
+  home-manager.users.shauryasingh.programs.firefox.extensions =
+      with pkgs.nur.repos.rycee.firefox-addons; [
+        ublock-origin
+        tridactyl
+        duckduckgo-privacy-essentials
+        reddit-enhancement-suite
+        betterttv
+      ];
 # Firefox:2 ends here
 
 
