@@ -128,12 +128,6 @@
               # Jetbrains deps
               jdk
 
-              # Neovim deps
-              neovim-nightly
-              # neovide-git
-              # nodejs
-              tree-sitter
-
               # Language deps
               python39Packages.grip
               python39Packages.pyflakes

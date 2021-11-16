@@ -793,11 +793,23 @@
 # Lastly, I didn't feel like nix-ifying my neovim lua config. Lets cheat a bit and just symlink it instead
 
 # [[file:../nix-config.org::*Neovim][Neovim:1]]
-  home-manager.users.shauryasingh.home.file = {
-    "~/.config/nvim" = {
-      recursive = true;
-      source = ../configs/nvim;
-    };
+  home-manager.users.shauryasingh.programs.neovim = {
+    enable = true;
+    package = pkgs.neovim-nightly;
+    vimAlias = true;
+    extraPackages = with pkgs; [
+        tree-sitter
+        # neovide-git
+        nodejs
+        tree-sitter
+    ];
+    extraConfig = builtins.concatStringsSep "\n" [
+      ''
+        lua << EOF
+        ${lib.strings.fileContents ../configs/nvim/nix.lua}
+        EOF
+      ''
+    ];
   };
 # Neovim:1 ends here
 

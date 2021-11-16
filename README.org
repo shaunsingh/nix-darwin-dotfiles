@@ -45,7 +45,6 @@ Build, and switch to the dotfiles
 Symlinking with nix (and managing doom with =nix-doom-emacs=) is very finicky, so for now we need to manually symlink them
     #+begin_src sh :comments both :tangle "./extra/install.sh" :shebang "#!/bin/bash"
     ln -s ~/nix-darwin-dotfiles/configs/doom/ ~/.config/doom
-    ln -s ~/nix-darwin-dotfiles/configs/nvim/ ~/.config/nvim
     #+end_src
 Install doom emacs
     #+begin_src sh :comments both :tangle "./extra/install.sh" :shebang "#!/bin/bash"

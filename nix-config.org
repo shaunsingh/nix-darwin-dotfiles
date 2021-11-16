@@ -139,7 +139,6 @@ Build, and switch to the dotfiles
 Symlinking with nix (and managing doom with =nix-doom-emacs=) is very finicky, so for now we need to manually symlink them
     #+begin_src sh :comments both :tangle "./extra/install.sh" :shebang "#!/bin/bash"
     ln -s ~/nix-darwin-dotfiles/configs/doom/ ~/.config/doom
-    ln -s ~/nix-darwin-dotfiles/configs/nvim/ ~/.config/nvim
     #+end_src
 Install doom emacs
     #+begin_src sh :comments both :tangle "./extra/install.sh" :shebang "#!/bin/bash"
@@ -367,12 +366,6 @@ The =flake.nix= below does the following:
 
               # Jetbrains deps
               jdk
-
-              # Neovim deps
-              neovim-nightly
-              # neovide-git
-              # nodejs
-              tree-sitter
 
               # Language deps
               python39Packages.grip
@@ -1412,11 +1405,23 @@ I also want to disable the default greeting, and use tmux with fish. Lets also s
 *** Neovim
 Lastly, I didn't feel like nix-ifying my neovim lua config. Lets cheat a bit and just symlink it instead
 #+begin_src nix :comments both :tangle "./modules/home.nix"
-  home-manager.users.shauryasingh.home.file = {
-    "~/.config/nvim" = {
-      recursive = true;
-      source = ../configs/nvim;
-    };
+  home-manager.users.shauryasingh.programs.neovim = {
+    enable = true;
+    package = pkgs.neovim-nightly;
+    vimAlias = true;
+    extraPackages = with pkgs; [
+        tree-sitter
+        # neovide-git
+        nodejs
+        tree-sitter
+    ];
+    extraConfig = builtins.concatStringsSep "\n" [
+      ''
+        lua << EOF
+        ${lib.strings.fileContents ../configs/nvim/nix.lua}
+        EOF
+      ''
+    ];
   };
 #+end_src
 

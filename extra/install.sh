@@ -39,7 +39,6 @@
 
 # [[file:../nix-config.org::*Installing and notes][Installing and notes:5]]
     ln -s ~/nix-darwin-dotfiles/configs/doom/ ~/.config/doom
-    ln -s ~/nix-darwin-dotfiles/configs/nvim/ ~/.config/nvim
 # Installing and notes:5 ends here
 
 
