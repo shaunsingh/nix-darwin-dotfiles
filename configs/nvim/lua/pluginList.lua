@@ -17,11 +17,9 @@ return packer.startup(function()
    -- Required for telescope
    use {
       "nvim-lua/plenary.nvim",
-      event = "VimEnter",
    }
 
    -- Startup optimizations
-
    use {
       "nathom/filetype.nvim",
    }
@@ -277,7 +275,6 @@ return packer.startup(function()
       "nvim-neorg/neorg",
       branch = "unstable",
       ft = "norg",
-      requires = "nvim-lua/plenary.nvim",
       config = function()
          require "plugins.neorg"
       end,

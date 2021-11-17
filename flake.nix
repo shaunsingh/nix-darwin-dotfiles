@@ -113,6 +113,7 @@
               zstd
               ## Required for plots but not installed by default
               gnuplot
+              pandoc
               ## Required for dictionaries but not installed by default
               sdcv
               (aspellWithDicts (ds: with ds; [ en en-computers en-science ]))

@@ -356,16 +356,16 @@ hl-todo                      ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
 (ligatures                   ; ligatures and symbols to make your code pretty again
  +extra)                     ; for those who dislike letters
 minimap                      ; show a map of the code on the side
-(modeline                    ; snazzy, Atom-inspired modeline, plus API
- +light)                     ; the doom modeline is a bit much, the default is a bit little
+modeline                     ; snazzy, Atom-inspired modeline, plus API
+;; +light)                   ; the doom modeline is a bit much, the default is a bit little
 nav-flash                    ; blink the current line after jumping
 ;;neotree                    ; a project drawer, like NERDTree for vim
 ophints                      ; highlight the region an operation acts on
 (popup                       ; tame sudden yet inevitable temporary windows
  +all                        ; catch all popups that start with an asterix
  +defaults)                  ; default popup rules
-;;(tabs                      ; an tab bar for Emacs
-;;  +centaur-tabs)           ; ... with prettier tabs
+(tabs                        ; an tab bar for Emacs
+  +centaur-tabs)             ; ... with prettier tabs
 treemacs                     ; a project drawer, like neotree but cooler
 ;;unicode                    ; extended unicode support for various languages
 vc-gutter                    ; vcs diff in the fringe
@@ -1273,6 +1273,16 @@ The rust language server also has some extra features I would like to enable
   rustic-format-on-save t))
 #+end_src
 
+I also want to use clippy for linting, and those sweet org-mode docs
+#+begin_src elisp
+(use-package rustic
+  :after lsp
+  :config
+  (setq lsp-rust-analyzer-cargo-watch-command "clippy"
+        rustic-lsp-server 'rust-analyzer)
+  (rustic-doc-mode t))
+#+end_src
+
 ** Better Defaults
 The defaults for emacs aren't so good nowadays. Lets fix that up a bit
 #+begin_src elisp
@@ -1339,6 +1349,10 @@ When im doing regexes, its usually with /g anyways, lets make that the default
   (setq evil-ex-substitute-global t     ; I like my s/../.. to by global by default
         evil-move-cursor-back nil       ; Don't move the block cursor when toggling insert mode
         evil-kill-on-visual-paste nil)) ; Don't put overwritten text in the kill ring
+#+end_src
+
+The mode indactors in the bottom left look a bit boring, lets spice it up a bit
+#+begin_src elisp
 #+end_src
 
 Doom looks much cleaner with the dividers removed. Not sure why it isn't the default honestly
@@ -1409,8 +1423,27 @@ Since I use an apple silicon mac, I prefer if nix handles compiling the parsers 
 Doom modeline already looks good, but it can be better. Lets add some icons, the battery status, and make sure we don't lose track of time
 #+begin_src elisp
 (after! doom-modeline
-  (display-time-mode 1)                              ;Enable time in the mode-line
-  (display-battery-mode 1)                           ;display the battery
+  (setq evil-normal-state-tag "λ"
+        evil-insert-state-tag ""
+        evil-visual-state-tag "麗"
+        evil-motion-state-tag ""
+        evil-emacs-state-tag "<EMACS>")
+
+  (setq doom-modeline-modal-icon nil
+        doom-modeline-major-mode-icon t
+        doom-modeline-major-mode-color-icon t
+        doom-modeline-continuous-word-count-modes '(markdown-mode gfm-mode org-mode)
+        doom-modeline-buffer-encoding nil
+        inhibit-compacting-font-caches t
+        find-file-visit-truename t)
+
+  (custom-set-faces!
+    '(doom-modeline-evil-insert-state :inherit doom-modeline-urgent)
+    '(doom-modeline-evil-visual-state :inherit doom-modeline-warning)
+    '(doom-modeline-evil-normal-state :inherit doom-modeline-buffer-path))
+
+  ;; (display-time-mode 1)                            ;Enable time in the mode-line
+  ;; (display-battery-mode 1)                         ;display the battery
   (setq doom-modeline-enable-word-count t))          ;Show word count
 #+end_src
 
@@ -1436,11 +1469,29 @@ I also like to have icons with my tabs.
 #+begin_src elisp
 (after! centaur-tabs
   (centaur-tabs-mode -1)
-  (setq centaur-tabs-height 20
+  (centaur-tabs-headline-match)
+  (centaur-tabs-change-fonts "Liga SFMono Nerd Font" 150)
+
+  (setq centaur-tabs-style "zigzag"
         centaur-tabs-set-icons t
-        centaur-tabs-gray-out-icons 'buffer)
-  (add-hook 'window-configuration-change-hook 'centaur-tabs-hide-on-window-change)
-  (centaur-tabs-change-fonts "Liga SFMono Nerd Font" 105))
+        centaur-tabs-set-bar 'nil
+        centaur-tabs-gray-out-icons 'buffer
+        centaur-tabs-height  30
+        centaur-tabs-close-button ""
+        centaur-tabs-modified-marker nil
+        centaur-tabs-show-navigation-buttons nil
+        centaur-tabs-show-new-tab-button nil
+        centaur-tabs-down-tab-text " ✦"
+        centaur-tabs-backward-tab-text " ⏴ "
+        centaur-tabs-forward-tab-text " ⏵ ")
+
+  (custom-set-faces!
+    `(tab-line :background ,(doom-color 'base1) :foreground ,(doom-color 'base1))
+    `(centaur-tabs-default :background ,(doom-color 'base1) :foreground ,(doom-color 'base1))
+    `(centaur-tabs-unselected :background ,(doom-color 'base1) :foreground ,(doom-color 'base4))
+    `(centaur-tabs-selected :background ,(doom-color 'bg) :foreground ,(doom-color 'blue)))
+
+  (add-hook 'window-configuration-change-hook 'centaur-tabs-hide-on-window-change))
 #+end_src
 
 ** Vertico

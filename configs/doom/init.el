@@ -26,16 +26,16 @@
        (ligatures                   ; ligatures and symbols to make your code pretty again
         +extra)                     ; for those who dislike letters
        minimap                      ; show a map of the code on the side
-       (modeline                    ; snazzy, Atom-inspired modeline, plus API
-        +light)                     ; the doom modeline is a bit much, the default is a bit little
+       modeline                     ; snazzy, Atom-inspired modeline, plus API
+       ;; +light)                   ; the doom modeline is a bit much, the default is a bit little
        nav-flash                    ; blink the current line after jumping
        ;;neotree                    ; a project drawer, like NERDTree for vim
        ophints                      ; highlight the region an operation acts on
        (popup                       ; tame sudden yet inevitable temporary windows
         +all                        ; catch all popups that start with an asterix
         +defaults)                  ; default popup rules
-       ;;(tabs                      ; an tab bar for Emacs
-       ;;  +centaur-tabs)           ; ... with prettier tabs
+       (tabs                        ; an tab bar for Emacs
+         +centaur-tabs)             ; ... with prettier tabs
        treemacs                     ; a project drawer, like neotree but cooler
        ;;unicode                    ; extended unicode support for various languages
        vc-gutter                    ; vcs diff in the fringe
