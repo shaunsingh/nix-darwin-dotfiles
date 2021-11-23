@@ -14,9 +14,14 @@ return packer.startup(function()
       event = "VimEnter",
    }
 
-   -- Required for telescope
    use {
-      "nvim-lua/plenary.nvim",
+	  "VonHeikemen/fine-cmdline.nvim",
+      requires = {
+        "MunifTanjim/nui.nvim"
+      },
+      config = function()
+         require("plugins.others").fineCmdline()
+      end,
    }
 
    -- Startup optimizations
@@ -209,6 +214,7 @@ return packer.startup(function()
       requires = {
          {
             "nvim-telescope/telescope-fzf-native.nvim",
+			"nvim-lua/plenary.nvim",
             run = "make",
          },
       },

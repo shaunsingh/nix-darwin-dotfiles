@@ -1,5 +1,6 @@
 -- Do not source the default filetype.vim
 vim.g.did_load_filetypes = 1
+vim.g.shell = "/bin/bash" --fish has speed issues with nvim-tree
 vim.g.neovide_cursor_vfx_mode = "pixiedust" -- neovide trail
 vim.opt.fillchars = { eob = " " } -- disable tilde fringe
 vim.opt.undofile = true -- enable persistent undo

@@ -461,6 +461,7 @@ Return nil otherwise."
 (fringe-mode 0) ;;disable fringe
 (global-subword-mode 1) ;;navigate through Camel Case words
 (tool-bar-mode +1) ;;re-enable the toolbar
+(global-so-long-mode -1) ;;i almost never want this on
 
 (add-to-list 'default-frame-alist '(inhibit-double-buffering . t))
 
@@ -488,8 +489,6 @@ Return nil otherwise."
   (setq evil-ex-substitute-global t     ; I like my s/../.. to by global by default
         evil-move-cursor-back nil       ; Don't move the block cursor when toggling insert mode
         evil-kill-on-visual-paste nil)) ; Don't put overwritten text in the kill ring
-
-
 
 (custom-set-faces!
   `(vertical-border :background ,(doom-color 'bg) :foreground ,(doom-color 'bg)))
@@ -547,8 +546,8 @@ Return nil otherwise."
     '(doom-modeline-evil-visual-state :inherit doom-modeline-warning)
     '(doom-modeline-evil-normal-state :inherit doom-modeline-buffer-path))
 
-  ;; (display-time-mode 1)                            ;Enable time in the mode-line
-  ;; (display-battery-mode 1)                         ;display the battery
+  ;; (display-time-mode 1)                           ;Enable time in the mode-line
+  ;; (display-battery-mode 1)                        ;display the battery
   (setq doom-modeline-enable-word-count t))          ;Show word count
 
 (defun centaur-tabs-get-total-tab-length ()
@@ -570,7 +569,7 @@ Return nil otherwise."
   (centaur-tabs-headline-match)
   (centaur-tabs-change-fonts "Liga SFMono Nerd Font" 150)
 
-  (setq centaur-tabs-style "zigzag"
+  (setq centaur-tabs-style "wave"
         centaur-tabs-set-icons t
         centaur-tabs-set-bar 'nil
         centaur-tabs-gray-out-icons 'buffer

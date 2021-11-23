@@ -460,7 +460,7 @@ associated file.
 #+begin_src emacs-lisp
 ;;agda                       ; types of types of types of types...
 ;;beancount                  ; mind the GAAP
-;;(cc +lsp)                 ; C/C++/Obj-C madness
+(cc +lsp)                    ; C/C++/Obj-C madness
 ;;clojure                    ; java with a lisp
 ;;common-lisp                ; if you've seen one lisp, you've seen them all
 ;;coq                        ; proofs-as-programs
@@ -1300,6 +1300,7 @@ The defaults for emacs aren't so good nowadays. Lets fix that up a bit
 (fringe-mode 0) ;;disable fringe
 (global-subword-mode 1) ;;navigate through Camel Case words
 (tool-bar-mode +1) ;;re-enable the toolbar
+(global-so-long-mode -1) ;;i almost never want this on
 #+end_src
 
 There's issues with emacs flickering on mac (and sometimes wayland). This should
@@ -1349,10 +1350,6 @@ When im doing regexes, its usually with /g anyways, lets make that the default
   (setq evil-ex-substitute-global t     ; I like my s/../.. to by global by default
         evil-move-cursor-back nil       ; Don't move the block cursor when toggling insert mode
         evil-kill-on-visual-paste nil)) ; Don't put overwritten text in the kill ring
-#+end_src
-
-The mode indactors in the bottom left look a bit boring, lets spice it up a bit
-#+begin_src elisp
 #+end_src
 
 Doom looks much cleaner with the dividers removed. Not sure why it isn't the default honestly
@@ -1442,8 +1439,8 @@ Doom modeline already looks good, but it can be better. Lets add some icons, the
     '(doom-modeline-evil-visual-state :inherit doom-modeline-warning)
     '(doom-modeline-evil-normal-state :inherit doom-modeline-buffer-path))
 
-  ;; (display-time-mode 1)                            ;Enable time in the mode-line
-  ;; (display-battery-mode 1)                         ;display the battery
+  ;; (display-time-mode 1)                           ;Enable time in the mode-line
+  ;; (display-battery-mode 1)                        ;display the battery
   (setq doom-modeline-enable-word-count t))          ;Show word count
 #+end_src
 
@@ -1472,7 +1469,7 @@ I also like to have icons with my tabs.
   (centaur-tabs-headline-match)
   (centaur-tabs-change-fonts "Liga SFMono Nerd Font" 150)
 
-  (setq centaur-tabs-style "zigzag"
+  (setq centaur-tabs-style "wave"
         centaur-tabs-set-icons t
         centaur-tabs-set-bar 'nil
         centaur-tabs-gray-out-icons 'buffer
