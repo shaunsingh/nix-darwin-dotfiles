@@ -10,7 +10,7 @@ module.start = function()
     end
 
     positions = {
-        maximized ={x=0, y=0, w=.95, h=.9},
+        maximized ={x=0, y=0, w=1, h=1},
         centered = {x=0.17, y=0.08, w=0.66, h=0.85},
         center = {x=0.1, y=0.05, w=0.77, h=0.88},
 
@@ -39,18 +39,16 @@ module.start = function()
 
     -- Grid
     grid = {
-        {key="u", units={positions.upper50Left50}},
-        {key="k", units={positions.upper50}},
-        {key="o", units={positions.upper50Right50}},
-
         {key="h", units={positions.left50, positions.left66, positions.left34}},
-        {key="i", units={positions.centered, positions.center, positions.maximized}},
+        {key="j", units={positions.lower50}},
+        {key="k", units={positions.upper50}},
         {key="l", units={positions.right50, positions.right66, positions.right34}},
 
-        {key="j", units={positions.lower50Left50}},
-        {key=",", units={positions.lower50}},
+        {key="u", units={positions.upper50Left50}},
+        {key="o", units={positions.upper50Right50}},
+        {key="i", units={positions.centered, positions.center, positions.maximized}},
+        {key=",", units={positions.lower50Left50}},
         {key=".", units={positions.lower50Right50}},
-
         {key="f", units={positions.maximized}},
     }
 
