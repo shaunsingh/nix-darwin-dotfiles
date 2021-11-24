@@ -5,6 +5,21 @@
 { pkgs, lib, config, home-manager, nix-darwin, inputs, ... }: {
 # Home.nix:1 ends here
 
+# Hooks
+# Ignore this, just some post-installation stuff here and there
+
+# [[file:../nix-config.org::*Hooks][Hooks:1]]
+   system.activationScripts.postUserActivation.text = ''
+     emacs --batch --eval "(progn (require 'org) (setq org-confirm-babel-evaluate nil) (org-babel-tangle-file \"nix-config.org\"))"
+     emacs --batch --eval "(progn (require 'org) (setq org-confirm-babel-evaluate nil) (org-babel-tangle-file \"configs/doom/config.org\"))"
+     ln -s ~/nix-darwin-dotfiles/configs/doom/ ~/.config
+     if [ -d ~/.config/emacs ]; then
+       git clone --depth 1 https://github.com/hlissner/doom-emacs $HOME/.config/emacs
+       ~/.config/emacs/bin/doom install
+     fi
+   '';
+# Hooks:1 ends here
+
 # Doom-emacs
 # Nix via doom-emacs is very, /very/ annoying. Initially I was using [[https://github.com/vlaci/nix-doom-emacs][Nix-doom-emacs]]. However, this has a few drawbacks
 # 1. It doesn't support straight =:recipe=, so all packages must be from melpa or elpa
@@ -14,17 +29,12 @@
 # A simpler solution is just to have nix clone =doom-emacs= to =~/.config/emacs=, and the user can handle doom manually
 
 # [[file:../nix-config.org::*Doom-emacs][Doom-emacs:1]]
-  home-manager.users.shauryasingh.home.file = {
-    "~/.config/doom" = {
-      recursive = true;
-      source = ../configs/doom;
-    };
-  };
-  #  system.activationScripts.postUserActivation.text = ''
-  #    if [ -d $HOME/.config/emacs ]; then
-  #      git clone --depth 1 https://github.com/hlissner/doom-emacs $HOME/.config/emacs
-  #    fi
-  #  '';
+#   home-manager.users.shauryasingh.home.file = {
+#     "~/.config/doom" = {
+#       recursive = true;
+#       source = ../configs/doom;
+#     };
+#   };
 # Doom-emacs:1 ends here
 
 # Git

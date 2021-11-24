@@ -65,108 +65,109 @@
     };
   };
 
-  outputs = { self, nixpkgs, nixpkgs-s2k, darwin, home-manager, ... }@inputs: {
-    darwinConfigurations."shaunsingh-laptop" = darwin.lib.darwinSystem {
-      system = "aarch64-darwin";
-      modules = [
-        { nixpkgs.overlays = [ nixpkgs-s2k.overlay ]; }
-        ./modules/mac.nix
-        ./modules/home.nix
-        ./modules/pam.nix
-        home-manager.darwinModule
-        {
-          home-manager = {
-            useGlobalPkgs = true;
-            useUserPackages = true;
-          };
-        }
-        ({ pkgs, lib, ... }: {
-          services.nix-daemon.enable = true;
-          security.pam.enableSudoTouchIdAuth = true;
-          nixpkgs = {
-            overlays = with inputs; [
-              nur.overlay
-              spacebar.overlay
-              neovim.overlay
-              emacs.overlay
-              rust-overlay.overlay
+  outputs = { self, nixpkgs, nixpkgs-s2k, darwin, home-manager, ...
+    }@inputs: {
+      darwinConfigurations."shaunsingh-laptop" = darwin.lib.darwinSystem {
+        system = "aarch64-darwin";
+        modules = [
+          { nixpkgs.overlays = [ nixpkgs-s2k.overlay ]; }
+          ./modules/mac.nix
+          ./modules/home.nix
+          ./modules/pam.nix
+          home-manager.darwinModule
+          {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+            };
+          }
+          ({ pkgs, lib, ... }: {
+            services.nix-daemon.enable = true;
+            security.pam.enableSudoTouchIdAuth = true;
+            nixpkgs = {
+              overlays = with inputs; [
+                nur.overlay
+                spacebar.overlay
+                neovim.overlay
+                emacs.overlay
+                rust-overlay.overlay
+              ];
+              config.allowUnfree = true;
+            };
+            nix = {
+              package = pkgs.nixUnstable;
+              extraOptions = ''
+                system = aarch64-darwin
+                extra-platforms = aarch64-darwin x86_64-darwin
+                experimental-features = nix-command flakes
+                build-users-group = nixbld
+              '';
+            };
+            environment.systemPackages = with pkgs; [
+              # Emacs deps
+              ((emacsPackagesNgGen emacsGcc).emacsWithPackages
+                (epkgs: [ epkgs.vterm epkgs.pdf-tools ]))
+              ## make sure ripgrep supports pcre2 (for vertico)
+              (ripgrep.override { withPCRE2 = true; })
+              sqlite
+              zstd
+              ## Required for plots but not installed by default
+              gnuplot
+              pandoc
+              ## Required for dictionaries but not installed by default
+              sdcv
+              (aspellWithDicts (ds: with ds; [ en en-computers en-science ]))
+              (texlive.combine {
+                inherit (texlive)
+                  scheme-small dvipng dvisvgm l3packages xcolor soul adjustbox
+                  collectbox amsmath siunitx cancel mathalpha capt-of chemfig
+                  wrapfig mhchem fvextra cleveref latexmk tcolorbox environ arev
+                  amsfonts simplekv alegreya sourcecodepro newpx svg catchfile
+                  transparent hanging;
+              })
+
+              # Jetbrains deps
+              jdk
+
+              # Language deps
+              python39Packages.grip
+              python39Packages.pyflakes
+              python39Packages.isort
+              python39Packages.pytest
+              nodePackages.pyright
+              pipenv
+              nixfmt
+              black
+              rust-analyzer
+              rust-bin.nightly.latest.default
+              shellcheck
+              languagetool
+              
+              # Terminal utils and rust alternatives :tm:
+              uutils-coreutils
+              xcp
+              exa
+              procs
+              tree
+              fd
+              zoxide
+              bottom
+              discocss
+              # eww
             ];
-            config.allowUnfree = true;
-          };
-          nix = {
-            package = pkgs.nixUnstable;
-            extraOptions = ''
-              system = aarch64-darwin
-              extra-platforms = aarch64-darwin x86_64-darwin
-              experimental-features = nix-command flakes
-              build-users-group = nixbld
-            '';
-          };
-          environment.systemPackages = with pkgs; [
-            # Emacs deps
-            ((emacsPackagesNgGen emacsGcc).emacsWithPackages
-              (epkgs: [ epkgs.vterm epkgs.pdf-tools ]))
-            ## make sure ripgrep supports pcre2 (for vertico)
-            (ripgrep.override { withPCRE2 = true; })
-            sqlite
-            zstd
-            ## Required for plots but not installed by default
-            gnuplot
-            pandoc
-            ## Required for dictionaries but not installed by default
-            sdcv
-            (aspellWithDicts (ds: with ds; [ en en-computers en-science ]))
-            (texlive.combine {
-              inherit (texlive)
-                scheme-small dvipng dvisvgm l3packages xcolor soul adjustbox
-                collectbox amsmath siunitx cancel mathalpha capt-of chemfig
-                wrapfig mhchem fvextra cleveref latexmk tcolorbox environ arev
-                amsfonts simplekv alegreya sourcecodepro newpx svg catchfile
-                transparent hanging;
-            })
-
-            # Jetbrains deps
-            jdk
-
-            # Language deps
-            python39Packages.grip
-            python39Packages.pyflakes
-            python39Packages.isort
-            python39Packages.pytest
-            nodePackages.pyright
-            pipenv
-            nixfmt
-            black
-            rust-analyzer
-            rust-bin.nightly.latest.default
-            shellcheck
-            languagetool
-
-            # Terminal utils and rust alternatives :tm:
-            uutils-coreutils
-            xcp
-            exa
-            procs
-            tree
-            fd
-            zoxide
-            bottom
-            discocss
-            # eww
-          ];
-          fonts = {
-            enableFontDir = true;
-            fonts = with pkgs; [
-              overpass
-              alegreya
-              alegreya-sans
-              emacs-all-the-icons-fonts
-              sf-mono-liga-bin
-            ];
-          };
-        })
-      ];
+            fonts = {
+              enableFontDir = true;
+              fonts = with pkgs; [
+                overpass
+                alegreya
+                alegreya-sans
+                emacs-all-the-icons-fonts
+                sf-mono-liga-bin
+              ];
+            };
+          })
+        ];
+      };
     };
-  };
 }
 # Notes on using the flake:4 ends here

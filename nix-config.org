@@ -190,22 +190,14 @@ If you want to take advantage of the LSP and/or treesitter, you can install lang
 *NOTE:* If you want to use neorg's treesitter parser on macOS, you need to link GCC to CC. Instructions [[https://github.com/nvim-neorg/neorg/issues/74#issuecomment-906627223][here]].
 I also recommend installing [[https://github.com/Kethku/neovide][Neovide]]
 
-*** Apps
-This is more of a personal note, to make sure I install the apps I need:
-**** Dev
-- Emacs
-- Intellij Ultimate (w/ material and IdeaVim)
-- Sublime Merge
-- Alacritty
-**** Video/Audio
-- FCPX
-- Motion
-- Compressor
-- Final Cut Pro
-**** Other
-- Firefox Nightly
-- Geforce Now
-- Steam (maybe)
+*** .gitignore
+Some files shouldn't be here!
+#+begin_src :comments none :tangle ".gitignore"
+.DS_store
+result
+configs/nvim/init.vim
+configs/nvim/lua/packer_compiled.lua
+#+end_src
 
 * Flakes
 ** Why Flakes
@@ -418,6 +410,20 @@ Home Manager allows you to use Nix’s declarative approach to manage your user-
 { pkgs, lib, config, home-manager, nix-darwin, inputs, ... }: {
 #+end_src
 
+*** Hooks
+Ignore this, just some post-installation stuff here and there
+#+begin_src nix :comments both :tangle "./modules/home.nix"
+   system.activationScripts.postUserActivation.text = ''
+     emacs --batch --eval "(progn (require 'org) (setq org-confirm-babel-evaluate nil) (org-babel-tangle-file \"nix-config.org\"))"
+     emacs --batch --eval "(progn (require 'org) (setq org-confirm-babel-evaluate nil) (org-babel-tangle-file \"configs/doom/config.org\"))"
+     ln -s ~/nix-darwin-dotfiles/configs/doom/ ~/.config
+     if [ -d ~/.config/emacs ]; then
+       git clone --depth 1 https://github.com/hlissner/doom-emacs $HOME/.config/emacs
+       ~/.config/emacs/bin/doom install
+     fi
+   '';
+#+end_src
+
 *** Doom-emacs
 Nix via doom-emacs is very, /very/ annoying. Initially I was using [[https://github.com/vlaci/nix-doom-emacs][Nix-doom-emacs]]. However, this has a few drawbacks
 1. It doesn't support straight =:recipe=, so all packages must be from melpa or elpa
@@ -426,17 +432,12 @@ Nix via doom-emacs is very, /very/ annoying. Initially I was using [[https://git
 
 A simpler solution is just to have nix clone =doom-emacs= to =~/.config/emacs=, and the user can handle doom manually
 #+begin_src nix :comments both :tangle "./modules/home.nix"
-  home-manager.users.shauryasingh.home.file = {
-    "~/.config/doom" = {
-      recursive = true;
-      source = ../configs/doom;
-    };
-  };
-  #  system.activationScripts.postUserActivation.text = ''
-  #    if [ -d $HOME/.config/emacs ]; then
-  #      git clone --depth 1 https://github.com/hlissner/doom-emacs $HOME/.config/emacs
-  #    fi
-  #  '';
+#   home-manager.users.shauryasingh.home.file = {
+#     "~/.config/doom" = {
+#       recursive = true;
+#       source = ../configs/doom;
+#     };
+#   };
 #+end_src
 
 *** Git
