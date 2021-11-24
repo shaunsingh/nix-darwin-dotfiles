@@ -143,10 +143,6 @@
               shellcheck
               languagetool
               
-			  # macOS 
-			  ## fennel
-			  ## hammerspoon
-
               # Terminal utils and rust alternatives :tm:
               uutils-coreutils
               xcp
