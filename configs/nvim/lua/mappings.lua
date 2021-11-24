@@ -33,4 +33,3 @@ vim.cmd "silent! command PackerInstall lua require 'pluginList' require('packer'
 vim.cmd "silent! command PackerStatus lua require 'pluginList' require('packer').status()"
 vim.cmd "silent! command PackerSync lua require 'pluginList' require('packer').sync()"
 vim.cmd "silent! command PackerUpdate lua require 'pluginList' require('packer').update()"
-

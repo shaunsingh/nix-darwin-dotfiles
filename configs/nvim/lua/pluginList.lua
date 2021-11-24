@@ -15,9 +15,9 @@ return packer.startup(function()
    }
 
    use {
-	  "VonHeikemen/fine-cmdline.nvim",
+      "VonHeikemen/fine-cmdline.nvim",
       requires = {
-        "MunifTanjim/nui.nvim"
+         "MunifTanjim/nui.nvim",
       },
       config = function()
          require("plugins.others").fineCmdline()
@@ -214,7 +214,7 @@ return packer.startup(function()
       requires = {
          {
             "nvim-telescope/telescope-fzf-native.nvim",
-			"nvim-lua/plenary.nvim",
+            "nvim-lua/plenary.nvim",
             run = "make",
          },
       },

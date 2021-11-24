@@ -19,11 +19,11 @@ M.colorizer = function()
 end
 
 M.fineCmdline = function()
-  local fineCmdline = pcall(require, "fine-cmdline")
-  if fineCmdline then
-    --remap ex-commands to floating windows 
-    vim.api.nvim_set_keymap('n', ':', ':lua require("fine-cmdline").open()<CR>', {noremap = true})
-  end
+   local fineCmdline = pcall(require, "fine-cmdline")
+   if fineCmdline then
+      --remap ex-commands to floating windows
+      vim.api.nvim_set_keymap("n", ":", ':lua require("fine-cmdline").open()<CR>', { noremap = true })
+   end
 end
 
 M.blankline = function()

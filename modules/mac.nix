@@ -156,6 +156,7 @@ homebrew = {
 
 # [[file:../nix-config.org::*Hammerspoon][Hammerspoon:1]]
   system.activationScripts.postUserActivation.text = ''
+    sudo cp -r ~/nix-darwin-dotfiles/configs/hammerspoon/ ~/.hammerspoon
     git clone --depth 1 https://github.com/asmagill/hs._asm.undocumented.spaces.git spaces && cd spaces && make install && cd .. && rm -f -r spaces
   '';
 # Hammerspoon:1 ends here

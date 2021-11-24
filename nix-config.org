@@ -1629,6 +1629,7 @@ homebrew = {
 Yabai breaks very, /very/ often and amethyst just isn't my cup of tea. Lets use hammerspoon to configure some of our system and implement our own tiling wm. I've implemented this elsewhere. We also need to build the =spaces= dependency from source, since this is an arm64 machine
 #+begin_src nix :comments both :tangle "./modules/mac.nix"
   system.activationScripts.postUserActivation.text = ''
+    sudo cp -r ~/nix-darwin-dotfiles/configs/hammerspoon/ ~/.hammerspoon
     git clone --depth 1 https://github.com/asmagill/hs._asm.undocumented.spaces.git spaces && cd spaces && make install && cd .. && rm -f -r spaces
   '';
 #+end_src
