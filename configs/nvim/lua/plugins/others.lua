@@ -26,6 +26,13 @@ M.fineCmdline = function()
    end
 end
 
+M.searchbox = function()
+   local searchbox = pcall(require, "searchbox")
+   if searchbox then
+      vim.api.nvim_set_keymap("n", "/", ':lua require("searchbox").incsearch()<CR>', { noremap = true })
+   end
+end
+
 M.blankline = function()
    require("indent_blankline").setup {
       show_current_context = true,
@@ -101,6 +108,17 @@ M.signature = function()
       }
    end
 end
+
+M.comment = function()
+   local present, comment = pcall(require, "Commment")
+   if present then
+      comment.setup {
+         padding = true,
+      }
+   end
+end
+
+
 
 M.orgmode = function()
    local present, orgmode = pcall(require, "orgmode")

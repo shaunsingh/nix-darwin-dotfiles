@@ -79,7 +79,7 @@
        :tools
        ;;ansible                    ; a crucible for infrastructure as code
        ;;biblio                     ; Writes a PhD for you (citation needed)
-       (debugger +lsp)              ; FIXME stepping through code, to help you add bugs
+       ;;(debugger +lsp)            ; FIXME stepping through code, to help you add bugs
        ;;direnv                     ; be direct about your environment
        ;;docker                     ; port everything to containers
        editorconfig                 ; let someone else argue about tabs vs spaces
@@ -90,9 +90,8 @@
         +dictionary                 ; dictionary/thesaurus is nice
         +docsets)                   ; ...or in Dash docsets locally
        lsp                          ; Language Server Protocol
-       ;;(:if IS-MAC macos)         ; MacOS-specific commands
-       (magit                       ; a git porcelain for Emacs
-        +forge)                     ; interface with git forges
+       magit                        ; a git porcelain for Emacs
+       ;; +forge)                   ; interface with git forges
        ;;make                       ; run make tasks from Emacs
        ;;pass                       ; password manager for nerds
        pdf                          ; pdf enhancements
@@ -106,7 +105,7 @@
 
        :os
        (:if IS-MAC macos)           ; improve compatibility with macOS
-       tty                          ; improve the terminal Emacs experience
+       ;;tty                        ; improve the terminal Emacs experience
 
        :lang
        ;;agda                       ; types of types of types of types...

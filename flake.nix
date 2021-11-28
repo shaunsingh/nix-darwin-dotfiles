@@ -50,7 +50,7 @@
       inputs.nixpkgs.follows = "unstable";
     };
     emacs = {
-      url = "github:nix-community/emacs-overlay";
+      url = "github:shaunsingh/emacs";
       inputs.nixpkgs.follows = "unstable";
     };
     # overlays
@@ -105,8 +105,8 @@
             };
             environment.systemPackages = with pkgs; [
               # Emacs deps
-              ((emacsPackagesNgGen emacsGcc).emacsWithPackages
-                (epkgs: [ epkgs.vterm epkgs.pdf-tools ]))
+              ((emacsPackagesNgGen emacs).emacsWithPackages
+                (epkgs: [ epkgs.vterm ]))
               ## make sure ripgrep supports pcre2 (for vertico)
               (ripgrep.override { withPCRE2 = true; })
               sqlite

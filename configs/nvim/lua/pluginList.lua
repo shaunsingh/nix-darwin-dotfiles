@@ -16,12 +16,24 @@ return packer.startup(function()
 
    use {
       "VonHeikemen/fine-cmdline.nvim",
+      -- cmd = { "lua require('fine-cmdline').open()" },
       requires = {
          "MunifTanjim/nui.nvim",
       },
       config = function()
          require("plugins.others").fineCmdline()
       end,
+   }
+
+   use {
+     'VonHeikemen/searchbox.nvim',
+     -- cmd = { "lua require('searchbox').incsearch()" },
+     requires = {
+       {'MunifTanjim/nui.nvim'}
+     },
+     config = function()
+        require("plugins.others").searchbox()
+     end,
    }
 
    -- Startup optimizations
@@ -49,6 +61,18 @@ return packer.startup(function()
             keys = "<Esc>",
          }
       end,
+   }
+
+   use {
+     "folke/which-key.nvim",
+     after = "nord.nvim",
+     config = function()
+       require("which-key").setup {
+         -- your configuration comes here
+         -- or leave it empty to use the default settings
+         -- refer to the configuration section below
+       }
+     end
    }
 
    -- Theme <3 and UI
@@ -159,6 +183,14 @@ return packer.startup(function()
    use {
       "rafamadriz/friendly-snippets",
       event = "InsertEnter",
+   }
+
+   use {
+      'numToStr/Comment.nvim',
+      after = "friendly-snippets",
+      config = function()
+         require('plugins.others').comment()
+      end
    }
 
    use {

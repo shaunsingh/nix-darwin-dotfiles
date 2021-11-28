@@ -29,4 +29,13 @@ ts_config.setup {
       updatetime = 25, -- Debounced time for highlighting nodes in the playground from source code
       persist_queries = false, -- Whether the query persists across vim sessions
    },
+   incremental_selection = {
+      enable = true,
+      keymaps = {
+         init_selection = '<CR>',
+         scope_incremental = '<CR>',
+         node_incremental = '<TAB>',
+         node_decremental = '<S-TAB>',
+      },
+   },
 }

@@ -39,17 +39,56 @@
       }
     },
     "emacs": {
+      "inputs": {
+        "emacs-src": "emacs-src",
+        "emacs-vterm-src": "emacs-vterm-src",
+        "nixpkgs": [
+          "unstable"
+        ]
+      },
       "locked": {
-        "lastModified": 1637771311,
-        "narHash": "sha256-94BT3fWPYh+nr77oFfiz3/BJey9BkYgH21BwmXK2V6c=",
-        "owner": "nix-community",
-        "repo": "emacs-overlay",
-        "rev": "11059911b8f96237b365f9b49d9d031963475a19",
+        "lastModified": 1637880208,
+        "narHash": "sha256-SaeIokTrQRjlYSHHMhXBaN34RQyj696AkdxAnXzKls4=",
+        "owner": "shaunsingh",
+        "repo": "emacs",
+        "rev": "5b61c71f0a56d029f45cbd2b657eb1aa71ddabee",
         "type": "github"
       },
       "original": {
-        "owner": "nix-community",
-        "repo": "emacs-overlay",
+        "owner": "shaunsingh",
+        "repo": "emacs",
+        "type": "github"
+      }
+    },
+    "emacs-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1637874290,
+        "narHash": "sha256-AHC7ytUyXvwiJC9N4sZmtRt7qiL9HNigWecwrCMzEig=",
+        "owner": "emacs-mirror",
+        "repo": "emacs",
+        "rev": "9d37be35227fcb419e7b52978f8d5a8b1379567f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "emacs-mirror",
+        "repo": "emacs",
+        "type": "github"
+      }
+    },
+    "emacs-vterm-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1631083259,
+        "narHash": "sha256-+fl1GUCpAZBOvgMd3akF9EMirp1/K+JyRq0TWKSDeJw=",
+        "owner": "akermu",
+        "repo": "emacs-libvterm",
+        "rev": "2681120b770573044832ba8c22ccbac192e1a294",
+        "type": "github"
+      },
+      "original": {
+        "owner": "akermu",
+        "repo": "emacs-libvterm",
         "type": "github"
       }
     },
