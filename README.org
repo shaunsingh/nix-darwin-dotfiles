@@ -6,17 +6,7 @@
 ** [[https://github.com/shaunsingh/nix-darwin-dotfiles/blob/gh-pages/nix-config.pdf][PDF Version]]
 
 * Images 
-
-** Terminal & Bar setup
-[[https://preview.redd.it/hh4ptgc0mis71.png?width=960&crop=smart&auto=webp&s=57e885e766cf0d0e2c7709a6be9862ea47103577]]
-[[https://media.discordapp.net/attachments/635625917623828520/897351007485456434/unknown.png?width=1872&height=1170]]
-
-** Doom-emacs
-[[https://media.discordapp.net/attachments/635625917623828520/899385681506369536/unknown.png?width=2160&height=911]]
-[[https://media.discordapp.net/attachments/635625917623828520/901903542619615272/unknown.png?width=1892&height=1171]]
-
-** Neovim
-[[https://media.discordapp.net/attachments/794365077754085387/907837547982516234/Screen_Shot_2021-11-09_at_22.40.28.png?width=1836&height=1169]]
+[[./extra/assets/macOS.png]]
 
 * Installing and notes
 *NOTE: These are available as an executable script [[./extra/install.sh]]*
