@@ -146,10 +146,30 @@ Install doom emacs
     ~/.config/emacs/bin/doom install
     #+end_src
 
+** Using Nix unstable OOTB
+If you want to use nix unstable out of of the box then you can use the following script
+#+begin_src sh :comments both :tangle "./extra/nix-install.sh" :shebang "#!/bin/bash"
+RELEASE="nix-2.5pre20211019_4a2b7cc"
+URL="https://github.com/numtide/nix-unstable-installer/releases/download/$RELEASE/install"
+
+# install using workaround for darwin systems
+if [[ $(uname -s) = "Darwin" ]]; then
+    FLAG="--darwin-use-unencrypted-nix-store-volume"
+fi
+
+[[ ! -z "$1" ]] && URL="$1"
+
+if command -v nix > /dev/null; then
+    echo "nix is already installed on this system."
+else
+    bash <(curl -L $URL) --daemon $FLAG
+fi
+#+end_src
+
 ** Additional Configuration
 *** Emacs
 If you want to use [[https://github.com/emacs-ng/emacs-ng][Emacs-NG]], use the following build options
-#+begin_src sh
+#+begin_src sh 
   git clone --depth 1 https://github.com/emacs-ng/emacs-ng.git
   cd emacs-ng
   ./autogen.sh

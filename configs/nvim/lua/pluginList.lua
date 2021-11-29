@@ -14,28 +14,6 @@ return packer.startup(function()
       event = "VimEnter",
    }
 
-   use {
-      "VonHeikemen/fine-cmdline.nvim",
-      -- cmd = { "lua require('fine-cmdline').open()" },
-      requires = {
-         "MunifTanjim/nui.nvim",
-      },
-      config = function()
-         require("plugins.others").fineCmdline()
-      end,
-   }
-
-   use {
-     'VonHeikemen/searchbox.nvim',
-     -- cmd = { "lua require('searchbox').incsearch()" },
-     requires = {
-       {'MunifTanjim/nui.nvim'}
-     },
-     config = function()
-        require("plugins.others").searchbox()
-     end,
-   }
-
    -- Startup optimizations
    use {
       "nathom/filetype.nvim",
@@ -50,7 +28,6 @@ return packer.startup(function()
       cmd = "StartupTime",
    }
 
-   -- Use fancy plugin for JK escape
    use {
       "max397574/better-escape.nvim",
       event = "InsertEnter",
@@ -63,26 +40,20 @@ return packer.startup(function()
       end,
    }
 
-   use {
-     "folke/which-key.nvim",
-     after = "nord.nvim",
-     config = function()
-       require("which-key").setup {
-         -- your configuration comes here
-         -- or leave it empty to use the default settings
-         -- refer to the configuration section below
-       }
-     end
+   use  {
+      "shaunsingh/nord.nvim",
+      branch = "nvim_api_rewrite",
+      config = function()
+        require("nord").setup()
+      end,
    }
 
-   -- Theme <3 and UI
    use {
-      --"shaunsingh/nord.nvim",
-      "Clutch-Squad-10669/nord.nvim",
-      after = "packer.nvim",
-      config = function()
-         require("nord").set()
-      end,
+     "folke/which-key.nvim",
+     keys="<space>",
+     config = function()
+       require("which-key").setup()
+     end
    }
 
    use {
@@ -169,7 +140,6 @@ return packer.startup(function()
 
    use {
       "williamboman/nvim-lsp-installer",
-      event = "InsertEnter",
    }
 
    use {
@@ -217,27 +187,27 @@ return packer.startup(function()
 
    use {
       "hrsh7th/cmp-nvim-lua",
-      after = "cmp_luasnip",
+      after = "nvim-cmp",
    }
 
    use {
       "hrsh7th/cmp-nvim-lsp",
-      after = "cmp-nvim-lua",
+      after = "nvim-cmp",
    }
 
    use {
       "lukas-reineke/cmp-rg",
-      after = "cmp-nvim-lsp",
+      after = "nvim-cmp",
    }
 
    use {
       "ray-x/cmp-treesitter",
-      after = "cmp-nvim-lsp",
+      after = "nvim-cmp",
    }
 
    use {
       "hrsh7th/cmp-path",
-      after = "cmp-rg",
+      after = "nvim-cmp",
    }
 
    use {
@@ -254,6 +224,28 @@ return packer.startup(function()
          require "plugins.telescope"
       end,
    }
+
+   use {
+      "VonHeikemen/fine-cmdline.nvim",
+      requires = {
+         "MunifTanjim/nui.nvim",
+      },
+      config = function()
+         require("plugins.others").fineCmdline()
+      end,
+   }
+
+   use {
+     'VonHeikemen/searchbox.nvim',
+     requires = {
+       {'MunifTanjim/nui.nvim'}
+     },
+     config = function()
+        require("plugins.others").searchbox()
+     end,
+   }
+
+
 
    use {
       "Pocco81/TrueZen.nvim",
@@ -312,6 +304,8 @@ return packer.startup(function()
    use {
       "nvim-neorg/neorg",
       branch = "unstable",
+      setup = vim.cmd("autocmd BufRead,BufNewFile *.norg setlocal filetype=norg"),
+      after = {"nvim-treesitter"},  -- you may also specify telescope
       ft = "norg",
       config = function()
          require "plugins.neorg"
@@ -322,4 +316,5 @@ return packer.startup(function()
       "nvim-neorg/neorg-telescope",
       ft = "norg",
    }
+
 end)

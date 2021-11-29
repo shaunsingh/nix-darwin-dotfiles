@@ -3,9 +3,6 @@ if not present then
    return
 end
 
--- function executed for top right close button in bufferline
-vim.cmd "function! Doom_bufferline_quitvim(a,b,c,d) \n qa \n endfunction"
-
 local colors = {
    bg = "NONE",
    black = "#242730",
