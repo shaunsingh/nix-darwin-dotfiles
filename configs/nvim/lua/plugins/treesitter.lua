@@ -13,12 +13,12 @@ parser_configs.norg = {
    },
 }
 parser_configs.org = {
-  install_info = {
-    url = 'https://github.com/milisims/tree-sitter-org',
-    revision = 'main',
-    files = {'src/parser.c', 'src/scanner.cc'},
-  },
-  filetype = 'org',
+   install_info = {
+      url = "https://github.com/milisims/tree-sitter-org",
+      revision = "main",
+      files = { "src/parser.c", "src/scanner.cc" },
+   },
+   filetype = "org",
 }
 
 ts_config.setup {
@@ -27,7 +27,7 @@ ts_config.setup {
    highlight = {
       enable = true,
       use_languagetree = true,
-      additional_vim_regex_highlighting = {'org'},
+      additional_vim_regex_highlighting = { "org" },
    },
    rainbow = {
       enable = true,
@@ -42,10 +42,10 @@ ts_config.setup {
    incremental_selection = {
       enable = true,
       keymaps = {
-         init_selection = '<CR>',
-         scope_incremental = '<CR>',
-         node_incremental = '<TAB>',
-         node_decremental = '<S-TAB>',
+         init_selection = "<CR>",
+         scope_incremental = "<CR>",
+         node_incremental = "<TAB>",
+         node_decremental = "<S-TAB>",
       },
    },
 }

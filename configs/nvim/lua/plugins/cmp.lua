@@ -92,6 +92,6 @@ cmp.setup {
       { name = "nvim_lua" },
       { name = "neorg" },
       { name = "treesitter" },
-	  { name = "orgmode" },
+      { name = "orgmode" },
    },
 }

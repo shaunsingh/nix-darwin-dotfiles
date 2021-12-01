@@ -40,20 +40,20 @@ return packer.startup(function()
       end,
    }
 
-   use  {
+   use {
       "Clutch-Squad-10669/nord.nvim",
       --branch = "nvim_api_rewrite",
       config = function()
-        require("nord").set()
+         require("nord").set()
       end,
    }
 
    use {
-     "folke/which-key.nvim",
-     keys="<space>",
-     config = function()
-       require("which-key").setup()
-     end
+      "folke/which-key.nvim",
+      keys = "<space>",
+      config = function()
+         require("which-key").setup()
+      end,
    }
 
    use {
@@ -125,12 +125,11 @@ return packer.startup(function()
       event = "InsertEnter",
    }
 
-
-   use { 
-		'dccsillag/magma-nvim', 
-        cmd = { "MagmaInit" },
-		run = ':UpdateRemotePlugins' 
-	}
+   use {
+      "dccsillag/magma-nvim",
+      cmd = { "MagmaInit" },
+      run = ":UpdateRemotePlugins",
+   }
 
    use {
       "neovim/nvim-lspconfig",
@@ -157,11 +156,11 @@ return packer.startup(function()
    }
 
    use {
-      'numToStr/Comment.nvim',
+      "numToStr/Comment.nvim",
       after = "friendly-snippets",
       config = function()
-         require('plugins.others').comment()
-      end
+         require("plugins.others").comment()
+      end,
    }
 
    use {
@@ -237,33 +236,34 @@ return packer.startup(function()
    }
 
    use {
-     'VonHeikemen/searchbox.nvim',
-     requires = {
-        'MunifTanjim/nui.nvim',
-     },
-     config = function()
-        require("plugins.others").searchbox()
-     end,
+      "VonHeikemen/searchbox.nvim",
+      requires = {
+         "MunifTanjim/nui.nvim",
+      },
+      config = function()
+         require("plugins.others").searchbox()
+      end,
    }
 
-	use {'rcarriga/nvim-notify',
+   use {
+      "rcarriga/nvim-notify",
       after = "nord.nvim",
-	  config = function()
-		 vim.notify = require 'notify'
-         require("notify").setup({
-           stages = "slide",
-           timeout = 2500,
-           minimum_width = 50,
-           icons = {
-             ERROR = "",
-             WARN = "",
-             INFO = "",
-             DEBUG = "",
-             TRACE = "✎",
-           },
-         })
-	  end
-	}
+      config = function()
+         vim.notify = require "notify"
+         require("notify").setup {
+            stages = "slide",
+            timeout = 2500,
+            minimum_width = 50,
+            icons = {
+               ERROR = "",
+               WARN = "",
+               INFO = "",
+               DEBUG = "",
+               TRACE = "✎",
+            },
+         }
+      end,
+   }
 
    use {
       "Pocco81/TrueZen.nvim",
@@ -322,26 +322,26 @@ return packer.startup(function()
    use {
       "nvim-neorg/neorg",
       branch = "unstable",
-      setup = vim.cmd("autocmd BufRead,BufNewFile *.norg setlocal filetype=norg"),
-      after = {"nvim-treesitter"},  -- you may also specify telescope
+      setup = vim.cmd "autocmd BufRead,BufNewFile *.norg setlocal filetype=norg",
+      after = { "nvim-treesitter" }, -- you may also specify telescope
       ft = "norg",
       config = function()
          require "plugins.neorg"
       end,
    }
 
-    use {'nvim-orgmode/orgmode',
-       --ft = "org",
-       --setup = vim.cmd("autocmd BufRead,BufNewFile *.org setlocal filetype=org"),
-       after = {"nvim-treesitter"},  
-       config = function()
-          require('orgmode').setup{}
-       end
-    }
+   use {
+      "nvim-orgmode/orgmode",
+      --ft = "org",
+      --setup = vim.cmd("autocmd BufRead,BufNewFile *.org setlocal filetype=org"),
+      after = { "nvim-treesitter" },
+      config = function()
+         require("orgmode").setup {}
+      end,
+   }
 
    use {
       "nvim-neorg/neorg-telescope",
       ft = "norg",
    }
-
 end)

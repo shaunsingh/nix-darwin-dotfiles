@@ -22,4 +22,4 @@ vim.opt.numberwidth = 2 -- two wide number column
 vim.opt.shortmess:append "casI" -- disable intro
 vim.opt.whichwrap:append "<>hl" -- clean aligned wraps
 vim.opt.guifont = "Liga SFMono Nerd Font:h14" -- set guifont for neovide
-vim.opt.guicursor:append('i:blinkwait700-blinkon400-blinkoff250') -- set insert mode cursor to blink
+vim.opt.guicursor:append "i:blinkwait700-blinkon400-blinkoff250"

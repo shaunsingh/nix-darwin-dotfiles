@@ -23,17 +23,17 @@ M.fineCmdline = function()
    if present then
       --remap ex-commands to floating windows
       vim.api.nvim_set_keymap("n", ":", ':lua require("fine-cmdline").open()<CR>', { noremap = true })
-      fineCmdline.setup({
+      fineCmdline.setup {
          cmdline = {
-            smart_history = true
+            smart_history = true,
          },
          popup = {
             border = {
-               style = 'rounded',
-               highlight = 'TelescopeResultsBorder',
+               style = "rounded",
+               highlight = "TelescopeResultsBorder",
             },
          },
-      })
+      }
    end
 end
 
@@ -128,8 +128,6 @@ M.comment = function()
       }
    end
 end
-
-
 
 M.orgmode = function()
    local present, orgmode = pcall(require, "orgmode")
