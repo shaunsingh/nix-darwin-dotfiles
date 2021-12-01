@@ -29,7 +29,7 @@
 
   inputs = {
     # All packages should follow latest nixpkgs
-    unstable.url = "github:nixos/nixpkgs/master";
+    unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     nur.url = "github:nix-community/NUR";
     darwin = {
       url = "github:LnL7/nix-darwin/master";
@@ -110,10 +110,10 @@
               ## make sure ripgrep supports pcre2 (for vertico)
               (ripgrep.override { withPCRE2 = true; })
               sqlite
-              zstd
+              # zstd
               ## Required for plots but not installed by default
               gnuplot
-              pandoc
+              # pandoc
               ## Required for dictionaries but not installed by default
               sdcv
               (aspellWithDicts (ds: with ds; [ en en-computers en-science ]))
@@ -127,26 +127,26 @@
               })
 
               # Jetbrains deps
-              jdk
+              # jdk
 
               # Language deps
-              python39Packages.grip
-              python39Packages.pyflakes
-              python39Packages.isort
-              python39Packages.pytest
+              # python39Packages.grip
+              # python39Packages.pyflakes
+              # python39Packages.isort
+              # python39Packages.pytest
               nodePackages.pyright
-              pipenv
+              # pipenv
               nixfmt
-              black
+              # black
               rust-analyzer
               rust-bin.nightly.latest.default
-              shellcheck
+              # shellcheck
               languagetool
               
               # Terminal utils and rust alternatives :tm:
               uutils-coreutils
               xcp
-              exa
+              # exa
               procs
               tree
               fd

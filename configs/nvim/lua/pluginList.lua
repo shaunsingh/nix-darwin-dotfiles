@@ -41,10 +41,10 @@ return packer.startup(function()
    }
 
    use  {
-      "shaunsingh/nord.nvim",
-      branch = "nvim_api_rewrite",
+      "Clutch-Squad-10669/nord.nvim",
+      --branch = "nvim_api_rewrite",
       config = function()
-        require("nord").setup()
+        require("nord").set()
       end,
    }
 
@@ -63,7 +63,6 @@ return packer.startup(function()
 
    use {
       "NTBBloodbath/galaxyline.nvim",
-      after = "nvim-web-devicons",
       config = function()
          require "plugins.statusline"
       end,
@@ -71,7 +70,6 @@ return packer.startup(function()
 
    use {
       "akinsho/bufferline.nvim",
-      after = "nvim-web-devicons",
       config = function()
          require "plugins.bufferline"
       end,
@@ -79,7 +77,6 @@ return packer.startup(function()
 
    use {
       "lukas-reineke/indent-blankline.nvim",
-      after = "nord.nvim",
       config = function()
          require("plugins.others").blankline()
       end,
@@ -95,7 +92,6 @@ return packer.startup(function()
 
    use {
       "nvim-treesitter/nvim-treesitter",
-      after = "nord.nvim",
       config = function()
          require "plugins.treesitter"
       end,
@@ -113,7 +109,6 @@ return packer.startup(function()
 
    use {
       "lewis6991/gitsigns.nvim",
-      after = "nord.nvim",
    }
 
    use {
@@ -130,9 +125,15 @@ return packer.startup(function()
       event = "InsertEnter",
    }
 
+
+   use { 
+		'dccsillag/magma-nvim', 
+        cmd = { "MagmaInit" },
+		run = ':UpdateRemotePlugins' 
+	}
+
    use {
       "neovim/nvim-lspconfig",
-      after = "nvim-lsp-installer",
       config = function()
          require "plugins.lspconfig"
       end,
@@ -238,14 +239,31 @@ return packer.startup(function()
    use {
      'VonHeikemen/searchbox.nvim',
      requires = {
-       {'MunifTanjim/nui.nvim'}
+        'MunifTanjim/nui.nvim',
      },
      config = function()
         require("plugins.others").searchbox()
      end,
    }
 
-
+	use {'rcarriga/nvim-notify',
+      after = "nord.nvim",
+	  config = function()
+		 vim.notify = require 'notify'
+         require("notify").setup({
+           stages = "slide",
+           timeout = 2500,
+           minimum_width = 50,
+           icons = {
+             ERROR = "",
+             WARN = "",
+             INFO = "",
+             DEBUG = "",
+             TRACE = "✎",
+           },
+         })
+	  end
+	}
 
    use {
       "Pocco81/TrueZen.nvim",
@@ -311,6 +329,15 @@ return packer.startup(function()
          require "plugins.neorg"
       end,
    }
+
+    use {'nvim-orgmode/orgmode',
+       --ft = "org",
+       --setup = vim.cmd("autocmd BufRead,BufNewFile *.org setlocal filetype=org"),
+       after = {"nvim-treesitter"},  
+       config = function()
+          require('orgmode').setup{}
+       end
+    }
 
    use {
       "nvim-neorg/neorg-telescope",

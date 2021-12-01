@@ -19,10 +19,21 @@ M.colorizer = function()
 end
 
 M.fineCmdline = function()
-   local fineCmdline = pcall(require, "fine-cmdline")
-   if fineCmdline then
+   local present, fineCmdline = pcall(require, "fine-cmdline")
+   if present then
       --remap ex-commands to floating windows
       vim.api.nvim_set_keymap("n", ":", ':lua require("fine-cmdline").open()<CR>', { noremap = true })
+      fineCmdline.setup({
+         cmdline = {
+            smart_history = true
+         },
+         popup = {
+            border = {
+               style = 'rounded',
+               highlight = 'TelescopeResultsBorder',
+            },
+         },
+      })
    end
 end
 

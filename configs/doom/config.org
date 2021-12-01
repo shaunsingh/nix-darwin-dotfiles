@@ -348,7 +348,7 @@ I reckon enabling half the modules Doom provides should do it.
 doom                         ; what makes DOOM look the way it does
 doom-dashboard               ; a nifty splash screen for Emacs
 doom-quit                    ; DOOM quit-message prompts when you quit Emacs
-(emoji +unicode)             ; 🙂
+;;(emoji +unicode)           ; 🙂
 ;;fill-column                ; a `fill-column' indicator
 hl-todo                      ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
 ;;hydra                      ; quick documentation for related commands
@@ -364,12 +364,12 @@ ophints                      ; highlight the region an operation acts on
 (popup                       ; tame sudden yet inevitable temporary windows
  +all                        ; catch all popups that start with an asterix
  +defaults)                  ; default popup rules
-(tabs                        ; an tab bar for Emacs
-  +centaur-tabs)             ; ... with prettier tabs
+;;(tabs                      ; an tab bar for Emacs
+;;  +centaur-tabs)           ; ... with prettier tabs
 treemacs                     ; a project drawer, like neotree but cooler
 ;;unicode                    ; extended unicode support for various languages
 vc-gutter                    ; vcs diff in the fringe
-;;vi-tilde-fringe            ; fringe tildes to mark beyond EOB
+vi-tilde-fringe              ; fringe tildes to mark beyond EOB
 ;;(window-select +numbers)   ; visually switch windows
 workspaces                   ; tab emulation, persistence & separate workspaces
 zen                          ; distraction-free coding or writing
@@ -418,11 +418,10 @@ syntax                                         ; tasing you for every semicolon 
 #+name: doom-tools
 #+begin_src emacs-lisp
 ;;ansible                    ; a crucible for infrastructure as code
-;;biblio                     ; Writes a PhD for you (citation needed)
-;;(debugger +lsp)            ; FIXME stepping through code, to help you add bugs
+(debugger +lsp)              ; FIXME stepping through code, to help you add bugs
 ;;direnv                     ; be direct about your environment
 ;;docker                     ; port everything to containers
-editorconfig                 ; let someone else argue about tabs vs spaces
+;;editorconfig               ; let someone else argue about tabs vs spaces
 ;;ein                        ; tame Jupyter notebooks with emacs
 (eval +overlay)              ; run code, run (also, repls)
 ;;gist                       ; interacting with github gists
@@ -430,8 +429,8 @@ editorconfig                 ; let someone else argue about tabs vs spaces
  +dictionary                 ; dictionary/thesaurus is nice
  +docsets)                   ; ...or in Dash docsets locally
 lsp                          ; Language Server Protocol
-magit                        ; a git porcelain for Emacs
-;; +forge)                   ; interface with git forges
+(magit                       ; a git porcelain for Emacs
+ +forge)                    ; interface with git forges
 ;;make                       ; run make tasks from Emacs
 ;;pass                       ; password manager for nerds
 pdf                          ; pdf enhancements
@@ -487,7 +486,7 @@ emacs-lisp                   ; drown in parentheses
 ;;(julia +lsp)               ; Python, R, and MATLAB in a blender
 ;;(kotlin +lsp)              ; a better, slicker Java(Script)
 (latex                       ; writing papers in Emacs has never been so fun
-;; +fold                     ; fold the clutter away nicities
+ +fold                       ; fold the clutter away nicities
  +latexmk                    ; modern latex plz
  +cdlatex                    ; quick maths symbols
  +lsp)
@@ -549,8 +548,8 @@ I couldn't resist the Email and Feed modules.
 ;;calendar                   ; A dated approach to timetabling
 ;;emms                       ; Multimedia in Emacs is music to my ears
 ;;everywhere                 ; *leave* Emacs!? You must be joking.
-irc                          ; how neckbeards socialize
-(rss +org)                   ; emacs as an RSS reader
+;;irc                        ; how neckbeards socialize
+;;(rss +org)                 ; emacs as an RSS reader
 ;;twitter                    ; twitter client https://twitter.com/vnought
 #+end_src
 
@@ -594,16 +593,16 @@ was written in org! It makes sense that the majority of my packages are for
 tweaking org then
 #+name: org
 #+begin_src emacs-lisp
-(package! org-appear)
 (package! doct)
+(package! citar)
+(package! citeproc)
+(package! org-appear)
 (package! org-roam-ui)
 (package! org-pandoc-import ;https://github.com/melpa/melpa/pull/7326
   :recipe (:host github
            :repo "tecosaur/org-pandoc-import"
            :files ("*.el" "filters" "preprocessors")))
 ;; org cite additions
-(package! citar)
-(package! citeproc)
 (package! org-cite-csl-activate :recipe (:host github :repo "andras-simonyi/org-cite-csl-activate"))
 #+end_src
 
@@ -612,9 +611,9 @@ When I'm not working in org, I'm probably exporting it to latex. Lets adjust
 that a bit too
 #+name: latex
 #+begin_src emacs-lisp
-(package! org-fragtog)
 (package! aas)
 (package! laas)
+(package! org-fragtog)
 (package! engrave-faces)
 #+end_src
 
@@ -651,8 +650,8 @@ screenshot capabilities are nice, and using the same dictionaries accross
 #+name: emacs
 #+begin_src emacs-lisp
 (package! lexic)
-(package! magit-delta)
 (package! pdf-tools)
+(package! magit-delta)
 (package! screenshot :recipe (:host github :repo "Jimmysit0/screenshot")) ;https://github.com/melpa/melpa/pull/7327
 #+end_src
 
@@ -1300,6 +1299,10 @@ The defaults for emacs aren't so good nowadays. Lets fix that up a bit
 (global-subword-mode 1) ;;navigate through Camel Case words
 (tool-bar-mode +1) ;;re-enable the toolbar
 (global-so-long-mode -1) ;;i almost never want this on
+
+;; emacs29 fixes
+(general-auto-unbind-keys :off)
+(remove-hook 'doom-after-init-modules-hook #'general-auto-unbind-keys)
 #+end_src
 
 There's issues with emacs flickering on mac (and sometimes wayland). This should
@@ -1419,10 +1422,10 @@ Since I use an apple silicon mac, I prefer if nix handles compiling the parsers 
 Doom modeline already looks good, but it can be better. Lets add some icons, the battery status, and make sure we don't lose track of time
 #+begin_src elisp
 (after! doom-modeline
-  (setq evil-normal-state-tag "λ"
-        evil-insert-state-tag ""
-        evil-visual-state-tag "麗"
-        evil-motion-state-tag ""
+  (setq evil-normal-state-tag "<λ>"
+        evil-insert-state-tag "<I>"
+        evil-visual-state-tag "<V>"
+        evil-motion-state-tag "<M>"
         evil-emacs-state-tag "<EMACS>")
 
   (setq doom-modeline-modal-icon nil
@@ -1436,7 +1439,7 @@ Doom modeline already looks good, but it can be better. Lets add some icons, the
   (custom-set-faces!
     '(doom-modeline-evil-insert-state :inherit doom-modeline-urgent)
     '(doom-modeline-evil-visual-state :inherit doom-modeline-warning)
-    '(doom-modeline-evil-normal-state :inherit doom-modeline-buffer-path)
+    '(doom-modeline-evil-normal-state :inherit doom-modeline-buffer-path))
 
   (setq doom-modeline-enable-word-count t))          ;Show word count
 #+end_src
@@ -1482,7 +1485,10 @@ I also like to have icons with my tabs.
   (custom-set-faces!
     `(tab-line :background ,(doom-color 'base1) :foreground ,(doom-color 'base1))
     `(centaur-tabs-default :background ,(doom-color 'base1) :foreground ,(doom-color 'base1))
+    `(centaur-tabs-active-bar-face :background ,(doom-color 'base1) :foreground ,(doom-color 'base1))
+    `(centaur-tabs-unselected-modified :background ,(doom-color 'base1) :foreground ,(doom-color 'fg))
     `(centaur-tabs-unselected :background ,(doom-color 'base1) :foreground ,(doom-color 'base4))
+    `(centaur-tabs-selected-modified :background ,(doom-color 'bg) :foreground ,(doom-color 'fg))
     `(centaur-tabs-selected :background ,(doom-color 'bg) :foreground ,(doom-color 'blue)))
 
   (add-hook 'window-configuration-change-hook 'centaur-tabs-hide-on-window-change))
@@ -3298,9 +3304,7 @@ Sprinkle in some =doct= utility functions
   (setq org-cite-global-bibliography
         (let ((paths (or citar-bibliography
                          (bound-and-true-p bibtex-completion-bibliography))))
-          ;; Always return bibliography paths as list for org-cite.
           (if (stringp paths) (list paths) paths)))
-  ;; setup export processor; default csl/citeproc-el, with biblatex for latex
   (setq org-cite-export-processors
         '((t csl))))
 
@@ -3326,13 +3330,13 @@ Sprinkle in some =doct= utility functions
   (org-support-shift-select t)
   (citar-bibliography '("~/org/references.bib"))
   (when (featurep! :lang org +roam2)
-    ;; Include property drawer metadata for 'org-roam' v2.
     (citar-org-note-include '(org-id org-roam-ref)))
   ;; Personal extras
-  (setq citar-symbols
-        `((file ,(all-the-icons-faicon "file-o" :v-adjust -0.1) . " ")
-          (note ,(all-the-icons-material "speaker_notes" :face 'all-the-icons-silver :v-adjust -0.3) . " ")
-          (link ,(all-the-icons-octicon "link" :face 'all-the-icons-dsilver :v-adjust 0.01) . " "))))
+  (setq citar-symbol-separator "  "
+   citar-symbols
+        `((file ,(all-the-icons-faicon "file-o" :face 'all-the-icons-green :v-adjust -0.1) . " ")
+          (note ,(all-the-icons-material "speaker_notes" :face 'all-the-icons-blue :v-adjust -0.3) . " ")
+          (link ,(all-the-icons-octicon "link" :face 'all-the-icons-orange :v-adjust 0.01) . " "))))
 
 (use-package! oc-csl-activate
   :after oc
@@ -3355,7 +3359,6 @@ Sprinkle in some =doct= utility functions
 #+end_src
 
 ** Org-Plot
-
 You can't ever have too many graphs! Lets make it look prettier, and tell it to use the doom theme colors
 #+begin_src elisp
 (after! org-plot
@@ -4290,8 +4293,6 @@ non-monospace and SFMono for code
         ("dvipsnames" "xcolor" nil)
         ("colorlinks=true, linkcolor=Blue, citecolor=BrickRed, urlcolor=PineGreen" "hyperref" nil)
     ("" "indentfirst" nil)))
-    ;; "\\setmainfont[Ligatures=TeX]{Alegreya}"
-    ;; "\\setmonofont[Ligatures=TeX]{Liga SFMono Nerd Font}"))
 #+end_src
 
 *** Pretty code blocks

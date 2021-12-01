@@ -2,22 +2,22 @@
 ;;; $DOOMDIR/packages.el
 
 ;;org
-(package! org-appear)
 (package! doct)
+(package! citar)
+(package! citeproc)
+(package! org-appear)
 (package! org-roam-ui)
 (package! org-pandoc-import ;https://github.com/melpa/melpa/pull/7326
   :recipe (:host github
            :repo "tecosaur/org-pandoc-import"
            :files ("*.el" "filters" "preprocessors")))
 ;; org cite additions
-(package! citar)
-(package! citeproc)
 (package! org-cite-csl-activate :recipe (:host github :repo "andras-simonyi/org-cite-csl-activate"))
 
 ;;latex
-(package! org-fragtog)
 (package! aas)
 (package! laas)
+(package! org-fragtog)
 (package! engrave-faces)
 
 ;;markdown and html
@@ -39,8 +39,8 @@
 
 ;;emacs additions
 (package! lexic)
-(package! magit-delta)
 (package! pdf-tools)
+(package! magit-delta)
 (package! screenshot :recipe (:host github :repo "Jimmysit0/screenshot")) ;https://github.com/melpa/melpa/pull/7327
 
 ;;lsp

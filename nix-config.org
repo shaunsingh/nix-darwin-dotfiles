@@ -116,39 +116,39 @@ I won't delve too much into why I choose nix in the end (as I've covered it befo
 *NOTE: These are available as an executable script [[./extra/install.sh]]*
 
 Install Nix. I have it setup for multi-user, but you can remove the =--daemon= if you want a single user install
-    #+begin_src sh :comments both :tangle "./extra/install.sh" :shebang "#!/bin/bash"
+    #+BEGIN_SRC bash :comments both :tangle "./extra/install.sh" :shebang "#!/bin/bash"
     sh <(curl -L https://nixos.org/nix/install) --daemon
-    #+end_src
+    #+END_SRC
 Launch an ephemeral shell with git, nixUnstable, and Emacs
-    #+begin_src sh :comments both :tangle "./extra/install.sh" :shebang "#!/bin/bash"
+    #+BEGIN_SRC bash :comments both :tangle "./extra/install.sh" :shebang "#!/bin/bash"
     nix-shell -p nixUnstable git emacs
-    #+end_src
+    #+END_SRC
 Tangle the =.org= files (not needed, but recommend in case I forgot to update tangled files)
-    #+begin_src sh :comments both :tangle "./extra/install.sh" :shebang "#!/bin/bash"
+    #+BEGIN_SRC bash :comments both :tangle "./extra/install.sh" :shebang "#!/bin/bash"
     git clone --depth 1 https://github.com/shaunsingh/nix-darwin-dotfiles.git ~/nix-darwin-dotfiles/ && cd nix-darwin-dotfiles
     emacs --batch --eval "(progn (require 'org) (setq org-confirm-babel-evaluate nil) (org-babel-tangle-file \"~/nix-darwin-dotfiles/nix-config.org\"))"
     emacs --batch --eval "(progn (require 'org) (setq org-confirm-babel-evaluate nil) (org-babel-tangle-file \"~/nix-darwin-dotfiles/configs/doom/config.org\"))"
-    #+end_src
+    #+END_SRC
 	(if emacs asks you for comment syntax, put `# ` for everything)
 Build, and switch to the dotfiles
-    #+begin_src sh :comments both :tangle "./extra/install.sh" :shebang "#!/bin/bash"
+    #+BEGIN_SRC bash :comments both :tangle "./extra/install.sh" :shebang "#!/bin/bash"
     nix build ~/nix-darwin-dotfiles\#darwinConfigurations.shaunsingh-laptop.system --extra-experimental-features nix-command --extra-experimental-features flakes
     ./result/sw/bin/darwin-rebuild switch --flake .#shaunsingh-laptop
-    #+end_src
+    #+END_SRC
 (note, =--extra-experimental-features= is only needed the first time around. After that the configuration will edit =/etc/nix/nix.conf= to enable flakes and nix-command by default)
 Symlinking with nix (and managing doom with =nix-doom-emacs=) is very finicky, so for now we need to manually symlink them
-    #+begin_src sh :comments both :tangle "./extra/install.sh" :shebang "#!/bin/bash"
+    #+BEGIN_SRC bash :comments both :tangle "./extra/install.sh" :shebang "#!/bin/bash"
     ln -s ~/nix-darwin-dotfiles/configs/doom/ ~/.config/doom
-    #+end_src
+    #+END_SRC
 Install doom emacs
-    #+begin_src sh :comments both :tangle "./extra/install.sh" :shebang "#!/bin/bash"
+    #+BEGIN_SRC bash :comments both :tangle "./extra/install.sh" :shebang "#!/bin/bash"
     git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.config/emacs
     ~/.config/emacs/bin/doom install
-    #+end_src
+    #+END_SRC
 
 ** Using Nix unstable OOTB
 If you want to use nix unstable out of of the box then you can use the following script
-#+begin_src sh :comments both :tangle "./extra/nix-install.sh" :shebang "#!/bin/bash"
+#+BEGIN_SRC bash :comments both :tangle "./extra/nix-install.sh" :shebang "#!/bin/bash"
 RELEASE="nix-2.5pre20211019_4a2b7cc"
 URL="https://github.com/numtide/nix-unstable-installer/releases/download/$RELEASE/install"
 
@@ -164,12 +164,12 @@ if command -v nix > /dev/null; then
 else
     bash <(curl -L $URL) --daemon $FLAG
 fi
-#+end_src
+#+END_SRC
 
 ** Additional Configuration
 *** Emacs
 If you want to use [[https://github.com/emacs-ng/emacs-ng][Emacs-NG]], use the following build options
-#+begin_src sh 
+#+BEGIN_SRC bash 
   git clone --depth 1 https://github.com/emacs-ng/emacs-ng.git
   cd emacs-ng
   ./autogen.sh
@@ -183,12 +183,12 @@ If you want to use [[https://github.com/emacs-ng/emacs-ng][Emacs-NG]], use the f
               --with-all
   make -j$(($(nproc) * 2)) NATIVE_FULL_AOT=1
   make install-strip
-#+end_src
+#+END_SRC
 
 If you want to update the doom configuration, you can run
-#+begin_src sh
+#+BEGIN_SRC bash
 doom upgrade
-#+end_src
+#+END_SRC
 
 If you modify your shell configuration, please do run =doom env= to regenerate env vars
 
@@ -212,12 +212,12 @@ I also recommend installing [[https://github.com/Kethku/neovide][Neovide]]
 
 *** .gitignore
 Some files shouldn't be here!
-#+begin_src :comments none :tangle ".gitignore"
+#+BEGIN_SRC :comments none :tangle ".gitignore"
 .DS_store
 result
 configs/nvim/init.vim
 configs/nvim/lua/packer_compiled.lua
-#+end_src
+#+END_SRC
 
 * Flakes
 ** Why Flakes
@@ -237,20 +237,20 @@ When you clone this flake and install it, your system should theoretically be th
 When you install this config, there are 3 useful commands you need to know
 
 - Updating the flake. This will update the =flake.lock= lockfile to the latest commit of nixpkgs, emacs-overlay, etc
-#+begin_src sh
+#+BEGIN_SRC bash
 nix flake update
-#+end_src
+#+END_SRC
 
 - Building and Installing the flake. This will first build and download everything you need, then =rebuild= your machine, so it "installs"
-#+begin_src sh
+#+BEGIN_SRC bash
 nix build ~/nix-darwin-dotfiles\#darwinConfigurations.shaunsingh-laptop.system --extra-experimental-features nix-command --extra-experimental-features flakes
     ./result/sw/bin/darwin-rebuild switch --flake .#shaunsingh-laptop
-#+end_src
+#+END_SRC
 
 - Testing the flake. If you have any errors when you play around with this config, then this will let you know what went wrong.
-#+begin_src sh
+#+BEGIN_SRC bash
 nix flake check
-#+end_src
+#+END_SRC
 
 The =flake.nix= below does the following:
 1. Add a binary cache for =nix-community= overlays
@@ -264,7 +264,7 @@ The =flake.nix= below does the following:
 9. Configure =nix= to enable =flakes= and =nix-command= by default, and add =x86-64-darwin= as a platform (to install packages through rosetta)
 10. Install my packages and config dependencies
 11. Install the required fonts
-#+begin_src nix :comments both :tangle "flake.nix"
+#+BEGIN_SRC nix :comments both :tangle "flake.nix"
 {
   description = "Shaurya's Nix Environment";
 
@@ -280,7 +280,7 @@ The =flake.nix= below does the following:
 
   inputs = {
     # All packages should follow latest nixpkgs
-    unstable.url = "github:nixos/nixpkgs/master";
+    unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     nur.url = "github:nix-community/NUR";
     darwin = {
       url = "github:LnL7/nix-darwin/master";
@@ -361,7 +361,6 @@ The =flake.nix= below does the following:
               ## make sure ripgrep supports pcre2 (for vertico)
               (ripgrep.override { withPCRE2 = true; })
               sqlite
-              zstd
               ## Required for plots but not installed by default
               gnuplot
               pandoc
@@ -377,27 +376,27 @@ The =flake.nix= below does the following:
                   transparent hanging;
               })
 
-              # Jetbrains deps
+              # Language Deps
+              ## Build Tools
               jdk
+              clang_13
+              luajit
+              rust-bin.nightly.latest.default
 
-              # Language deps
-              python39Packages.grip
-              python39Packages.pyflakes
-              python39Packages.isort
-              python39Packages.pytest
+              ## Language Servers
               nodePackages.pyright
-              pipenv
+              rust-analyzer
+              languagetool
+
+              ## Formatting
               nixfmt
               black
-              rust-analyzer
-              rust-bin.nightly.latest.default
               shellcheck
-              languagetool
-              
+
               # Terminal utils and rust alternatives :tm:
               uutils-coreutils
               xcp
-              exa
+              lsd
               procs
               tree
               fd
@@ -405,6 +404,7 @@ The =flake.nix= below does the following:
               bottom
               discocss
               # eww
+
             ];
             fonts = {
               enableFontDir = true;
@@ -421,18 +421,18 @@ The =flake.nix= below does the following:
       };
     };
 }
-#+end_src
+#+END_SRC
 
 * Modules
 ** Home.nix
 Home Manager allows you to use Nix’s declarative approach to manage your user-level configuration and packages. It works on any *nix system supported by Nix, including MacOS.
-#+begin_src nix :comments both :tangle "./modules/home.nix"
+#+BEGIN_SRC nix :comments both :tangle "./modules/home.nix"
 { pkgs, lib, config, home-manager, nix-darwin, inputs, ... }: {
-#+end_src
+#+END_SRC
 
 *** Hooks
 Ignore this, just some post-installation stuff here and there
-#+begin_src nix :comments both :tangle "./modules/home.nix"
+#+BEGIN_SRC nix :comments both :tangle "./modules/home.nix"
    system.activationScripts.postUserActivation.text = ''
      emacs --batch --eval "(progn (require 'org) (setq org-confirm-babel-evaluate nil) (org-babel-tangle-file \"nix-config.org\"))"
      emacs --batch --eval "(progn (require 'org) (setq org-confirm-babel-evaluate nil) (org-babel-tangle-file \"configs/doom/config.org\"))"
@@ -442,7 +442,7 @@ Ignore this, just some post-installation stuff here and there
        ~/.config/emacs/bin/doom install
      fi
    '';
-#+end_src
+#+END_SRC
 
 *** Doom-emacs
 Nix via doom-emacs is very, /very/ annoying. Initially I was using [[https://github.com/vlaci/nix-doom-emacs][Nix-doom-emacs]]. However, this has a few drawbacks
@@ -451,18 +451,18 @@ Nix via doom-emacs is very, /very/ annoying. Initially I was using [[https://git
 3. It just ends up breaking anyways.
 
 A simpler solution is just to have nix clone =doom-emacs= to =~/.config/emacs=, and the user can handle doom manually
-#+begin_src nix :comments both :tangle "./modules/home.nix"
+#+BEGIN_SRC nix :comments both :tangle "./modules/home.nix"
 #   home-manager.users.shauryasingh.home.file = {
 #     "~/.config/doom" = {
 #       recursive = true;
 #       source = ../configs/doom;
 #     };
 #   };
-#+end_src
+#+END_SRC
 
 *** Git
 As opposed to what the xcode CLT provides, I want lfs enabled with git, and use =delta= instead of the default diff tool (rust alternatives go brr). MacOS is also quite annoying with its =.DS_Store='s everywhere, so lets ignore that
-#+begin_src nix :comments both :tangle "./modules/home.nix"
+#+BEGIN_SRC nix :comments both :tangle "./modules/home.nix"
   home-manager.users.shauryasingh.programs.git = {
     enable = true;
     userName = "shaunsingh";
@@ -499,11 +499,11 @@ As opposed to what the xcode CLT provides, I want lfs enabled with git, and use 
     };
     ignores = [ ".dir-locals.el" ".envrc" ".DS_Store" ];
   };
-#+end_src
+#+END_SRC
 
 *** IdeaVim
 Intellij Idea ships with a very nice Vim emulation plugin. This is configured via a vimrc-like file (=~/.ideavimrc=). Since it doesn't have proper support in home-manger, we can just generate a file and symlink it into place
-#+begin_src nix :comments both :tangle "./modules/home.nix"
+#+BEGIN_SRC nix :comments both :tangle "./modules/home.nix"
   home-manager.users.shauryasingh.home.file = {
     ".ideavimrc".text = ''
       " settings
@@ -554,11 +554,11 @@ Intellij Idea ships with a very nice Vim emulation plugin. This is configured vi
 
       nmap <leader>E :action Tool_External Tools_emacsclient<cr>
     '';
-#+end_src
+#+END_SRC
 
 *** Discocss
 [[https://github.com/mlvzk/discocss][Discocss]] is a way to inject custom CSS into discord. Similar to ideavim, it doesn't have proper support but we can generate a file for =~/.config/discocss/custom.css=
-#+begin_src nix :comments both :tangle "./modules/home.nix"
+#+BEGIN_SRC nix :comments both :tangle "./modules/home.nix"
     ".config/discocss/custom.css".text = ''
       /*
           Discord Nord
@@ -878,16 +878,16 @@ Intellij Idea ships with a very nice Vim emulation plugin. This is configured vi
                   width: 240px !important;
     '';
   };
-#+end_src
+#+END_SRC
 
 *** Firefox
 Although safari is my main browser, firefox looks very appealing with its excellent privacy and speed
-#+begin_src nix :comments both :tangle "./modules/home.nix"
+#+BEGIN_SRC nix :comments both :tangle "./modules/home.nix"
   home-manager.users.shauryasingh.programs.firefox.enable = true;
-#+end_src
+#+END_SRC
 
 GUI apps are very finicky with nix, and so I create a fake package so that we can still use the configuration from =home-manager= without having to install it via nix. The user can then install firefox manually to =~/Applications=
-#+begin_src nix :comments both :tangle "./modules/home.nix"
+#+BEGIN_SRC nix :comments both :tangle "./modules/home.nix"
   home-manager.users.shauryasingh.programs.firefox.package =
     pkgs.runCommand "firefox-0.0.0" { } "mkdir $out";
   home-manager.users.shauryasingh.programs.firefox.extensions =
@@ -898,10 +898,10 @@ GUI apps are very finicky with nix, and so I create a fake package so that we ca
         reddit-enhancement-suite
         betterttv
       ];
-#+end_src
+#+END_SRC
 
 Now for the configuration. We want firefox to use the css at [[./configs/userChrome.css]], and we want to configure the UI. Lets also enable the (rust powered ftw) webrender/servo renderer.
-#+begin_src nix :comments both :tangle "./modules/home.nix"
+#+BEGIN_SRC nix :comments both :tangle "./modules/home.nix"
   home-manager.users.shauryasingh.programs.firefox.profiles = let
     userChrome = builtins.readFile ../configs/userChrome.css;
     settings = {
@@ -937,10 +937,10 @@ Now for the configuration. We want firefox to use the css at [[./configs/userChr
       id = 0;
     };
   };
-#+end_src
+#+END_SRC
 
 And of course for the css itself
-#+begin_src css :comments both :tangle "./configs/userChrome.css"
+#+BEGIN_SRC css :comments both :tangle "./configs/userChrome.css"
 /*
  *  Hide window controls
  */
@@ -1156,11 +1156,11 @@ And of course for the css itself
 
 /* Fix customization view */
 #customization-panelWrapper > .panel-arrowbox > .panel-arrow{ margin-inline-end: initial !important; }
-#+end_src
+#+END_SRC
 
 *** Alacritty
 Alacritty is my terminal emulator of choice. Similar to firefox, we want to create a fake package, and then configure it as normal
-#+begin_src nix :comments both :tangle "./modules/home.nix"
+#+BEGIN_SRC nix :comments both :tangle "./modules/home.nix"
   home-manager.users.shauryasingh.programs.alacritty = {
     enable = true;
     # We need to give it a dummy package
@@ -1212,11 +1212,11 @@ Alacritty is my terminal emulator of choice. Similar to firefox, we want to crea
       };
     };
   };
-#+end_src
+#+END_SRC
 
 *** Kitty
 I no longer use kitty (its quite slow to start and has too many features I don't need), but I keep the config around just in case
-#+begin_src nix :comments both :tangle "./modules/home.nix"
+#+BEGIN_SRC nix :comments both :tangle "./modules/home.nix"
   # home-manager.users.shauryasingh.programs.kitty = {
   #   enable = true;
   #   package = builtins.path {
@@ -1262,31 +1262,31 @@ I no longer use kitty (its quite slow to start and has too many features I don't
   #     color15              =   "#B48EAD";
   #   };
   # };
-#+end_src
+#+END_SRC
 
 *** Fish
 I like to use the fish shell. Although it isn't POSIX, it has the best autocompletion and highlighting I've seen.
-#+begin_src nix :comments both :tangle "./modules/home.nix"
+#+BEGIN_SRC nix :comments both :tangle "./modules/home.nix"
   programs.fish.enable = true;
   environment.shells = with pkgs; [ fish ];
   users.users.shauryasingh = {
     home = "/Users/shauryasingh";
     shell = pkgs.fish;
   };
-#+end_src
+#+END_SRC
 
 **** Settings fish as default
 On macOS nix doesn't set the fish shell to the main shell by default (like it does on NixOS), so lets do that manually
-#+begin_src nix :comments both :tangle "./modules/home.nix"
+#+BEGIN_SRC nix :comments both :tangle "./modules/home.nix"
   system.activationScripts.postActivation.text = ''
     # Set the default shell as fish for the user
     sudo chsh -s ${lib.getBin pkgs.fish}/bin/fish shauryasingh
   '';
-#+end_src
+#+END_SRC
 
 **** Aliases
 I also like to alias common commands with other, better rust alternatives :tm:
-#+begin_src nix :comments both :tangle "./modules/home.nix"
+#+BEGIN_SRC nix :comments both :tangle "./modules/home.nix"
   programs.fish.shellAliases = with pkgs; {
     ":q" = "exit";
     vi = "emacsclient -c";
@@ -1305,11 +1305,11 @@ I also like to alias common commands with other, better rust alternatives :tm:
       "/Applications/Neovide.app/Contents/MacOS/neovide --frameless --multigrid";
     nix-fish = "nix-shell --command fish";
   };
-#+end_src
+#+END_SRC
 
 **** Prompt
 I like to make my prompt look pretty (along with some =nix-shell= and =git= integration)
-#+begin_src nix :comments both :tangle "./modules/home.nix"
+#+BEGIN_SRC nix :comments both :tangle "./modules/home.nix"
   programs.fish.promptInit = ''
 
     set -g fish_greeting ""
@@ -1405,11 +1405,11 @@ I like to make my prompt look pretty (along with some =nix-shell= and =git= inte
 
     end
   '';
-#+end_src
+#+END_SRC
 
 **** Init
 I also want to disable the default greeting, and use tmux with fish. Lets also set =nvim= as the default editor, and add emacs to my path
-#+begin_src nix :comments both :tangle "./modules/home.nix"
+#+BEGIN_SRC nix :comments both :tangle "./modules/home.nix"
   programs.fish.interactiveShellInit = ''
     set -g fish_greeting ""
     if not set -q TMUX
@@ -1421,11 +1421,11 @@ I also want to disable the default greeting, and use tmux with fish. Lets also s
     set -x EDITOR "nvim"
     set -x PATH ~/.config/emacs/bin $PATH
   '';
-#+end_src
+#+END_SRC
 
 *** Neovim
 Lastly, I didn't feel like nix-ifying my neovim lua config. Lets cheat a bit and just symlink it instead
-#+begin_src nix :comments both :tangle "./modules/home.nix"
+#+BEGIN_SRC nix :comments both :tangle "./modules/home.nix"
   home-manager.users.shauryasingh.programs.neovim = {
     enable = true;
     package = pkgs.neovim-nightly;
@@ -1444,27 +1444,27 @@ Lastly, I didn't feel like nix-ifying my neovim lua config. Lets cheat a bit and
       ''
     ];
   };
-#+end_src
+#+END_SRC
 
 *** Bat
 Bat is another rust alternative :tm: to cat, and provides syntax highlighting. Lets theme it to match nord
-#+begin_src nix :comments both :tangle "./modules/home.nix"
+#+BEGIN_SRC nix :comments both :tangle "./modules/home.nix"
   home-manager.users.shauryasingh.programs.bat = {
     enable = true;
     config = { theme = "Nord"; };
   };
-#+end_src
+#+END_SRC
 
 *** Tmux
 Lastly, lets make tmux look just as pretty as our prompt, and enable truecolor support.
-#+begin_src nix :comments both :tangle "./modules/home.nix"
+#+BEGIN_SRC nix :comments both :tangle "./modules/home.nix"
   programs.tmux.enable = true;
   programs.tmux.extraConfig = ''
     # make sure fish works in tmux
-    set -g  default-terminal   "xterm-256color"
-    set -sa terminal-overrides ',xterm-256color:RGB'
+    set -g default-terminal "screen-256color"
     # so that escapes register immidiately in vim
     set -sg escape-time 1
+    set -g focus-events on
     # mouse support
     set -g mouse on
     # change prefix to C-a
@@ -1495,19 +1495,19 @@ Lastly, lets make tmux look just as pretty as our prompt, and enable truecolor s
     set -g window-status-format "#[fg=magenta]#[fg=black]#[bg=magenta]#I #[bg=brightblack]#[fg=white] #W#[fg=brightblack]#[bg=default] "
   '';
 }
-#+end_src
+#+END_SRC
 
 ** Mac.nix
 There are mac-specific tweaks I need to do. In the future if I switch to nixOS full-time, then I wuold likely need to remove the mac-specific packages. An easy way to do this is just keep them in a seperate file:
-#+begin_src nix :comments both :tangle "./modules/mac.nix"
+#+BEGIN_SRC nix :comments both :tangle "./modules/mac.nix"
 { pkgs, lib, spacebar, ... }: {
-#+end_src
+#+END_SRC
 
 *** Yabai
 Yabai is my tiling WM of choice. As this is an m1 (=aarch64-darwin=) laptop, I use the =the-future= branch, which enables the SA addon on m1 machines and monterey support
 
 Now to configure the package via nix
-#+begin_src nix :comments both :tangle "./modules/mac.nix"
+#+BEGIN_SRC nix :comments both :tangle "./modules/mac.nix"
   services.yabai = {
     enable = false;
     enableScriptingAddition = false;
@@ -1539,11 +1539,11 @@ Now to configure the package via nix
       window_gap = 18;
     };
   };
-#+end_src
+#+END_SRC
 
 *** Spacebar
 Spacebar is my bar of choice on macOS. Its lighter than any web-based ubersicht bar, and looks nice
-#+begin_src nix :comments both :tangle "./modules/mac.nix"
+#+BEGIN_SRC nix :comments both :tangle "./modules/mac.nix"
   services.spacebar = {
     enable = true;
     package = pkgs.spacebar;
@@ -1574,11 +1574,11 @@ Spacebar is my bar of choice on macOS. Its lighter than any web-based ubersicht 
       right_shell_command = "whoami";
     };
   };
-#+end_src
+#+END_SRC
 
 *** SKHD
 Skhd is the hotkey daemon for yabai. As yabai is disabled, it makes sense to disable skhd too for the time being
-#+begin_src nix :comments both :tangle "./modules/mac.nix"
+#+BEGIN_SRC nix :comments both :tangle "./modules/mac.nix"
   services.skhd = {
     enable = false;
     package = pkgs.skhd;
@@ -1614,11 +1614,11 @@ Skhd is the hotkey daemon for yabai. As yabai is disabled, it makes sense to dis
         yabai -m window --toggle pip
     '';
   };
-#+end_src
+#+END_SRC
 
 *** Homebrew
 GUI apps with Nix are finicky at best. As much as I would like to fully give up homebrew, its very annoying having to re-install GUI apps on new systems
-#+begin_src nix :comments both :tangle "./modules/mac.nix"
+#+BEGIN_SRC nix :comments both :tangle "./modules/mac.nix"
 homebrew = {
     brewPrefix = "/opt/homebrew/bin";
     enable = true;
@@ -1649,23 +1649,23 @@ homebrew = {
     ];
 
   };
-#+end_src
+#+END_SRC
 
 *** Hammerspoon
 Yabai breaks very, /very/ often and amethyst just isn't my cup of tea. Lets use hammerspoon to configure some of our system and implement our own tiling wm. I've implemented this elsewhere. We also need to build the =spaces= dependency from source, since this is an arm64 machine
-#+begin_src nix :comments both :tangle "./modules/mac.nix"
+#+BEGIN_SRC nix :comments both :tangle "./modules/mac.nix"
   system.activationScripts.postUserActivation.text = ''
     sudo cp -r ~/nix-darwin-dotfiles/configs/hammerspoon/ ~/.hammerspoon
     git clone --depth 1 https://github.com/asmagill/hs._asm.undocumented.spaces.git spaces && cd spaces && make install && cd .. && rm -f -r spaces
   '';
-#+end_src
+#+END_SRC
 
 *** MacOS Settings
 I like my hostname to be the same as the flake's target
-#+begin_src nix :comments both :tangle "./modules/mac.nix"
+#+BEGIN_SRC nix :comments both :tangle "./modules/mac.nix"
   networking.hostName = "shaunsingh-laptop";
   system.stateVersion = 4;
-#+end_src
+#+END_SRC
 
 Along with that, lets
 - Increase key repeat rate
@@ -1676,7 +1676,7 @@ Along with that, lets
 - Set macOS to use the dark theme
 - Configure Trackpad and mouse behavior
 - Enable subpixel antialiasing on internal/external displays
-#+begin_src nix :comments both :tangle "./modules/mac.nix"
+#+BEGIN_SRC nix :comments both :tangle "./modules/mac.nix"
   system.keyboard = {
     enableKeyMapping = true;
     remapCapsLockToEscape = true;
@@ -1706,7 +1706,7 @@ Along with that, lets
     };
   };
 }
-#+end_src
+#+END_SRC
 
 ** Pam.nix
 Apple's touchid is an excellent way of authenticating anything quickly and securely. Sadly, =sudo= doesn't support it by default, but its an easy fix. T do this, we edit =/etc/pam.d/sudo= via =sed= to include the relevent code to enable touchid.
@@ -1720,7 +1720,7 @@ Apple's touchid is an excellent way of authenticating anything quickly and secur
  added line that includes the name of the option, to make it easier to identify the line that
  should be deleted when the option is disabled.
 
-#+begin_src nix :comments both :tangle "./modules/pam.nix"
+#+BEGIN_SRC nix :comments both :tangle "./modules/pam.nix"
 { config, lib, pkgs, ... }:
 
 with lib;
@@ -1767,7 +1767,7 @@ in {
     '';
   };
 }
-#+end_src
+#+END_SRC
 
 * Editors
 ** Emacs
@@ -1833,10 +1833,6 @@ Wallpapers are in =./extra/wallpapers/=
 Some of my favorites:
 
 [[attachment:_20211108_193854queen_chess.png]]
-
-
 [[attachment:_20211108_193915portal.png]]
-
 [[attachment:_20211108_193918Nord Minimal - D8DEE9.png]]
-
 [[attachment:_20211108_193920nixos.png]]

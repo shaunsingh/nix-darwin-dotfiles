@@ -5,11 +5,20 @@ end
 
 local parser_configs = require("nvim-treesitter.parsers").get_parser_configs()
 parser_configs.norg = {
+   -- on macOS: https://github.com/nvim-neorg/neorg/issues/74#issuecomment-906627223
    install_info = {
       url = "https://github.com/nvim-neorg/tree-sitter-norg",
       files = { "src/parser.c", "src/scanner.cc" },
       branch = "main",
    },
+}
+parser_configs.org = {
+  install_info = {
+    url = 'https://github.com/milisims/tree-sitter-org',
+    revision = 'main',
+    files = {'src/parser.c', 'src/scanner.cc'},
+  },
+  filetype = 'org',
 }
 
 ts_config.setup {
@@ -18,6 +27,7 @@ ts_config.setup {
    highlight = {
       enable = true,
       use_languagetree = true,
+      additional_vim_regex_highlighting = {'org'},
    },
    rainbow = {
       enable = true,

@@ -22,6 +22,7 @@ cmp.setup {
             Path = "Path",
             luasnip = "LuaSnip",
             neorg = "Neorg",
+            orgmode = "Org",
             treesitter = "ts",
          })[entry.source.name]
          vim_item.kind = ({
@@ -91,5 +92,6 @@ cmp.setup {
       { name = "nvim_lua" },
       { name = "neorg" },
       { name = "treesitter" },
+	  { name = "orgmode" },
    },
 }

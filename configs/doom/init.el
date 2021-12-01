@@ -18,7 +18,7 @@
        doom                         ; what makes DOOM look the way it does
        doom-dashboard               ; a nifty splash screen for Emacs
        doom-quit                    ; DOOM quit-message prompts when you quit Emacs
-       (emoji +unicode)             ; 🙂
+       ;;(emoji +unicode)           ; 🙂
        ;;fill-column                ; a `fill-column' indicator
        hl-todo                      ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
        ;;hydra                      ; quick documentation for related commands
@@ -34,12 +34,12 @@
        (popup                       ; tame sudden yet inevitable temporary windows
         +all                        ; catch all popups that start with an asterix
         +defaults)                  ; default popup rules
-       (tabs                        ; an tab bar for Emacs
-         +centaur-tabs)             ; ... with prettier tabs
+       ;;(tabs                      ; an tab bar for Emacs
+       ;;  +centaur-tabs)           ; ... with prettier tabs
        treemacs                     ; a project drawer, like neotree but cooler
        ;;unicode                    ; extended unicode support for various languages
        vc-gutter                    ; vcs diff in the fringe
-       ;;vi-tilde-fringe            ; fringe tildes to mark beyond EOB
+       vi-tilde-fringe              ; fringe tildes to mark beyond EOB
        ;;(window-select +numbers)   ; visually switch windows
        workspaces                   ; tab emulation, persistence & separate workspaces
        zen                          ; distraction-free coding or writing
@@ -78,11 +78,10 @@
 
        :tools
        ;;ansible                    ; a crucible for infrastructure as code
-       ;;biblio                     ; Writes a PhD for you (citation needed)
-       ;;(debugger +lsp)            ; FIXME stepping through code, to help you add bugs
+       (debugger +lsp)              ; FIXME stepping through code, to help you add bugs
        ;;direnv                     ; be direct about your environment
        ;;docker                     ; port everything to containers
-       editorconfig                 ; let someone else argue about tabs vs spaces
+       ;;editorconfig               ; let someone else argue about tabs vs spaces
        ;;ein                        ; tame Jupyter notebooks with emacs
        (eval +overlay)              ; run code, run (also, repls)
        ;;gist                       ; interacting with github gists
@@ -90,8 +89,8 @@
         +dictionary                 ; dictionary/thesaurus is nice
         +docsets)                   ; ...or in Dash docsets locally
        lsp                          ; Language Server Protocol
-       magit                        ; a git porcelain for Emacs
-       ;; +forge)                   ; interface with git forges
+       (magit                       ; a git porcelain for Emacs
+        +forge)                    ; interface with git forges
        ;;make                       ; run make tasks from Emacs
        ;;pass                       ; password manager for nerds
        pdf                          ; pdf enhancements
@@ -138,7 +137,7 @@
        ;;(julia +lsp)               ; Python, R, and MATLAB in a blender
        ;;(kotlin +lsp)              ; a better, slicker Java(Script)
        (latex                       ; writing papers in Emacs has never been so fun
-       ;; +fold                     ; fold the clutter away nicities
+        +fold                       ; fold the clutter away nicities
         +latexmk                    ; modern latex plz
         +cdlatex                    ; quick maths symbols
         +lsp)
@@ -193,8 +192,8 @@
        ;;calendar                   ; A dated approach to timetabling
        ;;emms                       ; Multimedia in Emacs is music to my ears
        ;;everywhere                 ; *leave* Emacs!? You must be joking.
-       irc                          ; how neckbeards socialize
-       (rss +org)                   ; emacs as an RSS reader
+       ;;irc                        ; how neckbeards socialize
+       ;;(rss +org)                 ; emacs as an RSS reader
        ;;twitter                    ; twitter client https://twitter.com/vnought
 
        :config

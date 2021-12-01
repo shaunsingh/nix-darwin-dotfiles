@@ -33,9 +33,9 @@ return packer.init {
    compile_path = vim.fn.stdpath "config" .. "/lua/packer_compiled.lua",
    display = {
       open_fn = function()
-         return require("packer.util").float { border = "single" }
+         return require("packer.util").float { border = "rounded" }
       end,
-      prompt_border = "single",
+      prompt_border = "rounded",
    },
    git = {
       clone_timeout = 600, -- Timeout, in seconds, for git clones
