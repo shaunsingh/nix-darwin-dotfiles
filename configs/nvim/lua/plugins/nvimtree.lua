@@ -6,7 +6,7 @@ end
 
 vim.o.termguicolors = true
 
--- vim.cmd [[highlight NvimTreeNormal guifg=#D8DEE9  guibg=#2a2e39]]
+vim.cmd [[highlight NvimTreeNormal guifg=#D8DEE9  guibg=#2a2e39]]
 
 vim.g.nvim_tree_add_trailing = 0 -- append a trailing slash to folder names
 vim.g.nvim_tree_highlight_opened_files = 0
@@ -33,11 +33,10 @@ vim.g.nvim_tree_icons = {
       untracked = "★",
    },
    folder = {
-      -- disable indent_markers option to get arrows working or if you want both arrows and indent then just add the arrow icons in front            ofthe default and opened folders below!
-      -- arrow_open = "",
-      -- arrow_closed = "",
+      arrow_open = "",
+      arrow_closed = "",
       default = "",
-      empty = "", -- 
+      empty = "",
       empty_open = "",
       open = "",
       symlink = "",

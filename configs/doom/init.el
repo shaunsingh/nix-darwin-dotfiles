@@ -78,6 +78,7 @@
 
        :tools
        ;;ansible                    ; a crucible for infrastructure as code
+       biblio                       ; Writes a PhD for you (citation needed)
        (debugger +lsp)              ; FIXME stepping through code, to help you add bugs
        ;;direnv                     ; be direct about your environment
        ;;docker                     ; port everything to containers
@@ -90,7 +91,7 @@
         +docsets)                   ; ...or in Dash docsets locally
        lsp                          ; Language Server Protocol
        (magit                       ; a git porcelain for Emacs
-        +forge)                    ; interface with git forges
+        +forge)                     ; interface with git forges
        ;;make                       ; run make tasks from Emacs
        ;;pass                       ; password manager for nerds
        pdf                          ; pdf enhancements
@@ -187,6 +188,7 @@
        (:if (executable-find "mu") (mu4e +org +gmail))
        ;;notmuch
        ;;(wanderlust +gmail)
+
 
        :app
        ;;calendar                   ; A dated approach to timetabling

@@ -9,11 +9,8 @@ end
 
 vim.g.mapleader = " " --leader
 map("n", ";", ":") --semicolon to enter command mode
-map("n", "j", "gj") --move by visual line not actual line
-map("n", "k", "gk")
 map("n", "<leader>ww", "<cmd>HopWord<CR>") --easymotion/hop
 map("n", "<leader>l", "<cmd>HopLine<CR>")
-map("n", "<leader>/", "<cmd>HopPattern<CR>")
 map("n", "<leader>fr", "<cmd>Telescope oldfiles<CR>") --fuzzy
 map("n", "<leader>.", "<cmd>Telescope find_files<CR>")
 map("n", "<leader>f", "<cmd>Telescope current_buffer_fuzzy_find<CR>")

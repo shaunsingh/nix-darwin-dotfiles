@@ -244,6 +244,7 @@ have flags applied to tweak their behaviour.
        :email
        <<doom-email>>
 
+
        :app
        <<doom-app>>
 
@@ -418,6 +419,7 @@ syntax                                         ; tasing you for every semicolon 
 #+name: doom-tools
 #+begin_src emacs-lisp
 ;;ansible                    ; a crucible for infrastructure as code
+biblio                       ; Writes a PhD for you (citation needed)
 (debugger +lsp)              ; FIXME stepping through code, to help you add bugs
 ;;direnv                     ; be direct about your environment
 ;;docker                     ; port everything to containers
@@ -430,7 +432,7 @@ syntax                                         ; tasing you for every semicolon 
  +docsets)                   ; ...or in Dash docsets locally
 lsp                          ; Language Server Protocol
 (magit                       ; a git porcelain for Emacs
- +forge)                    ; interface with git forges
+ +forge)                     ; interface with git forges
 ;;make                       ; run make tasks from Emacs
 ;;pass                       ; password manager for nerds
 pdf                          ; pdf enhancements
@@ -594,16 +596,12 @@ tweaking org then
 #+name: org
 #+begin_src emacs-lisp
 (package! doct)
-(package! citar)
-(package! citeproc)
 (package! org-appear)
 (package! org-roam-ui)
 (package! org-pandoc-import ;https://github.com/melpa/melpa/pull/7326
   :recipe (:host github
            :repo "tecosaur/org-pandoc-import"
            :files ("*.el" "filters" "preprocessors")))
-;; org cite additions
-(package! org-cite-csl-activate :recipe (:host github :repo "andras-simonyi/org-cite-csl-activate"))
 #+end_src
 
 **** \LaTeX:
@@ -3280,82 +3278,6 @@ Sprinkle in some =doct= utility functions
                            :keyword "%U"
                            :file +org-capture-project-notes-file)))
               )))
-#+end_src
-
-** Org-Cite
-#+begin_src elisp
-(use-package! citar
-  :when (featurep! :completion vertico)
-  :after org)
-
-(use-package! citeproc
-  :defer t)
-
-;;; Org-Cite configuration
-(map! :after org
-      :map org-mode-map
-      :localleader
-      :desc "Insert citation" "@" #'org-cite-insert)
-
-(use-package! oc
-  :after citar
-  :config
-  (require 'ox)
-  (setq org-cite-global-bibliography
-        (let ((paths (or citar-bibliography
-                         (bound-and-true-p bibtex-completion-bibliography))))
-          (if (stringp paths) (list paths) paths)))
-  (setq org-cite-export-processors
-        '((t csl))))
-
-;;; Org-cite processors
-(use-package! oc-biblatex
-  :after oc)
-
-(use-package! oc-csl
-  :after oc
-  :config
-  (setq org-cite-csl-styles-dir "~/.config/bib/styles"))
-
-(use-package! oc-natbib
-  :after oc)
-
-;;;; Third-party
-(use-package! citar-org
-  :no-require
-  :custom
-  (org-cite-insert-processor 'citar)
-  (org-cite-follow-processor 'citar)
-  (org-cite-activate-processor 'citar)
-  (org-support-shift-select t)
-  (citar-bibliography '("~/org/references.bib"))
-  (when (featurep! :lang org +roam2)
-    (citar-org-note-include '(org-id org-roam-ref)))
-  ;; Personal extras
-  (setq citar-symbol-separator "  "
-   citar-symbols
-        `((file ,(all-the-icons-faicon "file-o" :face 'all-the-icons-green :v-adjust -0.1) . " ")
-          (note ,(all-the-icons-material "speaker_notes" :face 'all-the-icons-blue :v-adjust -0.3) . " ")
-          (link ,(all-the-icons-octicon "link" :face 'all-the-icons-orange :v-adjust 0.01) . " "))))
-
-(use-package! oc-csl-activate
-  :after oc
-  :config
-  (setq org-cite-csl-activate-use-document-style t)
-  (defun +org-cite-csl-activate/enable ()
-    (interactive)
-    (setq org-cite-activate-processor 'csl-activate)
-    (add-hook! 'org-mode-hook '((lambda () (cursor-sensor-mode 1)) org-cite-csl-activate-render-all))
-    (defadvice! +org-cite-csl-activate-render-all-silent (orig-fn)
-      :around #'org-cite-csl-activate-render-all
-      (with-silent-modifications (funcall orig-fn)))
-    (when (eq major-mode 'org-mode)
-      (with-silent-modifications
-        (save-excursion
-          (goto-char (point-min))
-          (org-cite-activate (point-max)))
-        (org-cite-csl-activate-render-all)))
-    (fmakunbound #'+org-cite-csl-activate/enable)))
 #+end_src
 
 ** Org-Plot

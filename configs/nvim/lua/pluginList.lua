@@ -62,7 +62,7 @@ return packer.startup(function()
    }
 
    use {
-      "NTBBloodbath/galaxyline.nvim",
+      "beauwilliams/statusline.lua",
       config = function()
          require "plugins.statusline"
       end,
@@ -332,8 +332,8 @@ return packer.startup(function()
 
    use {
       "nvim-orgmode/orgmode",
-      --ft = "org",
-      --setup = vim.cmd("autocmd BufRead,BufNewFile *.org setlocal filetype=org"),
+      ft = "org",
+      setup = vim.cmd("autocmd BufRead,BufNewFile *.org setlocal filetype=org"),
       after = { "nvim-treesitter" },
       config = function()
          require("orgmode").setup {}

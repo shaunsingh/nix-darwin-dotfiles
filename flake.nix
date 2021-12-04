@@ -29,7 +29,7 @@
 
   inputs = {
     # All packages should follow latest nixpkgs
-    unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    unstable.url = "github:nixos/nixpkgs/master";
     nur.url = "github:nix-community/NUR";
     darwin = {
       url = "github:LnL7/nix-darwin/master";
@@ -95,7 +95,7 @@
               config.allowUnfree = true;
             };
             nix = {
-              package = pkgs.nixUnstable;
+              package = pkgs.nix;
               extraOptions = ''
                 system = aarch64-darwin
                 extra-platforms = aarch64-darwin x86_64-darwin
@@ -110,12 +110,11 @@
               ## make sure ripgrep supports pcre2 (for vertico)
               (ripgrep.override { withPCRE2 = true; })
               sqlite
-              # zstd
               ## Required for plots but not installed by default
               gnuplot
               # pandoc
               ## Required for dictionaries but not installed by default
-              sdcv
+              # sdcv
               (aspellWithDicts (ds: with ds; [ en en-computers en-science ]))
               (texlive.combine {
                 inherit (texlive)
@@ -123,30 +122,29 @@
                   collectbox amsmath siunitx cancel mathalpha capt-of chemfig
                   wrapfig mhchem fvextra cleveref latexmk tcolorbox environ arev
                   amsfonts simplekv alegreya sourcecodepro newpx svg catchfile
-                  transparent hanging;
+                  transparent hanging biblatex biblatex-mla;
               })
 
-              # Jetbrains deps
-              # jdk
-
-              # Language deps
-              # python39Packages.grip
-              # python39Packages.pyflakes
-              # python39Packages.isort
-              # python39Packages.pytest
-              nodePackages.pyright
-              # pipenv
-              nixfmt
-              # black
-              rust-analyzer
+              # Language Deps
+              ## Build Tools
+              jdk
+              luajit
               rust-bin.nightly.latest.default
-              # shellcheck
+
+              ## Language Servers
+              nodePackages.pyright
+              rust-analyzer
               languagetool
-              
+
+              ## Formatting
+              nixfmt
+              black
+              shellcheck
+
               # Terminal utils and rust alternatives :tm:
               uutils-coreutils
               xcp
-              # exa
+              lsd
               procs
               tree
               fd
@@ -154,6 +152,7 @@
               bottom
               discocss
               # eww
+
             ];
             fonts = {
               enableFontDir = true;

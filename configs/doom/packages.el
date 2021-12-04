@@ -3,16 +3,12 @@
 
 ;;org
 (package! doct)
-(package! citar)
-(package! citeproc)
 (package! org-appear)
 (package! org-roam-ui)
 (package! org-pandoc-import ;https://github.com/melpa/melpa/pull/7326
   :recipe (:host github
            :repo "tecosaur/org-pandoc-import"
            :files ("*.el" "filters" "preprocessors")))
-;; org cite additions
-(package! org-cite-csl-activate :recipe (:host github :repo "andras-simonyi/org-cite-csl-activate"))
 
 ;;latex
 (package! aas)
