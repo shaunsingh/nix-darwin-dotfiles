@@ -1,0 +1,4 @@
+.DS_store
+result
+configs/nvim/init.vim
+configs/nvim/lua/packer_compiled.lua

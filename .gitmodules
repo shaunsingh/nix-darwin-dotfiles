@@ -1,0 +1,3 @@
+[submodule "configs/nyoom.nvim"]
+	path = configs/nyoom.nvim
+	url = https://github.com/shaunsingh/nyoom.nvim.git

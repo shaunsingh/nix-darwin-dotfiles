@@ -58,7 +58,6 @@
       url = "github:oxalica/rust-overlay";
       inputs.nixpkgs.follows = "unstable";
     };
-
     nixpkgs-s2k = {
       url = "github:shaunsingh/nixpkgs-s2k";
       inputs.nixpkgs.follows = "unstable";
@@ -109,6 +108,7 @@
                 (epkgs: [ epkgs.vterm ]))
               ## make sure ripgrep supports pcre2 (for vertico)
               (ripgrep.override { withPCRE2 = true; })
+
               sqlite
               ## Required for plots but not installed by default
               gnuplot

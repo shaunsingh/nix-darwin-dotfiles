@@ -78,7 +78,7 @@
 
        :tools
        ;;ansible                    ; a crucible for infrastructure as code
-       biblio                       ; Writes a PhD for you (citation needed)
+       ;;biblio                     ; Writes a PhD for you (citation needed)
        (debugger +lsp)              ; FIXME stepping through code, to help you add bugs
        ;;direnv                     ; be direct about your environment
        ;;docker                     ; port everything to containers

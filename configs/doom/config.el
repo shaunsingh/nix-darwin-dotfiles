@@ -235,34 +235,34 @@ A key's value is a LaTeX snippet which loads such a font."))
 
 ;; nil
 
-(setq doom-theme 'doom-vibrant)
+(setq doom-theme 'modus-vivendi)
 (setq doom-fw-padded-modeline t)
 (setq doom-one-light-padded-modeline t)
 (setq doom-nord-padded-modeline t)
 (setq doom-vibrant-padded-modeline t)
 
-;; (use-package modus-themes
-;;   :init
-;;   ;; Add all your customizations prior to loading the themes
-;;   (setq modus-themes-italic-constructs t
-;;         modus-themes-completions 'opinionated
-;;         modus-themes-variable-pitch-headings t
-;;         modus-themes-scale-headings t
-;;         modus-themes-variable-pitch-ui nil
-;;         modus-themes-org-agenda
-;;         '((header-block . (variable-pitch scale-title))
-;;           (header-date . (grayscale bold-all)))
-;;         modus-themes-org-blocks
-;;         '(grayscale)
-;;         modus-themes-mode-line
-;;         '(borderless)
-;;         modus-themes-region '(bg-only no-extend))
+(use-package modus-themes
+  :init
+  ;; Add all your customizations prior to loading the themes
+  (setq modus-themes-italic-constructs t
+        modus-themes-completions 'opinionated
+        modus-themes-variable-pitch-headings t
+        modus-themes-scale-headings t
+        modus-themes-variable-pitch-ui nil
+        modus-themes-org-agenda
+        '((header-block . (variable-pitch scale-title))
+          (header-date . (grayscale bold-all)))
+        modus-themes-org-blocks
+        '(grayscale)
+        modus-themes-mode-line
+        '(borderless)
+        modus-themes-region '(bg-only no-extend))
 
-;;   ;; Load the theme files before enabling a theme
-;;   (modus-themes-load-themes)
-;;   :config
-;;   (modus-themes-load-vivendi)
-;;  :bind ("<f5>" . modus-themes-toggle))
+  ;; Load the theme files before enabling a theme
+  (modus-themes-load-themes)
+  :config
+  (modus-themes-load-vivendi)
+  :bind ("<f5>" . modus-themes-toggle))
 
 (after! company
    (setq company-idle-delay 0.1
@@ -1992,6 +1992,93 @@ MathJax = {
 
 (setq org-agenda-files (list "~/org/school.org"
                              "~/org/todo.org"))
+
+(use-package! citar
+  :when (featurep! :completion vertico)
+  :no-require
+  :config
+  (setq org-cite-insert-processor 'citar
+        org-cite-follow-processor 'citar
+        org-cite-activate-processor 'citar
+        citar-bibliography '("~/org/references.bib"))
+  (when (featurep! :lang org +roam2)
+    ;; Include property drawer metadata for 'org-roam' v2.
+    (setq citar-file-note-org-include '(org-id org-roam-ref))))
+
+(use-package! citar
+  :when (featurep! :completion vertico)
+  :after org)
+
+(use-package! citeproc
+  :defer t)
+
+;;; Org-Cite configuration
+(map! :after org
+      :map org-mode-map
+      :localleader
+      :desc "Insert citation" "@" #'org-cite-insert)
+
+(use-package! oc
+  :after citar
+  :config
+  (require 'ox)
+  (setq org-cite-global-bibliography
+        (let ((paths (or citar-bibliography
+                         (bound-and-true-p bibtex-completion-bibliography))))
+          ;; Always return bibliography paths as list for org-cite.
+          (if (stringp paths) (list paths) paths)))
+  ;; setup export processor; default csl/citeproc-el, with biblatex for latex
+  (setq org-cite-export-processors
+        '((t csl))))
+
+;;; Org-cite processors
+(use-package! oc-biblatex
+  :after oc)
+
+(use-package! oc-csl
+  :after oc
+  :config
+  (setq org-cite-csl-styles-dir "~/.config/bib/styles"))
+
+(use-package! oc-natbib
+  :after oc)
+
+;;;; Third-party
+(use-package! citar-org
+  :no-require
+  :custom
+  (org-cite-insert-processor 'citar)
+  (org-cite-follow-processor 'citar)
+  (org-cite-activate-processor 'citar)
+  (org-support-shift-select t)
+  (citar-bibliography '("~/org/references.bib"))
+  (when (featurep! :lang org +roam2)
+    ;; Include property drawer metadata for 'org-roam' v2.
+    (citar-org-note-include '(org-id org-roam-ref)))
+  ;; Personal extras
+  (setq citar-symbols
+        `((file ,(all-the-icons-faicon "file-o" :v-adjust -0.1) . " ")
+          (note ,(all-the-icons-material "speaker_notes" :face 'all-the-icons-silver :v-adjust -0.3) . " ")
+          (link ,(all-the-icons-octicon "link" :face 'all-the-icons-dsilver :v-adjust 0.01) . " "))))
+
+(use-package! oc-csl-activate
+  :after oc
+  :config
+  (setq org-cite-csl-activate-use-document-style t)
+  (defun +org-cite-csl-activate/enable ()
+    (interactive)
+    (setq org-cite-activate-processor 'csl-activate)
+    (add-hook! 'org-mode-hook '((lambda () (cursor-sensor-mode 1)) org-cite-csl-activate-render-all))
+    (defadvice! +org-cite-csl-activate-render-all-silent (orig-fn)
+      :around #'org-cite-csl-activate-render-all
+      (with-silent-modifications (funcall orig-fn)))
+    (when (eq major-mode 'org-mode)
+      (with-silent-modifications
+        (save-excursion
+          (goto-char (point-min))
+          (org-cite-activate (point-max)))
+        (org-cite-csl-activate-render-all)))
+    (fmakunbound #'+org-cite-csl-activate/enable)))
 
 (use-package! doct
   :commands (doct))
