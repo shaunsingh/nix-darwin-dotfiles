@@ -48,7 +48,7 @@ in
         transparent hanging biblatex biblatex-mla;
     })
     emacsSyncScript
-    languagetool
+    # languagetool
     # neovim deps
     neovim-nightly
     tree-sitter
@@ -56,19 +56,15 @@ in
     nodejs
     tree-sitter
   ];
-  system.activationScripts.postUserActivation.text = ''
-    $HOME/.config/emacs/bin/doom sync || true
-    YES=1 FORCE=1 $HOME/.config/emacs/bin/doom sync -u &
-  '';
 # Doom-emacs:1 ends here
 
 # Neovim
 # Lastly, I didn't feel like nix-ifying my neovim lua config. Lets cheat a bit and just symlink it instead
 
 # [[file:../nix-config.org::*Neovim][Neovim:1]]
-home-manager.users.shauryasingh.xdg.configFile."nvim/init.lua".source = ../configs/nyoom.nvim/init.lua;  
+  # home-manager.users.shauryasingh.xdg.configFile."nvim/init.lua".source = "../configs/nyoom.nvim/init.lua";  
   # fzf-native
-  home-manager.users.shauryasingh.xdg.dataFile."nvim/site/pack/packer/start/telescope-fzf-native.nvim/build/libfzf.so".source = "${pkgs.telescope-fzf-native}/build/libfzf.so";
+  home-manager.users.shauryasingh.xdg.dataFile."nvim/site/pack/packer/start/telescope-fzf-native.nvim/build/libfzf.so".source = "${pkgs.vimPlugins.telescope-fzf-native-nvim}/build/libfzf.so";
   # tree-sitter parsers
   home-manager.users.shauryasingh.xdg.configFile."nvim/parser/lua.so".source = "${pkgs.tree-sitter.builtGrammars.tree-sitter-lua}/parser";
   home-manager.users.shauryasingh.xdg.configFile."nvim/parser/nix.so".source = "${pkgs.tree-sitter.builtGrammars.tree-sitter-nix}/parser";
