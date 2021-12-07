@@ -1,3 +1,12 @@
 [submodule "configs/nyoom.nvim"]
 	path = configs/nyoom.nvim
 	url = https://github.com/shaunsingh/nyoom.nvim.git
+[submodule "configs/Nyoom.emacs"]
+	path = configs/Nyoom.emacs
+	url = https://github.com/shaunsingh/Nyoom.emacs.git
+[submodule "configs/--force"]
+	path = configs/--force
+	url = https://github.com/shaunsingh/nyoom.emacs.git
+[submodule "configs/nyoom.emacs"]
+	path = configs/nyoom.emacs
+	url = https://github.com/shaunsingh/nyoom.emacs.git

@@ -1,6 +1,0 @@
-# -*- mode: snippet -*-
-# name: Header arg - session
-# key: S
-# condition: (+yas/org-src-header-p)
-# --
-:session "${1:`(file-name-base (or (buffer-file-name) "unnnamed"))`-session}" $0

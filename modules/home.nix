@@ -5,23 +5,6 @@
 { pkgs, lib, config, home-manager, nix-darwin, inputs, ... }: {
 # Home.nix:1 ends here
 
-# Doom-emacs
-# Nix via doom-emacs is very, /very/ annoying. Initially I was using [[https://github.com/vlaci/nix-doom-emacs][Nix-doom-emacs]]. However, this has a few drawbacks
-# 1. It doesn't support straight =:recipe=, so all packages must be from melpa or elpa
-# 2. It pins the version of doom, so you need to update doom and its dependencies painstakingly manually
-# 3. It just ends up breaking anyways.
-
-# A simpler solution is just to have nix clone =doom-emacs= to =~/.config/emacs=, and the user can handle doom manually
-
-# [[file:../nix-config.org::*Doom-emacs][Doom-emacs:1]]
-#   home-manager.users.shauryasingh.home.file = {
-#     "~/.config/doom" = {
-#       recursive = true;
-#       source = ../configs/doom;
-#     };
-#   };
-# Doom-emacs:1 ends here
-
 # Git
 # As opposed to what the xcode CLT provides, I want lfs enabled with git, and use =delta= instead of the default diff tool (rust alternatives go brr). MacOS is also quite annoying with its =.DS_Store='s everywhere, so lets ignore that
 
@@ -782,30 +765,6 @@ programs.fish.interactiveShellInit = ''
   set -x PATH ~/.config/emacs/bin $PATH
 '';
 # Init:1 ends here
-
-# Neovim
-# Lastly, I didn't feel like nix-ifying my neovim lua config. Lets cheat a bit and just symlink it instead
-
-# [[file:../nix-config.org::*Neovim][Neovim:1]]
-home-manager.users.shauryasingh.programs.neovim = {
-  enable = true;
-  package = pkgs.neovim-nightly;
-  vimAlias = true;
-  extraPackages = with pkgs; [
-      tree-sitter
-      # neovide-git
-      nodejs
-      tree-sitter
-  ];
-  extraConfig = builtins.concatStringsSep "\n" [
-    ''
-      lua << EOF
-      ${lib.strings.fileContents ../configs/nvim/nix.lua}
-      EOF
-    ''
-  ];
-};
-# Neovim:1 ends here
 
 # Bat
 # Bat is another rust alternative :tm: to cat, and provides syntax highlighting. Lets theme it to match nord

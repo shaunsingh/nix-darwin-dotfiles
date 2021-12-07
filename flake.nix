@@ -14,23 +14,34 @@
 # 11. Install the required fonts
 
 # [[file:nix-config.org::*Notes on using the flake][Notes on using the flake:4]]
+# The =flake.nix= below does the following:
+# 1. Add a binary cache for =nix-community= overlays
+# 2. Add inputs (=nixpkgs-master=, =nix-darwin=, =home-manager,= and =spacebar=)
+# 3. Add overlays to get the latest versions of =neovim= (nightly) and =emacs= (emacs29)
+# 4. Create a nix-darwin configuration for my hostname
+# 5. Source the [[./modules/mac.nix][mac]], [[./modules/home.nix][home]], and [[./modules/pam.nix][pam]] modules
+# 6. Configure home-manager and the nix-daemon
+# 7. Enable the use of touch-id for sudo authentication
+# 8. Configure =nixpkgs= to use the overlays above, and allow unfree packages
+# 9. Configure =nix= to enable =flakes= and =nix-command= by default, and add =x86-64-darwin= as a platform (to install packages through rosetta)
+# 10. Install my packages and config dependencies
+# 11. Install the required fonts
+
+# [[file:nix-config.org::*Notes on using the flake][Notes on using the flake:4]]
 {
   description = "Shaurya's Nix Environment";
 
-  nixConfig = {
-    # Add binary cache for neovim-nightly/emacsGcc
-    extra-substituters =
-      [ "https://cachix.cachix.org" "https://nix-community.cachix.org" ];
-    extra-trusted-public-keys = [
-      "cachix.cachix.org-1:eWNHQldwUO7G2VkjpnjDbWwy4KQ/HNxht7H4SSoMckM="
-      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-    ];
-  };
+  nixConfig.extra-substituters = "https://nix-community.cachix.org";
+  nixConfig.extra-trusted-public-keys = "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=";
 
   inputs = {
     # All packages should follow latest nixpkgs
     unstable.url = "github:nixos/nixpkgs/master";
     nur.url = "github:nix-community/NUR";
+
+    doom-emacs.url = "github:hlissner/doom-emacs/develop";
+    doom-emacs.flake = false;
+
     darwin = {
       url = "github:LnL7/nix-darwin/master";
       inputs.nixpkgs.follows = "unstable";
@@ -50,7 +61,7 @@
       inputs.nixpkgs.follows = "unstable";
     };
     emacs = {
-      url = "github:shaunsingh/emacs";
+      url = "github:nix-community/emacs-overlay";
       inputs.nixpkgs.follows = "unstable";
     };
     # overlays
@@ -64,7 +75,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, nixpkgs-s2k, darwin, home-manager, ...
+  outputs = { self, nixpkgs, nixpkgs-s2k, darwin, home-manager, doom-emacs, ...
     }@inputs: {
       darwinConfigurations."shaunsingh-laptop" = darwin.lib.darwinSystem {
         system = "aarch64-darwin";
@@ -73,6 +84,7 @@
           ./modules/mac.nix
           ./modules/home.nix
           ./modules/pam.nix
+          ./modules/editors.nix
           home-manager.darwinModule
           {
             home-manager = {
@@ -90,6 +102,7 @@
                 neovim.overlay
                 emacs.overlay
                 rust-overlay.overlay
+                (final: prev: { doomEmacsRevision = doom-emacs.rev; })
               ];
               config.allowUnfree = true;
             };
@@ -103,40 +116,16 @@
               '';
             };
             environment.systemPackages = with pkgs; [
-              # Emacs deps
-              ((emacsPackagesNgGen emacs).emacsWithPackages
-                (epkgs: [ epkgs.vterm ]))
-              ## make sure ripgrep supports pcre2 (for vertico)
-              (ripgrep.override { withPCRE2 = true; })
-
-              sqlite
-              ## Required for plots but not installed by default
-              gnuplot
-              # pandoc
-              ## Required for dictionaries but not installed by default
-              # sdcv
-              (aspellWithDicts (ds: with ds; [ en en-computers en-science ]))
-              (texlive.combine {
-                inherit (texlive)
-                  scheme-small dvipng dvisvgm l3packages xcolor soul adjustbox
-                  collectbox amsmath siunitx cancel mathalpha capt-of chemfig
-                  wrapfig mhchem fvextra cleveref latexmk tcolorbox environ arev
-                  amsfonts simplekv alegreya sourcecodepro newpx svg catchfile
-                  transparent hanging biblatex biblatex-mla;
-              })
-
-              # Language Deps
-              ## Build Tools
-              jdk
-              luajit
+              # Build Tools
+              # jdk
+              # luajit
               rust-bin.nightly.latest.default
 
-              ## Language Servers
+              # Language Servers
               nodePackages.pyright
               rust-analyzer
-              languagetool
 
-              ## Formatting
+              # Formatting
               nixfmt
               black
               shellcheck
@@ -147,12 +136,10 @@
               lsd
               procs
               tree
-              fd
               zoxide
               bottom
               discocss
               # eww
-
             ];
             fonts = {
               enableFontDir = true;
@@ -169,4 +156,5 @@
       };
     };
 }
+# Notes on using the flake:4 ends here
 # Notes on using the flake:4 ends here
