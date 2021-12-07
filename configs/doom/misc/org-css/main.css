@@ -76,22 +76,22 @@ summary {
 
 /*! end normalise.css */
 #page {
-  --accent: #3B4252;
-  --accent-dark: #88C0D0;
-  --code-foreground: #D8DEE9;
-  --code-background: #3B4252;
-  --code-func: #81A1C1;
-  --code-const: #B48EAD;
-  --code-regex: #A3BE8C;
-  --back-white: #434C5E;
-  --back-light: #2E3440;
-  --back-medium: #4C566A;
-  --text-light: #88C0D0;
-  --text-gray: #616E88;
-  --text-medium: #81A1C1;
-  --text-dark: #E5E9F0;
+  --accent: #2a2e38;
+  --accent-dark: #51afef;
+  --code-foreground: #bbc2cf;
+  --code-background: #484854;
+  --code-func: #51afef;
+  --code-const: #C57BDB;
+  --code-regex: #7bc275;
+  --back-white: #DDDDDD;
+  --back-light: #242730;
+  --back-medium: #62686E;
+  --text-light: #51afef;
+  --text-gray: #62686E;
+  --text-medium: #FCCE7B;
+  --text-dark: #bbc2cf;
   --switch-icon: "🔆";
-  --switch-shadow-color: #EBCB8B;
+  --switch-shadow-color: #FCCE7B;
   --switch-text: "light mode?"; }
 
 #theme-switch:checked ~ #page {
@@ -403,8 +403,8 @@ blockquote {
     text-transform: none; }
 
 div.info {
-  background: rgba(136, 192, 208, 0.15);
-  border-left: 4px solid rgba(136, 192, 208, 0.45);
+  background: rgba(81, 175, 239, 0.15);
+  border-left: 4px solid rgba(81, 175, 239, 0.45);
   margin: 1.8rem 0 1.25rem 15px;
   padding: 0.8em;
   line-height: 1.4;
@@ -417,7 +417,7 @@ div.info {
 div.info::before {
   content: "i";
   color: var(--back-white);
-  background: rgba(136, 192, 208, 0.8);
+  background: rgba(81, 175, 239, 0.8);
   align-items: flex-end;
   top: -1rem;
   font-weight: 700;
@@ -465,8 +465,8 @@ div.success::before {
   text-align: center; }
 
 div.warning {
-  background: rgba(235, 203, 139, 0.15);
-  border-left: 4px solid rgba(235, 203, 139, 0.45);
+  background: rgba(252, 206, 123, 0.15);
+  border-left: 4px solid rgba(252, 206, 123, 0.45);
   margin: 1.8rem 0 1.25rem 15px;
   padding: 0.8em;
   line-height: 1.4;
@@ -479,7 +479,7 @@ div.warning {
 div.warning::before {
   content: "!";
   color: var(--back-white);
-  background: rgba(235, 203, 139, 0.8);
+  background: rgba(252, 206, 123, 0.8);
   align-items: flex-end;
   top: -1rem;
   font-weight: 700;
@@ -496,8 +496,8 @@ div.warning::before {
   text-align: center; }
 
 div.error {
-  background: rgba(191, 97, 106, 0.15);
-  border-left: 4px solid rgba(191, 97, 106, 0.45);
+  background: rgba(255, 102, 92, 0.15);
+  border-left: 4px solid rgba(255, 102, 92, 0.45);
   margin: 1.8rem 0 1.25rem 15px;
   padding: 0.8em;
   line-height: 1.4;
@@ -510,7 +510,7 @@ div.error {
 div.error::before {
   content: "!";
   color: var(--back-white);
-  background: rgba(191, 97, 106, 0.8);
+  background: rgba(255, 102, 92, 0.8);
   align-items: flex-end;
   top: -1rem;
   font-weight: 700;
@@ -671,10 +671,10 @@ li p + details.code {
   color: var(--code-foreground); }
   .example .org-keyword,
   .src .org-keyword {
-    color: #88C0D0; }
+    color: #51afef; }
   .example .org-variable-name,
   .src .org-variable-name {
-    color: #B48EAD; }
+    color: #C57BDB; }
   .example .org-rainbow-delimiters-depth-1,
   .example .org-rainbow-delimiters-depth-2,
   .example .org-rainbow-delimiters-depth-3,
@@ -693,7 +693,7 @@ li p + details.code {
   .src .org-rainbow-delimiters-depth-7,
   .src .org-rainbow-delimiters-depth-8,
   .src .org-rainbow-delimiters-depth-9 {
-    color: #616E88; }
+    color: #62686E; }
   .example .org-string,
   .src .org-string {
     color: #A3BE8C; }
@@ -701,7 +701,7 @@ li p + details.code {
   .example .org-comment-delimiter,
   .src .org-comment,
   .src .org-comment-delimiter {
-    color: #616E88; }
+    color: #62686E; }
   .example .org-function-name,
   .src .org-function-name {
     color: var(--code-func); }
@@ -1529,12 +1529,12 @@ li.on > .checkbox {
   box-shadow: 0 0 2px #A3BE8C; }
 
 li.trans > .checkbox {
-  background: #EBCB8B;
-  box-shadow: 0 0 2px #EBCB8B; }
+  background: #FCCE7B;
+  box-shadow: 0 0 2px #FCCE7B; }
 
 li.off > .checkbox {
-  background: #BF616A;
-  box-shadow: 0 0 2px #BF616A;
+  background: #FF665C;
+  box-shadow: 0 0 2px #FF665C;
   top: 6px; }
 
 li.on > .checkbox::after {
@@ -1802,13 +1802,13 @@ table {
   height: 8px; }
 
 ::-webkit-scrollbar-track {
-  background: #2E3440; }
+  background: #242730; }
 
 ::-webkit-scrollbar-thumb {
-  background: #4C566A; }
+  background: #484854; }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #434C5E; }
+  background: #2a2e38; }
 
 @media (min-width: 1280px) {
   #table-of-contents {

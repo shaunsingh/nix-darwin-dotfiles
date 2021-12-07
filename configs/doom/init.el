@@ -18,7 +18,7 @@
        doom                         ; what makes DOOM look the way it does
        doom-dashboard               ; a nifty splash screen for Emacs
        doom-quit                    ; DOOM quit-message prompts when you quit Emacs
-       (emoji +unicode)             ; 🙂
+       ;;(emoji +unicode)           ; 🙂
        ;;fill-column                ; a `fill-column' indicator
        hl-todo                      ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
        ;;hydra                      ; quick documentation for related commands
@@ -26,9 +26,9 @@
        (ligatures                   ; ligatures and symbols to make your code pretty again
         +extra)                     ; for those who dislike letters
        minimap                      ; show a map of the code on the side
-       (modeline                    ; snazzy, Atom-inspired modeline, plus API
-        +light)                     ; the doom modeline is a bit much, the default is a bit little
-       ;;nav-flash                  ; blink the current line after jumping
+       modeline                     ; snazzy, Atom-inspired modeline, plus API
+       ;; +light)                   ; the doom modeline is a bit much, the default is a bit little
+       nav-flash                    ; blink the current line after jumping
        ;;neotree                    ; a project drawer, like NERDTree for vim
        ophints                      ; highlight the region an operation acts on
        (popup                       ; tame sudden yet inevitable temporary windows
@@ -39,7 +39,7 @@
        treemacs                     ; a project drawer, like neotree but cooler
        ;;unicode                    ; extended unicode support for various languages
        vc-gutter                    ; vcs diff in the fringe
-       ;;vi-tilde-fringe            ; fringe tildes to mark beyond EOB
+       vi-tilde-fringe              ; fringe tildes to mark beyond EOB
        ;;(window-select +numbers)   ; visually switch windows
        workspaces                   ; tab emulation, persistence & separate workspaces
        zen                          ; distraction-free coding or writing
@@ -72,17 +72,17 @@
        vterm                        ; the best terminal emulation in Emacs
 
        :checkers
-       syntax                       ; tasing you for every semicolon you forget
-       (:if (executable-find "aspell") spell) ; tasing you for misspelling mispelling
-       ;;grammar                    ; tasing grammar mistake every you make
+       syntax                                         ; tasing you for every semicolon you forget
+       (:if (executable-find "aspell") spell)         ; tasing you for misspelling mispelling
+       (:if (executable-find "languagetool") grammar) ; tasing grammar mistake every you make
 
        :tools
        ;;ansible                    ; a crucible for infrastructure as code
        ;;biblio                     ; Writes a PhD for you (citation needed)
-       ;;debugger                   ; FIXME stepping through code, to help you add bugs
+       (debugger +lsp)              ; FIXME stepping through code, to help you add bugs
        ;;direnv                     ; be direct about your environment
        ;;docker                     ; port everything to containers
-       editorconfig                 ; let someone else argue about tabs vs spaces
+       ;;editorconfig               ; let someone else argue about tabs vs spaces
        ;;ein                        ; tame Jupyter notebooks with emacs
        (eval +overlay)              ; run code, run (also, repls)
        ;;gist                       ; interacting with github gists
@@ -90,9 +90,8 @@
         +dictionary                 ; dictionary/thesaurus is nice
         +docsets)                   ; ...or in Dash docsets locally
        lsp                          ; Language Server Protocol
-       ;;(:if IS-MAC macos)         ; MacOS-specific commands
-       magit                        ; a git porcelain for Emacs
-        ;;+forge)                   ; interface with git forges
+       (magit                       ; a git porcelain for Emacs
+        +forge)                     ; interface with git forges
        ;;make                       ; run make tasks from Emacs
        ;;pass                       ; password manager for nerds
        pdf                          ; pdf enhancements
@@ -111,7 +110,7 @@
        :lang
        ;;agda                       ; types of types of types of types...
        ;;beancount                  ; mind the GAAP
-       ;;(cc +lsp)                 ; C/C++/Obj-C madness
+       (cc +lsp)                    ; C/C++/Obj-C madness
        ;;clojure                    ; java with a lisp
        ;;common-lisp                ; if you've seen one lisp, you've seen them all
        ;;coq                        ; proofs-as-programs
@@ -139,7 +138,7 @@
        ;;(julia +lsp)               ; Python, R, and MATLAB in a blender
        ;;(kotlin +lsp)              ; a better, slicker Java(Script)
        (latex                       ; writing papers in Emacs has never been so fun
-       ;; +fold                     ; fold the clutter away nicities
+        +fold                       ; fold the clutter away nicities
         +latexmk                    ; modern latex plz
         +cdlatex                    ; quick maths symbols
         +lsp)
@@ -189,6 +188,7 @@
        (:if (executable-find "mu") (mu4e +org +gmail))
        ;;notmuch
        ;;(wanderlust +gmail)
+
 
        :app
        ;;calendar                   ; A dated approach to timetabling

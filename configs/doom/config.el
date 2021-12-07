@@ -205,64 +205,64 @@ A key's value is a LaTeX snippet which loads such a font."))
         \\TeX}
 \\makeatother\n") t))
 
-(defvar required-fonts '("Overpass" "Liga SFMono Nerd Font" "Alegreya" ))
-(defvar available-fonts
-  (delete-dups (or (font-family-list)
-                   (split-string (shell-command-to-string "fc-list : family")
-                                 "[,\n]"))))
-(defvar missing-fonts
-  (delq nil (mapcar
-             (lambda (font)
-               (unless (delq nil (mapcar (lambda (f)
-                           (string-match-p (format "^%s$" font) f))
-                                         available-fonts))
-                                         font))
-                                         required-fonts)))
-(if missing-fonts
-    (pp-to-string
-     `(unless noninteractive
-        (add-hook! 'doom-init-ui-hook
-          (run-at-time nil nil
-                       (lambda ()
-                         (message "%s missing the following fonts: %s"
-                                  (propertize "Warning!" 'face '(bold warning))
-                                  (mapconcat (lambda (font)
-                                               (propertize font 'face 'font-lock-variable-name-face))
-                                             ',missing-fonts
-                                             ", "))
-                         (sleep-for 0.5))))))
-  ";; No missing fonts detected")
+;; (defvar required-fonts '("Overpass" "Liga SFMono Nerd Font" "Alegreya" ))
+;; (defvar available-fonts
+;;   (delete-dups (or (font-family-list)
+;;                    (split-string (shell-command-to-string "fc-list : family")
+;;                                  "[,\n]"))))
+;; (defvar missing-fonts
+;;   (delq nil (mapcar
+;;              (lambda (font)
+;;                (unless (delq nil (mapcar (lambda (f)
+;;                            (string-match-p (format "^%s$" font) f))
+;;                                          available-fonts))
+;;                                          font))
+;;                                          required-fonts)))
+;; (if missing-fonts
+;;     (pp-to-string
+;;      `(unless noninteractive
+;;         (add-hook! 'doom-init-ui-hook
+;;           (run-at-time nil nil
+;;                        (lambda ()
+;;                          (message "%s missing the following fonts: %s"
+;;                                   (propertize "Warning!" 'face '(bold warning))
+;;                                   (mapconcat (lambda (font)
+;;                                                (propertize font 'face 'font-lock-variable-name-face))
+;;                                              ',missing-fonts
+;;                                              ", "))
+;;                          (sleep-for 0.5))))))
+;;  ";; No missing fonts detected")
 
-;; No missing fonts detected
+;; nil
 
-(setq doom-theme 'doom-one-light)
+(setq doom-theme 'modus-vivendi)
 (setq doom-fw-padded-modeline t)
 (setq doom-one-light-padded-modeline t)
 (setq doom-nord-padded-modeline t)
 (setq doom-vibrant-padded-modeline t)
 
-;; (use-package modus-themes
-;;   :init
-;;   ;; Add all your customizations prior to loading the themes
-;;   (setq modus-themes-italic-constructs t
-;;         modus-themes-completions 'opinionated
-;;         modus-themes-variable-pitch-headings t
-;;         modus-themes-scale-headings t
-;;         modus-themes-variable-pitch-ui nil
-;;         modus-themes-org-agenda
-;;         '((header-block . (variable-pitch scale-title))
-;;           (header-date . (grayscale bold-all)))
-;;         modus-themes-org-blocks
-;;         '(grayscale)
-;;         modus-themes-mode-line
-;;         '(borderless)
-;;         modus-themes-region '(bg-only no-extend))
+(use-package modus-themes
+  :init
+  ;; Add all your customizations prior to loading the themes
+  (setq modus-themes-italic-constructs t
+        modus-themes-completions 'opinionated
+        modus-themes-variable-pitch-headings t
+        modus-themes-scale-headings t
+        modus-themes-variable-pitch-ui nil
+        modus-themes-org-agenda
+        '((header-block . (variable-pitch scale-title))
+          (header-date . (grayscale bold-all)))
+        modus-themes-org-blocks
+        '(grayscale)
+        modus-themes-mode-line
+        '(borderless)
+        modus-themes-region '(bg-only no-extend))
 
-;;   ;; Load the theme files before enabling a theme
-;;   (modus-themes-load-themes)
-;;   :config
-;;   (modus-themes-load-vivendi)
-;;  :bind ("<f5>" . modus-themes-toggle))
+  ;; Load the theme files before enabling a theme
+  (modus-themes-load-themes)
+  :config
+  (modus-themes-load-vivendi)
+  :bind ("<f5>" . modus-themes-toggle))
 
 (after! company
    (setq company-idle-delay 0.1
@@ -440,20 +440,32 @@ Return nil otherwise."
   lsp-rust-analyzer-cargo-watch-command "clippy"
   rustic-format-on-save t))
 
+(use-package rustic
+  :after lsp
+  :config
+  (setq lsp-rust-analyzer-cargo-watch-command "clippy"
+        rustic-lsp-server 'rust-analyzer)
+  (rustic-doc-mode t))
+
 (setq undo-limit 80000000                          ;I mess up too much
       evil-want-fine-undo t                        ;By default while in insert all changes are one big blob. Be more granular
       scroll-margin 2                              ;having a little margin is nice
       auto-save-default t                          ;I dont like to lose work
+      ;; display-line-numbers-type 'relative       ;If I have to use line numbers, at least make them relative
       display-line-numbers-type nil                ;I dislike line numbers
       history-length 25                            ;Slight speedup
       delete-by-moving-to-trash t                  ;delete to system trash instead
-      browse-url-browser-function 'xwidget-webkit-browse-url
+      browser-url-browser-function 'eww-browse-url ; use the builtin eww to browse links
       truncate-string-ellipsis "…")                ;default ellipses suck
 
 (fringe-mode 0) ;;disable fringe
 (global-subword-mode 1) ;;navigate through Camel Case words
-;; (tool-bar-mode +1) ;;re-enable the toolbar
-;; (setq tool-bar-style 'text)
+(tool-bar-mode +1) ;;re-enable the toolbar
+(global-so-long-mode -1) ;;i almost never want this on
+
+;; emacs29 fixes
+(general-auto-unbind-keys :off)
+(remove-hook 'doom-after-init-modules-hook #'general-auto-unbind-keys)
 
 (add-to-list 'default-frame-alist '(inhibit-double-buffering . t))
 
@@ -467,7 +479,9 @@ Return nil otherwise."
   (consult-buffer))
 
 (map! :leader
-      :desc "hop to word" "w w" #'avy-goto-word-0)
+      :desc "hop to word" "w w" #'avy-goto-word-or-subword-1)
+(map! :leader
+      :desc "hop to word" "w W" #'avy-goto-char-2)
 (map! :leader
       :desc "hop to line"
       "l" #'avy-goto-line)
@@ -483,12 +497,6 @@ Return nil otherwise."
 (custom-set-faces!
   `(vertical-border :background ,(doom-color 'bg) :foreground ,(doom-color 'bg)))
 
-(when (boundp 'window-divider-mode)
-  (setq window-divider-default-places nil
-        window-divider-default-bottom-width 0
-        window-divider-default-right-width 0)
-  (window-divider-mode -1))
-
 (remove-hook 'doom-first-buffer-hook #'global-hl-line-mode)
 
 (defadvice! fix-+evil-default-cursor-fn ()
@@ -498,11 +506,6 @@ Return nil otherwise."
   :override #'+evil-emacs-cursor-fn
   (evil-set-cursor-color (face-foreground 'warning)))
 
-(setq minimap-highlight-line nil)
-(custom-set-faces!
-  `(minimap-active-region-background :background unspecified))
-
-;; Make a clean & minimalist frame
 (use-package frame
   :config
   (setq-default default-frame-alist
@@ -512,18 +515,10 @@ Return nil otherwise."
                 '(right-fringe   . 0)
                 '(tool-bar-lines . 0)
                 '(menu-bar-lines . 0)
-                '(line-spacing . 0.35)
+                '(line-spacing . 0.24)
                 '(vertical-scroll-bars . nil))))
   (setq-default window-resize-pixelwise t)
-  (setq-default frame-resize-pixelwise t)
-  :custom
-  (window-divider-default-right-width 24)
-  (window-divider-default-bottom-width 12)
-  (window-divider-default-places 'right-only)
-  (window-divider-mode t))
-
-;; Make sure new frames use window-divider
-(add-hook 'before-make-frame-hook 'window-divider-mode)
+  (setq-default frame-resize-pixelwise t))
 
 (use-package! selectric-mode
   :commands selectric-mode)
@@ -536,18 +531,26 @@ Return nil otherwise."
 ;;   (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
 
 (after! doom-modeline
-  (display-time-mode 1)                              ;Enable time in the mode-line
-  (display-battery-mode 1)                           ;display the battery
-  (setq doom-modeline-enable-word-count t))          ;Show word count
+  (setq evil-normal-state-tag "<λ>"
+        evil-insert-state-tag "<I>"
+        evil-visual-state-tag "<V>"
+        evil-motion-state-tag "<M>"
+        evil-emacs-state-tag "<EMACS>")
 
-(defun doom-modeline-conditional-buffer-encoding ()
-  "We expect the encoding to be LF UTF-8, so only show the modeline when this is not the case"
-  (setq-local doom-modeline-buffer-encoding
-              (unless (and (memq (plist-get (coding-system-plist buffer-file-coding-system) :category)
-                                 '(coding-category-undecided coding-category-utf-8))
-                           (not (memq (coding-system-eol-type buffer-file-coding-system) '(1 2))))
-                t)))
-(add-hook 'after-change-major-mode-hook #'doom-modeline-conditional-buffer-encoding) ;;remove encoding
+  (setq doom-modeline-modal-icon nil
+        doom-modeline-major-mode-icon t
+        doom-modeline-major-mode-color-icon t
+        doom-modeline-continuous-word-count-modes '(markdown-mode gfm-mode org-mode)
+        doom-modeline-buffer-encoding nil
+        inhibit-compacting-font-caches t
+        find-file-visit-truename t)
+
+  (custom-set-faces!
+    '(doom-modeline-evil-insert-state :inherit doom-modeline-urgent)
+    '(doom-modeline-evil-visual-state :inherit doom-modeline-warning)
+    '(doom-modeline-evil-normal-state :inherit doom-modeline-buffer-path))
+
+  (setq doom-modeline-enable-word-count t))          ;Show word count
 
 (defun centaur-tabs-get-total-tab-length ()
   (length (centaur-tabs-tabs (centaur-tabs-current-tabset))))
@@ -565,11 +568,32 @@ Return nil otherwise."
 
 (after! centaur-tabs
   (centaur-tabs-mode -1)
-  (setq centaur-tabs-height 20
+  (centaur-tabs-headline-match)
+  (centaur-tabs-change-fonts "Liga SFMono Nerd Font" 150)
+
+  (setq centaur-tabs-style "wave"
         centaur-tabs-set-icons t
-        centaur-tabs-gray-out-icons 'buffer)
-  (add-hook 'window-configuration-change-hook 'centaur-tabs-hide-on-window-change)
-  (centaur-tabs-change-fonts "Liga SFMono Nerd Font" 105))
+        centaur-tabs-set-bar 'nil
+        centaur-tabs-gray-out-icons 'buffer
+        centaur-tabs-height  30
+        centaur-tabs-close-button ""
+        centaur-tabs-modified-marker nil
+        centaur-tabs-show-navigation-buttons nil
+        centaur-tabs-show-new-tab-button nil
+        centaur-tabs-down-tab-text " ✦"
+        centaur-tabs-backward-tab-text " ⏴ "
+        centaur-tabs-forward-tab-text " ⏵ ")
+
+  (custom-set-faces!
+    `(tab-line :background ,(doom-color 'base1) :foreground ,(doom-color 'base1))
+    `(centaur-tabs-default :background ,(doom-color 'base1) :foreground ,(doom-color 'base1))
+    `(centaur-tabs-active-bar-face :background ,(doom-color 'base1) :foreground ,(doom-color 'base1))
+    `(centaur-tabs-unselected-modified :background ,(doom-color 'base1) :foreground ,(doom-color 'fg))
+    `(centaur-tabs-unselected :background ,(doom-color 'base1) :foreground ,(doom-color 'base4))
+    `(centaur-tabs-selected-modified :background ,(doom-color 'bg) :foreground ,(doom-color 'fg))
+    `(centaur-tabs-selected :background ,(doom-color 'bg) :foreground ,(doom-color 'blue)))
+
+  (add-hook 'window-configuration-change-hook 'centaur-tabs-hide-on-window-change))
 
 (after! marginalia
   (setq marginalia-censor-variables nil)
@@ -897,10 +921,6 @@ Return nil otherwise."
                 jit-lock-stealth-time 1)))
 
 (add-hook 'org-mode-hook #'locally-defer-font-lock)
-
-(custom-set-faces!
-  `(org-block-end-line :background ,(doom-color 'base2))
-  `(org-block-begin-line :background ,(doom-color 'base2)))
 
 (defvar org-prettify-inline-results t
   "Whether to use (ab)use prettify-symbols-mode on {{{results(...)}}}.
@@ -1973,6 +1993,93 @@ MathJax = {
 (setq org-agenda-files (list "~/org/school.org"
                              "~/org/todo.org"))
 
+(use-package! citar
+  :when (featurep! :completion vertico)
+  :no-require
+  :config
+  (setq org-cite-insert-processor 'citar
+        org-cite-follow-processor 'citar
+        org-cite-activate-processor 'citar
+        citar-bibliography '("~/org/references.bib"))
+  (when (featurep! :lang org +roam2)
+    ;; Include property drawer metadata for 'org-roam' v2.
+    (setq citar-file-note-org-include '(org-id org-roam-ref))))
+
+(use-package! citar
+  :when (featurep! :completion vertico)
+  :after org)
+
+(use-package! citeproc
+  :defer t)
+
+;;; Org-Cite configuration
+(map! :after org
+      :map org-mode-map
+      :localleader
+      :desc "Insert citation" "@" #'org-cite-insert)
+
+(use-package! oc
+  :after citar
+  :config
+  (require 'ox)
+  (setq org-cite-global-bibliography
+        (let ((paths (or citar-bibliography
+                         (bound-and-true-p bibtex-completion-bibliography))))
+          ;; Always return bibliography paths as list for org-cite.
+          (if (stringp paths) (list paths) paths)))
+  ;; setup export processor; default csl/citeproc-el, with biblatex for latex
+  (setq org-cite-export-processors
+        '((t csl))))
+
+;;; Org-cite processors
+(use-package! oc-biblatex
+  :after oc)
+
+(use-package! oc-csl
+  :after oc
+  :config
+  (setq org-cite-csl-styles-dir "~/.config/bib/styles"))
+
+(use-package! oc-natbib
+  :after oc)
+
+;;;; Third-party
+(use-package! citar-org
+  :no-require
+  :custom
+  (org-cite-insert-processor 'citar)
+  (org-cite-follow-processor 'citar)
+  (org-cite-activate-processor 'citar)
+  (org-support-shift-select t)
+  (citar-bibliography '("~/org/references.bib"))
+  (when (featurep! :lang org +roam2)
+    ;; Include property drawer metadata for 'org-roam' v2.
+    (citar-org-note-include '(org-id org-roam-ref)))
+  ;; Personal extras
+  (setq citar-symbols
+        `((file ,(all-the-icons-faicon "file-o" :v-adjust -0.1) . " ")
+          (note ,(all-the-icons-material "speaker_notes" :face 'all-the-icons-silver :v-adjust -0.3) . " ")
+          (link ,(all-the-icons-octicon "link" :face 'all-the-icons-dsilver :v-adjust 0.01) . " "))))
+
+(use-package! oc-csl-activate
+  :after oc
+  :config
+  (setq org-cite-csl-activate-use-document-style t)
+  (defun +org-cite-csl-activate/enable ()
+    (interactive)
+    (setq org-cite-activate-processor 'csl-activate)
+    (add-hook! 'org-mode-hook '((lambda () (cursor-sensor-mode 1)) org-cite-csl-activate-render-all))
+    (defadvice! +org-cite-csl-activate-render-all-silent (orig-fn)
+      :around #'org-cite-csl-activate-render-all
+      (with-silent-modifications (funcall orig-fn)))
+    (when (eq major-mode 'org-mode)
+      (with-silent-modifications
+        (save-excursion
+          (goto-char (point-min))
+          (org-cite-activate (point-max)))
+        (org-cite-csl-activate-render-all)))
+    (fmakunbound #'+org-cite-csl-activate/enable)))
+
 (use-package! doct
   :commands (doct))
 
@@ -2154,80 +2261,6 @@ is selected, only the bare key is returned."
                            :keyword "%U"
                            :file +org-capture-project-notes-file)))
               )))
-
-(use-package! citar
-  :when (featurep! :completion vertico))
-
-(use-package! citeproc
-  :defer t)
-
-;;; Org-Cite configuration
-(map! :after org
-      :map org-mode-map
-      :localleader
-      :desc "Insert citation" "@" #'org-cite-insert)
-
-(use-package! oc
-  :after org citar
-  :config
-  (require 'ox)
-  (setq org-cite-global-bibliography
-        (let ((paths (or citar-bibliography
-                         (bound-and-true-p bibtex-completion-bibliography))))
-          ;; Always return bibliography paths as list for org-cite.
-          (if (stringp paths) (list paths) paths)))
-  ;; setup export processor; default csl/citeproc-el, with biblatex for latex
-  (setq org-cite-export-processors
-        '((t csl))))
-
-;;; Org-cite processors
-(use-package! oc-biblatex
-  :after oc)
-
-(use-package! oc-csl
-  :after oc
-  :config
-  (setq org-cite-csl-styles-dir "~/.config/bib/styles"))
-
-(use-package! oc-natbib
-  :after oc)
-
-;;;; Third-party
-(use-package! citar-org
-  :no-require
-  :custom
-  (org-cite-insert-processor 'citar)
-  (org-cite-follow-processor 'citar)
-  (org-cite-activate-processor 'citar)
-  (org-support-shift-select t)
-  (citar-bibliography '("~/org/references.bib"))
-  (when (featurep! :lang org +roam2)
-    ;; Include property drawer metadata for 'org-roam' v2.
-    (citar-org-note-include '(org-id org-roam-ref)))
-  ;; Personal extras
-  (setq citar-symbols
-        `((file ,(all-the-icons-faicon "file-o" :v-adjust -0.1) . " ")
-          (note ,(all-the-icons-material "speaker_notes" :face 'all-the-icons-silver :v-adjust -0.3) . " ")
-          (link ,(all-the-icons-octicon "link" :face 'all-the-icons-dsilver :v-adjust 0.01) . " "))))
-
-(use-package! oc-csl-activate
-  :after oc
-  :config
-  (setq org-cite-csl-activate-use-document-style t)
-  (defun +org-cite-csl-activate/enable ()
-    (interactive)
-    (setq org-cite-activate-processor 'csl-activate)
-    (add-hook! 'org-mode-hook '((lambda () (cursor-sensor-mode 1)) org-cite-csl-activate-render-all))
-    (defadvice! +org-cite-csl-activate-render-all-silent (orig-fn)
-      :around #'org-cite-csl-activate-render-all
-      (with-silent-modifications (funcall orig-fn)))
-    (when (eq major-mode 'org-mode)
-      (with-silent-modifications
-        (save-excursion
-          (goto-char (point-min))
-          (org-cite-activate (point-max)))
-        (org-cite-csl-activate-render-all)))
-    (fmakunbound #'+org-cite-csl-activate/enable)))
 
 (after! org-plot
   (defun org-plot/generate-theme (_type)
@@ -3049,8 +3082,6 @@ This is done according to `org-latex-feature-implementations'"
         ("dvipsnames" "xcolor" nil)
         ("colorlinks=true, linkcolor=Blue, citecolor=BrickRed, urlcolor=PineGreen" "hyperref" nil)
     ("" "indentfirst" nil)))
-    ;; "\\setmainfont[Ligatures=TeX]{Alegreya}"
-    ;; "\\setmonofont[Ligatures=TeX]{Liga SFMono Nerd Font}"))
 
 (use-package! engrave-faces-latex
   :after ox-latex

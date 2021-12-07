@@ -1,9 +1,9 @@
-$blue: #88C0D0;
+$blue: #51afef;
 $green: #A3BE8C;
-$red: #BF616A;
-$orange: #EBCB8B;
-$cyan: #8FBCBB;
-$purple: #B48EAD;
+$red: #FF665C;
+$orange: #FCCE7B;
+$cyan: #5cEfFF;
+$purple: #C57BDB;
 
 $accent: var(--accent);
 $accent-dark: var(--accent-dark);
@@ -24,26 +24,26 @@ $text-medium: var(--text-medium);
 $text-dark: var(--text-dark);
 
 #page {
-    --accent: #3B4252;
-    --accent-dark: #88C0D0;
+    --accent: #2a2e38;
+    --accent-dark: #51afef;
 
-    --code-foreground: #D8DEE9;
-    --code-background: #3B4252;
-    --code-func: #81A1C1;
-    --code-const: #B48EAD;
-    --code-regex: #A3BE8C;
+    --code-foreground: #bbc2cf;
+    --code-background: #484854;
+    --code-func: #51afef;
+    --code-const: #C57BDB;
+    --code-regex: #7bc275;
 
-    --back-white: #434C5E;
-    --back-light: #2E3440;
-    --back-medium: #4C566A;
+    --back-white: #DDDDDD;
+    --back-light: #242730;
+    --back-medium: #62686E;
 
-    --text-light: #88C0D0;
-    --text-gray: #616E88;
-    --text-medium: #81A1C1;
-    --text-dark: #E5E9F0;
+    --text-light: #51afef;
+    --text-gray: #62686E;
+    --text-medium: #FCCE7B;
+    --text-dark: #bbc2cf;
 
     --switch-icon: "🔆";
-    --switch-shadow-color: #EBCB8B;
+    --switch-shadow-color: #FCCE7B;
     --switch-text: "light mode?";
     // img.invertible, object[type="image/svg+xml"].invertible {
     //     filter: invert(90.0%) hue-rotate(180deg) sepia(1%);
