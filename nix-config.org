@@ -210,15 +210,6 @@ If you want to take advantage of the LSP and/or treesitter, you can install lang
 *NOTE:* If you want to use neorg's treesitter parser on macOS, you need to link GCC to CC. Instructions [[https://github.com/nvim-neorg/neorg/issues/74#issuecomment-906627223][here]].
 I also recommend installing [[https://github.com/Kethku/neovide][Neovide]]
 
-*** .gitignore
-Some files shouldn't be here!
-#+BEGIN_SRC :comments none :tangle ".gitignore"
-.DS_store
-result
-configs/nvim/init.vim
-configs/nvim/lua/packer_compiled.lua
-#+END_SRC
-
 * Flakes
 ** Why Flakes
 Once upon a time, Nix pioneered reproducible builds: it tries hard to ensure that two builds of the same derivation graph produce an identical result. Unfortunately, the evaluation of Nix files into such a derivation graph isn’t nearly as reproducible, despite the language being nominally purely functional.
@@ -1424,7 +1415,7 @@ Lastly, I didn't feel like nix-ifying my neovim lua config. Lets cheat a bit and
     extraConfig = builtins.concatStringsSep "\n" [
       ''
         lua << EOF
-        ${lib.strings.fileContents ../configs/nvim/nix.lua}
+        ${lib.strings.fileContents ../configs/nyoom.nvim/nix.lua}
         EOF
       ''
     ];
@@ -1763,9 +1754,15 @@ Complex codebases lead to less freedom for end-user extensiblity and configurati
 
 The configuration was originally based off of [[https://github.com/NvChad/NvChad/tree/29f04fcc9d7a5e0cc9ef3a59ce5860d4cfa60f85][commit 29f04fc]] of NvChad, but this config has evolved to be much more than that.
 
+You can now find it seperately on github, here: https://github.com/shaunsingh/nyoom.nvim
+
+*** Develop
+When sharing the config, it makes it much easier to handle dependencies with nix. This ensures installing dependencies (including neovim-nightly), as well as adding the new neovim build to path
+#+include: "./configs/nyoom.nvim/flake.nix" src nix
+#+include: "./configs/nyoom.nvim/shell.nix" src nix
 *** Init
 The init.lua first loads impatient.nvim if available (so we can cache the =.lua= files). It then disables builtin vim plugins, and loads the required modules for startup (=packer_compiled.lua=, =mappings.lua=, and =options.lua=)
-#+include: "./configs/nvim/init.lua" src lua
+#+include: "./configs/nyoom.nvim/init.lua" src lua
 *** Packer
 My packer configuration is broken into two files: =packerInit= and =pluginList=.
 =packerInit= downloads packer if it isn't present, lazy loads it if it is, and configures packer. Notably:
@@ -1773,48 +1770,91 @@ My packer configuration is broken into two files: =packerInit= and =pluginList=.
  - Use packer in a floating window instead of a split, and remove the borders
  - Increaes =clone_timeout=, just in case I'm on a more finicky network
 =pluginList= contains the list of plugins, as well lazy loads and defines their configuration files.
-#+include: "./configs/nvim/lua/packerInit.lua" src lua
-#+include: "./configs/nvim/lua/pluginList.lua" src lua
+#+include: "./configs/nyoom.nvim/lua/packerInit.lua" src lua
+#+include: "./configs/nyoom.nvim/lua/pluginList.lua" src lua
 *** Settings
 As I said earlier, there are 3 required modules for startup (=packer_compiled.lua=, =mappings.lua=, and =options.lua=). Of that, =packer_compiled.lua= is generated using =:PackerCompile=, so we will focus on the other two.
  - =mappings.lua= contains all of my mappings. All of the mappings are the same as the defaults for Doom Emacs (with a few exceptions). To list all of the keybinds, run =SPC h b b= in doom (or =SPC h b f= for major-mode specific binds). The file also contains some commands, which allow for the lazy loading of packer.
  - =options.lua= contains all the basic options I want set before loading a buffer. Additionally, I want to disable the tilde fringe and =filetype.vim= (replaced with =filetype.nvim=).
-#+include: "./configs/nvim/lua/mappings.lua" src lua
-#+include: "./configs/nvim/lua/options.lua" src lua
+#+include: "./configs/nyoom.nvim/lua/mappings.lua" src lua
+#+include: "./configs/nyoom.nvim/lua/options.lua" src lua
 *** Plugin Configuration
 **** Bufferline
-#+include: "./configs/nvim/lua/plugins/bufferline.lua" src lua
+#+include: "./configs/nyoom.nvim/lua/plugins/bufferline.lua" src lua
 **** Nvim-cmp
-#+include: "./configs/nvim/lua/plugins/cmp.lua" src lua
+#+include: "./configs/nyoom.nvim/lua/plugins/cmp.lua" src lua
 **** Gitsigns
-#+include: "./configs/nvim/lua/plugins/gitsigns.lua" src lua
+#+include: "./configs/nyoom.nvim/lua/plugins/gitsigns.lua" src lua
 **** Lspconfig
-#+include: "./configs/nvim/lua/plugins/lspconfig.lua" src lua
+#+include: "./configs/nyoom.nvim/lua/plugins/lspconfig.lua" src lua
 **** Neogit
-#+include: "./configs/nvim/lua/plugins/neogit.lua" src lua
+#+include: "./configs/nyoom.nvim/lua/plugins/neogit.lua" src lua
 **** Neorg
-#+include: "./configs/nvim/lua/plugins/neorg.lua" src lua
+#+include: "./configs/nyoom.nvim/lua/plugins/neorg.lua" src lua
 **** Nvimtree
-#+include: "./configs/nvim/lua/plugins/nvimtree.lua" src lua
+#+include: "./configs/nyoom.nvim/lua/plugins/nvimtree.lua" src lua
 **** Others
-#+include: "./configs/nvim/lua/plugins/others.lua" src lua
+#+include: "./configs/nyoom.nvim/lua/plugins/others.lua" src lua
 **** Statusline
-#+include: "./configs/nvim/lua/plugins/statusline.lua" src lua
+#+include: "./configs/nyoom.nvim/lua/plugins/statusline.lua" src lua
 **** Telescope
-#+include: "./configs/nvim/lua/plugins/telescope.lua" src lua
+#+include: "./configs/nyoom.nvim/lua/plugins/telescope.lua" src lua
 **** Treesitter
-#+include: "./configs/nvim/lua/plugins/treesitter.lua" src lua
+#+include: "./configs/nyoom.nvim/lua/plugins/treesitter.lua" src lua
 **** Zenmode
-#+include: "./configs/nvim/lua/plugins/zenmode.lua" src lua
+#+include: "./configs/nyoom.nvim/lua/plugins/zenmode.lua" src lua
+*** External
+These are plugin I'm currently developing, but don't want ready for public release yet. As such, they reside in the =nyoom.nvim/lua/ext= directory.
+**** doom.nvim
+This is an experimental port of =doom-vibrant= to neovim, just me playing around with the new highlight API
+#+include: "./configs/nyoom.nvim/lua/ext/doom.nvim/lua/doom.lua" src lua
+**** Statusline.nvim
+Just a little statusline to mess around with
+#+include: "./configs/nyoom.nvim/lua/ext/statusline.nvim/lua/statusline.lua" src lua
+***** Modules
+This is the fun part!
+#+include: "./configs/nyoom.nvim/lua/ext/statusline.nvim/lua/modules/config.lua" src lua
+#+include: "./configs/nyoom.nvim/lua/ext/statusline.nvim/lua/modules/statusline.lua" src lua
+#+include: "./configs/nyoom.nvim/lua/ext/statusline.nvim/lua/modules/utils.lua" src lua
+***** Sections
+All the sections of the statusline, lsp, git, etc,
+#+include: "./configs/nyoom.nvim/lua/ext/statusline.nvim/lua/sections/_bufeditable.lua" src lua
+#+include: "./configs/nyoom.nvim/lua/ext/statusline.nvim/lua/sections/_buficon.lua" src lua
+#+include: "./configs/nyoom.nvim/lua/ext/statusline.nvim/lua/sections/_bufmodified.lua" src lua
+#+include: "./configs/nyoom.nvim/lua/ext/statusline.nvim/lua/sections/_bufname.lua" src lua
+#+include: "./configs/nyoom.nvim/lua/ext/statusline.nvim/lua/sections/_filesize.lua" src lua
+#+include: "./configs/nyoom.nvim/lua/ext/statusline.nvim/lua/sections/_git_branch.lua" src lua
+#+include: "./configs/nyoom.nvim/lua/ext/statusline.nvim/lua/sections/_lsp.lua" src lua
+#+include: "./configs/nyoom.nvim/lua/ext/statusline.nvim/lua/sections/_signify.lua" src lua
+***** Tables
+Just contains all the icons and modes I use throughout the statusline
+#+include: "./configs/nyoom.nvim/lua/ext/statusline.nvim/lua/tables/_icons.lua" src lua
+#+include: "./configs/nyoom.nvim/lua/ext/statusline.nvim/lua/tables/_modes.lua" src lua
 
 * Extra :ATTACH:
+** Hammerspoon
+Yabai breaks pretty often, so I use hammerspoon as a wm instead! Heres how its done:
+#+include: "./configs/hammerspoon/init.lua" src lua
+*** Hhtwm
+This is where most of the magit happens. It interfaces with hammerspoon's abstractions to macOS's events, and controlls windows. The =layout.lua= files defines the usual layouts (grid, 3/2, etc)
+#+include: "./configs/hammerspoon/hhtwm/init.lua" src lua
+#+include: "./configs/hammerspoon/hhtwm/layouts.lua" src lua
+*** Plugins
+With that, we need the =caffiene= plugin, which this file handles configuring
+#+include: "./configs/hammerspoon/plugins/init.lua" src lua
+*** Bindings
+No use having the logic for a WM if we can't use it. lets define some bindings to help with that
+#+include: "./configs/hammerspoon/bindings/init.lua" src lua
+#+include: "./configs/hammerspoon/bindings/grid.lua" src lua
+#+include: "./configs/hammerspoon/bindings/hotkeys.lua" src lua
+#+include: "./configs/hammerspoon/bindings/tiling.lua" src lua
+
+** Wallpapers
 :PROPERTIES:
 :ID:       86261973-40ab-49f5-b78b-89514c2f6d9c
 :END:
 Wallpapers are in =./extra/wallpapers/=
 Some of my favorites:
+ *Note*: fix later, using links from github
 
-[[attachment:_20211108_193854queen_chess.png]]
-[[attachment:_20211108_193915portal.png]]
-[[attachment:_20211108_193918Nord Minimal - D8DEE9.png]]
-[[attachment:_20211108_193920nixos.png]]
+ *TODO*: Attach from github
