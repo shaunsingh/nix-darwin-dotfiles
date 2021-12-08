@@ -53,16 +53,15 @@ in
     neovim-nightly
     tree-sitter
     # neovide-git
-    nodejs
+    nodejs-16_x
     tree-sitter
   ];
 # Doom-emacs:1 ends here
 
 # Neovim
-# Lastly, I didn't feel like nix-ifying my neovim lua config. Lets cheat a bit and just symlink it instead
+# Lastly, I didn't feel like nix-ifying my neovim lua config, so thats just a submodule. We can use nix to manage tree-sitter grammers, as well as fzf-native
 
 # [[file:../nix-config.org::*Neovim][Neovim:1]]
-  # home-manager.users.shauryasingh.xdg.configFile."nvim/init.lua".source = "../configs/nyoom.nvim/init.lua";  
   # fzf-native
   home-manager.users.shauryasingh.xdg.dataFile."nvim/site/pack/packer/start/telescope-fzf-native.nvim/build/libfzf.so".source = "${pkgs.vimPlugins.telescope-fzf-native-nvim}/build/libfzf.so";
   # tree-sitter parsers
