@@ -11,7 +11,7 @@
 # 2. It pins the version of doom, so you need to update doom and its dependencies painstakingly manually
 # 3. It just ends up breaking anyways.
 
-# A simpler solution is just to have nix clone =doom-emacs= to =~/.config/emacs=, and the user can handle doom manually
+# A simpler solution is just to have nix clone =doom-emacs= to =~/.config/emacs=, and the user can handle doom manually. The doom version is pinned in the =flake.lock= of the repository, but a =doom upgrade= will override it. Since I have an arm based macbook, I also use nix to install and manage my treesitter parsers instead of compiling them myself
 
 # [[file:../nix-config.org::*Doom-emacs][Doom-emacs:1]]
 let
@@ -27,10 +27,34 @@ let
       git -C $HOME/.config/emacs checkout ${pkgs.doomEmacsRevision} || true
     fi
   '';
+  # langs = [
+  #   "bash"
+  #   "c"
+  #   "cpp"
+  #   "css"
+  #   "nix"
+  #   "lua"
+  #   "html"
+  #   "java"
+  #   "python"
+  #   "rust"
+  #   "yaml"
+  #   "toml"
+  #   "make"
+  #   "json"
+  #   "fish"
+  #   "regex"
+  #   "elisp"
+  #   "fennel"
+  #   "comment"
+  #   "markdown"
+  #   "clojure"
+  # ];
+  # grammars = lib.getAttrs (map (lang: "tree-sitter-${lang}") langs) pkgs.tree-sitter.builtGrammars;
 in
 {
   home-manager.users.shauryasingh.home.packages = with pkgs; [
-    ((emacsPackagesNgGen emacsGcc).emacsWithPackages
+    ((emacsPackagesNgGen emacs).emacsWithPackages
       (epkgs: [ epkgs.vterm ]))
     (ripgrep.override { withPCRE2 = true; })
     fd
@@ -51,11 +75,15 @@ in
     # languagetool
     # neovim deps
     neovim-nightly
-    tree-sitter
     # neovide-git
-    nodejs-16_x
+    # nodejs-16_x
     tree-sitter
   ];
+  # home-manager.users.shauryasingh.home.file.".config/tree-sitter".source = (pkgs.runCommand "grammars" {} ''
+  #   mkdir -p $out/bin
+  #   ${lib.concatStringsSep "\n"
+  #     (lib.mapAttrsToList (name: src: "name=${name}; ln -s ${src}/parser $out/bin/\${name#tree-sitter-}.so") grammars)};
+  # '');
 # Doom-emacs:1 ends here
 
 # Neovim

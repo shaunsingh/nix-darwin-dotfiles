@@ -61,7 +61,7 @@
       inputs.nixpkgs.follows = "unstable";
     };
     emacs = {
-      url = "github:nix-community/emacs-overlay";
+      url = "github:shaunsingh/emacs";
       inputs.nixpkgs.follows = "unstable";
     };
     # overlays
