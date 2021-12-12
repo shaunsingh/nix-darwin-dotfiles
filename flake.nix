@@ -145,8 +145,7 @@
               enableFontDir = true;
               fonts = with pkgs; [
                 overpass
-                alegreya
-                alegreya-sans
+                fira
                 emacs-all-the-icons-fonts
                 sf-mono-liga-bin
               ];

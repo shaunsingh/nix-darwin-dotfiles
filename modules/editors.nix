@@ -27,30 +27,30 @@ let
       git -C $HOME/.config/emacs checkout ${pkgs.doomEmacsRevision} || true
     fi
   '';
-  # langs = [
-  #   "bash"
-  #   "c"
-  #   "cpp"
-  #   "css"
-  #   "nix"
-  #   "lua"
-  #   "html"
-  #   "java"
-  #   "python"
-  #   "rust"
-  #   "yaml"
-  #   "toml"
-  #   "make"
-  #   "json"
-  #   "fish"
-  #   "regex"
-  #   "elisp"
-  #   "fennel"
-  #   "comment"
-  #   "markdown"
-  #   "clojure"
-  # ];
-  # grammars = lib.getAttrs (map (lang: "tree-sitter-${lang}") langs) pkgs.tree-sitter.builtGrammars;
+  langs = [
+    "bash"
+    "c"
+    "cpp"
+    "css"
+    "nix"
+    "lua"
+    "html"
+    "java"
+    "python"
+    "rust"
+    "yaml"
+    "toml"
+    "make"
+    "json"
+    "fish"
+    "regex"
+    "elisp"
+    "fennel"
+    "comment"
+    "markdown"
+    "clojure"
+  ];
+  grammars = lib.getAttrs (map (lang: "tree-sitter-${lang}") langs) pkgs.tree-sitter.builtGrammars;
 in
 {
   home-manager.users.shauryasingh.home.packages = with pkgs; [
@@ -63,14 +63,7 @@ in
     # pandoc
     # sdcv
     (aspellWithDicts (ds: with ds; [ en en-computers en-science ]))
-    (texlive.combine {
-      inherit (texlive)
-        scheme-small dvipng dvisvgm l3packages xcolor soul adjustbox
-        collectbox amsmath siunitx cancel mathalpha capt-of chemfig
-        wrapfig mhchem fvextra cleveref latexmk tcolorbox environ arev
-        amsfonts simplekv alegreya sourcecodepro newpx svg catchfile
-        transparent hanging biblatex biblatex-mla;
-    })
+    tectonic
     emacsSyncScript
     # languagetool
     # neovim deps
@@ -79,11 +72,11 @@ in
     # nodejs-16_x
     tree-sitter
   ];
-  # home-manager.users.shauryasingh.home.file.".config/tree-sitter".source = (pkgs.runCommand "grammars" {} ''
-  #   mkdir -p $out/bin
-  #   ${lib.concatStringsSep "\n"
-  #     (lib.mapAttrsToList (name: src: "name=${name}; ln -s ${src}/parser $out/bin/\${name#tree-sitter-}.so") grammars)};
-  # '');
+  home-manager.users.shauryasingh.home.file.".config/tree-sitter".source = (pkgs.runCommand "grammars" {} ''
+    mkdir -p $out/bin
+    ${lib.concatStringsSep "\n"
+      (lib.mapAttrsToList (name: src: "name=${name}; ln -s ${src}/parser $out/bin/\${name#tree-sitter-}.so") grammars)};
+  '');
 # Doom-emacs:1 ends here
 
 # Neovim
