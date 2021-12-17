@@ -1109,10 +1109,7 @@ Now to configure the package via nix
       mouse_follows_focus = "off";
       mouse_drop_action = "stack";
       window_placement = "second_child";
-      window_opacity = "on";
       window_shadow = "on";
-      active_window_opacity = "1.0";
-      normal_window_opacity = "0.92";
       split_ratio = "0.50";
       auto_balance = "on";
       mouse_modifier = "fn";
@@ -1125,6 +1122,12 @@ Now to configure the package via nix
       right_padding = 18;
       window_gap = 18;
     };
+    extraConfig = ''
+      # rules
+      yabai -m rule --add app=emacs-28.0.90 manage=on
+      yabai -m rule --add app='System Preferences' manage=off
+      yabai -m rule --add app='Activity Monitor' manage=off
+    '';
   };
 #+end_src
 
