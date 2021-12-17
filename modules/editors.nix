@@ -28,27 +28,12 @@ let
     fi
   '';
   langs = [
-    "bash"
-    "c"
-    "cpp"
-    "css"
     "nix"
-    "lua"
-    "html"
     "java"
     "python"
     "rust"
-    "yaml"
-    "toml"
-    "make"
-    "json"
-    "fish"
-    "regex"
     "elisp"
-    "fennel"
     "comment"
-    "markdown"
-    "clojure"
   ];
   grammars = lib.getAttrs (map (lang: "tree-sitter-${lang}") langs) pkgs.tree-sitter.builtGrammars;
 in
@@ -59,7 +44,7 @@ in
     (ripgrep.override { withPCRE2 = true; })
     fd
     sqlite
-    gnuplot
+    # gnuplot
     # pandoc
     # sdcv
     (aspellWithDicts (ds: with ds; [ en en-computers en-science ]))
@@ -83,7 +68,7 @@ in
 # Lastly, I didn't feel like nix-ifying my neovim lua config, so thats just a submodule. We can use nix to manage tree-sitter grammers, as well as fzf-native
 
 # [[file:../nix-config.org::*Neovim][Neovim:1]]
-  # fzf-native
+# fzf-native
   home-manager.users.shauryasingh.xdg.dataFile."nvim/site/pack/packer/start/telescope-fzf-native.nvim/build/libfzf.so".source = "${pkgs.vimPlugins.telescope-fzf-native-nvim}/build/libfzf.so";
   # tree-sitter parsers
   home-manager.users.shauryasingh.xdg.configFile."nvim/parser/lua.so".source = "${pkgs.tree-sitter.builtGrammars.tree-sitter-lua}/parser";

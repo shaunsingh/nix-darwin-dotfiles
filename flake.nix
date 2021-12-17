@@ -5,21 +5,7 @@
 # 2. Add inputs (=nixpkgs-master=, =nix-darwin=, =home-manager,= and =spacebar=)
 # 3. Add overlays to get the latest versions of =neovim= (nightly) and =emacs= (emacs29)
 # 4. Create a nix-darwin configuration for my hostname
-# 5. Source the [[./modules/mac.nix][mac]], [[./modules/home.nix][home]], and [[./modules/pam.nix][pam]] modules
-# 6. Configure home-manager and the nix-daemon
-# 7. Enable the use of touch-id for sudo authentication
-# 8. Configure =nixpkgs= to use the overlays above, and allow unfree packages
-# 9. Configure =nix= to enable =flakes= and =nix-command= by default, and add =x86-64-darwin= as a platform (to install packages through rosetta)
-# 10. Install my packages and config dependencies
-# 11. Install the required fonts
-
-# [[file:nix-config.org::*Notes on using the flake][Notes on using the flake:4]]
-# The =flake.nix= below does the following:
-# 1. Add a binary cache for =nix-community= overlays
-# 2. Add inputs (=nixpkgs-master=, =nix-darwin=, =home-manager,= and =spacebar=)
-# 3. Add overlays to get the latest versions of =neovim= (nightly) and =emacs= (emacs29)
-# 4. Create a nix-darwin configuration for my hostname
-# 5. Source the [[./modules/mac.nix][mac]], [[./modules/home.nix][home]], and [[./modules/pam.nix][pam]] modules
+# 5. Source the [[file:./modules/mac.nix][mac]], [[file:./modules/home.nix][home]], and [[file:./modules/pam.nix][pam]] modules
 # 6. Configure home-manager and the nix-daemon
 # 7. Enable the use of touch-id for sudo authentication
 # 8. Configure =nixpkgs= to use the overlays above, and allow unfree packages
@@ -32,7 +18,8 @@
   description = "Shaurya's Nix Environment";
 
   nixConfig.extra-substituters = "https://nix-community.cachix.org";
-  nixConfig.extra-trusted-public-keys = "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=";
+  nixConfig.extra-trusted-public-keys =
+    "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=";
 
   inputs = {
     # All packages should follow latest nixpkgs
@@ -54,6 +41,10 @@
     spacebar = {
       url = "github:shaunsingh/spacebar/master";
       inputs.nixpkgs.follows = "unstable";
+    };
+    yabai-src = {
+      url = "github:koekeishiya/yabai/master";
+      flake = false;
     };
     # Editors
     neovim = {
@@ -103,6 +94,26 @@
                 emacs.overlay
                 rust-overlay.overlay
                 (final: prev: { doomEmacsRevision = doom-emacs.rev; })
+                (final: prev: {
+                  yabai = let
+                    version = "4.0.0-dev";
+                    buildSymlinks = prev.runCommand "build-symlinks" { } ''
+                      mkdir -p $out/bin
+                      ln -s /usr/bin/xcrun /usr/bin/xcodebuild /usr/bin/tiffutil /usr/bin/qlmanage $out/bin
+                    '';
+                  in prev.yabai.overrideAttrs (old: {
+                    inherit version;
+                    src = inputs.yabai-src;
+                    buildInputs = with prev.darwin.apple_sdk.frameworks; [
+                      Carbon
+                      Cocoa
+                      ScriptingBridge
+                      prev.xxd
+                      SkyLight
+                    ];
+                    nativeBuildInputs = [ buildSymlinks ];
+                  });
+                })
               ];
               config.allowUnfree = true;
             };
@@ -117,8 +128,7 @@
             };
             environment.systemPackages = with pkgs; [
               # Build Tools
-              # jdk
-              # luajit
+              jdk
               rust-bin.nightly.latest.default
 
               # Language Servers
@@ -131,15 +141,13 @@
               shellcheck
 
               # Terminal utils and rust alternatives :tm:
-              uutils-coreutils
               xcp
               lsd
               procs
               tree
               zoxide
               bottom
-              discocss
-              # eww
+              gpx
             ];
             fonts = {
               enableFontDir = true;
@@ -155,5 +163,4 @@
       };
     };
 }
-# Notes on using the flake:4 ends here
 # Notes on using the flake:4 ends here
