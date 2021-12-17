@@ -39,8 +39,6 @@ let
 in
 {
   home-manager.users.shauryasingh.home.packages = with pkgs; [
-    ((emacsPackagesNgGen emacs).emacsWithPackages
-      (epkgs: [ epkgs.vterm ]))
     (ripgrep.override { withPCRE2 = true; })
     fd
     sqlite

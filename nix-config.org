@@ -362,6 +362,9 @@ The =flake.nix= below does the following:
               '';
             };
             environment.systemPackages = with pkgs; [
+              # emacs needs to be here since its a GUI app
+              emacs
+
               # Build Tools
               jdk
               rust-bin.nightly.latest.default
@@ -1052,8 +1055,6 @@ let
 in
 {
   home-manager.users.shauryasingh.home.packages = with pkgs; [
-    ((emacsPackagesNgGen emacs).emacsWithPackages
-      (epkgs: [ epkgs.vterm ]))
     (ripgrep.override { withPCRE2 = true; })
     fd
     sqlite

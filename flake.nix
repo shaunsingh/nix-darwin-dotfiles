@@ -127,6 +127,9 @@
               '';
             };
             environment.systemPackages = with pkgs; [
+              # emacs needs to be here since its a GUI app
+              emacs
+
               # Build Tools
               jdk
               rust-bin.nightly.latest.default
