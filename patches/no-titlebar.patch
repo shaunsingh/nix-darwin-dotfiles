@@ -1,0 +1,23 @@
+diff --git a/src/nsterm.m b/src/nsterm.m
+index a6c2e7505b..d23c000552 100644
+--- a/src/nsterm.m
++++ b/src/nsterm.m
+@@ -433,7 +433,7 @@ - (NSColor *)colorUsingDefaultColorSpace
+ 
+ /* These flags will be OR'd or XOR'd with the NSWindow's styleMask
+    property depending on what we're doing.  */
+-#define FRAME_DECORATED_FLAGS (NSWindowStyleMaskTitled              \
++#define FRAME_DECORATED_FLAGS (NSWindowStyleMaskBorderless          \
+                                | NSWindowStyleMaskResizable         \
+                                | NSWindowStyleMaskMiniaturizable    \
+                                | NSWindowStyleMaskClosable)
+@@ -8305,9 +8305,6 @@ - (instancetype) initWithEmacsFrame:(struct frame *)f
+       if ([col alphaComponent] != (EmacsCGFloat) 1.0)
+         [self setOpaque:NO];
+ 
+-      /* toolbar support */
+-      [self createToolbar:f];
+-
+       /* macOS Sierra automatically enables tabbed windows.  We can't
+          allow this to be enabled until it's available on a Free system.
+          Currently it only happens by accident and is buggy anyway.  */
