@@ -45,10 +45,6 @@
       flake = false;
     };
     # Editors
-    neovim = {
-      url = "github:nix-community/neovim-nightly-overlay";
-      inputs.nixpkgs.follows = "unstable";
-    };
     emacs-src = {
       url = "github:emacs-mirror/emacs";
       flake = false;
@@ -60,6 +56,10 @@
     # overlays
     rust-overlay = {
       url = "github:oxalica/rust-overlay";
+      inputs.nixpkgs.follows = "unstable";
+    };
+    neovim-overlay = {
+      url = "github:nix-community/neovim-nightly-overlay";
       inputs.nixpkgs.follows = "unstable";
     };
   };
@@ -87,9 +87,10 @@
             overlays = with inputs; [
               nur.overlay
               spacebar.overlay
-              neovim.overlay
+              neovim-overlay.overlay
               rust-overlay.overlay
-              (final: prev: { doomEmacsRevision = inputs.doom-emacs.rev; 
+              (final: prev: {
+                doomEmacsRevision = inputs.doom-emacs.rev;
                 sf-mono-liga-bin = pkgs.callPackage ./pkgs/sf-mono-liga-bin { };
                 yabai = let
                   version = "4.0.0-dev";
@@ -100,6 +101,7 @@
                 in prev.yabai.overrideAttrs (old: {
                   inherit version;
                   src = inputs.yabai-src;
+
                   buildInputs = with prev.darwin.apple_sdk.frameworks; [
                     Carbon
                     Cocoa
@@ -107,26 +109,20 @@
                     prev.xxd
                     SkyLight
                   ];
+
                   nativeBuildInputs = [ buildSymlinks ];
                 });
                 emacs = (prev.emacs.override {
-                  withX = false;
-                  withNS = false;
                   srcRepo = true;
-                  withGTK3 = false;
                   nativeComp = true;
                   withSQLite3 = true;
-                  withXwidgets = false;
-                  withImageMagick = true;
+                  withXwidgets = true;
                 }).overrideAttrs (o: rec {
                   version = "29.0.50";
                   src = inputs.emacs-src;
 
                   buildInputs = o.buildInputs
                     ++ [ prev.darwin.apple_sdk.frameworks.WebKit ];
-
-                  configureFlags = (super.lib.remove "--with-xft" old.configureFlags)
-                    ++ super.lib.singleton "--with-pgtk";
 
                   patches = [
                     ./patches/fix-window-role.patch
