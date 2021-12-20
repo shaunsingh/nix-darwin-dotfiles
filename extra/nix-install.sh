@@ -1,8 +1,4 @@
 #!/bin/bash
-# Using Nix unstable OOTB
-# If you want to use nix unstable out of of the box then you can use the following script
-
-# [[file:../nix-config.org::*Using Nix unstable OOTB][Using Nix unstable OOTB:1]]
 RELEASE="nix-2.5pre20211019_4a2b7cc"
 URL="https://github.com/numtide/nix-unstable-installer/releases/download/$RELEASE/install"
 
@@ -18,4 +14,3 @@ if command -v nix > /dev/null; then
 else
     bash <(curl -L $URL) --daemon $FLAG
 fi
-# Using Nix unstable OOTB:1 ends here

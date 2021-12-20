@@ -1,19 +1,3 @@
-
-
-# The =flake.nix= below does the following:
-# 1. Add a binary cache for =nix-community= overlays
-# 2. Add inputs (=nixpkgs-master=, =nix-darwin=, =home-manager,= and =spacebar=)
-# 3. Add overlays to get the latest versions of =neovim= (nightly) and =emacs= (emacs29)
-# 4. Create a nix-darwin configuration for my hostname
-# 5. Source the [[file:./modules/mac.nix][mac]], [[file:./modules/home.nix][home]], and [[file:./modules/pam.nix][pam]] modules
-# 6. Configure home-manager and the nix-daemon
-# 7. Enable the use of touch-id for sudo authentication
-# 8. Configure =nixpkgs= to use the overlays above, and allow unfree packages
-# 9. Configure =nix= to enable =flakes= and =nix-command= by default, and add =x86-64-darwin= as a platform (to install packages through rosetta)
-# 10. Install my packages and config dependencies
-# 11. Install the required fonts
-
-# [[file:nix-config.org::*Notes on using the flake][Notes on using the flake:4]]
 {
   description = "Shaurya's Nix Environment";
 
@@ -23,7 +7,7 @@
 
   inputs = {
     # All packages should follow latest nixpkgs
-    unstable.url = "github:nixos/nixpkgs/master";
+    unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     nur.url = "github:nix-community/NUR";
     # core
     darwin = {
@@ -61,6 +45,10 @@
     neovim-overlay = {
       url = "github:nix-community/neovim-nightly-overlay";
       inputs.nixpkgs.follows = "unstable";
+    };
+    alacritty-src = {
+      url = "github:zenixls2/alacritty/ligature";
+      flake = false;
     };
   };
 
@@ -112,6 +100,15 @@
 
                   nativeBuildInputs = [ buildSymlinks ];
                 });
+                alacritty-ligatures = with pkgs;
+                  (alacritty.overrideAttrs (old: rec {
+                    src = inputs.alacritty-src;
+                    cargoDeps = old.cargoDeps.overrideAttrs (_: {
+                      inherit src;
+                      outputHash =
+                        "sha256-tY5sle1YUlUidJcq7RgTzkPsGLnWyG/3rtPqy2GklkY=";
+                    });
+                  }));
                 emacs = (prev.emacs.override {
                   srcRepo = true;
                   nativeComp = true;
@@ -122,10 +119,14 @@
                   src = inputs.emacs-src;
 
                   buildInputs = o.buildInputs
-                    ++ [ prev.darwin.apple_sdk.frameworks.WebKit ];
+                    ++ [ prev.darwin.apple_sdk.frameworks.WebKit pkgs.cairo pkgs.harfbuzz];
+
+                  configureFlags = o.configureFlags
+                    ++ [ "--with-cairo" "--with-harfbuzz" ];
 
                   patches = [
                     ./patches/fix-window-role.patch
+                    # ./patches/fix-harfbuzz-check.patch
                     # ./patches/no-titlebar.patch
                   ];
 
@@ -173,7 +174,6 @@
             tree
             zoxide
             bottom
-            gpx
           ];
           fonts = {
             enableFontDir = true;
@@ -189,4 +189,3 @@
     };
   };
 }
-# Notes on using the flake:4 ends here

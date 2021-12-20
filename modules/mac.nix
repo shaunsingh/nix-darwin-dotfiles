@@ -1,38 +1,37 @@
-# Mac.nix
-# There are mac-specific tweaks I need to do. In the future if I switch to nixOS full-time, then I wuold likely need to remove the mac-specific packages. An easy way to do this is just keep them in a seperate file:
+{ pkgs, lib, ... }: {
 
-# [[file:../nix-config.org::*Mac.nix][Mac.nix:1]]
-{ pkgs, lib, spacebar, ... }: {
-# Mac.nix:1 ends here
-
-# Yabai
-# Yabai is my tiling WM of choice. As this is an m1 (=aarch64-darwin=) laptop, I use the =the-future= branch, which enables the SA addon on m1 machines and monterey support
-
-# Now to configure the package via nix
-
-# [[file:../nix-config.org::*Yabai][Yabai:1]]
 services.yabai = {
   enable = true;
   enableScriptingAddition = true;
   package = pkgs.yabai;
   config = {
-    window_border = "off";
-    focus_follows_mouse = "autoraise";
-    mouse_follows_focus = "off";
-    mouse_drop_action = "stack";
-    window_placement = "second_child";
-    window_shadow = "on";
-    split_ratio = "0.50";
-    auto_balance = "on";
-    mouse_modifier = "fn";
-    mouse_action1 = "move";
-    mouse_action2 = "resize";
+    # layout
     layout = "bsp";
+    auto_balance = "on";
+    split_ratio = "0.50";
+    window_placement = "second_child";
+    # Gaps
+    window_gap = 18;
     top_padding = 18;
     bottom_padding = 46;
     left_padding = 18;
     right_padding = 18;
-    window_gap = 18;
+    # shadows and borders
+    window_shadow = "on";
+    window_border = "off";
+    window_border_width = 3;
+    active_window_border_color = "0xffFFFFFF";
+    normal_window_border_color = "0xffFFAB91";
+    insert_window_border_color = "0xff673AB7";
+    window_opacity = "on";
+    window_opacity_duration = "0.1";
+    active_window_opacity = "1.0";
+    normal_window_opacity = "1.0";
+    # mouse
+    mouse_modifier = "cmd";
+    mouse_action1 = "move";
+    mouse_action2 = "resize";
+    mouse_drop_action = "swap";
   };
   extraConfig = ''
     # rules
@@ -42,12 +41,7 @@ services.yabai = {
     yabai -m rule --add app='Activity Monitor' manage=off
   '';
 };
-# Yabai:1 ends here
 
-# Spacebar
-# Spacebar is my bar of choice on macOS. Its lighter than any web-based ubersicht bar, and looks nice
-
-# [[file:../nix-config.org::*Spacebar][Spacebar:1]]
 services.spacebar = {
   enable = true;
   package = pkgs.spacebar;
@@ -69,7 +63,7 @@ services.spacebar = {
     foreground_color = "0xff37474F";
     space_icon_color = "0xff673AB7";
     power_icon_strip = " ";
-    space_icon_strip = "I II III IV V VI VII VIII IX X";
+    space_icon_strip = "一 二 三 四 五 六 七 八 九 十";
     spaces_for_all_displays = "on";
     display_separator = "on";
     display_separator_icon = "|";
@@ -78,12 +72,7 @@ services.spacebar = {
     right_shell_command = "whoami";
   };
 };
-# Spacebar:1 ends here
 
-# SKHD
-# Skhd is the hotkey daemon for yabai. As yabai is disabled, it makes sense to disable skhd too for the time being
-
-# [[file:../nix-config.org::*SKHD][SKHD:1]]
 services.skhd = {
   enable = true;
   package = pkgs.skhd;
@@ -119,12 +108,7 @@ services.skhd = {
       yabai -m window --toggle pip
   '';
 };
-# SKHD:1 ends here
 
-# Homebrew
-# GUI apps with Nix are finicky at best. As much as I would like to fully give up homebrew, its very annoying having to re-install GUI apps on new systems
-
-# [[file:../nix-config.org::*Homebrew][Homebrew:1]]
 homebrew = {
     brewPrefix = "/opt/homebrew/bin";
     enable = true;
@@ -151,29 +135,10 @@ homebrew = {
       "balenaetcher" # flashing usbs/sd
     ];
   };
-# Homebrew:1 ends here
 
-# MacOS Settings
-# I like my hostname to be the same as the flake's target
-
-# [[file:../nix-config.org::*MacOS Settings][MacOS Settings:1]]
 networking.hostName = "shaunsingh-laptop";
 system.stateVersion = 4;
-# MacOS Settings:1 ends here
 
-
-
-# Along with that, lets
-# - Increase key repeat rate
-# - Remap Caps to Esc
-# - Save screenshots to =/tmp=
-# - Autohide the dock and menubar
-# - Show extensions in Finder (and allow it to "quit")
-# - Set macOS to use the dark theme
-# - Configure Trackpad and mouse behavior
-# - Enable subpixel antialiasing on internal/external displays
-
-# [[file:../nix-config.org::*MacOS Settings][MacOS Settings:2]]
 system.keyboard = {
     enableKeyMapping = true;
     remapCapsLockToEscape = true;
@@ -203,4 +168,3 @@ system.keyboard = {
     };
   };
 }
-# MacOS Settings:2 ends here

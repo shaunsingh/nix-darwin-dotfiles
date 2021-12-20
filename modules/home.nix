@@ -1,14 +1,5 @@
-# Home.nix
-# Home Manager allows you to use Nix’s declarative approach to manage your user-level configuration and packages. It works on any *nix system supported by Nix, including MacOS.
-
-# [[file:../nix-config.org::*Home.nix][Home.nix:1]]
 { pkgs, lib, config, home-manager, nix-darwin, inputs, ... }: {
-# Home.nix:1 ends here
 
-# Git
-# As opposed to what the xcode CLT provides, I want lfs enabled with git, and use =delta= instead of the default diff tool (rust alternatives go brr). MacOS is also quite annoying with its =.DS_Store='s everywhere, so lets ignore that
-
-# [[file:../nix-config.org::*Git][Git:1]]
 home-manager.users.shauryasingh.programs.git = {
   enable = true;
   userName = "shaunsingh";
@@ -22,12 +13,7 @@ home-manager.users.shauryasingh.programs.git = {
   };
   ignores = [ ".dir-locals.el" ".envrc" ".DS_Store" ];
 };
-# Git:1 ends here
 
-# IdeaVim
-# Intellij Idea ships with a very nice Vim emulation plugin. This is configured via a vimrc-like file (=~/.ideavimrc=). Since it doesn't have proper support in home-manger, we can just generate a file and symlink it into place
-
-# [[file:../nix-config.org::*IdeaVim][IdeaVim:1]]
 home-manager.users.shauryasingh.home.file = {
    ".ideavimrc".text = ''
      " settings
@@ -79,20 +65,9 @@ home-manager.users.shauryasingh.home.file = {
      nmap <leader>E :action Tool_External Tools_emacsclient<cr>
    '';
 };
-# IdeaVim:1 ends here
 
-# Firefox
-# Although safari is my main browser, firefox looks very appealing with its excellent privacy and speed
-
-# [[file:../nix-config.org::*Firefox][Firefox:1]]
 home-manager.users.shauryasingh.programs.firefox.enable = true;
-# Firefox:1 ends here
 
-
-
-# GUI apps are very finicky with nix, and so I create a fake package so that we can still use the configuration from =home-manager= without having to install it via nix. The user can then install firefox manually to =~/Applications=
-
-# [[file:../nix-config.org::*Firefox][Firefox:2]]
 home-manager.users.shauryasingh.programs.firefox.package =
   pkgs.runCommand "firefox-0.0.0" { } "mkdir $out";
 home-manager.users.shauryasingh.programs.firefox.extensions =
@@ -103,13 +78,7 @@ home-manager.users.shauryasingh.programs.firefox.extensions =
       reddit-enhancement-suite
       betterttv
     ];
-# Firefox:2 ends here
 
-
-
-# Now for the configuration. We want firefox to use the css at [[file:./configs/userChrome.css]], and we want to configure the UI. Lets also enable the (rust powered ftw) webrender/servo renderer.
-
-# [[file:../nix-config.org::*Firefox][Firefox:3]]
 home-manager.users.shauryasingh.programs.firefox.profiles = let
   userChrome = builtins.readFile ../configs/userChrome.css;
   settings = {
@@ -145,16 +114,11 @@ in {
     id = 0;
   };
 };
-# Firefox:3 ends here
 
-# Alacritty
-# Alacritty is my terminal emulator of choice. Similar to firefox, we want to create a fake package, and then configure it as normal
-
-# [[file:../nix-config.org::*Alacritty][Alacritty:1]]
 home-manager.users.shauryasingh.programs.alacritty = {
   enable = true;
-  # We need to give it a dummy package
-  package = pkgs.runCommand "alacritty-0.0.0" { } "mkdir $out";
+  package = pkgs.alacritty-ligatures;
+  # package = pkgs.runCommand "alacritty-0.0.0" { } "mkdir $out";
   settings = {
     window.padding.x = 45;
     window.padding.y = 45;
@@ -202,34 +166,19 @@ home-manager.users.shauryasingh.programs.alacritty = {
     };
   };
 };
-# Alacritty:1 ends here
 
-# Fish
-# I like to use the fish shell. Although it isn't POSIX, it has the best autocompletion and highlighting I've seen.
-
-# [[file:../nix-config.org::*Fish][Fish:1]]
 programs.fish.enable = true;
 environment.shells = with pkgs; [ fish ];
 users.users.shauryasingh = {
   home = "/Users/shauryasingh";
   shell = pkgs.fish;
 };
-# Fish:1 ends here
 
-# Settings fish as default
-# On macOS nix doesn't set the fish shell to the main shell by default (like it does on NixOS), so lets do that manually
-
-# [[file:../nix-config.org::*Settings fish as default][Settings fish as default:1]]
 system.activationScripts.postActivation.text = ''
   # Set the default shell as fish for the user
   sudo chsh -s ${lib.getBin pkgs.fish}/bin/fish shauryasingh
 '';
-# Settings fish as default:1 ends here
 
-# Aliases
-# I also like to alias common commands with other, better rust alternatives :tm:
-
-# [[file:../nix-config.org::*Aliases][Aliases:1]]
 programs.fish.shellAliases = with pkgs; {
   ":q" = "exit";
   vi = "emacsclient -c";
@@ -243,12 +192,7 @@ programs.fish.shellAliases = with pkgs; {
   find = "fd";
   calc = "emacs -f full-calc";
 };
-# Aliases:1 ends here
 
-# Prompt
-# I like to make my prompt look pretty (along with some =nix-shell= and =git= integration)
-
-# [[file:../nix-config.org::*Prompt][Prompt:1]]
 programs.fish.promptInit = ''
   set -g fish_greeting ""
   set -U fish_color_autosuggestion      brblack
@@ -342,34 +286,19 @@ programs.fish.promptInit = ''
 
   end
 '';
-# Prompt:1 ends here
 
-# Init
-# I also want to disable the default greeting. Lets also set =nvim= as the default editor, and add emacs to my path
-
-# [[file:../nix-config.org::*Init][Init:1]]
 programs.fish.interactiveShellInit = ''
   set -g fish_greeting ""
   zoxide init fish --cmd cd | source
   set -x EDITOR "nvim"
   set -x PATH ~/.config/emacs/bin $PATH
 '';
-# Init:1 ends here
 
-# Bat
-# Bat is another rust alternative :tm: to cat, and provides syntax highlighting. Lets theme it to match nord
-
-# [[file:../nix-config.org::*Bat][Bat:1]]
 home-manager.users.shauryasingh.programs.bat = {
   enable = true;
   config = { theme = "GitHub"; };
 };
-# Bat:1 ends here
 
-# Tmux
-# Lastly, lets make tmux look just as pretty as our prompt, and enable truecolor support.
-
-# [[file:../nix-config.org::*Tmux][Tmux:1]]
 programs.tmux.enable = true;
   programs.tmux.extraConfig = ''
     # make sure fish works in tmux
@@ -408,4 +337,3 @@ programs.tmux.enable = true;
     set -g window-status-format "#[fg=magenta]#[fg=white]#[bg=magenta]#I #[bg=brightwhite]#[fg=black] #W#[fg=brightwhite]#[bg=default] "
   '';
 }
-# Tmux:1 ends here
