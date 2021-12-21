@@ -46,6 +46,10 @@ in
     ${lib.concatStringsSep "\n"
       (lib.mapAttrsToList (name: src: "name=${name}; ln -s ${src}/parser $out/bin/\${name#tree-sitter-}.so") grammars)};
   '');
+  services.emacs = {
+    enable = true;
+    package = pkgs.emacs;
+  };
 
 # fzf-native
   home-manager.users.shauryasingh.xdg.dataFile."nvim/site/pack/packer/start/telescope-fzf-native.nvim/build/libfzf.so".source = "${pkgs.vimPlugins.telescope-fzf-native-nvim}/build/libfzf.so";

@@ -122,7 +122,7 @@
                     ++ [ prev.darwin.apple_sdk.frameworks.WebKit pkgs.cairo pkgs.harfbuzz];
 
                   configureFlags = o.configureFlags
-                    ++ [ "--with-cairo" "--with-harfbuzz" ];
+                    ++ [ "--with-rsvg" "--with-threads" "--without-gpm" "--without-dbus" "--without-mailutils" "--without-toolkit-scroll-bars" "--without-pop" ];
 
                   patches = [
                     ./patches/fix-window-role.patch
