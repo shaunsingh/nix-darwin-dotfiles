@@ -37,7 +37,7 @@ in
     # languagetool
     # neovim deps
     neovim-nightly
-    # neovide-git
+    # neovide
     # nodejs-16_x
     tree-sitter
   ];

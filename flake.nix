@@ -80,6 +80,7 @@
               (final: prev: {
                 doomEmacsRevision = inputs.doom-emacs.rev;
                 sf-mono-liga-bin = pkgs.callPackage ./pkgs/sf-mono-liga-bin { };
+                neovide = pkgs.callPackage ./pkgs/neovide { };
                 yabai = let
                   version = "4.0.0-dev";
                   buildSymlinks = prev.runCommand "build-symlinks" { } ''
