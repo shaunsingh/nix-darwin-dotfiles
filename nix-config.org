@@ -1098,14 +1098,15 @@ in
     (ripgrep.override { withPCRE2 = true; })
     fd
     sqlite
-    # gnuplot
-    # pandoc
-    # sdcv
+    gnuplot
+    pandoc
+    sdcv
     (aspellWithDicts (ds: with ds; [ en en-computers en-science ]))
     tectonic
     emacsSyncScript
-    # languagetool
-    # neovim deps
+    mu
+    isync
+    languagetool
     neovim-nightly
     # neovide
     nodejs-16_x
