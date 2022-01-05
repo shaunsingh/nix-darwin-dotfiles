@@ -53,6 +53,211 @@
   };
 
   outputs = { self, nixpkgs, darwin, home-manager, ... }@inputs: {
+    nixosConfigurations = {
+      # macbook 6,1 config
+      macbook61-laptop = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = [
+          ./modules/home.nix
+          ./modules/editors.nix
+          ./hardware/macbook61-hardware-configuration.nix
+          {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+            };
+          }
+          ({ pkgs, lib, config, ... }: {
+            services.nix-daemon.enable = true;
+            nixpkgs = {
+              config.allowUnfree = true;
+              overlays = with inputs; [
+                nur.overlay
+                neovim-overlay.overlay
+                rust-overlay.overlay
+                (final: prev: {
+                  doomEmacsRevision = inputs.doom-emacs.rev;
+                  sf-mono-liga-bin =
+                    pkgs.callPackage ./pkgs/sf-mono-liga-bin { };
+                  emacs = (prev.emacs.override {
+                    srcRepo = true;
+                    nativeComp = true;
+                    withSQLite3 = true;
+                  }).overrideAttrs (o: rec {
+                    version = "29.0.50";
+                    src = inputs.emacs-src;
+
+                    buildInputs = o.buildInputs
+                      ++ [ pkgs.librsvg pkgs.cairo pkgs.harfbuzz ];
+
+                    configureFlags = o.configureFlags ++ [
+                      "--with-rsvg"
+                      "--with-threads"
+                      "--without-gpm"
+                      "--without-dbus"
+                      "--without-mailutils"
+                      "--without-toolkit-scroll-bars"
+                      "--with-cairo"
+                      "--with-harfbuzz"
+                    ];
+
+                    postPatch = o.postPatch + ''
+                      substituteInPlace lisp/loadup.el \
+                      --replace '(emacs-repository-get-branch)' '"master"'
+                    '';
+
+                    CFLAGS =
+                      "-O3 -mtune=native -march=native -fomit-frame-pointer";
+                  });
+                })
+              ];
+            };
+            nix = {
+              package = pkgs.nix;
+              extraOptions = ''
+                experimental-features = nix-command flakes
+              '';
+            };
+
+            # Power management
+            services.power-profiles-daemon.enable = true;
+            powerManagement.cpuFreqGovernor = lib.mkDefault "performance";
+            services.thermald.enable = true;
+
+            # Macbook (non-pro), I mean it should work right?
+            services.mbpfan = {
+              enable = true;
+              lowTemp = 65;
+              highTemp = 75;
+              maxTemp = 100;
+              maxFanSpeed = 6500;
+              minFanSpeed = 1200;
+              pollingInterval = 7;
+            };
+
+            # enable the xserver (and use nvidia drivers)
+            services.xserver = {
+              enable = true;
+              libinput = {
+                enable = true;
+              };
+              videoDrivers = [ "nvidia" ];
+            };
+
+            # non-free firmware
+            hardware = {
+              enableRedistributableFirmware = true;
+              nvidia = {
+                package = config.boot.kernelPackages.nvidiaPackages.legacy_340;
+                powerManagement.enable = true;
+              };
+            };
+
+            # Network settings.
+            networking = {
+              hostName = "macbook61-laptop"; # Hostname
+              useDHCP = false; # Deprecated, so set explicitly to false
+              wireless.enable = false;
+              networkmanager.enable = true; # Enable networkmanager
+            };
+
+            # Bootloader
+            boot.loader.efi.canTouchEfiVariables = true;
+            boot.loader.systemd-boot.enable = true;
+
+            # Set your time zone.
+            time.timeZone = "America/New_York";
+
+            # Select internationalisation properties.
+            i18n.defaultLocale = "en_US.UTF-8";
+            console = {
+              font = "Lat2-Terminus16";
+              keyMap = "us";
+            };
+
+            # Sound
+            sound.enable = false;
+            hardware.pulseaudio.enable = false; # Pulseaudio
+
+            services.pipewire = {
+              enable = true;
+              alsa.enable = true;
+              alsa.support32Bit = true;
+              pulse.enable = true;
+              jack.enable = true;
+            };
+
+            # Define a user account. Don't forget to set a password with ‘passwd’.
+            users.users.shauryasingh = {
+              isNormalUser = true;
+              extraGroups =
+                [ "wheel" "networkManager" ]; # Enable ‘sudo’ for the user.
+              shell = pkgs.fish;
+            };
+
+            # Use fish, launch exwm after login
+            programs.fish = {
+              enable = true;
+              loginShellInit = ''
+                if test (id --user $USER) -ge 1000 && test (tty) = "/dev/tty1"
+                   exec >~/.logs/xsession 2>&1
+                   export LANG="en_GB.UTF-8"
+                   export LANGUAGE="en_GB.UTF-8"
+                   export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u)/bus
+                   export _JAVA_AWT_WM_NONREPARENTING=1
+                   wmname LG3D
+                   xset -dpms
+                   xset s off
+                   # xss-lock -- gnome-screensaver-command -l &
+                   xhost +SI:localuser:$USER
+                   emacs -mm --with-exwm
+                end
+              '';
+            };
+
+            environment.systemPackages = with pkgs; [
+              # emacs needs to be here since its a GUI app
+              emacs
+
+              # Build Tools
+              jdk
+              rust-bin.nightly.latest.default
+
+              # Language Servers
+              nodePackages.pyright
+              rust-analyzer
+
+              # Formatting
+              nixfmt
+              black
+              shellcheck
+
+              # Terminal utils and rust alternatives :tm:
+              xcp
+              lsd
+              procs
+              tree
+              zoxide
+              bottom
+
+              # linux programs
+              firefox
+              discord
+              flameshot
+            ];
+            fonts = {
+              enableFontDir = true;
+              fonts = with pkgs; [
+                overpass
+                fira
+                emacs-all-the-icons-fonts
+                sf-mono-liga-bin
+              ];
+            };
+          })
+        ];
+      };
+    };
     darwinConfigurations."shaunsingh-laptop" = darwin.lib.darwinSystem {
       system = "aarch64-darwin";
       modules = [
@@ -119,11 +324,21 @@
                   version = "29.0.50";
                   src = inputs.emacs-src;
 
-                  buildInputs = o.buildInputs
-                    ++ [ prev.darwin.apple_sdk.frameworks.WebKit pkgs.cairo pkgs.harfbuzz];
+                  buildInputs = o.buildInputs ++ [
+                    prev.darwin.apple_sdk.frameworks.WebKit
+                    pkgs.cairo
+                    pkgs.harfbuzz
+                  ];
 
-                  configureFlags = o.configureFlags
-                    ++ [ "--with-rsvg" "--with-threads" "--without-gpm" "--without-dbus" "--without-mailutils" "--without-toolkit-scroll-bars" "--without-pop" ];
+                  configureFlags = o.configureFlags ++ [
+                    "--with-rsvg"
+                    "--with-threads"
+                    "--without-gpm"
+                    "--without-dbus"
+                    "--without-mailutils"
+                    "--without-toolkit-scroll-bars"
+                    "--without-pop"
+                  ];
 
                   patches = [
                     ./patches/fix-window-role.patch

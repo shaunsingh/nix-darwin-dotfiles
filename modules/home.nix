@@ -174,10 +174,10 @@
     shell = pkgs.fish;
   };
 
-  system.activationScripts.postActivation.text = ''
+#  system.activationScripts.postActivation.text = ''
     # Set the default shell as fish for the user
-    sudo chsh -s ${lib.getBin pkgs.fish}/bin/fish shauryasingh
-  '';
+#    sudo chsh -s ${lib.getBin pkgs.fish}/bin/fish shauryasingh
+#  '';
 
   programs.fish.shellAliases = with pkgs; {
     ":q" = "exit";

@@ -38,7 +38,7 @@ in
     isync
     languagetool
     neovim-nightly
-    # neovide
+    neovide
     nodejs-16_x
     tree-sitter
   ];
