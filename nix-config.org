@@ -297,10 +297,6 @@ The =flake.nix= below does the following:
       url = "github:nix-community/neovim-nightly-overlay";
       inputs.nixpkgs.follows = "unstable";
     };
-    alacritty-src = {
-      url = "github:zenixls2/alacritty/ligature";
-      flake = false;
-    };
   };
 
   outputs = { self, nixpkgs, darwin, home-manager, ... }@inputs: {
@@ -557,15 +553,6 @@ The =flake.nix= below does the following:
 
                   nativeBuildInputs = [ buildSymlinks ];
                 });
-                alacritty-ligatures = with pkgs;
-                  (alacritty.overrideAttrs (old: rec {
-                    src = inputs.alacritty-src;
-                    cargoDeps = old.cargoDeps.overrideAttrs (_: {
-                      inherit src;
-                      outputHash =
-                        "sha256-tY5sle1YUlUidJcq7RgTzkPsGLnWyG/3rtPqy2GklkY=";
-                    });
-                  }));
                 emacs = (prev.emacs.override {
                   srcRepo = true;
                   nativeComp = true;
@@ -1021,8 +1008,7 @@ Alacritty is my terminal emulator of choice. Similar to firefox, we want to crea
 #+begin_src nix :comments none :tangle "./modules/home.nix"
   home-manager.users.shauryasingh.programs.alacritty = {
     enable = true;
-    package = pkgs.alacritty-ligatures;
-    # package = pkgs.runCommand "alacritty-0.0.0" { } "mkdir $out";
+    package = pkgs.runCommand "alacritty-0.0.0" { } "mkdir $out";
     settings = {
       window.padding.x = 45;
       window.padding.y = 45;
@@ -1323,7 +1309,7 @@ in
     isync
     languagetool
     neovim-nightly
-    neovide
+    # neovide
     nodejs-16_x
     tree-sitter
   ];
@@ -1449,7 +1435,8 @@ Skhd is the hotkey daemon for yabai. As yabai is disabled, it makes sense to dis
       cmd - return : alacritty
 
       # open emacs
-      cmd - e : emacsclient -c
+      cmd - e : emacs
+      cmd + lalt -e : emacsclient --eval "(emacs-everywhere)"
       cmd + shift -e : emacsclient --eval "(emacs-everywhere)"
 
       # focus window

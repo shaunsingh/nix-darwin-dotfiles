@@ -46,10 +46,6 @@
       url = "github:nix-community/neovim-nightly-overlay";
       inputs.nixpkgs.follows = "unstable";
     };
-    alacritty-src = {
-      url = "github:zenixls2/alacritty/ligature";
-      flake = false;
-    };
   };
 
   outputs = { self, nixpkgs, darwin, home-manager, ... }@inputs: {
@@ -306,15 +302,6 @@
 
                   nativeBuildInputs = [ buildSymlinks ];
                 });
-                alacritty-ligatures = with pkgs;
-                  (alacritty.overrideAttrs (old: rec {
-                    src = inputs.alacritty-src;
-                    cargoDeps = old.cargoDeps.overrideAttrs (_: {
-                      inherit src;
-                      outputHash =
-                        "sha256-tY5sle1YUlUidJcq7RgTzkPsGLnWyG/3rtPqy2GklkY=";
-                    });
-                  }));
                 emacs = (prev.emacs.override {
                   srcRepo = true;
                   nativeComp = true;
