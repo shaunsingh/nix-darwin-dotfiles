@@ -2,9 +2,6 @@
 #+subtitle: Dotfiles managed via [[https://github.com/LnL7/nix-darwin][Nix-Darwin]], and [[https://github.com/nix-community/home-manager][Home-Manager]]
 #+author: shaunsingh
 
-** [[https://shaunsingh.github.io/nix-darwin-dotfiles/][HTML Version]]
-** [[https://github.com/shaunsingh/nix-darwin-dotfiles/blob/gh-pages/nix-config.pdf][PDF Version]]
-
 * Images 
 [[./extra/assets/1.png]]
 [[./extra/assets/2.png]]
