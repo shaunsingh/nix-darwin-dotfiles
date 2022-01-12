@@ -494,7 +494,9 @@ The =flake.nix= below does the following:
               # linux programs
               firefox
               discord
+              discocss
               flameshot
+
             ];
             fonts = {
               enableFontDir = true;
@@ -667,6 +669,7 @@ The =flake.nix= below does the following:
             tree
             zoxide
             bottom
+            discocss
           ];
           fonts = {
             enableFontDir = true;
@@ -762,6 +765,12 @@ Intellij Idea ships with a very nice Vim emulation plugin. This is configured vi
       nmap <leader>E :action Tool_External Tools_emacsclient<cr>
     '';
  };
+#+end_src
+
+*** Discocss
+Discord is an app I use almost every day, so lets spice it up a bit. Still, its a pain to work with CSS files without highlighting so I'll just have HM link a file instead.
+#+begin_src nix :comments none :tangle "./modules/home.nix"
+  home-manager.users.shauryasingh.xdg.dataFile."discocss/custom.css".source = ../configs/custom.css;
 #+end_src
 
 *** Firefox

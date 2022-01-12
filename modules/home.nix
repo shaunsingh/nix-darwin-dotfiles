@@ -66,6 +66,8 @@
     '';
  };
 
+  home-manager.users.shauryasingh.xdg.dataFile."discocss/custom.css".source = ../configs/custom.css;
+
   home-manager.users.shauryasingh.programs.firefox.enable = true;
 
   home-manager.users.shauryasingh.programs.firefox.package =

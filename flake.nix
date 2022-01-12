@@ -11,21 +11,21 @@
     nur.url = "github:nix-community/NUR";
     # core
     darwin = {
-      url = "github:LnL7/nix-darwin/master";
+      url = "github:LnL7/nix-darwin";
       inputs.nixpkgs.follows = "unstable";
     };
     home-manager = {
-      url = "github:nix-community/home-manager/master";
+      url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "unstable";
     };
     # Bar
     spacebar = {
-      url = "github:shaunsingh/spacebar/master";
+      url = "github:shaunsingh/spacebar";
       inputs.nixpkgs.follows = "unstable";
     };
     # WM
     yabai-src = {
-      url = "github:koekeishiya/yabai/master";
+      url = "github:koekeishiya/yabai";
       flake = false;
     };
     # Editors
@@ -243,7 +243,9 @@
               # linux programs
               firefox
               discord
+              discocss
               flameshot
+
             ];
             fonts = {
               enableFontDir = true;
@@ -416,6 +418,7 @@
             tree
             zoxide
             bottom
+            discocss
           ];
           fonts = {
             enableFontDir = true;

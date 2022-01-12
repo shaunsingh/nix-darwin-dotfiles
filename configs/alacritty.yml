@@ -42,24 +42,24 @@ color_schemes:
       cursor: '0x37474F'
 
     normal:
-      black:   '0x000000'
-      red:     '0xFF6961'
-      green:   '0x028e2c'
-      yellow:  '0xFFaB91'
-      blue:    '0x0098dd'
-      magenta: '0x673AB7'
-      cyan:    '0x81A1C1'
-      white:   '0xFAFAFA'
+      black:   '#000000'
+      red:     '#FF6961'
+      green:   '#028e2c'
+      yellow:  '#FFaB91'
+      blue:    '#0098dd'
+      magenta: '#673AB7'
+      cyan:    '#81A1C1'
+      white:   '#FAFAFA'
 
     bright:
-      black:   '0x000000'
-      red:     '0xFF6961'
-      green:   '0x028e2c'
-      yellow:  '0xFFaB91'
-      blue:    '0x0098dd'
-      magenta: '0x673AB7'
-      cyan:    '0x81A1C1'
-      white:   '0xFAFAFA'
+      black:   '#000000'
+      red:     '#FF6961'
+      green:   '#028e2c'
+      yellow:  '#FFaB91'
+      blue:    '#0098dd'
+      magenta: '#673AB7'
+      cyan:    '#81A1C1'
+      white:   '#FAFAFA'
 
     indexed_colors: []
 
