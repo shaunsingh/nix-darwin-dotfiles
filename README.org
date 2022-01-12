@@ -6,7 +6,11 @@
 ** [[https://github.com/shaunsingh/nix-darwin-dotfiles/blob/gh-pages/nix-config.pdf][PDF Version]]
 
 * Images 
-[[./extra/assets/macOS.png]]
+[[./extra/assets/1.png]]
+[[./extra/assets/2.png]]
+[[./extra/assets/3.png]]
+[[./extra/assets/4.png]]
+[[./extra/assets/5.png]]
 
 * Installing and notes
 *NOTE: These are available as an executable script [[./extra/install.sh]]*
