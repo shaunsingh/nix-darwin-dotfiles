@@ -33,6 +33,10 @@
       url = "github:emacs-mirror/emacs";
       flake = false;
     };
+    emacs-vterm-src = {
+      url = "github:akermu/emacs-libvterm";
+      flake = false;
+    };
     doom-emacs = {
       url = "github:hlissner/doom-emacs/develop";
       flake = false;
@@ -302,6 +306,42 @@
 
                   nativeBuildInputs = [ buildSymlinks ];
                 });
+                emacs-vterm = prev.stdenv.mkDerivation rec {
+                  pname = "emacs-vterm";
+                  version = "master";
+
+                  src = inputs.emacs-vterm-src;
+
+                  nativeBuildInputs = [
+                    prev.cmake
+                    prev.libtool
+                    prev.glib.dev
+                  ];
+
+                  buildInputs = [
+                    prev.glib.out
+                    prev.libvterm-neovim
+                    prev.ncurses
+                  ];
+
+                  cmakeFlags = [
+                    "-DUSE_SYSTEM_LIBVTERM=yes"
+                  ];
+
+                  preConfigure = ''
+                    echo "include_directories(\"${prev.glib.out}/lib/glib-2.0/include\")" >> CMakeLists.txt
+                    echo "include_directories(\"${prev.glib.dev}/include/glib-2.0\")" >> CMakeLists.txt
+                    echo "include_directories(\"${prev.ncurses.dev}/include\")" >> CMakeLists.txt
+                    echo "include_directories(\"${prev.libvterm-neovim}/include\")" >> CMakeLists.txt
+                  '';
+
+                  installPhase = ''
+                    mkdir -p $out
+                    cp ../vterm-module.so $out
+                    cp ../vterm.el $out
+                  '';
+
+                };
                 emacs = (prev.emacs.override {
                   srcRepo = true;
                   nativeComp = true;
@@ -311,15 +351,9 @@
                   version = "29.0.50";
                   src = inputs.emacs-src;
 
-                  buildInputs = o.buildInputs ++ [
-                    prev.darwin.apple_sdk.frameworks.WebKit
-                    pkgs.cairo
-                    pkgs.harfbuzz
-                  ];
+                  buildInputs = o.buildInputs ++ [ prev.darwin.apple_sdk.frameworks.WebKit ];
 
                   configureFlags = o.configureFlags ++ [
-                    "--with-rsvg"
-                    "--with-threads"
                     "--without-gpm"
                     "--without-dbus"
                     "--without-mailutils"
@@ -329,13 +363,18 @@
 
                   patches = [
                     ./patches/fix-window-role.patch
-                    # ./patches/fix-harfbuzz-check.patch
+                    ./patches/system-appearance.patch
                     # ./patches/no-titlebar.patch
                   ];
 
                   postPatch = o.postPatch + ''
                     substituteInPlace lisp/loadup.el \
                     --replace '(emacs-repository-get-branch)' '"master"'
+                  '';
+
+                  postInstall = o.postInstall + ''
+                    cp ${final.emacs-vterm}/vterm.el $out/share/emacs/site-lisp/vterm.el
+                    cp ${final.emacs-vterm}/vterm-module.so $out/share/emacs/site-lisp/vterm-module.so
                   '';
 
                   CFLAGS =
