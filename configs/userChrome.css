@@ -1,122 +1,122 @@
- :root {
+:root {
 
-    --window-colour:               #FFFFFF;
-    --secondary-colour:            #FAFAFA;
-    --inverted-colour:             #37474F;
+--window-colour:               #2E3440;
+--secondary-colour:            #434C5E;
+--inverted-colour:             #ECEFF4;
 
-    --uc-identity-color-blue:      #81a1c1;
-    --uc-identity-color-turquoise: #0098dd;
-    --uc-identity-color-green:     #028e2c;
-    --uc-identity-color-yellow:    #FFaB91;
-    --uc-identity-color-orange:    #FFAB91;
-    --uc-identity-color-red:       #ff6961;
-    --uc-identity-color-pink:      #673AB7;
-    --uc-identity-color-purple:    #673AB7;
+--uc-identity-color-blue:      #81a1c1;
+--uc-identity-color-turquoise: #8FBCBB;
+--uc-identity-color-green:     #A3BE8C;
+--uc-identity-color-yellow:    #EBCB8B;
+--uc-identity-color-orange:    #D08770;
+--uc-identity-color-red:       #BF616A;
+--uc-identity-color-pink:      #B48EAD;
+--uc-identity-color-purple:    #B48EAD;
 
 
-    /* URL colour in URL bar suggestions */
-    --urlbar-popup-url-color: var(--uc-identity-color-purple) !important;
-     
-    /* global border radius */
-    --uc-border-radius: 0;
+/* URL colour in URL bar suggestions */
+--urlbar-popup-url-color: var(--uc-identity-color-purple) !important;
 
-    /* dynamic url bar width settings */
-    --uc-urlbar-width: clamp(200px, 40vw, 500px);
+/* global border radius */
+--uc-border-radius: 0;
 
-    /* dynamic tab width settings */
-    --uc-active-tab-width:   clamp(100px, 20vw, 300px);
-    --uc-inactive-tab-width: clamp( 50px, 15vw, 200px);
+/* dynamic url bar width settings */
+--uc-urlbar-width: clamp(200px, 40vw, 500px);
 
-    /* if active always shows the tab close button */
-    --show-tab-close-button: none; /* DEFAULT: -moz-inline-box; */
+/* dynamic tab width settings */
+--uc-active-tab-width:   clamp(100px, 20vw, 300px);
+--uc-inactive-tab-width: clamp( 50px, 15vw, 200px);
 
-    /* if active only shows the tab close button on hover*/
-    --show-tab-close-button-hover: none; /* DEFAULT: -moz-inline-box; */
+/* if active always shows the tab close button */
+--show-tab-close-button: none; /* DEFAULT: -moz-inline-box; */
 
-    /* adds left and right margin to the container-tabs indicator */
-    --container-tabs-indicator-margin: 10px;
+/* if active only shows the tab close button on hover*/
+--show-tab-close-button-hover: none; /* DEFAULT: -moz-inline-box; */
+
+/* adds left and right margin to the container-tabs indicator */
+--container-tabs-indicator-margin: 10px;
 
 }
 
-     #back-button,
-     #forward-button { display: none !important; }
+#back-button,
+#forward-button { display: none !important; }
 
-     /* bookmark icon */
-     #star-button{ display: none !important; }
+/* bookmark icon */
+#star-button{ display: none !important; }
 
-     /* zoom indicator */
-     #urlbar-zoom-button { display: none !important; }
+/* zoom indicator */
+#urlbar-zoom-button { display: none !important; }
 
-     /* Make button small as Possible, hidden out of sight */
-     #PanelUI-button { margin-top: -5px; margin-bottom: 44px; }
+/* Make button small as Possible, hidden out of sight */
+#PanelUI-button { margin-top: -5px; margin-bottom: 44px; }
 
-     #PanelUI-menu-button {
+#PanelUI-menu-button {
 
-        padding: 0px !important;
-        max-height: 1px;
+padding: 0px !important;
+max-height: 1px;
 
-        list-style-image: none !important;
+list-style-image: none !important;
 
-     }
+}
 
-     #PanelUI-menu-button .toolbarbutton-icon { width: 1px !important; }
-     #PanelUI-menu-button .toolbarbutton-badge-stack { padding: 0px !important; }
+#PanelUI-menu-button .toolbarbutton-icon { width: 1px !important; }
+#PanelUI-menu-button .toolbarbutton-badge-stack { padding: 0px !important; }
 
-     #reader-mode-button{ display: none !important; }
+#reader-mode-button{ display: none !important; }
 
-     /* tracking protection shield icon */
-     #tracking-protection-icon-container { display: none !important; }
+/* tracking protection shield icon */
+#tracking-protection-icon-container { display: none !important; }
 
-     /* #identity-box { display: none !important } /* hides encryption AND permission items */
-     #identity-permission-box { display: none !important; } /* only hodes permission items */
+/* #identity-box { display: none !important } /* hides encryption AND permission items */
+#identity-permission-box { display: none !important; } /* only hodes permission items */
 
-     /* e.g. playing indicator (secondary - not icon) */
-     .tab-secondary-label { display: none !important; }
+/* e.g. playing indicator (secondary - not icon) */
+.tab-secondary-label { display: none !important; }
 
-     #pageActionButton { display: none !important; }
-     #page-action-buttons { display: none !important; }
+#pageActionButton { display: none !important; }
+#page-action-buttons { display: none !important; }
 
-     #urlbar-go-button { display: none !important; }
+#urlbar-go-button { display: none !important; }
 
 :root {
 
-    --uc-theme-colour:                          var(--window-colour);
-    --uc-hover-colour:                          var(--secondary-colour);
-    --uc-inverted-colour:                       var(--inverted-colour);
+--uc-theme-colour:                          var(--window-colour);
+--uc-hover-colour:                          var(--secondary-colour);
+--uc-inverted-colour:                       var(--inverted-colour);
 
-    --button-bgcolor:                           var(--uc-theme-colour)    !important;
-    --button-hover-bgcolor:                     var(--uc-hover-colour)    !important;
-    --button-active-bgcolor:                    var(--uc-hover-colour)    !important;
+--button-bgcolor:                           var(--uc-theme-colour)    !important;
+--button-hover-bgcolor:                     var(--uc-hover-colour)    !important;
+--button-active-bgcolor:                    var(--uc-hover-colour)    !important;
 
-    --toolbar-bgcolor:                          var(--uc-theme-colour)    !important;
-    --toolbarbutton-hover-background:           var(--uc-hover-colour)    !important;
-    --toolbarbutton-active-background:          var(--uc-hover-colour)    !important;
-    --toolbarbutton-border-radius:              var(--uc-border-radius)   !important;
-    --lwt-toolbar-field-focus:                  var(--uc-theme-colour)    !important;
-    --toolbarbutton-icon-fill:                  var(--uc-inverted-colour) !important;
-    --toolbar-field-focus-background-color:     var(--secondary-colour)   !important;
-    --toolbar-field-color:                      var(--uc-inverted-colour) !important;
-    --toolbar-field-focus-color:                var(--uc-inverted-colour) !important;
+--toolbar-bgcolor:                          var(--uc-theme-colour)    !important;
+--toolbarbutton-hover-background:           var(--uc-hover-colour)    !important;
+--toolbarbutton-active-background:          var(--uc-hover-colour)    !important;
+--toolbarbutton-border-radius:              var(--uc-border-radius)   !important;
+--lwt-toolbar-field-focus:                  var(--uc-theme-colour)    !important;
+--toolbarbutton-icon-fill:                  var(--uc-inverted-colour) !important;
+--toolbar-field-focus-background-color:     var(--secondary-colour)   !important;
+--toolbar-field-color:                      var(--uc-inverted-colour) !important;
+--toolbar-field-focus-color:                var(--uc-inverted-colour) !important;
 
-    --tabs-border-color:                        var(--uc-theme-colour)    !important;
-    --tab-border-radius:                        var(--uc-border-radius)   !important;
-    --lwt-text-color:                           var(--uc-inverted-colour) !important;
-    --lwt-tab-text:                             var(--uc-inverted-colour) !important;
+--tabs-border-color:                        var(--uc-theme-colour)    !important;
+--tab-border-radius:                        var(--uc-border-radius)   !important;
+--lwt-text-color:                           var(--uc-inverted-colour) !important;
+--lwt-tab-text:                             var(--uc-inverted-colour) !important;
 
-    --lwt-sidebar-background-color:             var(--uc-hover-colour)    !important;
-    --lwt-sidebar-text-color:                   var(--uc-inverted-colour) !important;
+--lwt-sidebar-background-color:             var(--uc-hover-colour)    !important;
+--lwt-sidebar-text-color:                   var(--uc-inverted-colour) !important;
 
-    --arrowpanel-border-color:                  var(--uc-theme-colour)    !important;
-    --arrowpanel-border-radius:                 var(--uc-border-radius)   !important;
-    --arrowpanel-background:                    var(--uc-theme-colour)    !important;
-    --arrowpanel-color:                         var(--inverted-colour)    !important;
+--arrowpanel-border-color:                  var(--uc-theme-colour)    !important;
+--arrowpanel-border-radius:                 var(--uc-border-radius)   !important;
+--arrowpanel-background:                    var(--uc-theme-colour)    !important;
+--arrowpanel-color:                         var(--inverted-colour)    !important;
 
-    --autocomplete-popup-highlight-background:  var(--uc-inverted-colour) !important;
-    --autocomplete-popup-highlight-color:       var(--uc-inverted-colour) !important;
-    --autocomplete-popup-hover-background:      var(--uc-inverted-colour) !important;
+--autocomplete-popup-highlight-background:  var(--uc-inverted-colour) !important;
+--autocomplete-popup-highlight-color:       var(--uc-inverted-colour) !important;
+--autocomplete-popup-hover-background:      var(--uc-inverted-colour) !important;
 
 
-    --tab-block-margin: 2px !important;
+--tab-block-margin: 2px !important;
 
 }
 
@@ -129,16 +129,16 @@ window,
 #sidebar-box,
 #nav-bar {
 
-    -moz-appearance: none !important;
+-moz-appearance: none !important;
 
-    border: none !important;
-    box-shadow: none !important;
-    background: var(--uc-theme-colour) !important;
+border: none !important;
+box-shadow: none !important;
+background: var(--uc-theme-colour) !important;
 
 }
 
 /* grey out ccons inside the toolbar to make it
- * more aligned with the Black & White colour look */
+- more aligned with the Black & White colour look */
 #PersonalToolbar toolbarbutton:not(:hover),
 #bookmarks-toolbar-button:not(:hover) { filter: grayscale(1) !important; }
 
@@ -194,9 +194,9 @@ window,
     > .tab-background
     > .tab-context-line {
 
-        margin: -1px var(--container-tabs-indicator-margin) 0 var(--container-tabs-indicator-margin) !important;
+margin: -1px var(--container-tabs-indicator-margin) 0 var(--container-tabs-indicator-margin) !important;
 
-        border-radius: var(--tab-border-radius) !important;
+border-radius: var(--tab-border-radius) !important;
 
 }
 
@@ -209,28 +209,28 @@ window,
 .tab-icon-overlay:not([crashed]),
 .tab-icon-overlay[pinned][crashed][selected] {
 
-  top: 5px !important;
-  z-index: 1 !important;
+top: 5px !important;
+z-index: 1 !important;
 
-  padding: 1.5px !important;
-  inset-inline-end: -8px !important;
-  width: 16px !important; height: 16px !important;
+padding: 1.5px !important;
+inset-inline-end: -8px !important;
+width: 16px !important; height: 16px !important;
 
-  border-radius: 10px !important;
+border-radius: 10px !important;
 
 }
 
 /* style and position speaker icon */
 .tab-icon-overlay:not([sharing], [crashed]):is([soundplaying], [muted], [activemedia-blocked]) {
 
-  stroke: transparent !important;
-  background: transparent !important;
-  opacity: 1 !important; fill-opacity: 0.8 !important;
+stroke: transparent !important;
+background: transparent !important;
+opacity: 1 !important; fill-opacity: 0.8 !important;
 
-  color: currentColor !important;
+color: currentColor !important;
 
-  stroke: var(--uc-theme-colour) !important;
-  background-color: var(--uc-theme-colour) !important;
+stroke: var(--uc-theme-colour) !important;
+background-color: var(--uc-theme-colour) !important;
 
 }
 
@@ -238,8 +238,8 @@ window,
 /* change the colours of the speaker icon on active tab to match tab colours */
 .tabbrowser-tab[selected] .tab-icon-overlay:not([sharing], [crashed]):is([soundplaying], [muted], [activemedia-blocked]) {
 
-  stroke: var(--uc-hover-colour) !important;
-  background-color: var(--uc-hover-colour) !important;
+stroke: var(--uc-hover-colour) !important;
+background-color: var(--uc-hover-colour) !important;
 
 }
 
@@ -249,11 +249,11 @@ window,
 
 .tabbrowser-tab:not([image]) .tab-icon-overlay:not([pinned], [sharing], [crashed]) {
 
-  top: 0 !important;
+top: 0 !important;
 
-  padding: 0 !important;
-  margin-inline-end: 5.5px !important;
-  inset-inline-end: 0 !important;
+padding: 0 !important;
+margin-inline-end: 5.5px !important;
+inset-inline-end: 0 !important;
 
 }
 
@@ -262,10 +262,10 @@ window,
 .tab-icon-overlay:not([crashed])[muted]:hover,
 .tab-icon-overlay:not([crashed])[activemedia-blocked]:hover {
 
-    color: currentColor !important;
-    stroke: var(--uc-inverted-colour) !important;
-    background-color: var(--uc-inverted-colour) !important;
-    fill-opacity: 0.95 !important;
+color: currentColor !important;
+stroke: var(--uc-inverted-colour) !important;
+background-color: var(--uc-inverted-colour) !important;
+fill-opacity: 0.95 !important;
 
 }
 
@@ -274,10 +274,10 @@ window,
 .tabbrowser-tab[selected] .tab-icon-overlay:not([crashed])[muted]:hover,
 .tabbrowser-tab[selected] .tab-icon-overlay:not([crashed])[activemedia-blocked]:hover {
 
-    color: currentColor !important;
-    stroke: var(--uc-inverted-colour) !important;
-    background-color: var(--uc-inverted-colour) !important;
-    fill-opacity: 0.95 !important;
+color: currentColor !important;
+stroke: var(--uc-inverted-colour) !important;
+background-color: var(--uc-inverted-colour) !important;
+fill-opacity: 0.95 !important;
 
 }
 
@@ -295,9 +295,9 @@ window,
 
 #nav-bar {
 
-    border:     none !important;
-    box-shadow: none !important;
-    background: transparent !important;
+border:     none !important;
+box-shadow: none !important;
+background: transparent !important;
 
 }
 
@@ -309,8 +309,8 @@ window,
 #urlbar,
 #urlbar * {
 
-    outline: none !important;
-    box-shadow: none !important;
+outline: none !important;
+box-shadow: none !important;
 
 }
 
@@ -341,12 +341,12 @@ window,
 @media (min-width: 1000px) {
 
 
-    /* move tabs bar over */
-    #TabsToolbar { margin-left: var(--uc-urlbar-width) !important; }
+/* move tabs bar over */
+#TabsToolbar { margin-left: var(--uc-urlbar-width) !important; }
 
 
-    /* move entire nav bar  */
-    #nav-bar { margin: calc((var(--urlbar-min-height) * -1) - 8px) calc(100vw - var(--uc-urlbar-width)) 0 0 !important; }
+/* move entire nav bar  */
+#nav-bar { margin: calc((var(--urlbar-min-height) * -1) - 8px) calc(100vw - var(--uc-urlbar-width)) 0 0 !important; }
 
 
 } /* end media query */

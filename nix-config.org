@@ -824,9 +824,9 @@ GUI apps are very finicky with nix, and so I create a fake package so that we ca
       with pkgs.nur.repos.rycee.firefox-addons; [
         ublock-origin
         tridactyl
-        duckduckgo-privacy-essentials
         reddit-enhancement-suite
         betterttv
+        theme-nord-polar-night
       ];
 #+end_src
 
@@ -885,7 +885,7 @@ Alacritty is my terminal emulator of choice. Similar to firefox, we want to crea
       cursor.style = "Beam";
 
       font = {
-        size = 14;
+        size = 15;
         normal.family = "Liga SFMono Nerd Font";
         normal.style = "Light";
         bold.family = "Liga SFMono Nerd Font";

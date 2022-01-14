@@ -52,7 +52,7 @@ in
     package = pkgs.emacs;
   };
 
-  # fzf-native
+# fzf-native
   home-manager.users.shauryasingh.xdg.dataFile."nvim/site/pack/packer/start/telescope-fzf-native.nvim/build/libfzf.so".source = "${pkgs.vimPlugins.telescope-fzf-native-nvim}/build/libfzf.so";
   # tree-sitter parsers
   home-manager.users.shauryasingh.xdg.configFile."nvim/parser/lua.so".source = "${pkgs.tree-sitter.builtGrammars.tree-sitter-lua}/parser";
