@@ -421,7 +421,6 @@
             # Build Tools
             jdk
             rust-bin.nightly.latest.default
-            python310
 
             # Language Servers
             nodePackages.pyright

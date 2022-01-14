@@ -672,7 +672,6 @@ The =flake.nix= below does the following:
             # Build Tools
             jdk
             rust-bin.nightly.latest.default
-            python310
 
             # Language Servers
             nodePackages.pyright
