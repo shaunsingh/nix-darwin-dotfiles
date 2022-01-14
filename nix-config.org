@@ -885,7 +885,7 @@ Alacritty is my terminal emulator of choice. Similar to firefox, we want to crea
       cursor.style = "Beam";
 
       font = {
-        size = 16;
+        size = 14;
         normal.family = "Liga SFMono Nerd Font";
         normal.style = "Light";
         bold.family = "Liga SFMono Nerd Font";
