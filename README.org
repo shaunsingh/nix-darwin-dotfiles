@@ -3,10 +3,7 @@
 #+author: shaunsingh
 
 * Images 
-[[./extra/assets/1.png]]
-[[./extra/assets/2.png]]
-[[./extra/assets/3.png]]
-[[./extra/assets/4.png]]
+[[./extra/assets/out.png]]
 
 * Installing and notes
 *NOTE: These are available as an executable script [[./extra/install.sh]]*
