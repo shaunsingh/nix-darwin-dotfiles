@@ -20,9 +20,6 @@
       window_shadow = "on";
       window_border = "off";
       window_border_width = 3;
-      active_window_border_color = "0xffFFFFFF";
-      normal_window_border_color = "0xffFFAB91";
-      insert_window_border_color = "0xff673AB7";
       window_opacity = "on";
       window_opacity_duration = "0.1";
       active_window_opacity = "1.0";
@@ -59,9 +56,14 @@
       spacing_right = 25;
       text_font = ''"Menlo:16.0"'';
       icon_font = ''"Menlo:16.0"'';
-      background_color = "0xffffffff";
-      foreground_color = "0xff37474F";
-      space_icon_color = "0xff673AB7";
+      # Light theme colors:
+      ## background_color = "0xffffffff";
+      ## foreground_color = "0xff37474F";
+      ## space_icon_color = "0xff673AB7";
+      # Dark theme colors:
+      background_color = "0xff2E3440";
+      foreground_color = "0xffECEFF4";
+      space_icon_color = "0xff81A1C1";
       power_icon_strip = " ";
       space_icon_strip = "一 二 三 四 五 六 七 八 九 十";
       spaces_for_all_displays = "on";

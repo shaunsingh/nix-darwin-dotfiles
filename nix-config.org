@@ -289,8 +289,13 @@ The =flake.nix= below does the following:
       flake = false;
     };
     doom-emacs = {
-      url = "github:hlissner/doom-emacs/develop";
+      url = "github:hlissner/doom-emacs";
       flake = false;
+    };
+    # Themeing
+    base16 = {
+      url = "github:shaunsingh/base16-nix";
+      inputs.nixpkgs.follows = "unstable";
     };
     # overlays
     rust-overlay = {
@@ -515,7 +520,6 @@ The =flake.nix= below does the following:
       system = "aarch64-darwin";
       modules = [
         ./modules/mac.nix
-        ./modules/home.nix
         ./modules/pam.nix
         ./modules/editors.nix
         home-manager.darwinModule
@@ -523,9 +527,15 @@ The =flake.nix= below does the following:
           home-manager = {
             useGlobalPkgs = true;
             useUserPackages = true;
+            users.shauryasingh = {
+              imports = [
+                inputs.base16.hmModule
+                ./modules/home.nix
+              ];
+            };
           };
         }
-        ({ pkgs, lib, ... }: {
+        ({ config, pkgs, lib, ... }: {
           services.nix-daemon.enable = true;
           security.pam.enableSudoTouchIdAuth = true;
           nixpkgs = {
@@ -645,6 +655,16 @@ The =flake.nix= below does the following:
               build-users-group = nixbld
             '';
           };
+          programs.fish.enable = true;
+          environment.shells = with pkgs; [ fish ];
+          users.users.shauryasingh = {
+            home = "/Users/shauryasingh";
+            shell = pkgs.fish;
+          };
+          system.activationScripts.postActivation.text = ''
+            # Set the default shell as fish for the user
+            sudo chsh -s ${lib.getBin pkgs.fish}/bin/fish shauryasingh
+          '';
           environment.systemPackages = with pkgs; [
             # emacs needs to be here since its a GUI app
             emacs
@@ -652,6 +672,7 @@ The =flake.nix= below does the following:
             # Build Tools
             jdk
             rust-bin.nightly.latest.default
+            python310
 
             # Language Servers
             nodePackages.pyright
@@ -688,22 +709,38 @@ The =flake.nix= below does the following:
 #+end_src
 
 * Modules
+** Theme.nix
+We need to define the theme we're using before we get started
+#+begin_src nix :comments none :tangle "./modules/theme.nix"
+{ pkgs, lib, config, inputs, ...}:
+{
+  config = {
+    themes.base16 = {
+      enable = true;
+      scheme = "nord";
+      # defaultTemplateType = "default";
+    };
+  }
+}
+#+end_src
+
 ** Home.nix
 Home Manager allows you to use Nix’s declarative approach to manage your user-level configuration and packages. It works on any *nix system supported by Nix, including MacOS.
 #+begin_src nix :comments none :tangle "./modules/home.nix"
 { pkgs, lib, config, home-manager, nix-darwin, inputs, ... }: {
 #+end_src
+
 *** Git
 As opposed to what the xcode CLT provides, I want lfs enabled with git, and use =delta= instead of the default diff tool (rust alternatives go brr). MacOS is also quite annoying with its =.DS_Store='s everywhere, so lets ignore that
 #+begin_src nix :comments none :tangle "./modules/home.nix"
-  home-manager.users.shauryasingh.programs.git = {
+  programs.git = {
     enable = true;
     userName = "shaunsingh";
     userEmail = "shaunsingh0207@gmail.com";
     delta = {
       enable = true;
       options = {
-        syntax-theme = "GitHub";
+        syntax-theme = "Nord";
         line-numbers = true;
       };
     };
@@ -714,7 +751,7 @@ As opposed to what the xcode CLT provides, I want lfs enabled with git, and use 
 *** IdeaVim
 Intellij Idea ships with a very nice Vim emulation plugin. This is configured via a vimrc-like file (=~/.ideavimrc=). Since it doesn't have proper support in home-manger, we can just generate a file and symlink it into place
 #+begin_src nix :comments none :tangle "./modules/home.nix"
-  home-manager.users.shauryasingh.home.file = {
+  home.file = {
     ".ideavimrc".text = ''
       " settings
       set ignorecase
@@ -770,20 +807,20 @@ Intellij Idea ships with a very nice Vim emulation plugin. This is configured vi
 *** Discocss
 Discord is an app I use almost every day, so lets spice it up a bit. Still, its a pain to work with CSS files without highlighting so I'll just have HM link a file instead.
 #+begin_src nix :comments none :tangle "./modules/home.nix"
-  home-manager.users.shauryasingh.xdg.dataFile."discocss/custom.css".source = ../configs/custom.css;
+  xdg.dataFile."discocss/custom.css".source = ../configs/custom.css;
 #+end_src
 
 *** Firefox
 Although safari is my main browser, firefox looks very appealing with its excellent privacy and speed
 #+begin_src nix :comments none :tangle "./modules/home.nix"
-  home-manager.users.shauryasingh.programs.firefox.enable = true;
+  programs.firefox.enable = true;
 #+end_src
 
 GUI apps are very finicky with nix, and so I create a fake package so that we can still use the configuration from =home-manager= without having to install it via nix. The user can then install firefox manually to =~/Applications=
 #+begin_src nix :comments none :tangle "./modules/home.nix"
-  home-manager.users.shauryasingh.programs.firefox.package =
+  programs.firefox.package =
     pkgs.runCommand "firefox-0.0.0" { } "mkdir $out";
-  home-manager.users.shauryasingh.programs.firefox.extensions =
+  programs.firefox.extensions =
       with pkgs.nur.repos.rycee.firefox-addons; [
         ublock-origin
         tridactyl
@@ -795,7 +832,7 @@ GUI apps are very finicky with nix, and so I create a fake package so that we ca
 
 Now for the configuration. We want firefox to use the css at [[file:./configs/userChrome.css]], and we want to configure the UI. Lets also enable the (rust powered ftw) webrender/servo renderer.
 #+begin_src nix :comments none :tangle "./modules/home.nix"
-  home-manager.users.shauryasingh.programs.firefox.profiles = let
+  programs.firefox.profiles = let
     userChrome = builtins.readFile ../configs/userChrome.css;
     settings = {
       "app.update.auto" = true;
@@ -808,7 +845,6 @@ Now for the configuration. We want firefox to use the css at [[file:./configs/us
       "browser.uidensity" = 1;
       "browser.urlbar.placeholderName" = "SearX";
       "browser.urlbar.update1" = true;
-      "identity.fxaccounts.account.device.name" = config.networking.hostName;
       "privacy.trackingprotection.enabled" = true;
       "privacy.trackingprotection.socialtracking.enabled" = true;
       "privacy.trackingprotection.socialtracking.annotate.enabled" = true;
@@ -835,10 +871,10 @@ Now for the configuration. We want firefox to use the css at [[file:./configs/us
 *** Alacritty
 Alacritty is my terminal emulator of choice. Similar to firefox, we want to create a fake package, and then configure it as normal
 #+begin_src nix :comments none :tangle "./modules/home.nix"
-  home-manager.users.shauryasingh.programs.alacritty = {
+  programs.alacritty = {
     enable = true;
     package = pkgs.runCommand "alacritty-0.0.0" { } "mkdir $out";
-    settings = {
+    settings = with config.lib.base16.theme; {
       window.padding.x = 45;
       window.padding.y = 45;
       window.decorations = "transparent";
@@ -849,7 +885,7 @@ Alacritty is my terminal emulator of choice. Similar to firefox, we want to crea
       cursor.style = "Beam";
 
       font = {
-        size = 14;
+        size = 16;
         normal.family = "Liga SFMono Nerd Font";
         normal.style = "Light";
         bold.family = "Liga SFMono Nerd Font";
@@ -859,28 +895,28 @@ Alacritty is my terminal emulator of choice. Similar to firefox, we want to crea
       };
 
       colors = {
-        cursor.cursor = "#37474F";
-        primary.background = "#FFFFFF";
-        primary.foreground = "#37474F";
+        cursor.cursor = "#${base04-hex}";
+        primary.background = "#${base00-hex}";
+        primary.foreground = "#${base06-hex}";
         normal = {
-          black =   "#000000";
-          red =     "#FF6961";
-          green =   "#028e2c";
-          yellow =  "#FFaB91";
-          blue =    "#0098dd";
-          magenta = "#673AB7";
-          cyan =    "#81A1C1";
-          white =   "#FAFAFA";
+          black =   "#${base00-hex}";
+          red =     "#${base0B-hex}";
+          green =   "#${base0C-hex}";
+          yellow =  "#${base0D-hex}";
+          blue =    "#${base07-hex}";
+          magenta = "#${base0F-hex}";
+          cyan =    "#${base09-hex}";
+          white =   "#${base04-hex}";
         };
         bright = {
-          black =   "#000000";
-          red =     "#FF6961";
-          green =   "#028e2c";
-          yellow =  "#FFaB91";
-          blue =    "#0098dd";
-          magenta = "#673AB7";
-          cyan =    "#81A1C1";
-          white =   "#FAFAFA";
+          black =   "#${base03-hex}";
+          red =     "#${base0B-hex}";
+          green =   "#${base0C-hex}";
+          yellow =  "#${base0D-hex}";
+          blue =    "#${base07-hex}";
+          magenta = "#${base0F-hex}";
+          cyan =    "#${base09-hex}";
+          white =   "#${base06-hex}";
         };
       };
     };
@@ -888,29 +924,11 @@ Alacritty is my terminal emulator of choice. Similar to firefox, we want to crea
 #+end_src
 
 *** Fish
-I like to use the fish shell. Although it isn't POSIX, it has the best autocompletion and highlighting I've seen.
-#+begin_src nix :comments none :tangle "./modules/home.nix"
-  programs.fish.enable = true;
-  environment.shells = with pkgs; [ fish ];
-  users.users.shauryasingh = {
-    home = "/Users/shauryasingh";
-    shell = pkgs.fish;
-  };
-#+end_src
-
-**** Settings fish as default
-On macOS nix doesn't set the fish shell to the main shell by default (like it does on NixOS), so lets do that manually
-#+begin_src nix :comments none :tangle "./modules/home.nix"
-#  system.activationScripts.postActivation.text = ''
-    # Set the default shell as fish for the user
-#    sudo chsh -s ${lib.getBin pkgs.fish}/bin/fish shauryasingh
-#  '';
-#+end_src
-
 **** Aliases
 I also like to alias common commands with other, better rust alternatives :tm:
 #+begin_src nix :comments none :tangle "./modules/home.nix"
-  programs.fish.shellAliases = with pkgs; {
+programs.fish.enable = true;
+programs.fish.shellAliases = with pkgs; {
     ":q" = "exit";
     vi = "emacsclient -c";
     git-rebsae = "git rebase -i HEAD~2";
@@ -925,10 +943,15 @@ I also like to alias common commands with other, better rust alternatives :tm:
   };
 #+end_src
 
-**** Prompt
+**** Init
 I like to make my prompt look pretty (along with some =nix-shell= and =git= integration)
 #+begin_src nix :comments none :tangle "./modules/home.nix"
-  programs.fish.promptInit = ''
+  programs.fish.interactiveShellInit = ''
+    set -g fish_greeting ""
+    zoxide init fish --cmd cd | source
+    set -x EDITOR "nvim"
+    set -x PATH ~/.config/emacs/bin $PATH
+
     set -g fish_greeting ""
     set -U fish_color_autosuggestion      brblack
     set -U fish_color_cancel              -r
@@ -1023,23 +1046,12 @@ I like to make my prompt look pretty (along with some =nix-shell= and =git= inte
   '';
 #+end_src
 
-**** Init
-I also want to disable the default greeting. Lets also set =nvim= as the default editor, and add emacs to my path
-#+begin_src nix :comments none :tangle "./modules/home.nix"
-  programs.fish.interactiveShellInit = ''
-    set -g fish_greeting ""
-    zoxide init fish --cmd cd | source
-    set -x EDITOR "nvim"
-    set -x PATH ~/.config/emacs/bin $PATH
-  '';
-#+end_src
-
 *** Bat
 Bat is another rust alternative :tm: to cat, and provides syntax highlighting. Lets theme it to match nord
 #+begin_src nix :comments none :tangle "./modules/home.nix"
-  home-manager.users.shauryasingh.programs.bat = {
+  programs.bat = {
     enable = true;
-    config = { theme = "GitHub"; };
+    config = { theme = "Nord"; };
   };
 #+end_src
 
@@ -1195,9 +1207,6 @@ Now to configure the package via nix
       window_shadow = "on";
       window_border = "off";
       window_border_width = 3;
-      active_window_border_color = "0xffFFFFFF";
-      normal_window_border_color = "0xffFFAB91";
-      insert_window_border_color = "0xff673AB7";
       window_opacity = "on";
       window_opacity_duration = "0.1";
       active_window_opacity = "1.0";
@@ -1238,9 +1247,14 @@ Spacebar is my bar of choice on macOS. Its lighter than any web-based ubersicht 
       spacing_right = 25;
       text_font = ''"Menlo:16.0"'';
       icon_font = ''"Menlo:16.0"'';
-      background_color = "0xffffffff";
-      foreground_color = "0xff37474F";
-      space_icon_color = "0xff673AB7";
+      # Light theme colors:
+      ## background_color = "0xffffffff";
+      ## foreground_color = "0xff37474F";
+      ## space_icon_color = "0xff673AB7";
+      # Dark theme colors:
+      background_color = "0xff2E3440";
+      foreground_color = "0xffECEFF4";
+      space_icon_color = "0xff81A1C1";
       power_icon_strip = " ";
       space_icon_strip = "一 二 三 四 五 六 七 八 九 十";
       spaces_for_all_displays = "on";

@@ -1,20 +1,20 @@
 { pkgs, lib, config, home-manager, nix-darwin, inputs, ... }: {
 
-  home-manager.users.shauryasingh.programs.git = {
+  programs.git = {
     enable = true;
     userName = "shaunsingh";
     userEmail = "shaunsingh0207@gmail.com";
     delta = {
       enable = true;
       options = {
-        syntax-theme = "GitHub";
+        syntax-theme = "Nord";
         line-numbers = true;
       };
     };
     ignores = [ ".dir-locals.el" ".envrc" ".DS_Store" ];
   };
 
-  home-manager.users.shauryasingh.home.file = {
+  home.file = {
     ".ideavimrc".text = ''
       " settings
       set ignorecase
@@ -66,13 +66,13 @@
     '';
  };
 
-  home-manager.users.shauryasingh.xdg.dataFile."discocss/custom.css".source = ../configs/custom.css;
+  xdg.dataFile."discocss/custom.css".source = ../configs/custom.css;
 
-  home-manager.users.shauryasingh.programs.firefox.enable = true;
+  programs.firefox.enable = true;
 
-  home-manager.users.shauryasingh.programs.firefox.package =
+  programs.firefox.package =
     pkgs.runCommand "firefox-0.0.0" { } "mkdir $out";
-  home-manager.users.shauryasingh.programs.firefox.extensions =
+  programs.firefox.extensions =
       with pkgs.nur.repos.rycee.firefox-addons; [
         ublock-origin
         tridactyl
@@ -81,7 +81,7 @@
         betterttv
       ];
 
-  home-manager.users.shauryasingh.programs.firefox.profiles = let
+  programs.firefox.profiles = let
     userChrome = builtins.readFile ../configs/userChrome.css;
     settings = {
       "app.update.auto" = true;
@@ -94,7 +94,6 @@
       "browser.uidensity" = 1;
       "browser.urlbar.placeholderName" = "SearX";
       "browser.urlbar.update1" = true;
-      "identity.fxaccounts.account.device.name" = config.networking.hostName;
       "privacy.trackingprotection.enabled" = true;
       "privacy.trackingprotection.socialtracking.enabled" = true;
       "privacy.trackingprotection.socialtracking.annotate.enabled" = true;
@@ -117,10 +116,10 @@
     };
   };
 
-  home-manager.users.shauryasingh.programs.alacritty = {
+  programs.alacritty = {
     enable = true;
     package = pkgs.runCommand "alacritty-0.0.0" { } "mkdir $out";
-    settings = {
+    settings = with config.lib.base16.theme; {
       window.padding.x = 45;
       window.padding.y = 45;
       window.decorations = "transparent";
@@ -131,7 +130,7 @@
       cursor.style = "Beam";
 
       font = {
-        size = 14;
+        size = 16;
         normal.family = "Liga SFMono Nerd Font";
         normal.style = "Light";
         bold.family = "Liga SFMono Nerd Font";
@@ -141,46 +140,35 @@
       };
 
       colors = {
-        cursor.cursor = "#37474F";
-        primary.background = "#FFFFFF";
-        primary.foreground = "#37474F";
+        cursor.cursor = "#${base04-hex}";
+        primary.background = "#${base00-hex}";
+        primary.foreground = "#${base06-hex}";
         normal = {
-          black =   "#000000";
-          red =     "#FF6961";
-          green =   "#028e2c";
-          yellow =  "#FFaB91";
-          blue =    "#0098dd";
-          magenta = "#673AB7";
-          cyan =    "#81A1C1";
-          white =   "#FAFAFA";
+          black =   "#${base00-hex}";
+          red =     "#${base0B-hex}";
+          green =   "#${base0C-hex}";
+          yellow =  "#${base0D-hex}";
+          blue =    "#${base07-hex}";
+          magenta = "#${base0F-hex}";
+          cyan =    "#${base09-hex}";
+          white =   "#${base04-hex}";
         };
         bright = {
-          black =   "#000000";
-          red =     "#FF6961";
-          green =   "#028e2c";
-          yellow =  "#FFaB91";
-          blue =    "#0098dd";
-          magenta = "#673AB7";
-          cyan =    "#81A1C1";
-          white =   "#FAFAFA";
+          black =   "#${base03-hex}";
+          red =     "#${base0B-hex}";
+          green =   "#${base0C-hex}";
+          yellow =  "#${base0D-hex}";
+          blue =    "#${base07-hex}";
+          magenta = "#${base0F-hex}";
+          cyan =    "#${base09-hex}";
+          white =   "#${base06-hex}";
         };
       };
     };
   };
 
-  programs.fish.enable = true;
-  environment.shells = with pkgs; [ fish ];
-  users.users.shauryasingh = {
-    home = "/Users/shauryasingh";
-    shell = pkgs.fish;
-  };
-
-#  system.activationScripts.postActivation.text = ''
-    # Set the default shell as fish for the user
-#    sudo chsh -s ${lib.getBin pkgs.fish}/bin/fish shauryasingh
-#  '';
-
-  programs.fish.shellAliases = with pkgs; {
+programs.fish.enable = true;
+programs.fish.shellAliases = with pkgs; {
     ":q" = "exit";
     vi = "emacsclient -c";
     git-rebsae = "git rebase -i HEAD~2";
@@ -194,7 +182,12 @@
     calc = "emacs -f full-calc";
   };
 
-  programs.fish.promptInit = ''
+  programs.fish.interactiveShellInit = ''
+    set -g fish_greeting ""
+    zoxide init fish --cmd cd | source
+    set -x EDITOR "nvim"
+    set -x PATH ~/.config/emacs/bin $PATH
+
     set -g fish_greeting ""
     set -U fish_color_autosuggestion      brblack
     set -U fish_color_cancel              -r
@@ -288,16 +281,9 @@
     end
   '';
 
-  programs.fish.interactiveShellInit = ''
-    set -g fish_greeting ""
-    zoxide init fish --cmd cd | source
-    set -x EDITOR "nvim"
-    set -x PATH ~/.config/emacs/bin $PATH
-  '';
-
-  home-manager.users.shauryasingh.programs.bat = {
+  programs.bat = {
     enable = true;
-    config = { theme = "GitHub"; };
+    config = { theme = "Nord"; };
   };
 
   programs.tmux.enable = true;

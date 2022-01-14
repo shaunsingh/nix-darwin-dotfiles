@@ -38,8 +38,13 @@
       flake = false;
     };
     doom-emacs = {
-      url = "github:hlissner/doom-emacs/develop";
+      url = "github:hlissner/doom-emacs";
       flake = false;
+    };
+    # Themeing
+    base16 = {
+      url = "github:shaunsingh/base16-nix";
+      inputs.nixpkgs.follows = "unstable";
     };
     # overlays
     rust-overlay = {
@@ -264,7 +269,6 @@
       system = "aarch64-darwin";
       modules = [
         ./modules/mac.nix
-        ./modules/home.nix
         ./modules/pam.nix
         ./modules/editors.nix
         home-manager.darwinModule
@@ -272,9 +276,15 @@
           home-manager = {
             useGlobalPkgs = true;
             useUserPackages = true;
+            users.shauryasingh = {
+              imports = [
+                inputs.base16.hmModule
+                ./modules/home.nix
+              ];
+            };
           };
         }
-        ({ pkgs, lib, ... }: {
+        ({ config, pkgs, lib, ... }: {
           services.nix-daemon.enable = true;
           security.pam.enableSudoTouchIdAuth = true;
           nixpkgs = {
@@ -394,6 +404,16 @@
               build-users-group = nixbld
             '';
           };
+          programs.fish.enable = true;
+          environment.shells = with pkgs; [ fish ];
+          users.users.shauryasingh = {
+            home = "/Users/shauryasingh";
+            shell = pkgs.fish;
+          };
+          system.activationScripts.postActivation.text = ''
+            # Set the default shell as fish for the user
+            sudo chsh -s ${lib.getBin pkgs.fish}/bin/fish shauryasingh
+          '';
           environment.systemPackages = with pkgs; [
             # emacs needs to be here since its a GUI app
             emacs
@@ -401,6 +421,7 @@
             # Build Tools
             jdk
             rust-bin.nightly.latest.default
+            python310
 
             # Language Servers
             nodePackages.pyright
