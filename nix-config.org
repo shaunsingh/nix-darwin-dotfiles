@@ -333,6 +333,7 @@ The =flake.nix= below does the following:
               imports = [
                 inputs.base16.hmModule
                 ./modules/home.nix
+                ./modules/theme.nix
               ];
             };
           };
@@ -522,6 +523,7 @@ The =flake.nix= below does the following:
                 imports = [
                   inputs.base16.hmModule
                   ./modules/home.nix
+                  ./modules/theme.nix
                 ];
               };
             };

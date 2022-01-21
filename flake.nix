@@ -82,6 +82,7 @@
               imports = [
                 inputs.base16.hmModule
                 ./modules/home.nix
+                ./modules/theme.nix
               ];
             };
           };
@@ -271,6 +272,7 @@
                 imports = [
                   inputs.base16.hmModule
                   ./modules/home.nix
+                  ./modules/theme.nix
                 ];
               };
             };
