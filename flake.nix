@@ -71,8 +71,6 @@
         ./modules/mac.nix
         ./modules/pam.nix
         ./modules/editors.nix
-        inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x1
-        inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x1-7th-gen
         home-manager.darwinModule
         {
           home-manager = {
@@ -263,6 +261,8 @@
         modules = [
           ./modules/editors.nix
           ./modules/linux.nix
+          inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x1
+          inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x1-7th-gen
           home-manager.nixosModules.home-manager
           {
             home-manager = {
