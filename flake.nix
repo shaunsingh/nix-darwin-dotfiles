@@ -373,6 +373,7 @@
             powerManagement.cpuFreqGovernor = lib.mkDefault "performance";
             services.thermald.enable = true;
             hardware.enableRedistributableFirmware = true;
+            boot.kernelPackages = pkgs.linuxPackages_latest;
 
             # Network settings.
             networking = {
