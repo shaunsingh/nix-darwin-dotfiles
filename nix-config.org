@@ -621,8 +621,8 @@ The =flake.nix= below does the following:
 
             # Power management
             services.power-profiles-daemon.enable = true;
-            powerManagement.cpuFreqGovernor = lib.mkDefault "performance";
             services.thermald.enable = true;
+            powerManagement.cpuFreqGovernor = lib.mkDefault "performance";
             hardware.enableRedistributableFirmware = true;
             boot.kernelPackages = pkgs.linuxPackages_latest;
 
@@ -631,7 +631,8 @@ The =flake.nix= below does the following:
               hostName = "shaunsingh-thinkpad"; # Hostname
               useDHCP = false; # Deprecated, so set explicitly to false
               wireless.enable = false;
-              networkmanager.enable = true; # Enable networkmanager
+              networkmanager.enable = true;
+              firewall.enable = false
             };
 
             # Bootloader
@@ -654,7 +655,7 @@ The =flake.nix= below does the following:
 
             # Sound
             sound.enable = false;
-            hardware.pulseaudio.enable = false; # Pulseaudio
+            hardware.pulseaudio.enable = false; 
 
             services.pipewire = {
               enable = true;
@@ -669,7 +670,6 @@ The =flake.nix= below does the following:
               emacs
 
               # Build Tools
-              jdk
               rust-bin.nightly.latest.default
 
               # Language Servers
@@ -681,6 +681,9 @@ The =flake.nix= below does the following:
               black
               shellcheck
 
+              # linux utils
+              firefox
+
               # Terminal utils and rust alternatives :tm:
               xcp
               lsd
@@ -689,6 +692,7 @@ The =flake.nix= below does the following:
               zoxide
               bottom
               discocss
+
             ];
             fonts = {
               enableFontDir = true;

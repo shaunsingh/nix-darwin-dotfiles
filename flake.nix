@@ -370,8 +370,8 @@
 
             # Power management
             services.power-profiles-daemon.enable = true;
-            powerManagement.cpuFreqGovernor = lib.mkDefault "performance";
             services.thermald.enable = true;
+            powerManagement.cpuFreqGovernor = lib.mkDefault "performance";
             hardware.enableRedistributableFirmware = true;
             boot.kernelPackages = pkgs.linuxPackages_latest;
 
@@ -380,7 +380,8 @@
               hostName = "shaunsingh-thinkpad"; # Hostname
               useDHCP = false; # Deprecated, so set explicitly to false
               wireless.enable = false;
-              networkmanager.enable = true; # Enable networkmanager
+              networkmanager.enable = true;
+              firewall.enable = false
             };
 
             # Bootloader
@@ -403,7 +404,7 @@
 
             # Sound
             sound.enable = false;
-            hardware.pulseaudio.enable = false; # Pulseaudio
+            hardware.pulseaudio.enable = false; 
 
             services.pipewire = {
               enable = true;
@@ -418,7 +419,6 @@
               emacs
 
               # Build Tools
-              jdk
               rust-bin.nightly.latest.default
 
               # Language Servers
@@ -430,6 +430,9 @@
               black
               shellcheck
 
+              # linux utils
+              firefox
+
               # Terminal utils and rust alternatives :tm:
               xcp
               lsd
@@ -438,6 +441,7 @@
               zoxide
               bottom
               discocss
+
             ];
             fonts = {
               enableFontDir = true;
