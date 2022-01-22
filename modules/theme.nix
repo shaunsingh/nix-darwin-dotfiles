@@ -4,7 +4,6 @@
     themes.base16 = {
       enable = true;
       scheme = "nord";
-      # defaultTemplateType = "default";
     };
-  }
+  };
 }

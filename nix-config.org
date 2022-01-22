@@ -712,9 +712,8 @@ We need to define the theme we're using before we get started
     themes.base16 = {
       enable = true;
       scheme = "nord";
-      # defaultTemplateType = "default";
     };
-  }
+  };
 }
 #+end_src
 
