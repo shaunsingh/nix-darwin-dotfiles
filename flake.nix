@@ -155,7 +155,6 @@
                   '';
 
                 };
-                emacsNg = emacs-ng.defaultPackage.x86_64-linux;
                 emacs = (prev.emacs.override {
                   srcRepo = true;
                   nativeComp = true;
@@ -219,7 +218,6 @@
           environment.systemPackages = with pkgs; [
             # emacs needs to be here since its a GUI app
             emacs
-            ## emacsNg
 
             # Build Tools
             jdk
@@ -261,6 +259,7 @@
         modules = [
           ./modules/editors.nix
           ./modules/linux.nix
+          ./hardware/thinkpad-hardware-configuration.nix
           inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x1
           inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x1-7th-gen
           home-manager.nixosModules.home-manager
