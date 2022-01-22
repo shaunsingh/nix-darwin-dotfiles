@@ -381,7 +381,7 @@
               useDHCP = false; # Deprecated, so set explicitly to false
               wireless.enable = false;
               networkmanager.enable = true;
-              firewall.enable = false
+              firewall.enable = false;
             };
 
             # Bootloader
