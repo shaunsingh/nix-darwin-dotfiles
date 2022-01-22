@@ -384,7 +384,11 @@
 
             # Bootloader
             boot.loader.efi.canTouchEfiVariables = true;
-            boot.loader.systemd-boot.enable = true;
+            boot.loader.grub.enable = true;
+            boot.loader.grub.version = 2;
+            boot.loader.grub.device = "nodev";
+            boot.loader.grub.useOSProber = true;
+            time.hardwareClockInLocalTime = true;
 
             # Set your time zone.
             time.timeZone = "America/New_York";
