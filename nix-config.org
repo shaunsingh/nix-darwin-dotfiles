@@ -406,7 +406,6 @@ The =flake.nix= below does the following:
                   '';
 
                 };
-                emacsNg = emacs-ng.defaultPackage.x86_64-linux;
                 emacs = (prev.emacs.override {
                   srcRepo = true;
                   nativeComp = true;
@@ -470,7 +469,6 @@ The =flake.nix= below does the following:
           environment.systemPackages = with pkgs; [
             # emacs needs to be here since its a GUI app
             emacs
-            ## emacsNg
 
             # Build Tools
             jdk
@@ -512,6 +510,7 @@ The =flake.nix= below does the following:
         modules = [
           ./modules/editors.nix
           ./modules/linux.nix
+          ./hardware/thinkpad-hardware-configuration.nix
           inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x1
           inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x1-7th-gen
           home-manager.nixosModules.home-manager
