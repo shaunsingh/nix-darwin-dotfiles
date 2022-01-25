@@ -13,15 +13,6 @@ let
       git -C $HOME/.config/emacs checkout ${pkgs.doomEmacsRevision} || true
     fi
   '';
-  langs = [
-    "nix"
-    "java"
-    "python"
-    "rust"
-    "elisp"
-    "comment"
-  ];
-  grammars = lib.getAttrs (map (lang: "tree-sitter-${lang}") langs) pkgs.tree-sitter.builtGrammars;
 in
 {
   home-manager.users.shauryasingh.home.packages = with pkgs; [
@@ -30,31 +21,15 @@ in
     sqlite
     gnuplot
     pandoc
-    sdcv
+    # sdcv
     (aspellWithDicts (ds: with ds; [ en en-computers en-science ]))
     tectonic
     emacsSyncScript
-    mu
-    isync
+    # mu
+    # isync
     languagetool
     neovim-nightly
     # neovide
     nodejs-16_x
-    tree-sitter
   ];
-  home-manager.users.shauryasingh.home.file.".config/tree-sitter".source = (pkgs.runCommand "grammars" {} ''
-    mkdir -p $out/bin
-    ${lib.concatStringsSep "\n"
-      (lib.mapAttrsToList (name: src: "name=${name}; ln -s ${src}/parser $out/bin/\${name#tree-sitter-}.so") grammars)};
-  '');
-  services.emacs = {
-    enable = true;
-    package = pkgs.emacs;
-  };
-
-# fzf-native
-  home-manager.users.shauryasingh.xdg.dataFile."nvim/site/pack/packer/start/telescope-fzf-native.nvim/build/libfzf.so".source = "${pkgs.vimPlugins.telescope-fzf-native-nvim}/build/libfzf.so";
-  # tree-sitter parsers
-  home-manager.users.shauryasingh.xdg.configFile."nvim/parser/lua.so".source = "${pkgs.tree-sitter.builtGrammars.tree-sitter-lua}/parser";
-  home-manager.users.shauryasingh.xdg.configFile."nvim/parser/nix.so".source = "${pkgs.tree-sitter.builtGrammars.tree-sitter-nix}/parser";
 }

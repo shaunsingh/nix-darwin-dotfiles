@@ -1,13 +1,9 @@
 {
   description = "Shaurya's Nix Environment";
 
-  nixConfig.extra-substituters = "https://nix-community.cachix.org";
-  nixConfig.extra-trusted-public-keys =
-    "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=";
-
   inputs = {
     # All packages should follow latest nixpkgs
-    unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    unstable.url = "github:nixos/nixpkgs/master";
     nur.url = "github:nix-community/NUR";
     # core
     darwin = {
@@ -15,7 +11,7 @@
       inputs.nixpkgs.follows = "unstable";
     };
     nixos-hardware = {
-      url = github:NixOS/nixos-hardware/master;
+      url = "github:NixOS/nixos-hardware/master";
       inputs.nixpkgs.follows = "unstable";
     };
     home-manager = {
@@ -37,8 +33,8 @@
       url = "github:emacs-mirror/emacs";
       flake = false;
     };
-    emacs-ng = {
-      url = "github:emacs-ng/emacs-ng";
+    emacs-overlay = {
+      url = "github:nix-community/emacs-overlay";
       inputs.nixpkgs.follows = "unstable";
     };
     emacs-vterm-src = {
@@ -197,7 +193,7 @@
             ];
           };
           nix = {
-            package = pkgs.nix;
+            package = pkgs.nixUnstable;
             extraOptions = ''
               system = aarch64-darwin
               extra-platforms = aarch64-darwin x86_64-darwin
@@ -221,6 +217,7 @@
 
             # Build Tools
             jdk
+            rustpython
             rust-bin.nightly.latest.default
 
             # Language Servers
@@ -282,46 +279,11 @@
                 nur.overlay
                 spacebar.overlay
                 neovim-overlay.overlay
+                emacs-overlay.overlay
                 rust-overlay.overlay
                 (final: prev: {
                   doomEmacsRevision = inputs.doom-emacs.rev;
                   sf-mono-liga-bin = pkgs.callPackage ./pkgs/sf-mono-liga-bin { };
-                  emacs-vterm = prev.stdenv.mkDerivation rec {
-                    pname = "emacs-vterm";
-                    version = "master";
-
-                    src = inputs.emacs-vterm-src;
-
-                    nativeBuildInputs = [
-                      prev.cmake
-                      prev.libtool
-                      prev.glib.dev
-                    ];
-
-                    buildInputs = [
-                      prev.glib.out
-                      prev.libvterm-neovim
-                      prev.ncurses
-                    ];
-
-                    cmakeFlags = [
-                      "-DUSE_SYSTEM_LIBVTERM=yes"
-                    ];
-
-                    preConfigure = ''
-                      echo "include_directories(\"${prev.glib.out}/lib/glib-2.0/include\")" >> CMakeLists.txt
-                      echo "include_directories(\"${prev.glib.dev}/include/glib-2.0\")" >> CMakeLists.txt
-                      echo "include_directories(\"${prev.ncurses.dev}/include\")" >> CMakeLists.txt
-                      echo "include_directories(\"${prev.libvterm-neovim}/include\")" >> CMakeLists.txt
-                    '';
-
-                    installPhase = ''
-                      mkdir -p $out
-                      cp ../vterm-module.so $out
-                      cp ../vterm.el $out
-                    '';
-
-                  };
                 })
               ];
             };
@@ -332,30 +294,19 @@
               '';
             };
 
-            # Use fish, launch exwm after login
-            programs.fish = {
-              enable = true;
-              loginShellInit = ''
-                if test (id --user $USER) -ge 1000 && test (tty) = "/dev/tty1"
-                   exec >~/.logs/xsession 2>&1
-                   export LANG="en_GB.UTF-8"
-                   export LANGUAGE="en_GB.UTF-8"
-                   export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u)/bus
-                   export _JAVA_AWT_WM_NONREPARENTING=1
-                   wmname LG3D
-                   xset -dpms
-                   xset s off
-                   xhost +SI:localuser:$USER
-                   emacs -mm --with-exwm
-                end
-              '';
-            };
+            # Use fish
+            programs.fish.enable = true;
 
             # enable the xserver
             services.xserver = {
               enable = true;
+              displayManager.startx.enable = true;
               libinput = {
                 enable = true;
+                touchpad = {
+                  naturalScrolling = true;
+                  disableWhileTyping = true;
+                };
               };
             };
 
@@ -384,15 +335,20 @@
             };
 
             # Bootloader
-            boot.loader.efi.canTouchEfiVariables = true;
-            boot.loader.grub.enable = true;
-            boot.loader.grub.version = 2;
-            boot.loader.grub.device = "nodev";
-            boot.loader.grub.useOSProber = true;
-            time.hardwareClockInLocalTime = true;
+            boot.loader = {
+              efi.canTouchEfiVariables = true;
+              grub = {
+                enable = true;
+                version = 2;
+                device = "nodev";
+                efiSupport = true;
+                useOSProber = true;
+              };
+            };
 
             # Set your time zone.
             time.timeZone = "America/New_York";
+            time.hardwareClockInLocalTime = true;
 
             # Select internationalisation properties.
             i18n.defaultLocale = "en_US.UTF-8";
@@ -403,7 +359,7 @@
 
             # Sound
             sound.enable = false;
-            hardware.pulseaudio.enable = false; 
+            hardware.pulseaudio.enable = false;
 
             services.pipewire = {
               enable = true;
@@ -414,8 +370,8 @@
             };
 
             environment.systemPackages = with pkgs; [
-              # emacs needs to be here since its a GUI app
-              emacs
+              # cant have exwm without emacs
+              emacsGit
 
               # Build Tools
               rust-bin.nightly.latest.default
@@ -429,9 +385,6 @@
               black
               shellcheck
 
-              # linux utils
-              firefox
-
               # Terminal utils and rust alternatives :tm:
               xcp
               lsd
@@ -440,10 +393,8 @@
               zoxide
               bottom
               discocss
-
             ];
             fonts = {
-              enableFontDir = true;
               fonts = with pkgs; [
                 overpass
                 fira

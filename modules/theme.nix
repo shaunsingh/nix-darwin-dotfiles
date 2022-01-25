@@ -3,7 +3,10 @@
   config = {
     themes.base16 = {
       enable = true;
-      scheme = "nord";
+      customScheme = {
+        enable = true;
+        path = ./themes/base16-nanolight.yaml;
+      };
     };
   };
 }

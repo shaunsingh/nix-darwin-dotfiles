@@ -152,8 +152,8 @@ homebrew = {
     ];
 
     casks = [
+      "discord-canary" # discord for macOS
       "firefox-nightly" # my browser of choice
-      "discord-canary" # chat client of choice
       "nvidia-geforce-now" # game streaming
       "via" # keyboard config
       "blender" # blender

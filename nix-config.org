@@ -252,13 +252,9 @@ The =flake.nix= below does the following:
 {
   description = "Shaurya's Nix Environment";
 
-  nixConfig.extra-substituters = "https://nix-community.cachix.org";
-  nixConfig.extra-trusted-public-keys =
-    "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=";
-
   inputs = {
     # All packages should follow latest nixpkgs
-    unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    unstable.url = "github:nixos/nixpkgs/master";
     nur.url = "github:nix-community/NUR";
     # core
     darwin = {
@@ -266,7 +262,7 @@ The =flake.nix= below does the following:
       inputs.nixpkgs.follows = "unstable";
     };
     nixos-hardware = {
-      url = github:NixOS/nixos-hardware/master;
+      url = "github:NixOS/nixos-hardware/master";
       inputs.nixpkgs.follows = "unstable";
     };
     home-manager = {
@@ -288,8 +284,8 @@ The =flake.nix= below does the following:
       url = "github:emacs-mirror/emacs";
       flake = false;
     };
-    emacs-ng = {
-      url = "github:emacs-ng/emacs-ng";
+    emacs-overlay = {
+      url = "github:nix-community/emacs-overlay";
       inputs.nixpkgs.follows = "unstable";
     };
     emacs-vterm-src = {
@@ -448,7 +444,7 @@ The =flake.nix= below does the following:
             ];
           };
           nix = {
-            package = pkgs.nix;
+            package = pkgs.nixUnstable;
             extraOptions = ''
               system = aarch64-darwin
               extra-platforms = aarch64-darwin x86_64-darwin
@@ -472,6 +468,7 @@ The =flake.nix= below does the following:
 
             # Build Tools
             jdk
+            rustpython
             rust-bin.nightly.latest.default
 
             # Language Servers
@@ -533,46 +530,11 @@ The =flake.nix= below does the following:
                 nur.overlay
                 spacebar.overlay
                 neovim-overlay.overlay
+                emacs-overlay.overlay
                 rust-overlay.overlay
                 (final: prev: {
                   doomEmacsRevision = inputs.doom-emacs.rev;
                   sf-mono-liga-bin = pkgs.callPackage ./pkgs/sf-mono-liga-bin { };
-                  emacs-vterm = prev.stdenv.mkDerivation rec {
-                    pname = "emacs-vterm";
-                    version = "master";
-
-                    src = inputs.emacs-vterm-src;
-
-                    nativeBuildInputs = [
-                      prev.cmake
-                      prev.libtool
-                      prev.glib.dev
-                    ];
-
-                    buildInputs = [
-                      prev.glib.out
-                      prev.libvterm-neovim
-                      prev.ncurses
-                    ];
-
-                    cmakeFlags = [
-                      "-DUSE_SYSTEM_LIBVTERM=yes"
-                    ];
-
-                    preConfigure = ''
-                      echo "include_directories(\"${prev.glib.out}/lib/glib-2.0/include\")" >> CMakeLists.txt
-                      echo "include_directories(\"${prev.glib.dev}/include/glib-2.0\")" >> CMakeLists.txt
-                      echo "include_directories(\"${prev.ncurses.dev}/include\")" >> CMakeLists.txt
-                      echo "include_directories(\"${prev.libvterm-neovim}/include\")" >> CMakeLists.txt
-                    '';
-
-                    installPhase = ''
-                      mkdir -p $out
-                      cp ../vterm-module.so $out
-                      cp ../vterm.el $out
-                    '';
-
-                  };
                 })
               ];
             };
@@ -583,30 +545,19 @@ The =flake.nix= below does the following:
               '';
             };
 
-            # Use fish, launch exwm after login
-            programs.fish = {
-              enable = true;
-              loginShellInit = ''
-                if test (id --user $USER) -ge 1000 && test (tty) = "/dev/tty1"
-                   exec >~/.logs/xsession 2>&1
-                   export LANG="en_GB.UTF-8"
-                   export LANGUAGE="en_GB.UTF-8"
-                   export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$(id -u)/bus
-                   export _JAVA_AWT_WM_NONREPARENTING=1
-                   wmname LG3D
-                   xset -dpms
-                   xset s off
-                   xhost +SI:localuser:$USER
-                   emacs -mm --with-exwm
-                end
-              '';
-            };
+            # Use fish
+            programs.fish.enable = true;
 
             # enable the xserver
             services.xserver = {
               enable = true;
+              displayManager.startx.enable = true;
               libinput = {
                 enable = true;
+                touchpad = {
+                  naturalScrolling = true;
+                  disableWhileTyping = true;
+                };
               };
             };
 
@@ -635,15 +586,20 @@ The =flake.nix= below does the following:
             };
 
             # Bootloader
-            boot.loader.efi.canTouchEfiVariables = true;
-            boot.loader.grub.enable = true;
-            boot.loader.grub.version = 2;
-            boot.loader.grub.device = "nodev";
-            boot.loader.grub.useOSProber = true;
-            time.hardwareClockInLocalTime = true;
+            boot.loader = {
+              efi.canTouchEfiVariables = true;
+              grub = {
+                enable = true;
+                version = 2;
+                device = "nodev";
+                efiSupport = true;
+                useOSProber = true;
+              };
+            };
 
             # Set your time zone.
             time.timeZone = "America/New_York";
+            time.hardwareClockInLocalTime = true;
 
             # Select internationalisation properties.
             i18n.defaultLocale = "en_US.UTF-8";
@@ -654,7 +610,7 @@ The =flake.nix= below does the following:
 
             # Sound
             sound.enable = false;
-            hardware.pulseaudio.enable = false; 
+            hardware.pulseaudio.enable = false;
 
             services.pipewire = {
               enable = true;
@@ -665,8 +621,8 @@ The =flake.nix= below does the following:
             };
 
             environment.systemPackages = with pkgs; [
-              # emacs needs to be here since its a GUI app
-              emacs
+              # cant have exwm without emacs
+              emacsGit
 
               # Build Tools
               rust-bin.nightly.latest.default
@@ -680,9 +636,6 @@ The =flake.nix= below does the following:
               black
               shellcheck
 
-              # linux utils
-              firefox
-
               # Terminal utils and rust alternatives :tm:
               xcp
               lsd
@@ -691,10 +644,8 @@ The =flake.nix= below does the following:
               zoxide
               bottom
               discocss
-
             ];
             fonts = {
-              enableFontDir = true;
               fonts = with pkgs; [
                 overpass
                 fira
@@ -719,7 +670,10 @@ We need to define the theme we're using before we get started
   config = {
     themes.base16 = {
       enable = true;
-      scheme = "nord";
+      customScheme = {
+        enable = true;
+        path = ./themes/base16-nanolight.yaml;
+      };
     };
   };
 }
@@ -1122,15 +1076,6 @@ let
       git -C $HOME/.config/emacs checkout ${pkgs.doomEmacsRevision} || true
     fi
   '';
-  langs = [
-    "nix"
-    "java"
-    "python"
-    "rust"
-    "elisp"
-    "comment"
-  ];
-  grammars = lib.getAttrs (map (lang: "tree-sitter-${lang}") langs) pkgs.tree-sitter.builtGrammars;
 in
 {
   home-manager.users.shauryasingh.home.packages = with pkgs; [
@@ -1139,37 +1084,17 @@ in
     sqlite
     gnuplot
     pandoc
-    sdcv
+    # sdcv
     (aspellWithDicts (ds: with ds; [ en en-computers en-science ]))
     tectonic
     emacsSyncScript
-    mu
-    isync
+    # mu
+    # isync
     languagetool
     neovim-nightly
     # neovide
     nodejs-16_x
-    tree-sitter
   ];
-  home-manager.users.shauryasingh.home.file.".config/tree-sitter".source = (pkgs.runCommand "grammars" {} ''
-    mkdir -p $out/bin
-    ${lib.concatStringsSep "\n"
-      (lib.mapAttrsToList (name: src: "name=${name}; ln -s ${src}/parser $out/bin/\${name#tree-sitter-}.so") grammars)};
-  '');
-  services.emacs = {
-    enable = true;
-    package = pkgs.emacs;
-  };
-#+end_src
-
-*** Neovim
-Lastly, I didn't feel like nix-ifying my neovim lua config, so thats just a submodule. We can use nix to manage tree-sitter grammers, as well as fzf-native
-#+begin_src nix :comments none :tangle "./modules/editors.nix"
-  # fzf-native
-  home-manager.users.shauryasingh.xdg.dataFile."nvim/site/pack/packer/start/telescope-fzf-native.nvim/build/libfzf.so".source = "${pkgs.vimPlugins.telescope-fzf-native-nvim}/build/libfzf.so";
-  # tree-sitter parsers
-  home-manager.users.shauryasingh.xdg.configFile."nvim/parser/lua.so".source = "${pkgs.tree-sitter.builtGrammars.tree-sitter-lua}/parser";
-  home-manager.users.shauryasingh.xdg.configFile."nvim/parser/nix.so".source = "${pkgs.tree-sitter.builtGrammars.tree-sitter-nix}/parser";
 }
 #+end_src
 
@@ -1348,8 +1273,8 @@ homebrew = {
     ];
 
     casks = [
+      "discord-canary" # discord for macOS
       "firefox-nightly" # my browser of choice
-      "discord-canary" # chat client of choice
       "nvidia-geforce-now" # game streaming
       "via" # keyboard config
       "blender" # blender
@@ -1467,101 +1392,4 @@ in {
 }
 #+end_src
 
-* Editors
-** Emacs
-#+include: "~/.config/doom/config.org"
-** Neovim
-There are many neovim configurations that exist (i.e. NvChad, Lunar Vim, etc.). However, many of these configurations suffer from a host of problems:
 
-Some configurations (like NvChad), have very abstracted and complex codebases. Others rely on having as much overall functionality as possible (like LunarVim). While none of this is bad, there are some problems that can arise from these choices:
-
-Complex codebases lead to less freedom for end-user extensiblity and configuration, as there is more reliance on the maintainer of said code. Users may not use half of what is made avalible to them simply because they don't need all of that functionality, so all of it may not be necessary. This config provides a solution to these problems by providing only the necessary code in order to make a functioning configuration. The end goal of this personal neovim config is to be used as a base config for users to extend and add upon, leading to a more unique editing experience.
-
-The configuration was originally based off of [[https://github.com/NvChad/NvChad/tree/29f04fcc9d7a5e0cc9ef3a59ce5860d4cfa60f85][commit 29f04fc]] of NvChad, but this config has evolved to be much more than that.
-
-You can now find it seperately on github, here: https://github.com/shaunsingh/nyoom.nvim
-
-*** Develop
-When sharing the config, it makes it much easier to handle dependencies with nix. This ensures installing dependencies (including neovim-nightly), as well as adding the new neovim build to path
-#+include: "./configs/nyoom.nvim/flake.nix" src nix
-#+include: "./configs/nyoom.nvim/shell.nix" src nix
-*** Init
-The init.lua first loads impatient.nvim if available (so we can cache the =.lua= files). It then disables builtin vim plugins, and loads the required modules for startup (=packer_compiled.lua=, =mappings.lua=, and =options.lua=)
-#+include: "./configs/nyoom.nvim/init.lua" src lua
-*** Packer
-My packer configuration is broken into two files: =packerInit= and =pluginList=.
-=packerInit= downloads packer if it isn't present, lazy loads it if it is, and configures packer. Notably:
-- Put the =packer_compiled= file under =/nvim/lua= instead of =/nvim/plugin= so it can be chached by impatient.nvim
-- Use packer in a floating window instead of a split, and remove the borders
-- Increaes =clone_timeout=, just in case I'm on a more finicky network
-=pluginList= contains the list of plugins, as well lazy loads and defines their configuration files.
-#+include: "./configs/nyoom.nvim/lua/packerInit.lua" src lua
-#+include: "./configs/nyoom.nvim/lua/pluginList.lua" src lua
-*** Settings
-As I said earlier, there are 3 required modules for startup (=packer_compiled.lua=, =mappings.lua=, and =options.lua=). Of that, =packer_compiled.lua= is generated using =:PackerCompile=, so we will focus on the other two.
-- =mappings.lua= contains all of my mappings. All of the mappings are the same as the defaults for Doom Emacs (with a few exceptions). To list all of the keybinds, run =SPC h b b= in doom (or =SPC h b f= for major-mode specific binds). The file also contains some commands, which allow for the lazy loading of packer.
-- =options.lua= contains all the basic options I want set before loading a buffer. Additionally, I want to disable the tilde fringe and =filetype.vim= (replaced with =filetype.nvim=).
-#+include: "./configs/nyoom.nvim/lua/mappings.lua" src lua
-#+include: "./configs/nyoom.nvim/lua/options.lua" src lua
-*** Plugin Configuration
-**** Bufferline
-#+include: "./configs/nyoom.nvim/lua/plugins/bufferline.lua" src lua
-**** Nvim-cmp
-#+include: "./configs/nyoom.nvim/lua/plugins/cmp.lua" src lua
-**** Gitsigns
-#+include: "./configs/nyoom.nvim/lua/plugins/gitsigns.lua" src lua
-**** Lspconfig
-#+include: "./configs/nyoom.nvim/lua/plugins/lspconfig.lua" src lua
-**** Neogit
-#+include: "./configs/nyoom.nvim/lua/plugins/neogit.lua" src lua
-**** Neorg
-#+include: "./configs/nyoom.nvim/lua/plugins/neorg.lua" src lua
-**** Nvimtree
-#+include: "./configs/nyoom.nvim/lua/plugins/nvimtree.lua" src lua
-**** Others
-#+include: "./configs/nyoom.nvim/lua/plugins/others.lua" src lua
-**** Statusline
-#+include: "./configs/nyoom.nvim/lua/plugins/statusline.lua" src lua
-**** Telescope
-#+include: "./configs/nyoom.nvim/lua/plugins/telescope.lua" src lua
-**** Treesitter
-#+include: "./configs/nyoom.nvim/lua/plugins/treesitter.lua" src lua
-**** Zenmode
-#+include: "./configs/nyoom.nvim/lua/plugins/zenmode.lua" src lua
-*** External
-These are plugin I'm currently developing, but don't want ready for public release yet. As such, they reside in the =nyoom.nvim/lua/ext= directory.
-**** doom.nvim
-This is an experimental port of =doom-vibrant= to neovim, just me playing around with the new highlight API
-#+include: "./configs/nyoom.nvim/lua/ext/doom.nvim/lua/doom.lua" src lua
-**** Statusline.nvim
-Just a little statusline to mess around with
-#+include: "./configs/nyoom.nvim/lua/ext/statusline.nvim/lua/statusline.lua" src lua
-***** Modules
-This is the fun part!
-#+include: "./configs/nyoom.nvim/lua/ext/statusline.nvim/lua/modules/config.lua" src lua
-#+include: "./configs/nyoom.nvim/lua/ext/statusline.nvim/lua/modules/statusline.lua" src lua
-#+include: "./configs/nyoom.nvim/lua/ext/statusline.nvim/lua/modules/utils.lua" src lua
-***** Sections
-All the sections of the statusline, lsp, git, etc,
-#+include: "./configs/nyoom.nvim/lua/ext/statusline.nvim/lua/sections/_bufeditable.lua" src lua
-#+include: "./configs/nyoom.nvim/lua/ext/statusline.nvim/lua/sections/_buficon.lua" src lua
-#+include: "./configs/nyoom.nvim/lua/ext/statusline.nvim/lua/sections/_bufmodified.lua" src lua
-#+include: "./configs/nyoom.nvim/lua/ext/statusline.nvim/lua/sections/_bufname.lua" src lua
-#+include: "./configs/nyoom.nvim/lua/ext/statusline.nvim/lua/sections/_filesize.lua" src lua
-#+include: "./configs/nyoom.nvim/lua/ext/statusline.nvim/lua/sections/_git_branch.lua" src lua
-#+include: "./configs/nyoom.nvim/lua/ext/statusline.nvim/lua/sections/_lsp.lua" src lua
-#+include: "./configs/nyoom.nvim/lua/ext/statusline.nvim/lua/sections/_signify.lua" src lua
-***** Tables
-Just contains all the icons and modes I use throughout the statusline
-#+include: "./configs/nyoom.nvim/lua/ext/statusline.nvim/lua/tables/_icons.lua" src lua
-#+include: "./configs/nyoom.nvim/lua/ext/statusline.nvim/lua/tables/_modes.lua" src lua
-
-* Extra :ATTACH:
-** Wallpapers
-:PROPERTIES:
-:ID:       86261973-40ab-49f5-b78b-89514c2f6d9c
-:END:
-Wallpapers are in =./extra/wallpapers/=
-Some of my favorites:
- *Note*: fix later, using links from github
- *TODO*: Attach from github
