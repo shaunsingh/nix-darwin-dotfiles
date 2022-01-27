@@ -1,8 +1,7 @@
-{ config, options, lib, nixpkgs-wayland, ... }: {
+{ config, options, lib, ... }: {
   wayland.windowManager.sway = {
     enable = true;
     wrapperFeatures.gtk = true;
-    package = nixpkgs-wayland.packages.x86_64-linux.sway-unwrapped;
     config = {
       bars = [{ command = "waybar"; }];
       fonts = {

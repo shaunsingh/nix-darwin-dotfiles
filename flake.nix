@@ -65,7 +65,7 @@
       inputs.nixpkgs.follows = "unstable";
     };
   };
-  outputs = { self, nixpkgs, darwin, home-manager, nixpkgs-wayland, ... }@inputs: {
+  outputs = { self, nixpkgs, darwin, home-manager, ... }@inputs: {
     darwinConfigurations."shaunsingh-laptop" = darwin.lib.darwinSystem {
       system = "aarch64-darwin";
       modules = [
@@ -412,10 +412,10 @@
               discocss
 
               # wayland
-              nixpkgs-wayland.packages.x86_64-linux.waybar
-              nixpkgs-wayland.packages.x86_64-linux.wofi
-              nixpkgs-wayland.packages.x86_64-linux.grim
-              nixpkgs-wayland.packages.x86_64-linux.wl-clipboard
+              waybar
+              wofi
+              grim
+              wl-clipboard
             ];
             fonts = {
               fonts = with pkgs; [
