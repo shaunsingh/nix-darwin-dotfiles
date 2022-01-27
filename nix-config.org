@@ -1448,36 +1448,36 @@ On the linux side of things, I need to configure sway and all my linux utilities
         "${mod}+Enter" = "exec alacritty";
         "${mod}+Shift+e" = "exec nwgbar -o 0.2";
       };
-      colors =  {
-        focused = {
-          border = "0x${base01-hex}";
-          background = "0x${base0D-hex}";
-          text = "0x${base07-hex}";
-          indicator = "0x${base0D-hex}";
-          childBorder = "0x${base0D-hex}";
-        };
-        focusedInactive = {
-          border = "0x${base02-hex}";
-          background = "0x${base04-hex}";
-          text = "0x${base00-hex}";
-          indicator = "0x${base04-hex}";
-          childBorder = "0x${base04-hex}";
-        };
-        unfocused = {
-          border = "0x${base01-hex}";
-          background = "0x${base02-hex}";
-          text = "0x${base06-hex}";
-          indicator = "0x${base02-hex}";
-          childBorder = "0x${base02-hex}";
-        };
-        urgent = {
-          border = "0x${base03-hex}";
-          background = "0x${base08-hex}";
-          text = "0x${base00-hex}";
-          indicator = "0x${base08-hex}";
-          childBorder = "0x${base08-hex}";
-        };
-      };
+      # colors =  {
+      #   focused = {
+      #     border = "#${base01-hex}";
+      #     background = "#${base0D-hex}";
+      #     text = "#${base07-hex}";
+      #     indicator = "#${base0D-hex}";
+      #     childBorder = "#${base0D-hex}";
+      #   };
+      #   focusedInactive = {
+      #     border = "#${base02-hex}";
+      #     background = "#${base04-hex}";
+      #     text = "#${base00-hex}";
+      #     indicator = "#${base04-hex}";
+      #     childBorder = "#${base04-hex}";
+      #   };
+      #   unfocused = {
+      #     border = "#${base01-hex}";
+      #     background = "#${base02-hex}";
+      #     text = "#${base06-hex}";
+      #     indicator = "#${base02-hex}";
+      #     childBorder = "#${base02-hex}";
+      #   };
+      #   urgent = {
+      #     border = "#${base03-hex}";
+      #     background = "#${base08-hex}";
+      #     text = "#${base00-hex}";
+      #     indicator = "#${base08-hex}";
+      #     childBorder = "#${base08-hex}";
+      #   };
+      # };
       modifier = "Mod4";
       window.border = 0;
     };
