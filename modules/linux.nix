@@ -1,8 +1,8 @@
-{ config, options, pkgs, lib, ... }: {
+{ config, options, lib, nixpkgs-wayland, ... }: {
   wayland.windowManager.sway = {
     enable = true;
     wrapperFeatures.gtk = true;
-    package = inputs.nixpkgs-wayland.packages.x86_64-linux.sway-unwrapped;
+    package = nixpkgs-wayland.packages.x86_64-linux.sway-unwrapped;
     config = {
       bars = [{ command = "waybar"; }];
       fonts = {
@@ -29,7 +29,6 @@
         "${mod}+Control+h" = "workspace next";
         "${mod}+Tab" = "workspace back_and_forth";
         "${mod}+Enter" = "exec alacritty";
-        # Exit sway
         "${mod}+Shift+e" = "exec nwgbar -o 0.2";
       };
       modifier = "Mod4";

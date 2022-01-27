@@ -65,7 +65,7 @@
       inputs.nixpkgs.follows = "unstable";
     };
   };
-  outputs = { self, nixpkgs, darwin, home-manager, ... }@inputs: {
+  outputs = { self, nixpkgs, darwin, home-manager, nixpkgs-wayland, ... }@inputs: {
     darwinConfigurations."shaunsingh-laptop" = darwin.lib.darwinSystem {
       system = "aarch64-darwin";
       modules = [
@@ -257,6 +257,7 @@
     nixosConfigurations = {
       shaunsingh-thinkpad = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
+      specialArgs = inputs;
         modules = [
           ./modules/editors.nix
           ./hardware/thinkpad-hardware-configuration.nix
@@ -308,7 +309,6 @@
                 "https://nixpkgs-wayland.cachix.org"
               ];
             };
-
 
             systemd.user.targets.sway-session = {
               description = "Sway compositor session";
@@ -412,10 +412,10 @@
               discocss
 
               # wayland
-              inputs.nixpkgs-wayland.packages.x86_64-linux.waybar
-              inputs.nixpkgs-wayland.packages.x86_64-linux.wofi
-              inputs.nixpkgs-wayland.packages.x86_64-linux.grim
-              inputs.nixpkgs-wayland.packages.x86_64-linux.wl-clipboard
+              nixpkgs-wayland.packages.x86_64-linux.waybar
+              nixpkgs-wayland.packages.x86_64-linux.wofi
+              nixpkgs-wayland.packages.x86_64-linux.grim
+              nixpkgs-wayland.packages.x86_64-linux.wl-clipboard
             ];
             fonts = {
               fonts = with pkgs; [
