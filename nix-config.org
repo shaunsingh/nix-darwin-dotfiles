@@ -1486,9 +1486,6 @@ On the linux side of things, I need to configure sway and all my linux utilities
       export XDG_SESSION_DESKTOP=sway
       export XDG_CURRENT_DESKTOP=sway
     '';
-    extraConfig = ''
-      source ${config.lib.base16.templateFile { name = "sway"; }}
-    '';
   };
 }
 #+end_src

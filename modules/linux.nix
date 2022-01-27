@@ -68,8 +68,5 @@
       export XDG_SESSION_DESKTOP=sway
       export XDG_CURRENT_DESKTOP=sway
     '';
-    extraConfig = ''
-      source ${config.lib.base16.templateFile { name = "sway"; }}
-    '';
   };
 }
