@@ -60,16 +60,8 @@
       inputs.nixpkgs.follows = "unstable";
     };
     # Linux
-    sway-borders-src = {
-      url = "github:fluix-dev/sway-borders";
-      flake = false;
-    };
     nixpkgs-wayland = {
       url = "github:nix-community/nixpkgs-wayland";
-      inputs.nixpkgs.follows = "unstable";
-    };
-    nixpkgs-f2k = {
-      nixpkgs-f2k.url = "github:fortuneteller2k/nixpkgs-f2k";
       inputs.nixpkgs.follows = "unstable";
     };
   };
@@ -280,7 +272,6 @@
                   inputs.base16.hmModule
                   ./modules/home.nix
                   ./modules/theme.nix
-                  ./modules/linux.nix
                 ];
               };
             };
@@ -294,15 +285,11 @@
                 neovim-overlay.overlay
                 emacs-overlay.overlay
                 rust-overlay.overlay
-                { nixpkgs.overlays = [ nixpkgs-f2k.overlay ]; }
+                nixpkgs-wayland.overlay
                 (final: prev: {
                   doomEmacsRevision = inputs.doom-emacs.rev;
                   sf-mono-liga-bin = pkgs.callPackage ./pkgs/sf-mono-liga-bin { };
-                  sway = nixpkgs-wayland.packages.${system}.sway-unwrapped.overrideAttrs (_: {
-                    inherit version;
-                    src = inputs.sway-borders-src;
-                  });
-                })
+   	        })
               ];
             };
             nix = {
@@ -311,46 +298,16 @@
               extraOptions = ''
                 experimental-features = nix-command flakes
               '';
+              binaryCachePublicKeys = [
+                "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+                "nixpkgs-wayland.cachix.org-1:3lwxaILxMRkVhehr5StQprHdEo4IrE8sRho9R9HOLYA="
+              ];
+              binaryCaches = [
+                "https://cache.nixos.org"
+                "https://nixpkgs-wayland.cachix.org"
+              ];
             };
 
-            # use sway :chad:
-            programs.sway = {
-             enable = true;
-             extraPackages = with pkgs; [
-               # bar
-               waybar
-
-               # launcher
-               wofi
-
-               # utils
-               grim
-               slurp
-               mako
-               eww
-               phinger-cursors
-
-               # locking
-               swaylock-effects
-               swayidle
-
-               # clipboard and recording
-               wl-clipboard
-               wf-recorder
-
-               # Control
-               brightnessctl
-               playerctl
-             ];
-
-             extraSessionCommands = ''
-               export SDL_VIDEODRIVER=wayland
-               export QT_QPA_PLATFORM=wayland
-               export QT_WAYLAND_DISABLE_WINDOWDECORATION="1"
-               export _JAVA_AWT_WM_NONREPARENTING=1
-               export MOZ_ENABLE_WAYLAND=1
-             '';
-            };
 
             systemd.user.targets.sway-session = {
               description = "Sway compositor session";
@@ -365,6 +322,11 @@
               enable = true;
               loginShellInit = ''
                 if test (id --user $USER) -ge 1000 && test (tty) = "/dev/tty1"
+                  export SDL_VIDEODRIVER=wayland
+                  export QT_QPA_PLATFORM=wayland
+                  export QT_WAYLAND_DISABLE_WINDOWDECORATION="1"
+                  export _JAVA_AWT_WM_NONREPARENTING=1
+                  export MOZ_ENABLE_WAYLAND=1
                   exec sway
                 end
               '';
@@ -397,13 +359,7 @@
             # Bootloader
             boot.loader = {
               efi.canTouchEfiVariables = true;
-              grub = {
-                enable = true;
-                version = 2;
-                device = "nodev";
-                efiSupport = true;
-                useOSProber = true;
-              };
+              systemd-boot.enable = true;
             };
 
             # Set your time zone.
@@ -430,8 +386,7 @@
             };
 
             environment.systemPackages = with pkgs; [
-              # cant have exwm without emacs
-              emacsGit
+              emacsPgtk
 
               # Build Tools
               rustpython
@@ -454,7 +409,19 @@
               zoxide
               bottom
               discocss
-              discord-canary-openasar
+
+              # wayland
+              inputs.nixpkgs-wayland.packages.x86_64-linux.sway-unwrapped
+              inputs.nixpkgs-wayland.packages.x86_64-linux.waybar
+              inputs.nixpkgs-wayland.packages.x86_64-linux.wofi
+              inputs.nixpkgs-wayland.packages.x86_64-linux.grim
+              inputs.nixpkgs-wayland.packages.x86_64-linux.slurp
+              inputs.nixpkgs-wayland.packages.x86_64-linux.mako
+              inputs.nixpkgs-wayland.packages.x86_64-linux.slurp
+              inputs.nixpkgs-wayland.packages.x86_64-linux.mako
+              inputs.nixpkgs-wayland.packages.x86_64-linux.slurp
+              inputs.nixpkgs-wayland.packages.x86_64-linux.mako
+              inputs.nixpkgs-wayland.packages.x86_64-linux.wl-clipboard
             ];
             fonts = {
               fonts = with pkgs; [
