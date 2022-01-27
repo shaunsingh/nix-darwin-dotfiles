@@ -272,6 +272,7 @@
                   inputs.base16.hmModule
                   ./modules/home.nix
                   ./modules/theme.nix
+                  ./modules/linux.nix
                 ];
               };
             };
@@ -289,7 +290,7 @@
                 (final: prev: {
                   doomEmacsRevision = inputs.doom-emacs.rev;
                   sf-mono-liga-bin = pkgs.callPackage ./pkgs/sf-mono-liga-bin { };
-   	        })
+                })
               ];
             };
             nix = {
@@ -411,16 +412,9 @@
               discocss
 
               # wayland
-              inputs.nixpkgs-wayland.packages.x86_64-linux.sway-unwrapped
               inputs.nixpkgs-wayland.packages.x86_64-linux.waybar
               inputs.nixpkgs-wayland.packages.x86_64-linux.wofi
               inputs.nixpkgs-wayland.packages.x86_64-linux.grim
-              inputs.nixpkgs-wayland.packages.x86_64-linux.slurp
-              inputs.nixpkgs-wayland.packages.x86_64-linux.mako
-              inputs.nixpkgs-wayland.packages.x86_64-linux.slurp
-              inputs.nixpkgs-wayland.packages.x86_64-linux.mako
-              inputs.nixpkgs-wayland.packages.x86_64-linux.slurp
-              inputs.nixpkgs-wayland.packages.x86_64-linux.mako
               inputs.nixpkgs-wayland.packages.x86_64-linux.wl-clipboard
             ];
             fonts = {

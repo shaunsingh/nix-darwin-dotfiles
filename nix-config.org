@@ -311,16 +311,8 @@ The =flake.nix= below does the following:
       inputs.nixpkgs.follows = "unstable";
     };
     # Linux
-    sway-borders-src = {
-      url = "github:fluix-dev/sway-borders";
-      flake = false;
-    };
     nixpkgs-wayland = {
       url = "github:nix-community/nixpkgs-wayland";
-      inputs.nixpkgs.follows = "unstable";
-    };
-    nixpkgs-f2k = {
-      nixpkgs-f2k.url = "github:fortuneteller2k/nixpkgs-f2k";
       inputs.nixpkgs.follows = "unstable";
     };
   };
@@ -545,14 +537,10 @@ The =flake.nix= below does the following:
                 neovim-overlay.overlay
                 emacs-overlay.overlay
                 rust-overlay.overlay
-                { nixpkgs.overlays = [ nixpkgs-f2k.overlay ]; }
+                nixpkgs-wayland.overlay
                 (final: prev: {
                   doomEmacsRevision = inputs.doom-emacs.rev;
                   sf-mono-liga-bin = pkgs.callPackage ./pkgs/sf-mono-liga-bin { };
-                  sway = nixpkgs-wayland.packages.${system}.sway-unwrapped.overrideAttrs (_: {
-                    inherit version;
-                    src = inputs.sway-borders-src;
-                  });
                 })
               ];
             };
@@ -562,46 +550,16 @@ The =flake.nix= below does the following:
               extraOptions = ''
                 experimental-features = nix-command flakes
               '';
+              binaryCachePublicKeys = [
+                "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+                "nixpkgs-wayland.cachix.org-1:3lwxaILxMRkVhehr5StQprHdEo4IrE8sRho9R9HOLYA="
+              ];
+              binaryCaches = [
+                "https://cache.nixos.org"
+                "https://nixpkgs-wayland.cachix.org"
+              ];
             };
 
-            # use sway :chad:
-            programs.sway = {
-             enable = true;
-             extraPackages = with pkgs; [
-               # bar
-               waybar
-
-               # launcher
-               wofi
-
-               # utils
-               grim
-               slurp
-               mako
-               eww
-               phinger-cursors
-
-               # locking
-               swaylock-effects
-               swayidle
-
-               # clipboard and recording
-               wl-clipboard
-               wf-recorder
-
-               # Control
-               brightnessctl
-               playerctl
-             ];
-
-             extraSessionCommands = ''
-               export SDL_VIDEODRIVER=wayland
-               export QT_QPA_PLATFORM=wayland
-               export QT_WAYLAND_DISABLE_WINDOWDECORATION="1"
-               export _JAVA_AWT_WM_NONREPARENTING=1
-               export MOZ_ENABLE_WAYLAND=1
-             '';
-            };
 
             systemd.user.targets.sway-session = {
               description = "Sway compositor session";
@@ -616,6 +574,11 @@ The =flake.nix= below does the following:
               enable = true;
               loginShellInit = ''
                 if test (id --user $USER) -ge 1000 && test (tty) = "/dev/tty1"
+                  export SDL_VIDEODRIVER=wayland
+                  export QT_QPA_PLATFORM=wayland
+                  export QT_WAYLAND_DISABLE_WINDOWDECORATION="1"
+                  export _JAVA_AWT_WM_NONREPARENTING=1
+                  export MOZ_ENABLE_WAYLAND=1
                   exec sway
                 end
               '';
@@ -648,13 +611,7 @@ The =flake.nix= below does the following:
             # Bootloader
             boot.loader = {
               efi.canTouchEfiVariables = true;
-              grub = {
-                enable = true;
-                version = 2;
-                device = "nodev";
-                efiSupport = true;
-                useOSProber = true;
-              };
+              systemd-boot.enable = true;
             };
 
             # Set your time zone.
@@ -681,8 +638,7 @@ The =flake.nix= below does the following:
             };
 
             environment.systemPackages = with pkgs; [
-              # cant have exwm without emacs
-              emacsGit
+              emacsPgtk
 
               # Build Tools
               rustpython
@@ -705,7 +661,12 @@ The =flake.nix= below does the following:
               zoxide
               bottom
               discocss
-              discord-canary-openasar
+
+              # wayland
+              inputs.nixpkgs-wayland.packages.x86_64-linux.waybar
+              inputs.nixpkgs-wayland.packages.x86_64-linux.wofi
+              inputs.nixpkgs-wayland.packages.x86_64-linux.grim
+              inputs.nixpkgs-wayland.packages.x86_64-linux.wl-clipboard
             ];
             fonts = {
               fonts = with pkgs; [
@@ -834,8 +795,6 @@ Although safari is my main browser, firefox looks very appealing with its excell
 
 GUI apps are very finicky with nix, and so I create a fake package so that we can still use the configuration from =home-manager= without having to install it via nix. The user can then install firefox manually to =~/Applications=
 #+begin_src nix :comments none :tangle "./modules/home.nix"
-  programs.firefox.package =
-    pkgs.runCommand "firefox-0.0.0" { } "mkdir $out";
   programs.firefox.extensions =
       with pkgs.nur.repos.rycee.firefox-addons; [
         ublock-origin
@@ -1454,3 +1413,54 @@ in {
 #+end_src
 
 
+** Linux.nix
+On the linux side of things, I need to configure sway and all my linux utilities.
+#+begin_src nix :comments none :tangle "./modules/linux.nix"
+{ config, options, pkgs, lib, ... }: {
+  wayland.windowManager.sway = {
+    enable = true;
+    wrapperFeatures.gtk = true;
+    package = inputs.nixpkgs-wayland.packages.x86_64-linux.sway-unwrapped;
+    config = {
+      bars = [{ command = "waybar"; }];
+      fonts = {
+        names = [ "IBM Plex Sans" "Liga SFMono Nerd Font" ];
+        size = 16.0;
+      };
+      gaps.inner = 20;
+      input."type:keyboard" = {
+        xkb_variant = ",qwerty";
+        xkb_options = "grp:alt_caps_toggle";
+      };
+      input."type:touchpad" = {
+        tap = "enabled";
+        natural_scroll = "enabled";
+        scroll_method = "two_finger";
+      };
+      keybindings = let
+        mod = config.wayland.windowManager.sway.config.modifier;
+      in lib.mkOptionDefault {
+        # Shortcuts for easier navigation between workspaces
+        "${mod}+Control+Left" = "workspace prev";
+        "${mod}+Control+l" = "workspace prev";
+        "${mod}+Control+Right" = "workspace next";
+        "${mod}+Control+h" = "workspace next";
+        "${mod}+Tab" = "workspace back_and_forth";
+        "${mod}+Enter" = "exec alacritty";
+        # Exit sway
+        "${mod}+Shift+e" = "exec nwgbar -o 0.2";
+      };
+      modifier = "Mod4";
+      window.border = 0;
+    };
+    extraSessionCommands = ''
+      export XDG_SESSION_TYPE=wayland
+      export XDG_SESSION_DESKTOP=sway
+      export XDG_CURRENT_DESKTOP=sway
+    '';
+    extraConfig = ''
+      source ${config.lib.base16.templateFile { name = "sway"; }}
+    '';
+  };
+}
+#+end_src

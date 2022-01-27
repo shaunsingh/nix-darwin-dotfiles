@@ -69,6 +69,7 @@
   xdg.dataFile."discocss/custom.css".source = ../configs/custom.css;
 
   programs.firefox.enable = true;
+
   programs.firefox.extensions =
       with pkgs.nur.repos.rycee.firefox-addons; [
         ublock-origin
