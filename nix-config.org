@@ -310,6 +310,19 @@ The =flake.nix= below does the following:
       url = "github:nix-community/neovim-nightly-overlay";
       inputs.nixpkgs.follows = "unstable";
     };
+    # Linux
+    sway-borders-src = {
+      url = "github:fluix-dev/sway-borders";
+      flake = false;
+    };
+    nixpkgs-wayland = {
+      url = "github:nix-community/nixpkgs-wayland";
+      inputs.nixpkgs.follows = "unstable";
+    };
+    nixpkgs-f2k = {
+      nixpkgs-f2k.url = "github:fortuneteller2k/nixpkgs-f2k";
+      inputs.nixpkgs.follows = "unstable";
+    };
   };
   outputs = { self, nixpkgs, darwin, home-manager, ... }@inputs: {
     darwinConfigurations."shaunsingh-laptop" = darwin.lib.darwinSystem {
@@ -467,7 +480,6 @@ The =flake.nix= below does the following:
             emacs
 
             # Build Tools
-            jdk
             rustpython
             rust-bin.nightly.latest.default
 
@@ -519,6 +531,7 @@ The =flake.nix= below does the following:
                   inputs.base16.hmModule
                   ./modules/home.nix
                   ./modules/theme.nix
+                  ./modules/linux.nix
                 ];
               };
             };
@@ -532,33 +545,80 @@ The =flake.nix= below does the following:
                 neovim-overlay.overlay
                 emacs-overlay.overlay
                 rust-overlay.overlay
+                { nixpkgs.overlays = [ nixpkgs-f2k.overlay ]; }
                 (final: prev: {
                   doomEmacsRevision = inputs.doom-emacs.rev;
                   sf-mono-liga-bin = pkgs.callPackage ./pkgs/sf-mono-liga-bin { };
+                  sway = nixpkgs-wayland.packages.${system}.sway-unwrapped.overrideAttrs (_: {
+                    inherit version;
+                    src = inputs.sway-borders-src;
+                  });
                 })
               ];
             };
             nix = {
+              autoOptimiseStore = true;
               package = pkgs.nixUnstable;
               extraOptions = ''
                 experimental-features = nix-command flakes
               '';
             };
 
-            # Use fish
-            programs.fish.enable = true;
+            # use sway :chad:
+            programs.sway = {
+             enable = true;
+             extraPackages = with pkgs; [
+               # bar
+               waybar
 
-            # enable the xserver
-            services.xserver = {
+               # launcher
+               wofi
+
+               # utils
+               grim
+               slurp
+               mako
+               eww
+               phinger-cursors
+
+               # locking
+               swaylock-effects
+               swayidle
+
+               # clipboard and recording
+               wl-clipboard
+               wf-recorder
+
+               # Control
+               brightnessctl
+               playerctl
+             ];
+
+             extraSessionCommands = ''
+               export SDL_VIDEODRIVER=wayland
+               export QT_QPA_PLATFORM=wayland
+               export QT_WAYLAND_DISABLE_WINDOWDECORATION="1"
+               export _JAVA_AWT_WM_NONREPARENTING=1
+               export MOZ_ENABLE_WAYLAND=1
+             '';
+            };
+
+            systemd.user.targets.sway-session = {
+              description = "Sway compositor session";
+              documentation = ["man:systemd.special(7)" ];
+              bindsTo = [ "graphical-session.target" ];
+              wants = ["graphical-session-pre.target" ];
+              after = [ "graphical-session-pre.target" ];
+            };
+
+            # Use fish
+            programs.fish = {
               enable = true;
-              displayManager.startx.enable = true;
-              libinput = {
-                enable = true;
-                touchpad = {
-                  naturalScrolling = true;
-                  disableWhileTyping = true;
-                };
-              };
+              loginShellInit = ''
+                if test (id --user $USER) -ge 1000 && test (tty) = "/dev/tty1"
+                  exec sway
+                end
+              '';
             };
 
             # Define a user account. Don't forget to set a password with ‘passwd’.
@@ -625,6 +685,7 @@ The =flake.nix= below does the following:
               emacsGit
 
               # Build Tools
+              rustpython
               rust-bin.nightly.latest.default
 
               # Language Servers
@@ -644,11 +705,11 @@ The =flake.nix= below does the following:
               zoxide
               bottom
               discocss
+              discord-canary-openasar
             ];
             fonts = {
               fonts = with pkgs; [
-                overpass
-                fira
+                ibm-plex
                 emacs-all-the-icons-fonts
                 sf-mono-liga-bin
               ];
