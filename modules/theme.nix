@@ -1,12 +1,8 @@
-{ pkgs, lib, config, inputs, ...}:
-{
+{ config, base16-carbon-dark, ...}: {
   config = {
     themes.base16 = {
       enable = true;
-      customScheme = {
-        enable = true;
-        path = ./themes/base16-nanolight.yaml;
-      };
+      path = "${base16-carbon-dark}/base16-carbon-dark.yaml";
     };
   };
 }

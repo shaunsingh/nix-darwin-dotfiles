@@ -30,6 +30,6 @@ in
     languagetool
     neovim-nightly
     # neovide
-    nodejs-16_x
+    # nodejs-16_x
   ];
 }

@@ -110,17 +110,17 @@ I won't delve too much into why I choose nix in the end (as I've covered it befo
 
 Install Nix. I have it setup for multi-user, but you can remove the =--daemon= if you want a single user install
 #+begin_src bash :comments none :tangle "./extra/install.sh" :shebang "#!/bin/bash"
-    sh <(curl -L https://nixos.org/nix/install) --daemon
+sh <(curl -L https://nixos.org/nix/install) --daemon
 #+end_src
 Launch an ephemeral shell with git, nixUnstable, and Emacs
 #+begin_src bash :comments none :tangle "./extra/install.sh" :shebang "#!/bin/bash"
-    nix-shell -p nixUnstable git emacs
+nix-shell -p nixUnstable git emacs
 #+end_src
 Tangle the =.org= files (not needed, but recommend in case I forgot to update tangled files)
 #+begin_src bash :comments none :tangle "./extra/install.sh" :shebang "#!/bin/bash"
-    git clone --depth 1 https://github.com/shaunsingh/nix-darwin-dotfiles.git ~/nix-darwin-dotfiles/ && cd nix-darwin-dotfiles
-    emacs --batch --eval "(progn (require 'org) (setq org-confirm-babel-evaluate nil) (org-babel-tangle-file \"~/nix-darwin-dotfiles/nix-config.org\"))"
-    emacs --batch --eval "(progn (require 'org) (setq org-confirm-babel-evaluate nil) (org-babel-tangle-file \"~/nix-darwin-dotfiles/configs/doom/config.org\"))"
+git clone --depth 1 https://github.com/shaunsingh/nix-darwin-dotfiles.git ~/nix-darwin-dotfiles/ && cd nix-darwin-dotfiles
+emacs --batch --eval "(progn (require 'org) (setq org-confirm-babel-evaluate nil) (org-babel-tangle-file \"~/nix-darwin-dotfiles/nix-config.org\"))"
+emacs --batch --eval "(progn (require 'org) (setq org-confirm-babel-evaluate nil) (org-babel-tangle-file \"~/nix-darwin-dotfiles/configs/doom/config.org\"))"
 #+end_src
 (if emacs asks you for comment syntax, put `# ` for everything)
 Build, and switch to the dotfiles
@@ -129,14 +129,15 @@ Build, and switch to the dotfiles
     ./result/sw/bin/darwin-rebuild switch --flake .#shaunsingh-laptop
 #+end_src
 (note, =--extra-experimental-features= is only needed the first time around. After that the configuration will edit =/etc/nix/nix.conf= to enable flakes and nix-command by default)
-Symlinking with nix (and managing doom with =nix-doom-emacs=) is very finicky, so for now we need to manually symlink them
+Symlinking with nix (and managing doom with =nix-doom-emacs=) is very finicky, so for now just manually clone my emacs config
 #+begin_src bash :comments none :tangle "./extra/install.sh" :shebang "#!/bin/bash"
-    ln -s ~/nix-darwin-dotfiles/configs/doom/ ~/.config/doom
+git clone --depth 1 https://github.com/shaunsingh/nyoom.emacs ~/.config/doom
 #+end_src
-Install doom emacs
+
+Install doom emacs. No need to install all-the-icons, nix handles that!
 #+begin_src bash :comments none :tangle "./extra/install.sh" :shebang "#!/bin/bash"
-    git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.config/emacs
-    ~/.config/emacs/bin/doom install
+git clone --depth 1 https://github.com/hlissner/doom-emacs ~/.config/emacs
+~/.config/emacs/bin/doom install
 #+end_src
 
 ** Using Nix unstable OOTB
@@ -193,7 +194,7 @@ Indexed mail will go under =~/.mbsync/=, you can either manually run mbsync or u
 My org mode config includes two additional plugins, org-agenda and org-roam. Both these plugins need a set directory. All org files can go under the created =~/org= dir. Roam files go under =~/org/roam=
 
 *** Fonts
-[[https://github.com/shaunsingh/SFMono-Nerd-Font-Ligaturized][SFMono]] must be installed seperately due to liscensing issues, all other fonts are managed via nix.
+All fonts are managed via nix. Let me know if theres anything missing
 
 *** Neovim
 Run =:PackerSync= to install packer and plugins. Run =:checkhealth= to check for possible issues.
@@ -240,36 +241,45 @@ The =flake.nix= below does the following:
 1. Add a binary cache for =nix-community= overlays
 2. Add inputs (=nixpkgs-master=, =nix-darwin=, =home-manager,= and =spacebar=)
 3. Add overlays to get the latest versions of =neovim= (nightly) and =emacs= (emacs29)
-4. Create a nix-darwin configuration for my hostname
-5. Source the [[file:./modules/mac.nix][mac]], [[file:./modules/home.nix][home]], and [[file:./modules/pam.nix][pam]] modules
-6. Configure home-manager and the nix-daemon
-7. Enable the use of touch-id for sudo authentication
-8. Configure =nixpkgs= to use the overlays above, and allow unfree packages
-9. Configure =nix= to enable =flakes= and =nix-command= by default, and add =x86-64-darwin= as a platform (to install packages through rosetta)
-10. Install my packages and config dependencies
-11. Install the required fonts
+4. Configure home-manager and the nix-daemon
+5. Configure =nixpkgs= to use the overlays above
+6. Configure =nix= to enable =flakes= and =nix-command= by default
+
+For Darwin systems:
+1. Create a nix-darwin configuration for my hostname
+2. Source the [[file:./modules/mac.nix][mac]], [[file:./modules/home.nix][home]], and [[file:./modules/pam.nix][pam]] modules
+3. Enable the use of touch-id for sudo authentication
+4. add =x86-64-darwin= as a platform (to install packages through rosetta)
+
+For Linux systems:
+1. Create a nixOS configuration for my hostname
+2. Source the [[file:./modules/sway.nix][sway]], [[file:./modules/home.nix][home]], and [[file:./modules/linux.nix][linux]] modules
+3. Set up power-saving and network configurations
+
 #+begin_src nix :comments none :tangle "flake.nix"
 {
   description = "Shaurya's Nix Environment";
 
   inputs = {
-    # All packages should follow latest nixpkgs
+    # All packages should follow latest nixpkgs/nur
     unstable.url = "github:nixos/nixpkgs/master";
     nur.url = "github:nix-community/NUR";
-    # core
+    # Nix-Darwin
     darwin = {
       url = "github:LnL7/nix-darwin";
       inputs.nixpkgs.follows = "unstable";
     };
+    # NixOS Hardware for thinkpad config
     nixos-hardware = {
       url = "github:NixOS/nixos-hardware/master";
       inputs.nixpkgs.follows = "unstable";
     };
+    # HM-manager for dotfile/user management
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "unstable";
     };
-    # Bar
+    # Bar (macos)
     spacebar = {
       url = "github:shaunsingh/spacebar";
       inputs.nixpkgs.follows = "unstable";
@@ -279,41 +289,50 @@ The =flake.nix= below does the following:
       url = "github:koekeishiya/yabai";
       flake = false;
     };
-    # Editors
+    # SRC for macOS emacs overlay
     emacs-src = {
       url = "github:emacs-mirror/emacs";
       flake = false;
     };
+    # SRC for linux emacs overlay
     emacs-overlay = {
       url = "github:nix-community/emacs-overlay";
       inputs.nixpkgs.follows = "unstable";
     };
+    # Use latest libverm to build macOS emacs build
     emacs-vterm-src = {
       url = "github:akermu/emacs-libvterm";
       flake = false;
     };
+    # Keep the doom-emacs version managed with nix config
     doom-emacs = {
       url = "github:hlissner/doom-emacs";
       flake = false;
     };
     # Themeing
     base16 = {
-      url = "github:shaunsingh/base16-nix";
+      url = "path:./modules/base16-nix";
       inputs.nixpkgs.follows = "unstable";
     };
-    # overlays
-    rust-overlay = {
-      url = "github:oxalica/rust-overlay";
-      inputs.nixpkgs.follows = "unstable";
+    # IBM-Carbon-Theme (see IBM-design: colors)
+    base16-carbon-dark = {
+      url = "github:shaunsingh/base16-carbon-dark";
+      flake = false;
     };
+    # Neovim Nightly
     neovim-overlay = {
       url = "github:nix-community/neovim-nightly-overlay";
       inputs.nixpkgs.follows = "unstable";
     };
-    # Linux
+    # Get the latest and greatest wayland tools
     nixpkgs-wayland = {
       url = "github:nix-community/nixpkgs-wayland";
       inputs.nixpkgs.follows = "unstable";
+    };
+    # But sway is special :)
+    sway-borders-src = {
+      url = "github:fluix-dev/sway-borders";
+      flake = false;
     };
   };
   outputs = { self, nixpkgs, darwin, home-manager, ... }@inputs: {
@@ -328,6 +347,10 @@ The =flake.nix= below does the following:
           home-manager = {
             useGlobalPkgs = true;
             useUserPackages = true;
+            extraSpecialArgs = {
+              inherit (inputs)
+                base16-carbon-dark; # pass base16 input so hm can use it
+            };
             users.shauryasingh = {
               imports = [
                 inputs.base16.hmModule
@@ -341,16 +364,14 @@ The =flake.nix= below does the following:
           services.nix-daemon.enable = true;
           security.pam.enableSudoTouchIdAuth = true;
           nixpkgs = {
-            config.allowUnfree = true;
             overlays = with inputs; [
               nur.overlay
               spacebar.overlay
               neovim-overlay.overlay
-              rust-overlay.overlay
               (final: prev: {
                 doomEmacsRevision = inputs.doom-emacs.rev;
                 sf-mono-liga-bin = pkgs.callPackage ./pkgs/sf-mono-liga-bin { };
-                neovide = pkgs.callPackage ./pkgs/neovide { };
+                # yabai is broken on macOS 12, so lets make a smol overlay to use the master version
                 yabai = let
                   version = "4.0.0-dev";
                   buildSymlinks = prev.runCommand "build-symlinks" { } ''
@@ -377,21 +398,12 @@ The =flake.nix= below does the following:
 
                   src = inputs.emacs-vterm-src;
 
-                  nativeBuildInputs = [
-                    prev.cmake
-                    prev.libtool
-                    prev.glib.dev
-                  ];
+                  nativeBuildInputs = [ prev.cmake prev.libtool prev.glib.dev ];
 
-                  buildInputs = [
-                    prev.glib.out
-                    prev.libvterm-neovim
-                    prev.ncurses
-                  ];
+                  buildInputs =
+                    [ prev.glib.out prev.libvterm-neovim prev.ncurses ];
 
-                  cmakeFlags = [
-                    "-DUSE_SYSTEM_LIBVTERM=yes"
-                  ];
+                  cmakeFlags = [ "-DUSE_SYSTEM_LIBVTERM=yes" ];
 
                   preConfigure = ''
                     echo "include_directories(\"${prev.glib.out}/lib/glib-2.0/include\")" >> CMakeLists.txt
@@ -416,7 +428,8 @@ The =flake.nix= below does the following:
                   version = "29.0.50";
                   src = inputs.emacs-src;
 
-                  buildInputs = o.buildInputs ++ [ prev.darwin.apple_sdk.frameworks.WebKit ];
+                  buildInputs = o.buildInputs
+                    ++ [ prev.darwin.apple_sdk.frameworks.WebKit ];
 
                   configureFlags = o.configureFlags ++ [
                     "--without-gpm"
@@ -448,156 +461,65 @@ The =flake.nix= below does the following:
               })
             ];
           };
-          nix = {
-            package = pkgs.nixUnstable;
-            extraOptions = ''
-              system = aarch64-darwin
-              extra-platforms = aarch64-darwin x86_64-darwin
-              experimental-features = nix-command flakes
-              build-users-group = nixbld
-            '';
-          };
-          programs.fish.enable = true;
-          environment.shells = with pkgs; [ fish ];
-          users.users.shauryasingh = {
-            home = "/Users/shauryasingh";
-            shell = pkgs.fish;
-          };
-          system.activationScripts.postActivation.text = ''
-            # Set the default shell as fish for the user
-            sudo chsh -s ${lib.getBin pkgs.fish}/bin/fish shauryasingh
-          '';
-          environment.systemPackages = with pkgs; [
-            # emacs needs to be here since its a GUI app
-            emacs
-
-            # Build Tools
-            rustpython
-            rust-bin.nightly.latest.default
-
-            # Language Servers
-            nodePackages.pyright
-            rust-analyzer
-
-            # Formatting
-            nixfmt
-            black
-            shellcheck
-
-            # Terminal utils and rust alternatives :tm:
-            xcp
-            lsd
-            procs
-            tree
-            zoxide
-            bottom
-            discocss
-          ];
-          fonts = {
-            enableFontDir = true;
-            fonts = with pkgs; [
-              overpass
-              fira
-              emacs-all-the-icons-fonts
-              sf-mono-liga-bin
-            ];
-          };
         })
       ];
     };
     nixosConfigurations = {
       shaunsingh-thinkpad = nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
-      specialArgs = inputs;
+        system = "x86_64-linux";
+        specialArgs = inputs;
         modules = [
-          ./modules/editors.nix
           ./hardware/thinkpad-hardware-configuration.nix
           inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x1
           inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x1-7th-gen
+          ./modules/editors.nix
+          ./modules/linux.nix
           home-manager.nixosModules.home-manager
           {
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
+              extraSpecialArgs = {
+                inherit (inputs) base16-carbon-dark; # see: theme.nix
+              };
               users.shauryasingh = {
                 imports = [
                   inputs.base16.hmModule
                   ./modules/home.nix
                   ./modules/theme.nix
-                  ./modules/linux.nix
+                  ./modules/sway.nix
                 ];
               };
             };
           }
           ({ config, pkgs, lib, ... }: {
+            # Configure overlays
             nixpkgs = {
-              config.allowUnfree = true;
               overlays = with inputs; [
                 nur.overlay
-                spacebar.overlay
                 neovim-overlay.overlay
                 emacs-overlay.overlay
-                rust-overlay.overlay
                 nixpkgs-wayland.overlay
                 (final: prev: {
                   doomEmacsRevision = inputs.doom-emacs.rev;
-                  sf-mono-liga-bin = pkgs.callPackage ./pkgs/sf-mono-liga-bin { };
+                  sf-mono-liga-bin =
+                    pkgs.callPackage ./pkgs/sf-mono-liga-bin { };
+                  sway-borders = let version = "1.8-borders-dev";
+                  in prev.sway.overrideAttrs (old: {
+                    inherit version;
+                    src = inputs.sway-borders-src;
+                    CFLAGS = prev.CFLAGS
+                      ++ "-Wno-error"; # regular build fails because of warnings treated as errors. Disabled for now
+                  });
                 })
               ];
             };
-            nix = {
-              autoOptimiseStore = true;
-              package = pkgs.nixUnstable;
-              extraOptions = ''
-                experimental-features = nix-command flakes
-              '';
-              binaryCachePublicKeys = [
-                "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-                "nixpkgs-wayland.cachix.org-1:3lwxaILxMRkVhehr5StQprHdEo4IrE8sRho9R9HOLYA="
-              ];
-              binaryCaches = [
-                "https://cache.nixos.org"
-                "https://nixpkgs-wayland.cachix.org"
-              ];
-            };
-
-            systemd.user.targets.sway-session = {
-              description = "Sway compositor session";
-              documentation = ["man:systemd.special(7)" ];
-              bindsTo = [ "graphical-session.target" ];
-              wants = ["graphical-session-pre.target" ];
-              after = [ "graphical-session-pre.target" ];
-            };
-
-            # Use fish
-            programs.fish = {
-              enable = true;
-              loginShellInit = ''
-                if test (id --user $USER) -ge 1000 && test (tty) = "/dev/tty1"
-                  export SDL_VIDEODRIVER=wayland
-                  export QT_QPA_PLATFORM=wayland
-                  export QT_WAYLAND_DISABLE_WINDOWDECORATION="1"
-                  export _JAVA_AWT_WM_NONREPARENTING=1
-                  export MOZ_ENABLE_WAYLAND=1
-                  exec sway
-                end
-              '';
-            };
-
-            # Define a user account. Don't forget to set a password with ‘passwd’.
-            users.users.shauryasingh = {
-              isNormalUser = true;
-              extraGroups =
-                [ "wheel" "networkManager" ]; # Enable ‘sudo’ for the user.
-              shell = pkgs.fish;
-            };
 
             # Power management
-            services.power-profiles-daemon.enable = true;
-            services.thermald.enable = true;
-            powerManagement.cpuFreqGovernor = lib.mkDefault "performance";
-            hardware.enableRedistributableFirmware = true;
-            boot.kernelPackages = pkgs.linuxPackages_latest;
+            services.tlp.enable = true; # keep my ports controlle
+            services.thermald.enable = true; # keep my battery controlled
+            powerManagement.cpuFreqGovernor =
+              lib.mkDefault "powersave"; # keep my cpu frequency controlled
 
             # Network settings.
             networking = {
@@ -605,76 +527,9 @@ The =flake.nix= below does the following:
               useDHCP = false; # Deprecated, so set explicitly to false
               wireless.enable = false;
               networkmanager.enable = true;
-              firewall.enable = false;
+              firewall.enable = false; # I had issues, for some reason
             };
 
-            # Bootloader
-            boot.loader = {
-              efi.canTouchEfiVariables = true;
-              systemd-boot.enable = true;
-            };
-
-            # Set your time zone.
-            time.timeZone = "America/New_York";
-            time.hardwareClockInLocalTime = true;
-
-            # Select internationalisation properties.
-            i18n.defaultLocale = "en_US.UTF-8";
-            console = {
-              font = "Lat2-Terminus16";
-              keyMap = "us";
-            };
-
-            # Sound
-            sound.enable = false;
-            hardware.pulseaudio.enable = false;
-
-            services.pipewire = {
-              enable = true;
-              alsa.enable = true;
-              alsa.support32Bit = true;
-              pulse.enable = true;
-              jack.enable = true;
-            };
-
-            environment.systemPackages = with pkgs; [
-              emacsPgtk
-
-              # Build Tools
-              rustpython
-              rust-bin.nightly.latest.default
-
-              # Language Servers
-              nodePackages.pyright
-              rust-analyzer
-
-              # Formatting
-              nixfmt
-              black
-              shellcheck
-
-              # Terminal utils and rust alternatives :tm:
-              xcp
-              lsd
-              procs
-              tree
-              zoxide
-              bottom
-              discocss
-
-              # wayland
-              waybar
-              wofi
-              grim
-              wl-clipboard
-            ];
-            fonts = {
-              fonts = with pkgs; [
-                ibm-plex
-                emacs-all-the-icons-fonts
-                sf-mono-liga-bin
-              ];
-            };
           })
         ];
       };
@@ -684,27 +539,34 @@ The =flake.nix= below does the following:
 #+end_src
 
 * Modules
-** Theme.nix
-We need to define the theme we're using before we get started
-#+begin_src nix :comments none :tangle "./modules/theme.nix"
-{ pkgs, lib, config, inputs, ...}:
-{
-  config = {
-    themes.base16 = {
-      enable = true;
-      customScheme = {
-        enable = true;
-        path = ./themes/base16-nanolight.yaml;
-      };
-    };
-  };
-}
-#+end_src
-
 ** Home.nix
 Home Manager allows you to use Nix’s declarative approach to manage your user-level configuration and packages. It works on any *nix system supported by Nix, including MacOS.
 #+begin_src nix :comments none :tangle "./modules/home.nix"
 { pkgs, lib, config, home-manager, nix-darwin, inputs, ... }: {
+#+end_src
+
+*** Packages
+My flake.nix file is getting a bit repetitive and cluttered betweeen systems. Lets move the common packages to home-manager
+#+begin_src nix :comments none :tangle "./modules/home.nix"
+  home.packages = with pkgs; [
+    # Language Servers
+    nodePackages.pyright
+    rust-analyzer
+  
+    # Formatting
+    nixfmt
+    black
+    shellcheck
+  
+    # Terminal utils and rust alternatives :tm:
+    xcp
+    lsd
+    procs
+    tree
+    zoxide
+    bottom
+    discocss
+  ];
 #+end_src
 
 *** Git
@@ -725,64 +587,9 @@ As opposed to what the xcode CLT provides, I want lfs enabled with git, and use 
   };
 #+end_src
 
-*** IdeaVim
-Intellij Idea ships with a very nice Vim emulation plugin. This is configured via a vimrc-like file (=~/.ideavimrc=). Since it doesn't have proper support in home-manger, we can just generate a file and symlink it into place
-#+begin_src nix :comments none :tangle "./modules/home.nix"
-  home.file = {
-    ".ideavimrc".text = ''
-      " settings
-      set ignorecase
-      set smartcase
-      set scrolloff=3 " 3 lines above/below cursor when scrolling
-      set nonumber
-      set clipboard+=unnamed
-      set multiple-cursors
-      set numberwidth=2
-      set expandtab=true
-      set shiftwidth=4
-
-      " plugins
-      set easymotion
-      set NERDTree
-      set surround
-      set highlightedyank
-
-
-      " bindings
-      let mapleader = " "
-      nmap <leader>. :action GotoFile<cr>
-      nmap <leader>fr :action RecentFiles<cr>
-      nmap <leader>ww <Plug>(easymotion-w)
-      nmap <leader>tz :action Enter Zen Mode<cr>
-      nmap <leader>op :NERDTreeToggle<cr>
-      nmap <leader>ot :Terminal<cr>
-      nmap <leader>: :action SearchEverywhere<cr>
-      nmap <leader>/ :action Find<cr>
-
-      " use ; to enter command
-      nmap ; :
-
-      " use jk for escaping
-      inoremap jk <Esc>
-      cnoremap jk <Esc>
-
-      " move by visual lines"
-      nmap j gj
-      nmap k gk
-
-      " use C-hjkl to navigate splits
-      nmap <C-h> <c-w>h
-      nmap <C-l> <c-w>l
-      nmap <C-k> <c-w>k
-      nmap <C-j> <c-w>j
-
-      nmap <leader>E :action Tool_External Tools_emacsclient<cr>
-    '';
- };
-#+end_src
-
 *** Discocss
-Discord is an app I use almost every day, so lets spice it up a bit. Still, its a pain to work with CSS files without highlighting so I'll just have HM link a file instead.
+Discord is an app I use almost every day, so lets spice it up a bit. 
+Ideally, I would like this to just be text and not a file, so I can use that sweet base16-nix integration, but the astrix at the start of the css seems to destroy org-mode. LMK if anyone knows of a fix
 #+begin_src nix :comments none :tangle "./modules/home.nix"
   xdg.dataFile."discocss/custom.css".source = ../configs/custom.css;
 #+end_src
@@ -790,25 +597,372 @@ Discord is an app I use almost every day, so lets spice it up a bit. Still, its 
 *** Firefox
 Although safari is my main browser, firefox looks very appealing with its excellent privacy and speed
 #+begin_src nix :comments none :tangle "./modules/home.nix"
-  programs.firefox.enable = true;
+  programs.firefox = {
+    enable = true;
+    extensions = with pkgs.nur.repos.rycee.firefox-addons; [
+      ublock-origin
+      tridactyl
+      reddit-enhancement-suite
+      betterttv
+    ];
+  };
 #+end_src
 
-GUI apps are very finicky with nix, and so I create a fake package so that we can still use the configuration from =home-manager= without having to install it via nix. The user can then install firefox manually to =~/Applications=
-#+begin_src nix :comments none :tangle "./modules/home.nix"
-  programs.firefox.extensions =
-      with pkgs.nur.repos.rycee.firefox-addons; [
-        ublock-origin
-        tridactyl
-        reddit-enhancement-suite
-        betterttv
-        theme-nord-polar-night
-      ];
-#+end_src
-
-Now for the configuration. We want firefox to use the css at [[file:./configs/userChrome.css]], and we want to configure the UI. Lets also enable the (rust powered ftw) webrender/servo renderer.
+Now for the configuration. We want firefox to use our nice base16-nix powered css, and we want to configure the UI. Lets also enable the (rust powered ftw) webrender/servo renderer.
 #+begin_src nix :comments none :tangle "./modules/home.nix"
   programs.firefox.profiles = let
-    userChrome = builtins.readFile ../configs/userChrome.css;
+    userChrome = with config.lib.base16.theme; ''
+      :root {
+      --window-colour:                #${base01-hex};
+      --secondary-colour:             #${base04-hex};
+      --inverted-colour:              #${base05-hex};
+
+      --uc-identity-color-blue:       #${base08-hex};
+      --uc-identity-color-turquoise:  #${base09-hex};
+      --uc-identity-color-green:      #${base0A-hex};
+      --uc-identity-color-yellow:     #${base0B-hex};
+      --uc-identity-color-orange:     #${base0C-hex};
+      --uc-identity-color-red:        #${base0D-hex};
+      --uc-identity-color-pink:       #${base0E-hex};
+      --uc-identity-color-purple:     #${base0F-hex};
+      
+      /* URL colour in URL bar suggestions */
+      --urlbar-popup-url-color: var(--uc-identity-color-purple) !important;
+
+      /* global border radius */
+      --uc-border-radius: 0;
+
+      /* dynamic url bar width settings */
+      --uc-urlbar-width: clamp(200px, 40vw, 500px);
+
+      /* dynamic tab width settings */
+      --uc-active-tab-width:   clamp(100px, 20vw, 300px);
+      --uc-inactive-tab-width: clamp( 50px, 15vw, 200px);
+
+      /* if active only shows the tab close button on hover*/
+      --show-tab-close-button-hover: none; /* DEFAULT: -moz-inline-box; */
+
+      /* adds left and right margin to the container-tabs indicator */
+      --container-tabs-indicator-margin: 10px; }
+
+      #back-button,
+      #forward-button { display: none !important; }
+
+      /* bookmark icon */
+      #star-button{ display: none !important; }
+
+      /* zoom indicator */
+      #urlbar-zoom-button { display: none !important; }
+
+      /* Make button small as Possible, hidden out of sight */
+      #PanelUI-button { margin-top: -5px; margin-bottom: 44px; }
+
+      #PanelUI-menu-button {
+      padding: 0px !important;
+      max-height: 1px;
+
+      list-style-image: none !important;
+      }
+
+      #PanelUI-menu-button .toolbarbutton-icon { width: 1px !important; }
+      #PanelUI-menu-button .toolbarbutton-badge-stack { padding: 0px !important; }
+
+      #reader-mode-button{ display: none !important; }
+
+      /* tracking protection shield icon */
+      #tracking-protection-icon-container { display: none !important; }
+
+      /* #identity-box { display: none !important } /* hides encryption AND permission items */
+      #identity-permission-box { display: none !important; } /* only hodes permission items */
+
+      /* e.g. playing indicator (secondary - not icon) */
+      .tab-secondary-label { display: none !important; }
+
+      #pageActionButton { display: none !important; }
+      #page-action-buttons { display: none !important; }
+
+      #urlbar-go-button { display: none !important; }
+
+      :root {
+
+      --uc-theme-colour:                          var(--window-colour);
+      --uc-hover-colour:                          var(--secondary-colour);
+      --uc-inverted-colour:                       var(--inverted-colour);
+
+      --button-bgcolor:                           var(--uc-theme-colour)    !important;
+      --button-hover-bgcolor:                     var(--uc-hover-colour)    !important;
+      --button-active-bgcolor:                    var(--uc-hover-colour)    !important;
+
+      --toolbar-bgcolor:                          var(--uc-theme-colour)    !important;
+      --toolbarbutton-hover-background:           var(--uc-hover-colour)    !important;
+      --toolbarbutton-active-background:          var(--uc-hover-colour)    !important;
+      --toolbarbutton-border-radius:              var(--uc-border-radius)   !important;
+      --lwt-toolbar-field-focus:                  var(--uc-theme-colour)    !important;
+      --toolbarbutton-icon-fill:                  var(--uc-inverted-colour) !important;
+      --toolbar-field-focus-background-color:     var(--secondary-colour)   !important;
+      --toolbar-field-color:                      var(--uc-inverted-colour) !important;
+      --toolbar-field-focus-color:                var(--uc-inverted-colour) !important;
+
+      --tabs-border-color:                        var(--uc-theme-colour)    !important;
+      --tab-border-radius:                        var(--uc-border-radius)   !important;
+      --lwt-text-color:                           var(--uc-inverted-colour) !important;
+      --lwt-tab-text:                             var(--uc-inverted-colour) !important;
+
+      --lwt-sidebar-background-color:             var(--uc-hover-colour)    !important;
+      --lwt-sidebar-text-color:                   var(--uc-inverted-colour) !important;
+
+      --arrowpanel-border-color:                  var(--uc-theme-colour)    !important;
+      --arrowpanel-border-radius:                 var(--uc-border-radius)   !important;
+      --arrowpanel-background:                    var(--uc-theme-colour)    !important;
+      --arrowpanel-color:                         var(--inverted-colour)    !important;
+
+      --autocomplete-popup-highlight-background:  var(--uc-inverted-colour) !important;
+      --autocomplete-popup-highlight-color:       var(--uc-inverted-colour) !important;
+      --autocomplete-popup-hover-background:      var(--uc-inverted-colour) !important;
+
+
+      --tab-block-margin: 2px !important;
+
+      }
+
+      window,
+      #main-window,
+      #toolbar-menubar,
+      #TabsToolbar,
+      #PersonalToolbar,
+      #navigator-toolbox,
+      #sidebar-box,
+      #nav-bar {
+
+      -moz-appearance: none !important;
+
+      border: none !important;
+      box-shadow: none !important;
+      background: var(--uc-theme-colour) !important;
+
+      }
+
+      /* grey out ccons inside the toolbar to make it
+      - more aligned with the Black & White colour look */
+      #PersonalToolbar toolbarbutton:not(:hover),
+      #bookmarks-toolbar-button:not(:hover) { filter: grayscale(1) !important; }
+
+
+      /* remove window control buttons */
+      .titlebar-buttonbox-container { display: none !important; }
+
+
+      /* remove "padding" left and right from tabs */
+      .titlebar-spacer { display: none !important; }
+
+      /* remove gap after pinned tabs */
+      #tabbrowser-tabs[haspinnedtabs]:not([positionpinnedtabs])
+          > #tabbrowser-arrowscrollbox
+          > .tabbrowser-tab[first-visible-unpinned-tab] { margin-inline-start: 0 !important; }
+
+
+      /* remove tab shadow */
+      .tabbrowser-tab
+          >.tab-stack
+          > .tab-background { box-shadow: none !important;  }
+
+
+      /* tab background */
+      .tabbrowser-tab
+          > .tab-stack
+          > .tab-background { background: var(--uc-theme-colour) !important; }
+
+
+      /* active tab background */
+      .tabbrowser-tab[selected]
+          > .tab-stack
+          > .tab-background { background: var(--uc-hover-colour) !important; }
+
+
+      /* multi tab selection */
+      #tabbrowser-tabs:not([noshadowfortests]) .tabbrowser-tab:is([visuallyselected=true], [multiselected]) > .tab-stack > .tab-background:-moz-lwtheme { background: var(--uc-hover-colour) !important; }
+
+
+      /* tab close button options */
+      .tabbrowser-tab:not([pinned]) .tab-close-button { display: var(--show-tab-close-button) !important; }
+      .tabbrowser-tab:not([pinned]):hover .tab-close-button { display: var(--show-tab-close-button-hover) !important }
+
+
+      /* adaptive tab width */
+      .tabbrowser-tab[selected][fadein]:not([pinned]) { max-width: var(--uc-active-tab-width) !important; }
+      .tabbrowser-tab[fadein]:not([selected]):not([pinned]) { max-width: var(--uc-inactive-tab-width) !important; }
+
+
+      /* container tabs indicator */
+      .tabbrowser-tab[usercontextid]
+          > .tab-stack
+          > .tab-background
+          > .tab-context-line {
+
+      margin: -1px var(--container-tabs-indicator-margin) 0 var(--container-tabs-indicator-margin) !important;
+
+      border-radius: var(--tab-border-radius) !important;
+
+      }
+
+
+      /* show favicon when media is playing but tab is hovered */
+      .tab-icon-image:not([pinned]) { opacity: 1 !important; }
+
+
+      /* Makes the speaker icon to always appear if the tab is playing (not only on hover) */
+      .tab-icon-overlay:not([crashed]),
+      .tab-icon-overlay[pinned][crashed][selected] {
+
+      top: 5px !important;
+      z-index: 1 !important;
+
+      padding: 1.5px !important;
+      inset-inline-end: -8px !important;
+      width: 16px !important; height: 16px !important;
+
+      border-radius: 10px !important;
+
+      }
+
+      /* style and position speaker icon */
+      .tab-icon-overlay:not([sharing], [crashed]):is([soundplaying], [muted], [activemedia-blocked]) {
+
+      stroke: transparent !important;
+      background: transparent !important;
+      opacity: 1 !important; fill-opacity: 0.8 !important;
+
+      color: currentColor !important;
+
+      stroke: var(--uc-theme-colour) !important;
+      background-color: var(--uc-theme-colour) !important;
+
+      }
+
+
+      /* change the colours of the speaker icon on active tab to match tab colours */
+      .tabbrowser-tab[selected] .tab-icon-overlay:not([sharing], [crashed]):is([soundplaying], [muted], [activemedia-blocked]) {
+
+      stroke: var(--uc-hover-colour) !important;
+      background-color: var(--uc-hover-colour) !important;
+
+      }
+
+
+      .tab-icon-overlay:not([pinned], [sharing], [crashed]):is([soundplaying], [muted], [activemedia-blocked]) { margin-inline-end: 9.5px !important; }
+
+
+      .tabbrowser-tab:not([image]) .tab-icon-overlay:not([pinned], [sharing], [crashed]) {
+
+      top: 0 !important;
+
+      padding: 0 !important;
+      margin-inline-end: 5.5px !important;
+      inset-inline-end: 0 !important;
+
+      }
+
+
+      .tab-icon-overlay:not([crashed])[soundplaying]:hover,
+      .tab-icon-overlay:not([crashed])[muted]:hover,
+      .tab-icon-overlay:not([crashed])[activemedia-blocked]:hover {
+
+      color: currentColor !important;
+      stroke: var(--uc-inverted-colour) !important;
+      background-color: var(--uc-inverted-colour) !important;
+      fill-opacity: 0.95 !important;
+
+      }
+
+
+      .tabbrowser-tab[selected] .tab-icon-overlay:not([crashed])[soundplaying]:hover,
+      .tabbrowser-tab[selected] .tab-icon-overlay:not([crashed])[muted]:hover,
+      .tabbrowser-tab[selected] .tab-icon-overlay:not([crashed])[activemedia-blocked]:hover {
+
+      color: currentColor !important;
+      stroke: var(--uc-inverted-colour) !important;
+      background-color: var(--uc-inverted-colour) !important;
+      fill-opacity: 0.95 !important;
+
+      }
+
+
+      /* speaker icon colour fix */
+      #TabsToolbar .tab-icon-overlay:not([crashed])[soundplaying],
+      #TabsToolbar .tab-icon-overlay:not([crashed])[muted],
+      #TabsToolbar .tab-icon-overlay:not([crashed])[activemedia-blocked] { color: var(--uc-inverted-colour) !important; }
+
+
+      /* speaker icon colour fix on hover */
+      #TabsToolbar .tab-icon-overlay:not([crashed])[soundplaying]:hover,
+      #TabsToolbar .tab-icon-overlay:not([crashed])[muted]:hover,
+      #TabsToolbar .tab-icon-overlay:not([crashed])[activemedia-blocked]:hover { color: var(--uc-theme-colour) !important; }
+
+      #nav-bar {
+
+      border:     none !important;
+      box-shadow: none !important;
+      background: transparent !important;
+
+      }
+
+
+      /* remove border below whole nav */
+      #navigator-toolbox { border-bottom: none !important; }
+
+
+      #urlbar,
+      #urlbar * {
+
+      outline: none !important;
+      box-shadow: none !important;
+
+      }
+
+
+      #urlbar-background { border: var(--uc-hover-colour) !important; }
+
+
+      #urlbar[focused="true"]
+          > #urlbar-background,
+      #urlbar:not([open])
+          > #urlbar-background { background: transparent !important; }
+
+
+      #urlbar[open]
+          > #urlbar-background { background: var(--uc-theme-colour) !important; }
+
+
+      .urlbarView-row:hover
+          > .urlbarView-row-inner,
+      .urlbarView-row[selected]
+          > .urlbarView-row-inner { background: var(--uc-hover-colour) !important; }
+
+
+      /* transition to oneline */
+      @media (min-width: 1000px) {
+
+
+      /* move tabs bar over */
+      #TabsToolbar { margin-left: var(--uc-urlbar-width) !important; }
+
+
+      /* move entire nav bar  */
+      #nav-bar { margin: calc((var(--urlbar-min-height) * -1) - 8px) calc(100vw - var(--uc-urlbar-width)) 0 0 !important; }
+
+
+      } /* end media query */
+
+      /* Container Tabs */
+      .identity-color-blue      { --identity-tab-color: var(--uc-identity-color-blue)      !important; --identity-icon-color: var(--uc-identity-color-blue)      !important; }
+      .identity-color-turquoise { --identity-tab-color: var(--uc-identity-color-turquoise) !important; --identity-icon-color: var(--uc-identity-color-turquoise) !important; }
+      .identity-color-green     { --identity-tab-color: var(--uc-identity-color-green)     !important; --identity-icon-color: var(--uc-identity-color-green)     !important; }
+      .identity-color-yellow    { --identity-tab-color: var(--uc-identity-color-yellow)    !important; --identity-icon-color: var(--uc-identity-color-yellow)    !important; }
+      .identity-color-orange    { --identity-tab-color: var(--uc-identity-color-orange)    !important; --identity-icon-color: var(--uc-identity-color-orange)    !important; }
+      .identity-color-red       { --identity-tab-color: var(--uc-identity-color-red)       !important; --identity-icon-color: var(--uc-identity-color-red)       !important; }
+      .identity-color-pink      { --identity-tab-color: var(--uc-identity-color-pink)      !important; --identity-icon-color: var(--uc-identity-color-pink)      !important; }
+      .identity-color-purple    { --identity-tab-color: var(--uc-identity-color-purple)    !important; --identity-icon-color: var(--uc-identity-color-purple)    !important; }
+    '';
     settings = {
       "browser.startup.homepage" = "https://searx.tiekoetter.com/";
       "browser.ctrlTab.recentlyUsedOrder" = false;
@@ -820,7 +974,6 @@ Now for the configuration. We want firefox to use the css at [[file:./configs/us
       "privacy.trackingprotection.enabled" = true;
       "privacy.trackingprotection.socialtracking.enabled" = true;
       "privacy.trackingprotection.socialtracking.annotate.enabled" = true;
-      "reader.color_scheme" = "sepia";
       "services.sync.declinedEngines" = "addons,prefs";
       "services.sync.engine.addons" = false;
       "services.sync.engineStatusChanged.addons" = true;
@@ -844,11 +997,10 @@ Alacritty is my terminal emulator of choice. Similar to firefox, we want to crea
 #+begin_src nix :comments none :tangle "./modules/home.nix"
   programs.alacritty = {
     enable = true;
-    package = pkgs.runCommand "alacritty-0.0.0" { } "mkdir $out";
     settings = with config.lib.base16.theme; {
       window.padding.x = 45;
       window.padding.y = 45;
-      window.decorations = "transparent";
+      window.decorations = "none";
       window.dynamic_title = true;
       live_config_reload = true;
       mouse.hide_when_typing = true;
@@ -902,7 +1054,7 @@ programs.fish.enable = true;
 programs.fish.shellAliases = with pkgs; {
     ":q" = "exit";
     vi = "emacsclient -c";
-    git-rebsae = "git rebase -i HEAD~2";
+    git-rebase = "git rebase -i HEAD~2";
     ls = "lsd";
     ps = "ps";
     tree = "tree -a -C";
@@ -910,7 +1062,6 @@ programs.fish.shellAliases = with pkgs; {
     top = "btm";
     cp = "xcp";
     find = "fd";
-    calc = "emacs -f full-calc";
   };
 #+end_src
 
@@ -920,7 +1071,6 @@ I like to make my prompt look pretty (along with some =nix-shell= and =git= inte
   programs.fish.interactiveShellInit = ''
     set -g fish_greeting ""
     zoxide init fish --cmd cd | source
-    set -x EDITOR "nvim"
     set -x PATH ~/.config/emacs/bin $PATH
 
     set -g fish_greeting ""
@@ -961,24 +1111,24 @@ I like to make my prompt look pretty (along with some =nix-shell= and =git= inte
     set __fish_git_prompt_showupstream 'yes'
 
     set __fish_git_prompt_color_branch brown
-    set __fish_git_prompt_color_dirtystate FCBC47
+    set __fish_git_prompt_color_dirtystate red
     set __fish_git_prompt_color_stagedstate yellow
     set __fish_git_prompt_color_upstream cyan
     set __fish_git_prompt_color_cleanstate green
     set __fish_git_prompt_color_invalidstate red
 
-    set __fish_git_prompt_char_dirtystate '~~'
+    set __fish_git_prompt_char_dirtystate ' ✕ '
     set __fish_git_prompt_char_stateseparator ' '
-    set __fish_git_prompt_char_untrackedfiles ' ...'
-    set __fish_git_prompt_char_cleanstate '✓'
+    set __fish_git_prompt_char_untrackedfiles '++'
+    set __fish_git_prompt_char_cleanstate ' ✓ '
     set __fish_git_prompt_char_stagedstate '-> '
-    set __fish_git_prompt_char_conflictedstate "✕"
+    set __fish_git_prompt_char_conflictedstate "✕ "
 
     set __fish_git_prompt_char_upstream_prefix ""
     set __fish_git_prompt_char_upstream_equal ""
-    set __fish_git_prompt_char_upstream_ahead '>>='
-    set __fish_git_prompt_char_upstream_behind '=<<'
-    set __fish_git_prompt_char_upstream_diverged '<=>'
+    set __fish_git_prompt_char_upstream_ahead ' >= '
+    set __fish_git_prompt_char_upstream_behind ' <= '
+    set __fish_git_prompt_char_upstream_diverged ' <=> '
 
     function _print_in_color
       set -l string $argv[1]
@@ -1113,7 +1263,7 @@ in
     languagetool
     neovim-nightly
     # neovide
-    nodejs-16_x
+    # nodejs-16_x
   ];
 }
 #+end_src
@@ -1122,6 +1272,39 @@ in
 There are mac-specific tweaks I need to do. In the future if I switch to nixOS full-time, then I wuold likely need to remove the mac-specific packages. An easy way to do this is just keep them in a seperate file:
 #+begin_src nix :comments none :tangle "./modules/mac.nix"
 { config, pkgs, lib, ... }: {
+#+end_src
+
+** Basic config 
+Just the nix-y stuff
+#+begin_src nix :comments none :tangle "./modules/mac.nix"
+  nix = {
+    package = pkgs.nixUnstable;
+    extraOptions = ''
+      system = aarch64-darwin # M1 gang
+      extra-platforms = aarch64-darwin x86_64-darwin # But we use rosetta too
+      experimental-features = nix-command flakes
+      build-users-group = nixbld
+    '';
+  };
+  programs.fish.enable = true;
+  environment.shells = with pkgs; [ fish ];
+  users.users.shauryasingh = {
+    home = "/Users/shauryasingh";
+    shell = pkgs.fish;
+  };
+  system.activationScripts.postActivation.text = ''
+    # Set the default shell as fish for the user. MacOS doesn't do this like nixOS does
+    sudo chsh -s ${lib.getBin pkgs.fish}/bin/fish shauryasingh
+  '';
+  environment.systemPackages = with pkgs; [ emacs ];
+  fonts = {
+    enableFontDir = true;
+    fonts = with pkgs; [
+      ibm-plex
+      emacs-all-the-icons-fonts
+      sf-mono-liga-bin
+    ];
+  };
 #+end_src
 
 *** Yabai
@@ -1161,7 +1344,7 @@ Now to configure the package via nix
     };
     extraConfig = ''
       # rules
-      yabai -m rule --add app=emacs-28.0.90 manage=on
+      yabai -m rule --add app=emacs-29.0.50 manage=on
       yabai -m rule --add app='Firefox Nightly' manage=on
       yabai -m rule --add app='System Preferences' manage=off
       yabai -m rule --add app='Activity Monitor' manage=off
@@ -1412,80 +1595,243 @@ in {
 }
 #+end_src
 
-
-** Linux.nix
-On the linux side of things, I need to configure sway and all my linux utilities.
-#+begin_src nix :comments none :tangle "./modules/linux.nix"
-{ config, options, lib, ... }: {
+** Sway.nix
+On the linux side of things, I need to configure sway and all my linux utilities, such as: 
+- Install the required packages
+- Enable sway/xwayland/gtk
+- Set the wallpaper and theme for sway 
+- Enable trackpad and keyboard support
+- Set enviornment variables
+- Use sway-borders (maybe)
+- Setup foot terminal
+- Configure firefox to run wayland native
+#+begin_src nix :comments none :tangle "./modules/sway.nix"
+{ config, options, pkgs, lib, ... }: {
+  home.packages = with pkgs; [
+    # Build Emacs with Vterm
+    ((emacsPackagesNgGen emacsPgtk).emacsWithPackages (epkgs: [ epkgs.vterm ]))
+    # Wayland tools
+    wofi
+    grim
+    wl-clipboard
+    brightnessctl
+  ];
   wayland.windowManager.sway = {
     enable = true;
+    # Sway borders has some issues with my cursor dissapearing (or is sway HEAD, no idea). Anyways, disabled for now
+    # package = pkgs.sway-borders;
     wrapperFeatures.gtk = true;
-    config = with config.lib.base16.theme; {
-      bars = [{ command = "waybar"; }];
-      fonts = {
-        names = [ "IBM Plex Sans" "Liga SFMono Nerd Font" ];
-        size = 16.0;
+    config = {
+      output = {
+        "*" = {
+          bg = "\ `find ${../extra/wallpapers/IBM_Developer_Posters.jpg} | shuf -n 1\` fill";
+        };
       };
-      gaps.inner = 20;
-      input."type:keyboard" = {
-        xkb_variant = ",qwerty";
-        xkb_options = "grp:alt_caps_toggle";
+      input = {
+        "*".xkb_layout = "us";
+        "type:keyboard".xkb_options = "caps:super";
+        "type:touchpad".tap = "enabled";
       };
-      input."type:touchpad" = {
-        tap = "enabled";
-        natural_scroll = "enabled";
-        scroll_method = "two_finger";
+      colors = with config.lib.base16.theme; {
+        focused = {
+          border = "#${base01-hex}";
+          background = "#${base03-hex}";
+          text = "#${base03-hex}";
+          indicator = "#${base03-hex}";
+          childBorder = "#${base03-hex}";
+        };
+        focusedInactive = {
+          border = "#${base02-hex}";
+          background = "#${base0A-hex}";
+          text = "#${base0A-hex}";
+          indicator = "#${base0A-hex}";
+          childBorder = "#${base0A-hex}";
+        };
+        unfocused = {
+          border = "#${base01-hex}";
+          background = "#${base02-hex}";
+          text = "#${base02-hex}";
+          indicator = "#${base02-hex}";
+          childBorder = "#${base02-hex}";
+        };
+        urgent = {
+          border = "#${base03-hex}";
+          background = "#${base0C-hex}";
+          text = "#${base0C-hex}";
+          indicator = "#${base0C-hex}";
+          childBorder = "#${base0C-hex}";
+        };
       };
-      keybindings = let
-        mod = config.wayland.windowManager.sway.config.modifier;
-      in lib.mkOptionDefault {
-        # Shortcuts for easier navigation between workspaces
-        "${mod}+Control+Left" = "workspace prev";
-        "${mod}+Control+l" = "workspace prev";
-        "${mod}+Control+Right" = "workspace next";
-        "${mod}+Control+h" = "workspace next";
-        "${mod}+Tab" = "workspace back_and_forth";
-        "${mod}+Enter" = "exec alacritty";
-        "${mod}+Shift+e" = "exec nwgbar -o 0.2";
-      };
-      # colors =  {
-      #   focused = {
-      #     border = "#${base01-hex}";
-      #     background = "#${base0D-hex}";
-      #     text = "#${base07-hex}";
-      #     indicator = "#${base0D-hex}";
-      #     childBorder = "#${base0D-hex}";
-      #   };
-      #   focusedInactive = {
-      #     border = "#${base02-hex}";
-      #     background = "#${base04-hex}";
-      #     text = "#${base00-hex}";
-      #     indicator = "#${base04-hex}";
-      #     childBorder = "#${base04-hex}";
-      #   };
-      #   unfocused = {
-      #     border = "#${base01-hex}";
-      #     background = "#${base02-hex}";
-      #     text = "#${base06-hex}";
-      #     indicator = "#${base02-hex}";
-      #     childBorder = "#${base02-hex}";
-      #   };
-      #   urgent = {
-      #     border = "#${base03-hex}";
-      #     background = "#${base08-hex}";
-      #     text = "#${base00-hex}";
-      #     indicator = "#${base08-hex}";
-      #     childBorder = "#${base08-hex}";
-      #   };
-      # };
-      modifier = "Mod4";
-      window.border = 0;
+      terminal = "${pkgs.foot}/bin/foot";
+      menu = "${pkgs.wofi}/bin/wofi --show drun";
+      gaps.inner = 18;
+      bars = [];
     };
-    extraSessionCommands = ''
-      export XDG_SESSION_TYPE=wayland
-      export XDG_SESSION_DESKTOP=sway
-      export XDG_CURRENT_DESKTOP=sway
+    extraConfig = ''
+      # Remove text on decorations
+      for_window [title="."] title_format " "
+      default_border normal 0
+      default_floating_border normal 0
+
+      for_window [title="."] title_format " "
+      default_border normal 0
+      default_floating_border normal 0
+
+      # Brightness
+      bindsym XF86MonBrightnessDown exec "brightnessctl set 5%-"
+      bindsym XF86MonBrightnessUp exec "brightnessctl set +5%"
+
+      # Border Images: needs sway-borders which is finicky at the moment
+#     border_images.focused ${../configs/borders/shadows.png}
+#     border_images.focused_inactive ${../configs/borders/shadows.png}
+#     border_images.unfocused ${../configs/borders/shadows.png}
+#     border_images.urgent ${../configs/borders/shadows.png}
     '';
+    extraSessionCommands = ''
+      XDG_CURRENT_DESKTOP = "sway";
+      export WLR_NO_HARDWARE_CURSORS=1
+      export SDL_VIDEODRIVER=wayland
+      export MOZ_ENABLE_WAYLAND=1
+      export _JAVA_AWT_WM_NONREPARENTING=1
+    '';
+  };
+  # foot is a nice wayland native terminal, and I was having openGL issues with alacritty
+  programs.foot = {
+    enable = true;
+    settings = with config.lib.base16.theme; {
+      main = {
+        font = "Liga SFMono Nerd Font:size=12";
+        dpi-aware = "no";
+      };
+      cursor = {
+        style = "beam";
+      };
+      mouse = {
+        hide-when-typing = "yes";
+      };
+      colors = {
+        background = "${base00-hex}";
+        foreground = "${base06-hex}";
+        regular0 = "${base00-hex}";
+        regular1 = "${base0B-hex}";
+        regular2 = "${base0C-hex}";
+        regular3 = "${base0D-hex}";
+        regular4 = "${base07-hex}";
+        regular5 = "${base0F-hex}";
+        regular6 = "${base09-hex}";
+        regular7 = "${base04-hex}";
+        bright0 = "${base03-hex}";
+        bright1 = "${base0B-hex}";
+        bright2 = "${base0C-hex}";
+        bright3 = "${base0D-hex}";
+        bright4 = "${base07-hex}";
+        bright5 = "${base0F-hex}";
+        bright6 = "${base09-hex}";
+        bright7 = "${base06-hex}";
+      };
+    };
+  };
+  # We only want a wayland-native firefox package on wayland, obviously
+  programs.firefox.package = pkgs.wrapFirefox pkgs.firefox-unwrapped {
+     forceWayland = true;
+     extraPolicies = {
+       ExtensionSettings = {};
+     };
+  };
+}
+#+end_src
+
+** Linux.nix
+And for the usual linux config that I want to re-use between systems, here it is!
+#+begin_src nix :comments none :tangle "./modules/linux.nix"
+{ config, options, pkgs, lib, ... }: {
+
+  # Use nix-unstable
+  nix = {
+    package = pkgs.nixUnstable;
+    extraOptions = ''
+      experimental-features = nix-command flakes
+    '';
+  };
+
+  # Define a user account. Don't forget to set a password with ‘passwd’.
+  users.users.shauryasingh = {
+    isNormalUser = true;
+    extraGroups = [
+      "wheel"
+      "networkManager"
+    ]; # Enable ‘sudo’ for the user + nwcli access
+    shell = pkgs.fish;
+  };
+
+  # kernel and hardware management
+  hardware.enableRedistributableFirmware = true; # fsf :ha:
+  boot.kernelPackages =
+    pkgs.linuxPackages_latest; # why is default linux so old
+
+  # Bootloader
+  boot.loader = {
+    efi.canTouchEfiVariables = true;
+    systemd-boot.enable = true;
+  };
+
+  # Set your time zone.
+  time.timeZone = "America/New_York";
+  time.hardwareClockInLocalTime =
+    true; # lets not mess up my windows clock too
+
+  # Select internationalisation properties.
+  i18n.defaultLocale = "en_US.UTF-8";
+  console = {
+    font = "Lat2-Terminus16";
+    keyMap = "us";
+  };
+
+  # Sound
+  sound.enable = false;
+  hardware.pulseaudio.enable = false;
+
+  # Enable pipewire and emulate alsa/pulse/jack
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+    jack.enable = true;
+  };
+
+  # Set up XDG for screen-sharing
+  xdg = {
+    portal = {
+      enable = true;
+      gtkUsePortal = true;
+      extraPortals = with pkgs; [
+        xdg-desktop-portal-wlr
+        xdg-desktop-portal-gtk
+      ];
+    };
+  };
+
+  # Install fonts
+  fonts = {
+    fonts = with pkgs; [
+      ibm-plex
+      emacs-all-the-icons-fonts
+      sf-mono-liga-bin
+    ];
+  };
+}
+#+end_src
+
+** Theme.nix
+Just some basic themeing. Use our flake input (base16-carbon-dark) as our theme systemwide
+#+begin_src nix :comments none :tangle "./modules/theme.nix"
+{ config, base16-carbon-dark, ...}: {
+  config = {
+    themes.base16 = {
+      enable = true;
+      path = "${base16-carbon-dark}/base16-carbon-dark.yaml";
+    };
   };
 }
 #+end_src

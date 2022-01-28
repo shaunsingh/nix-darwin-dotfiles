@@ -2,23 +2,25 @@
   description = "Shaurya's Nix Environment";
 
   inputs = {
-    # All packages should follow latest nixpkgs
+    # All packages should follow latest nixpkgs/nur
     unstable.url = "github:nixos/nixpkgs/master";
     nur.url = "github:nix-community/NUR";
-    # core
+    # Nix-Darwin
     darwin = {
       url = "github:LnL7/nix-darwin";
       inputs.nixpkgs.follows = "unstable";
     };
+    # NixOS Hardware for thinkpad config
     nixos-hardware = {
       url = "github:NixOS/nixos-hardware/master";
       inputs.nixpkgs.follows = "unstable";
     };
+    # HM-manager for dotfile/user management
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "unstable";
     };
-    # Bar
+    # Bar (macos)
     spacebar = {
       url = "github:shaunsingh/spacebar";
       inputs.nixpkgs.follows = "unstable";
@@ -28,41 +30,50 @@
       url = "github:koekeishiya/yabai";
       flake = false;
     };
-    # Editors
+    # SRC for macOS emacs overlay
     emacs-src = {
       url = "github:emacs-mirror/emacs";
       flake = false;
     };
+    # SRC for linux emacs overlay
     emacs-overlay = {
       url = "github:nix-community/emacs-overlay";
       inputs.nixpkgs.follows = "unstable";
     };
+    # Use latest libverm to build macOS emacs build
     emacs-vterm-src = {
       url = "github:akermu/emacs-libvterm";
       flake = false;
     };
+    # Keep the doom-emacs version managed with nix config
     doom-emacs = {
       url = "github:hlissner/doom-emacs";
       flake = false;
     };
     # Themeing
     base16 = {
-      url = "github:shaunsingh/base16-nix";
+      url = "path:./modules/base16-nix";
       inputs.nixpkgs.follows = "unstable";
     };
-    # overlays
-    rust-overlay = {
-      url = "github:oxalica/rust-overlay";
-      inputs.nixpkgs.follows = "unstable";
+    # IBM-Carbon-Theme (see IBM-design: colors)
+    base16-carbon-dark = {
+      url = "github:shaunsingh/base16-carbon-dark";
+      flake = false;
     };
+    # Neovim Nightly
     neovim-overlay = {
       url = "github:nix-community/neovim-nightly-overlay";
       inputs.nixpkgs.follows = "unstable";
     };
-    # Linux
+    # Get the latest and greatest wayland tools
     nixpkgs-wayland = {
       url = "github:nix-community/nixpkgs-wayland";
       inputs.nixpkgs.follows = "unstable";
+    };
+    # But sway is special :)
+    sway-borders-src = {
+      url = "github:fluix-dev/sway-borders";
+      flake = false;
     };
   };
   outputs = { self, nixpkgs, darwin, home-manager, ... }@inputs: {
@@ -77,6 +88,10 @@
           home-manager = {
             useGlobalPkgs = true;
             useUserPackages = true;
+            extraSpecialArgs = {
+              inherit (inputs)
+                base16-carbon-dark; # pass base16 input so hm can use it
+            };
             users.shauryasingh = {
               imports = [
                 inputs.base16.hmModule
@@ -90,16 +105,14 @@
           services.nix-daemon.enable = true;
           security.pam.enableSudoTouchIdAuth = true;
           nixpkgs = {
-            config.allowUnfree = true;
             overlays = with inputs; [
               nur.overlay
               spacebar.overlay
               neovim-overlay.overlay
-              rust-overlay.overlay
               (final: prev: {
                 doomEmacsRevision = inputs.doom-emacs.rev;
                 sf-mono-liga-bin = pkgs.callPackage ./pkgs/sf-mono-liga-bin { };
-                neovide = pkgs.callPackage ./pkgs/neovide { };
+                # yabai is broken on macOS 12, so lets make a smol overlay to use the master version
                 yabai = let
                   version = "4.0.0-dev";
                   buildSymlinks = prev.runCommand "build-symlinks" { } ''
@@ -126,21 +139,12 @@
 
                   src = inputs.emacs-vterm-src;
 
-                  nativeBuildInputs = [
-                    prev.cmake
-                    prev.libtool
-                    prev.glib.dev
-                  ];
+                  nativeBuildInputs = [ prev.cmake prev.libtool prev.glib.dev ];
 
-                  buildInputs = [
-                    prev.glib.out
-                    prev.libvterm-neovim
-                    prev.ncurses
-                  ];
+                  buildInputs =
+                    [ prev.glib.out prev.libvterm-neovim prev.ncurses ];
 
-                  cmakeFlags = [
-                    "-DUSE_SYSTEM_LIBVTERM=yes"
-                  ];
+                  cmakeFlags = [ "-DUSE_SYSTEM_LIBVTERM=yes" ];
 
                   preConfigure = ''
                     echo "include_directories(\"${prev.glib.out}/lib/glib-2.0/include\")" >> CMakeLists.txt
@@ -165,7 +169,8 @@
                   version = "29.0.50";
                   src = inputs.emacs-src;
 
-                  buildInputs = o.buildInputs ++ [ prev.darwin.apple_sdk.frameworks.WebKit ];
+                  buildInputs = o.buildInputs
+                    ++ [ prev.darwin.apple_sdk.frameworks.WebKit ];
 
                   configureFlags = o.configureFlags ++ [
                     "--without-gpm"
@@ -197,156 +202,65 @@
               })
             ];
           };
-          nix = {
-            package = pkgs.nixUnstable;
-            extraOptions = ''
-              system = aarch64-darwin
-              extra-platforms = aarch64-darwin x86_64-darwin
-              experimental-features = nix-command flakes
-              build-users-group = nixbld
-            '';
-          };
-          programs.fish.enable = true;
-          environment.shells = with pkgs; [ fish ];
-          users.users.shauryasingh = {
-            home = "/Users/shauryasingh";
-            shell = pkgs.fish;
-          };
-          system.activationScripts.postActivation.text = ''
-            # Set the default shell as fish for the user
-            sudo chsh -s ${lib.getBin pkgs.fish}/bin/fish shauryasingh
-          '';
-          environment.systemPackages = with pkgs; [
-            # emacs needs to be here since its a GUI app
-            emacs
-
-            # Build Tools
-            rustpython
-            rust-bin.nightly.latest.default
-
-            # Language Servers
-            nodePackages.pyright
-            rust-analyzer
-
-            # Formatting
-            nixfmt
-            black
-            shellcheck
-
-            # Terminal utils and rust alternatives :tm:
-            xcp
-            lsd
-            procs
-            tree
-            zoxide
-            bottom
-            discocss
-          ];
-          fonts = {
-            enableFontDir = true;
-            fonts = with pkgs; [
-              overpass
-              fira
-              emacs-all-the-icons-fonts
-              sf-mono-liga-bin
-            ];
-          };
         })
       ];
     };
     nixosConfigurations = {
       shaunsingh-thinkpad = nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
-      specialArgs = inputs;
+        system = "x86_64-linux";
+        specialArgs = inputs;
         modules = [
-          ./modules/editors.nix
           ./hardware/thinkpad-hardware-configuration.nix
           inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x1
           inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x1-7th-gen
+          ./modules/editors.nix
+          ./modules/linux.nix
           home-manager.nixosModules.home-manager
           {
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
+              extraSpecialArgs = {
+                inherit (inputs) base16-carbon-dark; # see: theme.nix
+              };
               users.shauryasingh = {
                 imports = [
                   inputs.base16.hmModule
                   ./modules/home.nix
                   ./modules/theme.nix
-                  ./modules/linux.nix
+                  ./modules/sway.nix
                 ];
               };
             };
           }
           ({ config, pkgs, lib, ... }: {
+            # Configure overlays
             nixpkgs = {
-              config.allowUnfree = true;
               overlays = with inputs; [
                 nur.overlay
-                spacebar.overlay
                 neovim-overlay.overlay
                 emacs-overlay.overlay
-                rust-overlay.overlay
                 nixpkgs-wayland.overlay
                 (final: prev: {
                   doomEmacsRevision = inputs.doom-emacs.rev;
-                  sf-mono-liga-bin = pkgs.callPackage ./pkgs/sf-mono-liga-bin { };
+                  sf-mono-liga-bin =
+                    pkgs.callPackage ./pkgs/sf-mono-liga-bin { };
+                  sway-borders = let version = "1.8-borders-dev";
+                  in prev.sway.overrideAttrs (old: {
+                    inherit version;
+                    src = inputs.sway-borders-src;
+                    CFLAGS = prev.CFLAGS
+                      ++ "-Wno-error"; # regular build fails because of warnings treated as errors. Disabled for now
+                  });
                 })
               ];
             };
-            nix = {
-              autoOptimiseStore = true;
-              package = pkgs.nixUnstable;
-              extraOptions = ''
-                experimental-features = nix-command flakes
-              '';
-              binaryCachePublicKeys = [
-                "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-                "nixpkgs-wayland.cachix.org-1:3lwxaILxMRkVhehr5StQprHdEo4IrE8sRho9R9HOLYA="
-              ];
-              binaryCaches = [
-                "https://cache.nixos.org"
-                "https://nixpkgs-wayland.cachix.org"
-              ];
-            };
-
-            systemd.user.targets.sway-session = {
-              description = "Sway compositor session";
-              documentation = ["man:systemd.special(7)" ];
-              bindsTo = [ "graphical-session.target" ];
-              wants = ["graphical-session-pre.target" ];
-              after = [ "graphical-session-pre.target" ];
-            };
-
-            # Use fish
-            programs.fish = {
-              enable = true;
-              loginShellInit = ''
-                if test (id --user $USER) -ge 1000 && test (tty) = "/dev/tty1"
-                  export SDL_VIDEODRIVER=wayland
-                  export QT_QPA_PLATFORM=wayland
-                  export QT_WAYLAND_DISABLE_WINDOWDECORATION="1"
-                  export _JAVA_AWT_WM_NONREPARENTING=1
-                  export MOZ_ENABLE_WAYLAND=1
-                  exec sway
-                end
-              '';
-            };
-
-            # Define a user account. Don't forget to set a password with ‘passwd’.
-            users.users.shauryasingh = {
-              isNormalUser = true;
-              extraGroups =
-                [ "wheel" "networkManager" ]; # Enable ‘sudo’ for the user.
-              shell = pkgs.fish;
-            };
 
             # Power management
-            services.power-profiles-daemon.enable = true;
-            services.thermald.enable = true;
-            powerManagement.cpuFreqGovernor = lib.mkDefault "performance";
-            hardware.enableRedistributableFirmware = true;
-            boot.kernelPackages = pkgs.linuxPackages_latest;
+            services.tlp.enable = true; # keep my ports controlle
+            services.thermald.enable = true; # keep my battery controlled
+            powerManagement.cpuFreqGovernor =
+              lib.mkDefault "powersave"; # keep my cpu frequency controlled
 
             # Network settings.
             networking = {
@@ -354,76 +268,9 @@
               useDHCP = false; # Deprecated, so set explicitly to false
               wireless.enable = false;
               networkmanager.enable = true;
-              firewall.enable = false;
+              firewall.enable = false; # I had issues, for some reason
             };
 
-            # Bootloader
-            boot.loader = {
-              efi.canTouchEfiVariables = true;
-              systemd-boot.enable = true;
-            };
-
-            # Set your time zone.
-            time.timeZone = "America/New_York";
-            time.hardwareClockInLocalTime = true;
-
-            # Select internationalisation properties.
-            i18n.defaultLocale = "en_US.UTF-8";
-            console = {
-              font = "Lat2-Terminus16";
-              keyMap = "us";
-            };
-
-            # Sound
-            sound.enable = false;
-            hardware.pulseaudio.enable = false;
-
-            services.pipewire = {
-              enable = true;
-              alsa.enable = true;
-              alsa.support32Bit = true;
-              pulse.enable = true;
-              jack.enable = true;
-            };
-
-            environment.systemPackages = with pkgs; [
-              emacsPgtk
-
-              # Build Tools
-              rustpython
-              rust-bin.nightly.latest.default
-
-              # Language Servers
-              nodePackages.pyright
-              rust-analyzer
-
-              # Formatting
-              nixfmt
-              black
-              shellcheck
-
-              # Terminal utils and rust alternatives :tm:
-              xcp
-              lsd
-              procs
-              tree
-              zoxide
-              bottom
-              discocss
-
-              # wayland
-              waybar
-              wofi
-              grim
-              wl-clipboard
-            ];
-            fonts = {
-              fonts = with pkgs; [
-                ibm-plex
-                emacs-all-the-icons-fonts
-                sf-mono-liga-bin
-              ];
-            };
           })
         ];
       };

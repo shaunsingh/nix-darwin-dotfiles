@@ -1,72 +1,77 @@
-{ config, options, lib, ... }: {
-  wayland.windowManager.sway = {
-    enable = true;
-    wrapperFeatures.gtk = true;
-    config = with config.lib.base16.theme; {
-      bars = [{ command = "waybar"; }];
-      fonts = {
-        names = [ "IBM Plex Sans" "Liga SFMono Nerd Font" ];
-        size = 16.0;
-      };
-      gaps.inner = 20;
-      input."type:keyboard" = {
-        xkb_variant = ",qwerty";
-        xkb_options = "grp:alt_caps_toggle";
-      };
-      input."type:touchpad" = {
-        tap = "enabled";
-        natural_scroll = "enabled";
-        scroll_method = "two_finger";
-      };
-      keybindings = let
-        mod = config.wayland.windowManager.sway.config.modifier;
-      in lib.mkOptionDefault {
-        # Shortcuts for easier navigation between workspaces
-        "${mod}+Control+Left" = "workspace prev";
-        "${mod}+Control+l" = "workspace prev";
-        "${mod}+Control+Right" = "workspace next";
-        "${mod}+Control+h" = "workspace next";
-        "${mod}+Tab" = "workspace back_and_forth";
-        "${mod}+Enter" = "exec alacritty";
-        "${mod}+Shift+e" = "exec nwgbar -o 0.2";
-      };
-      # colors =  {
-      #   focused = {
-      #     border = "#${base01-hex}";
-      #     background = "#${base0D-hex}";
-      #     text = "#${base07-hex}";
-      #     indicator = "#${base0D-hex}";
-      #     childBorder = "#${base0D-hex}";
-      #   };
-      #   focusedInactive = {
-      #     border = "#${base02-hex}";
-      #     background = "#${base04-hex}";
-      #     text = "#${base00-hex}";
-      #     indicator = "#${base04-hex}";
-      #     childBorder = "#${base04-hex}";
-      #   };
-      #   unfocused = {
-      #     border = "#${base01-hex}";
-      #     background = "#${base02-hex}";
-      #     text = "#${base06-hex}";
-      #     indicator = "#${base02-hex}";
-      #     childBorder = "#${base02-hex}";
-      #   };
-      #   urgent = {
-      #     border = "#${base03-hex}";
-      #     background = "#${base08-hex}";
-      #     text = "#${base00-hex}";
-      #     indicator = "#${base08-hex}";
-      #     childBorder = "#${base08-hex}";
-      #   };
-      # };
-      modifier = "Mod4";
-      window.border = 0;
-    };
-    extraSessionCommands = ''
-      export XDG_SESSION_TYPE=wayland
-      export XDG_SESSION_DESKTOP=sway
-      export XDG_CURRENT_DESKTOP=sway
+{ config, options, pkgs, lib, ... }: {
+
+  # Use nix-unstable
+  nix = {
+    package = pkgs.nixUnstable;
+    extraOptions = ''
+      experimental-features = nix-command flakes
     '';
+  };
+
+  # Define a user account. Don't forget to set a password with ‘passwd’.
+  users.users.shauryasingh = {
+    isNormalUser = true;
+    extraGroups = [
+      "wheel"
+      "networkManager"
+    ]; # Enable ‘sudo’ for the user + nwcli access
+    shell = pkgs.fish;
+  };
+
+  # kernel and hardware management
+  hardware.enableRedistributableFirmware = true; # fsf :ha:
+  boot.kernelPackages =
+    pkgs.linuxPackages_latest; # why is default linux so old
+
+  # Bootloader
+  boot.loader = {
+    efi.canTouchEfiVariables = true;
+    systemd-boot.enable = true;
+  };
+
+  # Set your time zone.
+  time.timeZone = "America/New_York";
+  time.hardwareClockInLocalTime =
+    true; # lets not mess up my windows clock too
+
+  # Select internationalisation properties.
+  i18n.defaultLocale = "en_US.UTF-8";
+  console = {
+    font = "Lat2-Terminus16";
+    keyMap = "us";
+  };
+
+  # Sound
+  sound.enable = false;
+  hardware.pulseaudio.enable = false;
+
+  # Enable pipewire and emulate alsa/pulse/jack
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+    jack.enable = true;
+  };
+
+  # Set up XDG for screen-sharing
+  xdg = {
+    portal = {
+      enable = true;
+      gtkUsePortal = true;
+      extraPortals = with pkgs; [
+        xdg-desktop-portal-wlr
+        xdg-desktop-portal-gtk
+      ];
+    };
+  };
+
+  # Install fonts
+  fonts = {
+    fonts = with pkgs; [
+      ibm-plex
+      emacs-all-the-icons-fonts
+      sf-mono-liga-bin
+    ];
   };
 }
