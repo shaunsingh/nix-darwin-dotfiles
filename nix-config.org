@@ -548,6 +548,7 @@ Home Manager allows you to use Nix’s declarative approach to manage your user-
 *** Packages
 My flake.nix file is getting a bit repetitive and cluttered betweeen systems. Lets move the common packages to home-manager
 #+begin_src nix :comments none :tangle "./modules/home.nix"
+  home.stateVersion = "21.11";
   home.packages = with pkgs; [
     # Language Servers
     nodePackages.pyright
@@ -603,7 +604,6 @@ Although safari is my main browser, firefox looks very appealing with its excell
       ublock-origin
       tridactyl
       reddit-enhancement-suite
-      betterttv
     ];
   };
 #+end_src

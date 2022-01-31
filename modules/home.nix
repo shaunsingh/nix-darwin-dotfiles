@@ -1,5 +1,6 @@
 { pkgs, lib, config, home-manager, nix-darwin, inputs, ... }: {
 
+home.stateVersion = "21.11";
 home.packages = with pkgs; [
   # Language Servers
   nodePackages.pyright
@@ -42,7 +43,6 @@ programs.firefox = {
     ublock-origin
     tridactyl
     reddit-enhancement-suite
-    betterttv
   ];
 };
 
