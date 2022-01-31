@@ -52,7 +52,7 @@
     };
     # Themeing
     base16 = {
-      url = "path:./modules/base16-nix";
+      url = "github:shaunsingh/base16.nix";
       inputs.nixpkgs.follows = "unstable";
     };
     # IBM-Carbon-Theme (see IBM-design: colors)

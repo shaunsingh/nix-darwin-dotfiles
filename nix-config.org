@@ -311,7 +311,7 @@ For Linux systems:
     };
     # Themeing
     base16 = {
-      url = "path:./modules/base16-nix";
+      url = "github:shaunsingh/base16.nix";
       inputs.nixpkgs.follows = "unstable";
     };
     # IBM-Carbon-Theme (see IBM-design: colors)
@@ -600,6 +600,7 @@ Although safari is my main browser, firefox looks very appealing with its excell
 #+begin_src nix :comments none :tangle "./modules/home.nix"
   programs.firefox = {
     enable = true;
+    package = pkgs.runCommand "firefox-0.0.0" { } "mkdir $out";
     extensions = with pkgs.nur.repos.rycee.firefox-addons; [
       ublock-origin
       tridactyl
@@ -997,6 +998,7 @@ Alacritty is my terminal emulator of choice. Similar to firefox, we want to crea
 #+begin_src nix :comments none :tangle "./modules/home.nix"
   programs.alacritty = {
     enable = true;
+    package = pkgs.runCommand "alacritty-0.0.0" { } "mkdir $out";
     settings = with config.lib.base16.theme; {
       window.padding.x = 45;
       window.padding.y = 45;
@@ -1278,7 +1280,7 @@ There are mac-specific tweaks I need to do. In the future if I switch to nixOS f
 Just the nix-y stuff
 #+begin_src nix :comments none :tangle "./modules/mac.nix"
   nix = {
-    package = pkgs.nixUnstable;
+    package = pkgs.nix;
     extraOptions = ''
       system = aarch64-darwin # M1 gang
       extra-platforms = aarch64-darwin x86_64-darwin # But we use rosetta too
