@@ -105,6 +105,7 @@
           services.nix-daemon.enable = true;
           security.pam.enableSudoTouchIdAuth = true;
           nixpkgs = {
+            config.allowBroken = true;
             overlays = with inputs; [
               nur.overlay
               spacebar.overlay
@@ -112,6 +113,7 @@
               (final: prev: {
                 doomEmacsRevision = inputs.doom-emacs.rev;
                 sf-mono-liga-bin = pkgs.callPackage ./pkgs/sf-mono-liga-bin { };
+                nyxt = pkgs.callPackage ./pkgs/nyxt { };
                 # yabai is broken on macOS 12, so lets make a smol overlay to use the master version
                 yabai = let
                   version = "4.0.0-dev";

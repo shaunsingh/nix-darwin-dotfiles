@@ -7,8 +7,8 @@ git clone --depth 1 https://github.com/shaunsingh/nix-darwin-dotfiles.git ~/nix-
 emacs --batch --eval "(progn (require 'org) (setq org-confirm-babel-evaluate nil) (org-babel-tangle-file \"~/nix-darwin-dotfiles/nix-config.org\"))"
 emacs --batch --eval "(progn (require 'org) (setq org-confirm-babel-evaluate nil) (org-babel-tangle-file \"~/nix-darwin-dotfiles/configs/doom/config.org\"))"
 
-    nix build ~/nix-darwin-dotfiles\#darwinConfigurations.shaunsingh-laptop.system --extra-experimental-features nix-command --extra-experimental-features flakes
-    ./result/sw/bin/darwin-rebuild switch --flake .#shaunsingh-laptop
+nix build ~/nix-darwin-dotfiles\#darwinConfigurations.shaunsingh-laptop.system --extra-experimental-features nix-command --extra-experimental-features flakes
+./result/sw/bin/darwin-rebuild switch --flake .#shaunsingh-laptop
 
 git clone --depth 1 https://github.com/shaunsingh/nyoom.emacs ~/.config/doom
 

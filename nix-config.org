@@ -371,6 +371,7 @@ For Linux systems:
               (final: prev: {
                 doomEmacsRevision = inputs.doom-emacs.rev;
                 sf-mono-liga-bin = pkgs.callPackage ./pkgs/sf-mono-liga-bin { };
+                nyxt = pkgs.callPackage ./pkgs/nyxt { };
                 # yabai is broken on macOS 12, so lets make a smol overlay to use the master version
                 yabai = let
                   version = "4.0.0-dev";
@@ -1002,7 +1003,7 @@ Alacritty is my terminal emulator of choice. Similar to firefox, we want to crea
     settings = with config.lib.base16.theme; {
       window.padding.x = 45;
       window.padding.y = 45;
-      window.decorations = "none";
+      window.decorations = "transparent";
       window.dynamic_title = true;
       live_config_reload = true;
       mouse.hide_when_typing = true;
@@ -1215,8 +1216,8 @@ Lastly, lets make tmux look just as pretty as our prompt, and enable truecolor s
     set -g status-position bottom
     set -g pane-active-border-style bg=default,fg=default
     set -g pane-border-style fg=default
-    set -g window-status-current-format "#[fg=cyan]#[fg=white]#[bg=cyan]#I #[bg=brightwhite]#[fg=black] #W#[fg=brightwhite]#[bg=default] #[bg=default] #[fg=magenta]#[fg=white]#[bg=magenta]λ #[fg=black]#[bg=brightwhite] %a %d %b #[fg=magenta]%R#[fg=brightwhite]#[bg=default]"
-    set -g window-status-format "#[fg=magenta]#[fg=white]#[bg=magenta]#I #[bg=brightwhite]#[fg=black] #W#[fg=brightwhite]#[bg=default] "
+    set -g window-status-current-format "#[fg=cyan] #[fg=black]#[bg=cyan]#I #[bg=brightblack]#[fg=brightwhite] #W#[fg=brightblack]#[bg=default]  #[bg=default] #[fg=magenta] #[fg=white]#[bg=magenta]λ #[fg=black]#[bg=brightblack] %a %d %b #[fg=magenta]%R#[fg=brightblack]#[bg=default] "
+    set -g window-status-format "#[fg=magenta] #[fg=black]#[bg=magenta]#I #[bg=brightblack]#[fg=brightwhite] #W#[fg=brightblack]#[bg=default]  "
   '';
 }
 #+end_src
@@ -1298,7 +1299,10 @@ Just the nix-y stuff
     # Set the default shell as fish for the user. MacOS doesn't do this like nixOS does
     sudo chsh -s ${lib.getBin pkgs.fish}/bin/fish shauryasingh
   '';
-  environment.systemPackages = with pkgs; [ emacs ];
+  environment.systemPackages = with pkgs; [ 
+    emacs 
+    nyxt
+  ];
   fonts = {
     enableFontDir = true;
     fonts = with pkgs; [
@@ -1374,14 +1378,9 @@ Spacebar is my bar of choice on macOS. Its lighter than any web-based ubersicht 
       spacing_right = 25;
       text_font = ''"Menlo:16.0"'';
       icon_font = ''"Menlo:16.0"'';
-      # Light theme colors:
-      ## background_color = "0xffffffff";
-      ## foreground_color = "0xff37474F";
-      ## space_icon_color = "0xff673AB7";
-      # Dark theme colors:
-      background_color = "0xff2E3440";
-      foreground_color = "0xffECEFF4";
-      space_icon_color = "0xff81A1C1";
+      background_color = "0xff161616";
+      foreground_color = "0xffFFFFFF";
+      space_icon_color = "0xff3ddbd9";
       power_icon_strip = " ";
       space_icon_strip = "一 二 三 四 五 六 七 八 九 十";
       spaces_for_all_displays = "on";
@@ -1478,13 +1477,11 @@ homebrew = {
     ];
 
     casks = [
+      "raycast" # Launcher
+      "prusaslicer" # 3d printing
       "discord-canary" # discord for macOS
       "firefox-nightly" # my browser of choice
       "nvidia-geforce-now" # game streaming
-      "via" # keyboard config
-      "blender" # blender
-      "prusaslicer" # 3d printing
-      "balenaetcher" # flashing usbs/sd
     ];
   };
 #+end_src
