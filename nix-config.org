@@ -334,6 +334,10 @@ For Linux systems:
       url = "github:fluix-dev/sway-borders";
       flake = false;
     };
+    eww = {
+      url = "github:elkowar/eww";
+      inputs.nixpkgs.follows = "unstable";
+    };
   };
   outputs = { self, nixpkgs, darwin, home-manager, ... }@inputs: {
     darwinConfigurations."shaunsingh-laptop" = darwin.lib.darwinSystem {
@@ -443,7 +447,6 @@ For Linux systems:
                   patches = [
                     ./patches/fix-window-role.patch
                     ./patches/system-appearance.patch
-                    # ./patches/no-titlebar.patch
                   ];
 
                   postPatch = o.postPatch + ''
@@ -530,7 +533,6 @@ For Linux systems:
               networkmanager.enable = true;
               firewall.enable = false; # I had issues, for some reason
             };
-
           })
         ];
       };
@@ -593,7 +595,21 @@ As opposed to what the xcode CLT provides, I want lfs enabled with git, and use 
 Discord is an app I use almost every day, so lets spice it up a bit. 
 Ideally, I would like this to just be text and not a file, so I can use that sweet base16-nix integration, but the astrix at the start of the css seems to destroy org-mode. LMK if anyone knows of a fix
 #+begin_src nix :comments none :tangle "./modules/home.nix"
-  xdg.dataFile."discocss/custom.css".source = ../configs/custom.css;
+  xdg.dataFile."discocss/custom.css".source = ../configs/discocss/custom.css;
+#+end_src
+
+*** EWW
+Lisp widgets with a backend in rust, what else would you want in life? 
+#+begin_src nix :comments none :tangle "./modules/home.nix"
+  # xdg.dataFile = {
+  #   "eww/eww.scss".source = ../configs/eww;
+  #   "eww/eww.yuck".source = ../configs/eww;
+  #   "eww/scripts/battery".source = ../configs/eww/scripts/battery;
+  #   "eww/scripts/calendar".source = ../configs/eww/scripts/calendar;
+  #   "eww/scripts/popup".source = ../configs/eww/scripts/popup;
+  #   "eww/scripts/wifi".source = ../configs/eww/scripts/wifi;
+  #   "eww/scripts/workspace".source = ../configs/eww/scripts/workspace;
+  # };
 #+end_src
 
 *** Firefox
@@ -1003,7 +1019,7 @@ Alacritty is my terminal emulator of choice. Similar to firefox, we want to crea
     settings = with config.lib.base16.theme; {
       window.padding.x = 45;
       window.padding.y = 45;
-      window.decorations = "transparent";
+      window.decorations = "none";
       window.dynamic_title = true;
       live_config_reload = true;
       mouse.hide_when_typing = true;
@@ -1266,7 +1282,9 @@ in
     languagetool
     neovim-nightly
     # neovide
-    # nodejs-16_x
+    nodejs-16_x
+    fennel
+    fnlfmt
   ];
 }
 #+end_src
@@ -1301,7 +1319,7 @@ Just the nix-y stuff
   '';
   environment.systemPackages = with pkgs; [ 
     emacs 
-    nyxt
+    # nyxt
   ];
   fonts = {
     enableFontDir = true;
@@ -1614,6 +1632,7 @@ On the linux side of things, I need to configure sway and all my linux utilities
     grim
     wl-clipboard
     brightnessctl
+    inputs.eww.packages.x86_64.eww
   ];
   wayland.windowManager.sway = {
     enable = true;
@@ -1687,7 +1706,7 @@ On the linux side of things, I need to configure sway and all my linux utilities
 #     border_images.urgent ${../configs/borders/shadows.png}
     '';
     extraSessionCommands = ''
-      XDG_CURRENT_DESKTOP = "sway";
+      export XDG_CURRENT_DESKTOP=sway;
       export WLR_NO_HARDWARE_CURSORS=1
       export SDL_VIDEODRIVER=wayland
       export MOZ_ENABLE_WAYLAND=1

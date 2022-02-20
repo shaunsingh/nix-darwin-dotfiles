@@ -40,14 +40,21 @@
       url = "github:nix-community/emacs-overlay";
       inputs.nixpkgs.follows = "unstable";
     };
+
+    # and nixified doom-emacs
+    doom-emacs.url = "github:hlissner/doom-emacs/master";
+    doom-emacs.flake = false;
+    nix-straight.url = "github:nix-community/nix-straight.el";
+    nix-straight.flake = false;
+    nix-doom-emacs = {
+      url = "github:nix-community/nix-doom-emacs";
+      inputs.nixpkgs.follows = "unstable";
+      inputs.doom-emacs.follows = "doom-emacs";
+      inputs.nix-straight.follows = "nix-straight";
+    };
     # Use latest libverm to build macOS emacs build
     emacs-vterm-src = {
       url = "github:akermu/emacs-libvterm";
-      flake = false;
-    };
-    # Keep the doom-emacs version managed with nix config
-    doom-emacs = {
-      url = "github:hlissner/doom-emacs";
       flake = false;
     };
     # Themeing
@@ -75,6 +82,10 @@
       url = "github:fluix-dev/sway-borders";
       flake = false;
     };
+    eww = {
+      url = "github:elkowar/eww";
+      inputs.nixpkgs.follows = "unstable";
+    };
   };
   outputs = { self, nixpkgs, darwin, home-manager, ... }@inputs: {
     darwinConfigurations."shaunsingh-laptop" = darwin.lib.darwinSystem {
@@ -82,7 +93,6 @@
       modules = [
         ./modules/mac.nix
         ./modules/pam.nix
-        ./modules/editors.nix
         home-manager.darwinModule
         {
           home-manager = {
@@ -95,6 +105,7 @@
             users.shauryasingh = {
               imports = [
                 inputs.base16.hmModule
+                inputs.nix-doom-emacs.hmModule
                 ./modules/home.nix
                 ./modules/theme.nix
               ];
@@ -105,13 +116,11 @@
           services.nix-daemon.enable = true;
           security.pam.enableSudoTouchIdAuth = true;
           nixpkgs = {
-            config.allowBroken = true;
             overlays = with inputs; [
               nur.overlay
               spacebar.overlay
               neovim-overlay.overlay
               (final: prev: {
-                doomEmacsRevision = inputs.doom-emacs.rev;
                 sf-mono-liga-bin = pkgs.callPackage ./pkgs/sf-mono-liga-bin { };
                 nyxt = pkgs.callPackage ./pkgs/nyxt { };
                 # yabai is broken on macOS 12, so lets make a smol overlay to use the master version
@@ -162,7 +171,7 @@
                   '';
 
                 };
-                emacs = (prev.emacs.override {
+                emacs-mac = (prev.emacs.override {
                   srcRepo = true;
                   nativeComp = true;
                   withSQLite3 = true;
@@ -185,7 +194,6 @@
                   patches = [
                     ./patches/fix-window-role.patch
                     ./patches/system-appearance.patch
-                    # ./patches/no-titlebar.patch
                   ];
 
                   postPatch = o.postPatch + ''
@@ -215,7 +223,6 @@
           ./hardware/thinkpad-hardware-configuration.nix
           inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x1
           inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x1-7th-gen
-          ./modules/editors.nix
           ./modules/linux.nix
           home-manager.nixosModules.home-manager
           {
@@ -244,7 +251,6 @@
                 emacs-overlay.overlay
                 nixpkgs-wayland.overlay
                 (final: prev: {
-                  doomEmacsRevision = inputs.doom-emacs.rev;
                   sf-mono-liga-bin =
                     pkgs.callPackage ./pkgs/sf-mono-liga-bin { };
                   sway-borders = let version = "1.8-borders-dev";
@@ -272,7 +278,6 @@
               networkmanager.enable = true;
               firewall.enable = false; # I had issues, for some reason
             };
-
           })
         ];
       };

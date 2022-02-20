@@ -21,7 +21,7 @@ system.activationScripts.postActivation.text = ''
 '';
 environment.systemPackages = with pkgs; [ 
   emacs 
-  nyxt
+  # nyxt
 ];
 fonts = {
   enableFontDir = true;

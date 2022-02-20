@@ -7,6 +7,7 @@
     grim
     wl-clipboard
     brightnessctl
+    inputs.eww.packages.x86_64.eww
   ];
   wayland.windowManager.sway = {
     enable = true;
@@ -80,7 +81,7 @@
 #     border_images.urgent ${../configs/borders/shadows.png}
     '';
     extraSessionCommands = ''
-      XDG_CURRENT_DESKTOP = "sway";
+      export XDG_CURRENT_DESKTOP=sway;
       export WLR_NO_HARDWARE_CURSORS=1
       export SDL_VIDEODRIVER=wayland
       export MOZ_ENABLE_WAYLAND=1

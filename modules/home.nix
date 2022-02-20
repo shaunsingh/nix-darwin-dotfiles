@@ -2,14 +2,8 @@
 
 home.stateVersion = "21.11";
 home.packages = with pkgs; [
-  # Language Servers
-  nodePackages.pyright
-  rust-analyzer
-
   # Formatting
   nixfmt
-  black
-  shellcheck
 
   # Terminal utils and rust alternatives :tm:
   xcp
@@ -20,6 +14,12 @@ home.packages = with pkgs; [
   bottom
   discocss
 ];
+
+programs.doom-emacs = {
+  enable = true;
+  doomPrivateDir = ../configs/doom-emacs;
+  emacsPackage = pkgs.emacs-mac;
+};
 
 programs.git = {
   enable = true;
@@ -35,7 +35,17 @@ programs.git = {
   ignores = [ ".dir-locals.el" ".envrc" ".DS_Store" ];
 };
 
-xdg.dataFile."discocss/custom.css".source = ../configs/custom.css;
+xdg.dataFile."discocss/custom.css".source = ../configs/discocss/custom.css;
+
+# xdg.dataFile = {
+#   "eww/eww.scss".source = ../configs/eww;
+#   "eww/eww.yuck".source = ../configs/eww;
+#   "eww/scripts/battery".source = ../configs/eww/scripts/battery;
+#   "eww/scripts/calendar".source = ../configs/eww/scripts/calendar;
+#   "eww/scripts/popup".source = ../configs/eww/scripts/popup;
+#   "eww/scripts/wifi".source = ../configs/eww/scripts/wifi;
+#   "eww/scripts/workspace".source = ../configs/eww/scripts/workspace;
+# };
 
 programs.firefox = {
   enable = true;
@@ -434,7 +444,7 @@ programs.alacritty = {
   settings = with config.lib.base16.theme; {
     window.padding.x = 45;
     window.padding.y = 45;
-    window.decorations = "transparent";
+    window.decorations = "none";
     window.dynamic_title = true;
     live_config_reload = true;
     mouse.hide_when_typing = true;
