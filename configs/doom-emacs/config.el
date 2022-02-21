@@ -474,11 +474,6 @@ Return nil otherwise."
         message-send-mail-function #'message-send-mail-with-sendmail))
 ;; Mu4e:2 ends here
 
-;; [[file:config.org::*NK Creams Mode][NK Creams Mode:1]]
-;; (use-package! selectric-mode
-;;   :commands selectric-mode)
-;; NK Creams Mode:1 ends here
-
 ;; [[file:config.org::*Mode for Reddit][Mode for Reddit:1]]
 (use-package! md4rd
   :commands (md4rd-mode md4rd-login)
@@ -785,9 +780,6 @@ Return nil otherwise."
    `(avy-lead-face-1 ((t (:foreground ,nano-light-subtle))))
    `(avy-lead-face ((t (:foreground ,nano-light-popout :weight bold))))
    `(avy-lead-face-0 ((t (:foreground ,nano-light-salient :weight bold))))))
-
-(use-package! nano-modeline
-  :hook (after-init . nano-modeline-mode))
 ;; Nano:2 ends here
 
 ;; [[file:config.org::*Dimming][Dimming:1]]
@@ -2874,11 +2866,6 @@ This is done according to `org-latex-feature-implementations'"
       (concat "% fetched from " url "\n"
               (org-latex--inline-image link info)))))
 ;; Support images from URLs:1 ends here
-
-;; [[file:config.org::*Chameleon --- aka. match theme][Chameleon --- aka. match theme:1]]
-(use-package! ox-chameleon
-  :after ox)
-;; Chameleon --- aka. match theme:1 ends here
 
 ;; [[file:config.org::*Make verbatim different to code][Make verbatim different to code:1]]
 (after! org

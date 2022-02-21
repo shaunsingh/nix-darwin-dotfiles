@@ -5,6 +5,11 @@ home.packages = with pkgs; [
   # Formatting
   nixfmt
 
+  # Editors 
+  neovim-nightly
+  fennel
+  fnlfmt
+
   # Terminal utils and rust alternatives :tm:
   xcp
   lsd

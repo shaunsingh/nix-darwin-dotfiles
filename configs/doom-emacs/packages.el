@@ -22,11 +22,9 @@
 (package! info-colors)
 (package! svg-tag-mode)
 (package! solaire-mode :disable t)
-;; (package! ox-chameleon :recipe (:host github :repo "tecosaur/ox-chameleon") :pin "5a1928b9c33cbeb0463cf794afe8cff4ab512ce7")
 
 ;;nano
 (package! nano-theme)
-(package! nano-modeline
 
 ;;emacs additions
 ;; (package! meow)
@@ -38,4 +36,3 @@
 (package! md4rd)
 (package! elcord)
 (package! monkeytype)
-;; (package! selectric-mode :recipe (:local-repo "lisp/selectric-mode"))

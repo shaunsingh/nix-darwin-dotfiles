@@ -430,7 +430,6 @@ Making emacs look good is first priority, actually working in it is second
 (package! info-colors)
 (package! svg-tag-mode)
 (package! solaire-mode :disable t)
-;; (package! ox-chameleon :recipe (:host github :repo "tecosaur/ox-chameleon") :pin "5a1928b9c33cbeb0463cf794afe8cff4ab512ce7")
 #+end_src
 
 
@@ -439,7 +438,6 @@ And for those who like material design
 #+name: nano
 #+begin_src emacs-lisp
 (package! nano-theme)
-(package! nano-modeline
 #+end_src
 
 ***** Emacs Tweaks:
@@ -459,7 +457,6 @@ We do a little trolling (and reading)
 (package! md4rd)
 (package! elcord)
 (package! monkeytype)
-;; (package! selectric-mode :recipe (:local-repo "lisp/selectric-mode"))
 #+end_src
 
 * Basic Configuration
@@ -990,15 +987,6 @@ We can also send messages using msmtp
         message-send-mail-function #'message-send-mail-with-sendmail))
 #+end_src
 
-*** NK Creams Mode
-Instead of using the regular selectric-mode, I modified it with a few notable tweaks, mainly:
-1. Support for EVIL mode
-2. It uses NK Cream sounds instead of the typewritter ones
-#+begin_src emacs-lisp
-;; (use-package! selectric-mode
-;;   :commands selectric-mode)
-#+end_src
-
 *** Mode for Reddit
 Considering half of this config is /from/ reddit, it only makes sense to browse reddit in emacs. Who needs new reddit anyways :p
 #+begin_src emacs-lisp
@@ -1340,9 +1328,6 @@ Just some themeing
    `(avy-lead-face-1 ((t (:foreground ,nano-light-subtle))))
    `(avy-lead-face ((t (:foreground ,nano-light-popout :weight bold))))
    `(avy-lead-face-0 ((t (:foreground ,nano-light-salient :weight bold))))))
-
-(use-package! nano-modeline
-  :hook (after-init . nano-modeline-mode))
 #+end_src
 
 *** Dimming
@@ -3659,16 +3644,6 @@ tempfile, this can provide a caching mechanism.
                         (list it)))
       (concat "% fetched from " url "\n"
               (org-latex--inline-image link info)))))
-#+end_src
-
-*** Chameleon --- aka. match theme
-Once I had the idea of having the look of the LaTeX document produced match the
-current Emacs theme, I was enraptured. The result is the pseudo-class ~chameleon~,
-which I have implemented in the package =ox-chameleon=.
-
-#+begin_src emacs-lisp
-(use-package! ox-chameleon
-  :after ox)
 #+end_src
 
 *** Make verbatim different to code
