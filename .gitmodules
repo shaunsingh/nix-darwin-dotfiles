@@ -1,6 +1,0 @@
-[submodule "configs/nyoom.nvim"]
-	path = configs/nyoom.nvim
-	url = https://github.com/shaunsingh/nyoom.nvim.git
-[submodule "configs/nyoom.emacs"]
-	path = configs/nyoom.emacs
-	url = https://github.com/shaunsingh/nyoom.emacs.git

@@ -1,6 +1,0 @@
-# -*- mode: snippet -*-
-# name: Header arg - dir
-# key: d
-# condition: (+yas/org-src-header-p)
-# --
-:dir `(file-relative-name (read-directory-name "Working directory: "))` $0

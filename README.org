@@ -9,13 +9,6 @@
 
 * Installing and notes
 
-** Linux 
-NOTE: Don't use this unless you know what you're doing. You're likely here for the MacOS flake, if so just skip on ahead!
-#+begin_src sh
-nix-shell -p nixUnstable git
-nixos-install --flake https://github.com/shaunsingh/nix-darwin-dotfiles#shaunsingh-thinkpad
-#+end_src
-
 ** MacOS 
 *NOTE: These are available as an executable script [[./extra/install.sh]]*
 Install Nix. I have it setup for multi-user, but you can remove the =--daemon= if you want a single user install
