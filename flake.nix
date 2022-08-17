@@ -40,6 +40,18 @@
       url = "github:akermu/emacs-libvterm";
       flake = false;
     };
+    # Terminal emulator
+    wezterm-src = {
+      type = "git";
+      url = "https://github.com/wez/wezterm.git";
+      ref = "main";
+      submodules = true;
+      flake = false;
+    };
+    crane = {
+      url = "github:ipetkov/crane";
+      inputs.nixpkgs.follows = "unstable";
+    };
     # Themeing
     base16 = {
       url = "github:shaunsingh/base16.nix";
@@ -85,126 +97,138 @@
           services.nix-daemon.enable = true;
           security.pam.enableSudoTouchIdAuth = true;
           nixpkgs = {
-            overlays = with inputs; [
-              nur.overlay
-              spacebar.overlay
-              neovim-overlay.overlay
-              (final: prev: {
-                sf-mono-liga-bin = pkgs.callPackage ./pkgs/sf-mono-liga-bin { };
-                yabai =
-                  let
-                    version = "4.0.0-dev";
-                    buildSymlinks = prev.runCommand "build-symlinks" { } ''
-                      mkdir -p $out/bin
-                      ln -s /usr/bin/xcrun /usr/bin/xcodebuild /usr/bin/tiffutil /usr/bin/qlmanage $out/bin
-                    '';
-                  in
-                  prev.yabai.overrideAttrs (old: {
-                    inherit version;
-                    src = inputs.yabai-src;
+            config.allowUnfree = true;
+            overlays =
+              let
+                versionOf = input: input.rev;
+              in
+              with inputs; [
+                nur.overlay
+                spacebar.overlay
+                neovim-overlay.overlay
+                (final: prev: {
+                  sf-mono-liga-bin = pkgs.callPackage ./pkgs/sf-mono-liga-bin { };
+                  wezterm-git = prev.darwin.apple_sdk_11_0.callPackage ./pkgs/wezterm {
+                    inherit (prev.darwin.apple_sdk_11_0.frameworks) Cocoa CoreGraphics Foundation UserNotifications;
+                    src = inputs.wezterm-src;
+                    version = versionOf inputs.wezterm-src;
+                    crane-lib = inputs.crane.lib."${prev.system}";
+                  };
+                  yabai =
+                    let
+                      version = "4.0.0-dev";
+                      buildSymlinks = prev.runCommand "build-symlinks" { } ''
+                        mkdir -p $out/bin
+                        ln -s /usr/bin/xcrun /usr/bin/xcodebuild /usr/bin/tiffutil /usr/bin/qlmanage $out/bin
+                      '';
+                    in
+                    prev.yabai.overrideAttrs (old: {
+                      inherit version;
+                      src = inputs.yabai-src;
 
-                    buildInputs = with prev.darwin.apple_sdk.frameworks; [
-                      Carbon
-                      Cocoa
-                      ScriptingBridge
-                      prev.xxd
-                      SkyLight
+                      buildInputs = with prev.darwin.apple_sdk.frameworks; [
+                        Carbon
+                        Cocoa
+                        ScriptingBridge
+                        prev.xxd
+                        SkyLight
+                      ];
+
+                      nativeBuildInputs = [ buildSymlinks ];
+                    });
+                  emacs-vterm = prev.stdenv.mkDerivation rec {
+                    pname = "emacs-vterm";
+                    version = "master";
+
+                    src = inputs.emacs-vterm-src;
+
+                    nativeBuildInputs = [ prev.cmake prev.libtool prev.glib.dev ];
+
+                    buildInputs =
+                      [ prev.glib.out prev.libvterm-neovim prev.ncurses ];
+
+                    cmakeFlags = [ "-DUSE_SYSTEM_LIBVTERM=yes" ];
+
+                    preConfigure = ''
+                      echo "include_directories(\"${prev.glib.out}/lib/glib-2.0/include\")" >> CMakeLists.txt
+                      echo "include_directories(\"${prev.glib.dev}/include/glib-2.0\")" >> CMakeLists.txt
+                      echo "include_directories(\"${prev.ncurses.dev}/include\")" >> CMakeLists.txt
+                      echo "include_directories(\"${prev.libvterm-neovim}/include\")" >> CMakeLists.txt
+                    '';
+
+                    installPhase = ''
+                      mkdir -p $out
+                      cp ../vterm-module.so $out
+                      cp ../vterm.el $out
+                    '';
+
+                  };
+                  emacs-mac = (prev.emacs.override {
+                    srcRepo = true;
+                    nativeComp = true;
+                    withSQLite3 = true;
+                    withXwidgets = true;
+                  }).overrideAttrs (o: rec {
+                    version = "29.0.50";
+                    src = inputs.emacs-src;
+
+                    buildInputs = o.buildInputs
+                      ++ [ prev.darwin.apple_sdk.frameworks.WebKit ];
+
+                    configureFlags = o.configureFlags ++ [
+                      "--without-gpm"
+                      "--without-dbus"
+                      "--without-mailutils"
+                      "--without-pop"
                     ];
 
-                    nativeBuildInputs = [ buildSymlinks ];
+                    patches = [
+                      ./patches/fix-window-role.patch
+                      ./patches/system-appearance.patch
+                    ];
+
+                    postPatch = o.postPatch + ''
+                      substituteInPlace lisp/loadup.el \
+                      --replace '(emacs-repository-get-branch)' '"master"'
+                    '';
+
+                    postInstall = o.postInstall + ''
+                      cp ${final.emacs-vterm}/vterm.el $out/share/emacs/site-lisp/vterm.el
+                      cp ${final.emacs-vterm}/vterm-module.so $out/share/emacs/site-lisp/vterm-module.so
+                    '';
+
+                    CFLAGS =
+                      "-DMAC_OS_X_VERSION_MAX_ALLOWED=110203 -g -O3 -mtune=native -march=native -fomit-frame-pointer";
                   });
-                emacs-vterm = prev.stdenv.mkDerivation rec {
-                  pname = "emacs-vterm";
-                  version = "master";
 
-                  src = inputs.emacs-vterm-src;
+                  commercial-emacs = (prev.emacs.override {
+                    srcRepo = true;
+                    nativeComp = false;
+                    withSQLite3 = true;
+                    withXwidgets = true;
+                    withToolkitScrollBars = false;
+                  }).overrideAttrs (o: rec {
+                    version = "29.0.50-commercial";
+                    src = inputs.emacs-commercial-src;
 
-                  nativeBuildInputs = [ prev.cmake prev.libtool prev.glib.dev ];
+                    buildInputs = o.buildInputs
+                      ++ [ prev.darwin.apple_sdk.frameworks.WebKit ];
 
-                  buildInputs =
-                    [ prev.glib.out prev.libvterm-neovim prev.ncurses ];
+                    postPatch = o.postPatch + ''
+                      substituteInPlace lisp/loadup.el \
+                      --replace '(emacs-repository-get-branch)' '"master"'
+                    '';
 
-                  cmakeFlags = [ "-DUSE_SYSTEM_LIBVTERM=yes" ];
+                    postInstall = o.postInstall + ''
+                      cp ${final.emacs-vterm}/vterm.el $out/share/emacs/site-lisp/vterm.el
+                      cp ${final.emacs-vterm}/vterm-module.so $out/share/emacs/site-lisp/vterm-module.so
+                    '';
 
-                  preConfigure = ''
-                    echo "include_directories(\"${prev.glib.out}/lib/glib-2.0/include\")" >> CMakeLists.txt
-                    echo "include_directories(\"${prev.glib.dev}/include/glib-2.0\")" >> CMakeLists.txt
-                    echo "include_directories(\"${prev.ncurses.dev}/include\")" >> CMakeLists.txt
-                    echo "include_directories(\"${prev.libvterm-neovim}/include\")" >> CMakeLists.txt
-                  '';
-
-                  installPhase = ''
-                    mkdir -p $out
-                    cp ../vterm-module.so $out
-                    cp ../vterm.el $out
-                  '';
-
-                };
-                emacs-mac = (prev.emacs.override {
-                  srcRepo = true;
-                  nativeComp = true;
-                  withSQLite3 = true;
-                  withXwidgets = true;
-                }).overrideAttrs (o: rec {
-                  version = "29.0.50";
-                  src = inputs.emacs-src;
-
-                  buildInputs = o.buildInputs
-                    ++ [ prev.darwin.apple_sdk.frameworks.WebKit ];
-
-                  configureFlags = o.configureFlags ++ [
-                    "--without-gpm"
-                    "--without-dbus"
-                    "--without-mailutils"
-                    "--without-pop"
-                  ];
-
-                  patches = [
-                    ./patches/fix-window-role.patch
-                    ./patches/system-appearance.patch
-                  ];
-
-                  postPatch = o.postPatch + ''
-                    substituteInPlace lisp/loadup.el \
-                    --replace '(emacs-repository-get-branch)' '"master"'
-                  '';
-
-                  postInstall = o.postInstall + ''
-                    cp ${final.emacs-vterm}/vterm.el $out/share/emacs/site-lisp/vterm.el
-                    cp ${final.emacs-vterm}/vterm-module.so $out/share/emacs/site-lisp/vterm-module.so
-                  '';
-
-                  CFLAGS =
-                    "-DMAC_OS_X_VERSION_MAX_ALLOWED=110203 -g -O3 -mtune=native -march=native -fomit-frame-pointer";
-                });
-                commercial-emacs = (prev.emacs.override {
-                  srcRepo = true;
-                  nativeComp = false;
-                  withSQLite3 = true;
-                  withXwidgets = true;
-                  withToolkitScrollBars = false;
-                }).overrideAttrs (o: rec {
-                  version = "29.0.50-commercial";
-                  src = inputs.emacs-commercial-src;
-
-                  buildInputs = o.buildInputs
-                    ++ [ prev.darwin.apple_sdk.frameworks.WebKit ];
-
-                  postPatch = o.postPatch + ''
-                    substituteInPlace lisp/loadup.el \
-                    --replace '(emacs-repository-get-branch)' '"master"'
-                  '';
-
-                  postInstall = o.postInstall + ''
-                    cp ${final.emacs-vterm}/vterm.el $out/share/emacs/site-lisp/vterm.el
-                    cp ${final.emacs-vterm}/vterm-module.so $out/share/emacs/site-lisp/vterm-module.so
-                  '';
-
-                  CFLAGS =
-                    "-DMAC_OS_X_VERSION_MAX_ALLOWED=110203 -g -O3 -mtune=native -march=native -fomit-frame-pointer";
-                });
-              })
-            ];
+                    CFLAGS =
+                      "-DMAC_OS_X_VERSION_MAX_ALLOWED=110203 -g -O3 -mtune=native -march=native -fomit-frame-pointer";
+                  });
+                })
+              ];
           };
         })
       ];

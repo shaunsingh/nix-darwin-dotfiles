@@ -9,16 +9,6 @@
       build-users-group = nixbld
     '';
   };
-  programs.fish.enable = true;
-  environment.shells = with pkgs; [ fish ];
-  users.users.shauryasingh = {
-    home = "/Users/shauryasingh";
-    shell = pkgs.fish;
-  };
-  system.activationScripts.postActivation.text = ''
-    # Set the default shell as fish for the user. MacOS doesn't do this like nixOS does
-    sudo chsh -s ${lib.getBin pkgs.fish}/bin/fish shauryasingh
-  '';
   fonts = {
     fontDir.enable = false;
     fonts = with pkgs; [
@@ -29,6 +19,12 @@
       sf-mono-liga-bin
     ];
   };
+
+  programs.fish.enable = true;
+  system.activationScripts.postActivation.text = ''
+    # Set the default shell as fish for the user. MacOS doesn't do this like nixOS does
+    sudo chsh -s ${lib.getBin pkgs.fish}/bin/fish shauryasingh
+  '';
 
   services.yabai = {
     enable = true;
@@ -158,30 +154,6 @@
       lalt - d : yabai -m window --toggle zoom-parent
 
     '';
-  };
-
-  homebrew = {
-    brewPrefix = "/opt/homebrew/bin";
-    enable = true;
-    autoUpdate = true;
-    cleanup = "zap"; # keep it clean
-    global = {
-      brewfile = true;
-      noLock = true;
-    };
-    taps = [
-      "homebrew/core" # core
-      "homebrew/cask" # we're using this for casks, after all
-      "homebrew/cask-versions" # needed for firefox-nightly and discord-canary
-    ];
-    casks = [
-      "zulu17" # nix java doesn't work with manymc
-      "manymc" # m1 native minecraft client
-      "raycast" # Launcher
-      "neovide" # Neovim GUi
-      "discord-ptb" # discord client
-      "firefox-nightly" # my browser of choice
-    ];
   };
 
   networking.hostName = "shaunsingh-laptop";

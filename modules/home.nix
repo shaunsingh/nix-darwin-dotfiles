@@ -11,30 +11,9 @@
     fnlfmt
 
     # Terminal utils and rust alternatives :tm:
-    xcp
-    lsd
-    procs
-    tree
-    zoxide
-    bottom
+    wezterm-git
     discocss
   ];
-
-  programs.git = {
-    enable = true;
-    userName = "shaunsingh";
-    userEmail = "shaunsingh0207@gmail.com";
-    delta = {
-      enable = true;
-      options = {
-        syntax-theme = "Nord";
-        line-numbers = true;
-      };
-    };
-    ignores = [ ".dir-locals.el" ".envrc" ".DS_Store" ];
-  };
-
-  xdg.dataFile."discocss/custom.css".source = ../configs/discocss/custom.css;
 
   programs.firefox = {
     enable = true;
@@ -480,158 +459,211 @@
     };
   };
 
-  programs.fish.enable = true;
-  programs.fish.shellAliases = with pkgs; {
-    ":q" = "exit";
-    vi = "emacsclient -c";
-    git-rebase = "git rebase -i HEAD~2";
-    ls = "lsd";
-    ps = "ps";
-    tree = "tree -a -C";
-    cat = "bat";
-    top = "btm";
-    cp = "xcp";
-    find = "fd";
-  };
+  xdg.configFile."wezterm/wezterm.lua".text = with config.lib.base16.theme;
+    ''
+      local wezterm = require 'wezterm'
 
-  programs.fish.interactiveShellInit = ''
-    set -g fish_greeting ""
-    zoxide init fish --cmd cd | source
-    set -x PATH ~/.config/emacs/bin $PATH
+      return {
+        font = wezterm.font 'Liga SFMono Nerd Font',
+        font_size = 14.0,
+        line_height = 1.1,
+        enable_tab_bar = false,
+        window_decorations = "NONE",
+        window_padding = {
+          left = 45,
+          right = 45,
+          top = 45,
+          bottom = 45,
+        },
+        colors = {
+          foreground = "#${base06-hex}",
+          background = "#${base00-hex}",
+          cursor_bg = "#${base06-hex}",
+          cursor_fg = "#${base00-hex}",
+          selection_fg = "#${base05-hex}",
+          selection_bg = "#${base02-hex}",
+          scrollbar_thumb = "#${base01-hex}",
+          split = "#${base01-hex}",
 
-    set -g fish_greeting ""
-    set -U fish_color_autosuggestion      brblack
-    set -U fish_color_cancel              -r
-    set -U fish_color_command             green
-    set -U fish_color_comment             magenta
-    set -U fish_color_cwd                 green
-    set -U fish_color_cwd_root            red
-    set -U fish_color_end                 magenta
-    set -U fish_color_error               red
-    set -U fish_color_escape              cyan
-    set -U fish_color_history_current     --bold
-    set -U fish_color_host                normal
-    set -U fish_color_normal              normal
-    set -U fish_color_operator            cyan
-    set -U fish_color_param               blue
-    set -U fish_color_quote               yellow
-    set -U fish_color_redirection         yellow
-    set -U fish_color_search_match        'yellow' '--background=brightblack'
-    set -U fish_color_selection           'white' '--bold' '--background=brightblack'
-    set -U fish_color_status              red
-    set -U fish_color_user                green
-    set -U fish_color_valid_path          --underline
-    set -U fish_pager_color_completion    normal
-    set -U fish_pager_color_description   yellow
-    set -U fish_pager_color_prefix        'white' '--bold' '--underline'
-    set -U fish_pager_color_progress      'white' '--background=cyan'
+          ansi = {
+            "#${base00-hex}",
+            "#${base0B-hex}",
+            "#${base0C-hex}",
+            "#${base0D-hex}",
+            "#${base07-hex}",
+            "#${base0E-hex}",
+            "#${base09-hex}",
+            "#${base04-hex}",
+          },
+          brights = {
+            "#${base03-hex}",
+            "#${base0B-hex}",
+            "#${base0C-hex}",
+            "#${base0D-hex}",
+            "#${base08-hex}",
+            "#${base0F-hex}",
+            "#${base09-hex}",
+            "#${base06-hex}",
+          },
+        },
+      }
+    '';
 
-    # prompt
-    set fish_prompt_pwd_dir_length 1
-    set __fish_git_prompt_show_informative_status 1
-
-    set fish_color_command green
-    set fish_color_param $fish_color_normal
-
-    set __fish_git_prompt_showdirtystate 'yes'
-    set __fish_git_prompt_showupstream 'yes'
-
-    set __fish_git_prompt_color_branch brown
-    set __fish_git_prompt_color_dirtystate red
-    set __fish_git_prompt_color_stagedstate yellow
-    set __fish_git_prompt_color_upstream cyan
-    set __fish_git_prompt_color_cleanstate green
-    set __fish_git_prompt_color_invalidstate red
-
-    set __fish_git_prompt_char_dirtystate ' ✕ '
-    set __fish_git_prompt_char_stateseparator ' '
-    set __fish_git_prompt_char_untrackedfiles '++'
-    set __fish_git_prompt_char_cleanstate ' ✓ '
-    set __fish_git_prompt_char_stagedstate '-> '
-    set __fish_git_prompt_char_conflictedstate "✕ "
-
-    set __fish_git_prompt_char_upstream_prefix ""
-    set __fish_git_prompt_char_upstream_equal ""
-    set __fish_git_prompt_char_upstream_ahead ' >= '
-    set __fish_git_prompt_char_upstream_behind ' <= '
-    set __fish_git_prompt_char_upstream_diverged ' <=> '
-
-    function _print_in_color
-      set -l string $argv[1]
-      set -l color  $argv[2]
-
-      set_color $color
-      printf $string
-      set_color normal
-    end
-
-    function _prompt_color_for_status
-      if test $argv[1] -eq 0
-        echo magenta
-      else
-        echo red
-      end
-    end
-
-    function fish_prompt
-        set -l last_status $status
-
-        set -l nix_shell_info (
-          if test -n "$IN_NIX_SHELL"
-            echo -n " [nix-shell]"
-          end
-        )
-
-        if test $HOME != $PWD
-            _print_in_color ""(prompt_pwd) blue
-        end
-        __fish_git_prompt " (%s)"
-
-        _print_in_color "$nix_shell_info λ " (_prompt_color_for_status $last_status) ]
-
-    end
-  '';
-
-  programs.bat = {
+  programs.fish = {
     enable = true;
-    config = { theme = "Nord"; };
+    shellAliases = with pkgs; {
+      ":q" = "exit";
+      git-rebase = "git rebase -i HEAD~2";
+      ll = "${pkgs.exa}/bin/exa -lF --color-scale --no-user --no-time --no-permissions --group-directories-first --icons -a";
+      ls = "${pkgs.exa}/bin/exa -lF --group-directories-first --icons -a";
+    };
+    shellInit = ''
+      set fish_greeting
+    '';
   };
 
-  programs.tmux.enable = true;
-  programs.tmux.extraConfig = ''
-    # make sure fish works in tmux
-    set -g default-terminal "screen-256color"
-    set -sa terminal-overrides ',xterm-256color:RGB'
-    # so that escapes register immidiately in vim
-    set -sg escape-time 1
-    set -g focus-events on
-    # mouse support
-    set -g mouse on
-    # change prefix to C-a
-    set -g prefix C-a
-    bind C-a send-prefix
-    unbind C-b
-    # extend scrollback
-    set-option -g history-limit 5000
-    # vim-like pane resizing
-    bind -r C-k resize-pane -U
-    bind -r C-j resize-pane -D
-    bind -r C-h resize-pane -L
-    bind -r C-l resize-pane -R
-    # vim-like pane switching
-    bind -r k select-pane -U
-    bind -r j select-pane -D
-    bind -r h select-pane -L
-    bind -r l select-pane -R
-    # styling
-    set -g status-style fg=black,bg=default
-    set -g status-left ""
-    set -g status-right ""
-    set -g status-justify centre
-    set -g status-position bottom
-    set -g pane-active-border-style bg=default,fg=default
-    set -g pane-border-style fg=default
-    set -g window-status-current-format "#[fg=cyan] #[fg=black]#[bg=cyan]#I #[bg=brightblack]#[fg=brightwhite] #W#[fg=brightblack]#[bg=default]  #[bg=default] #[fg=magenta] #[fg=white]#[bg=magenta]λ #[fg=black]#[bg=brightblack] %a %d %b #[fg=magenta]%R#[fg=brightblack]#[bg=default] "
-    set -g window-status-format "#[fg=magenta] #[fg=black]#[bg=magenta]#I #[bg=brightblack]#[fg=brightwhite] #W#[fg=brightblack]#[bg=default]  "
-  '';
+  programs.bat.enable = true;
+  programs.exa.enable = true;
+  programs.zoxide.enable = true;
+
+  # programs.nushell.enable = true;
+  # home.file."Library/Application Support/org.nushell.nu/config.toml".text = ''
+  #   skip_welcome_message = true
+  #   disable_table_indexes = true
+  #   table_mode = "none"
+  #   prompt = "__zoxide_hook; STARSHIP_SHELL= starship prompt"
+  #   startup = [
+  #       "zoxide init nushell --hook prompt | save ~/.cache/zoxide/init.nu",
+  #       "source ~/.cache/zoxide/init.nu",
+  #       "def nuopen [arg, --raw (-r)] { if $raw { open -r $arg } else { open $arg } }
+  #       "alias open = ^open"
+  #       "alias ll = ${pkgs.exa}/bin/exa -lF --color-scale --no-user --no-time --no-permissions --group-directories-first --icons -a"
+  #       "alias ls = ${pkgs.exa}/bin/exa -lF --group-directories-first --icons -a"
+  #   ]
+  #   
+  #   [line_editor]
+  #   keyseq_timeout_ms = 0
+  #   edit_mode = "vi"
+  # '';
+
+  programs.git = {
+    enable = true;
+    userName = "shaunsingh";
+    userEmail = "shaunsingh0207@gmail.com";
+    delta = {
+      enable = true;
+      options = {
+        syntax-theme = "Nord";
+        line-numbers = true;
+      };
+    };
+    ignores = [ ".dir-locals.el" ".envrc" ".DS_Store" ];
+  };
+
+  programs.starship = {
+    enable = true;
+    settings = {
+      scan_timeout = 10;
+      # prompt
+      format = "$directory$git_branch$git_metrics$nix_shell$package$character";
+      add_newline = false;
+      line_break.disabled = true;
+      directory.style = "cyan";
+      character = {
+        success_symbol = "[λ](green)";
+        error_symbol = "[λ](red)";
+      };
+      # git
+      git_branch = {
+        style = "purple";
+        symbol = "";
+      };
+      git_metrics = {
+        disabled = false;
+        added_style = "bold yellow";
+        deleted_style = "bold red";
+      };
+      # package management
+      package.format = "version [$version](bold green) ";
+      nix_shell.symbol = " ";
+    };
+  };
+
+  programs.tmux = {
+    enable = true;
+    extraConfig = ''
+      # make sure fish works in tmux
+      set -g default-terminal "screen-256color"
+      set -sa terminal-overrides ',xterm-256color:RGB'
+      # so that escapes register immidiately in vim
+      set -sg escape-time 1
+      set -g focus-events on
+      # mouse support
+      set -g mouse on
+      # change prefix to C-a
+      set -g prefix C-a
+      bind C-a send-prefix
+      unbind C-b
+      # extend scrollback
+      set-option -g history-limit 5000
+      # vim-like pane resizing
+      bind -r C-k resize-pane -U
+      bind -r C-j resize-pane -D
+      bind -r C-h resize-pane -L
+      bind -r C-l resize-pane -R
+      # vim-like pane switching
+      bind -r k select-pane -U
+      bind -r j select-pane -D
+      bind -r h select-pane -L
+      bind -r l select-pane -R
+      # styling
+      set -g status-style fg=black,bg=default
+      set -g status-left ""
+      set -g status-right ""
+      set -g status-justify centre
+      set -g status-position bottom
+      set -g pane-active-border-style bg=default,fg=default
+      set -g pane-border-style fg=default
+      set -g window-status-current-format "#[fg=cyan] #[fg=black]#[bg=cyan]#I #[bg=brightblack]#[fg=brightwhite] #W#[fg=brightblack]#[bg=default]  #[bg=default] #[fg=magenta] #[fg=white]#[bg=magenta]λ #[fg=black]#[bg=brightblack] %a %d %b #[fg=magenta]%R#[fg=brightblack]#[bg=default] "
+      set -g window-status-format "#[fg=magenta] #[fg=black]#[bg=magenta]#I #[bg=brightblack]#[fg=brightwhite] #W#[fg=brightblack]#[bg=default]  "
+    '';
+  };
+
+  xdg.configFile."discocss/custom.css".text = with config.lib.base16.theme;
+    ''
+      /* monospaced font */
+      * { font-family: "Liga SFMono Nerd Font" !important; }
+
+      /* themeing*/
+      .theme-dark {
+        --background-primary: #${base00-hex};
+        --background-secondary: #${base01-hex};
+        --background-tertiary: #${base03-hex};
+        --background-secondary-alt: #${base02-hex};
+        --channeltextarea-background: #${base01-hex};
+        --interactive-muted: #${base0A-hex};
+        --background-floating: #${base01-hex};
+        --text-normal: #${base06-hex};
+        --header-primary: #${base05-hex};
+        --interactive-active: #${base0E-hex};
+        --background-accent: #${base01-hex};	
+      }
+      .theme-dark .container-1D34oG {
+        background-color: #${base00-hex};
+      }
+      .categoryHeader-O1zU94, .theme-dark .autocomplete-1vrmpx {
+        background-color: #${base00-hex};
+      }
+      .theme-dark .selected-1Tbx07 {
+        background-color: #${base02-hex};
+      }
+ 
+      /* minimal looks*/
+      [aria-label="Servers sidebar"],
+      [class*="chat-"] > [class*="content-"]::before,
+      [class*="repliedMessage-"]::before,
+      ::-webkit-scrollbar,
+      [class*="form-"] [class*="attachWrapper-"],
+      [class*="form-"] [class*="buttons-"],
+    '';
 }
