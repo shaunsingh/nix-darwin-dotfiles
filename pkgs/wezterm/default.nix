@@ -19,7 +19,7 @@
 
 let
   pname = "wezterm";
-
+  
   nativeBuildInputs = [
     pkg-config
     python3
@@ -56,7 +56,6 @@ crane-lib.buildPackage rec {
     rm $OUT_APP/*.dylib
     cp -r assets/shell-integration/* "$OUT_APP"
     ln -s $out/bin/{wezterm,wezterm-mux-server,wezterm-gui,strip-ansi-escapes} "$OUT_APP"
-    cp -r $out/Applications/WezTerm.app /System/Applications/WezTerm.app
   '';
 
   passthru.terminfo = runCommand "wezterm-terminfo"
