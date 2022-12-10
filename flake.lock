@@ -246,38 +246,6 @@
         "type": "github"
       }
     },
-    "lisp-unit2-src": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1670257026,
-        "narHash": "sha256-ySzQKSbsQjfVOksQNzQh2td+oICmD6iVwmP3YIWwFpA=",
-        "owner": "AccelerationNet",
-        "repo": "lisp-unit2",
-        "rev": "b5aa17b298cf2f669f4c0262c471e1ee4ab4699a",
-        "type": "github"
-      },
-      "original": {
-        "owner": "AccelerationNet",
-        "repo": "lisp-unit2",
-        "type": "github"
-      }
-    },
-    "ndebug-src": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1669040840,
-        "narHash": "sha256-/ZLKeGeeLjHZeYpN4BGDUuVsV3clocWjo9ehVNo3dec=",
-        "owner": "atlas-engineer",
-        "repo": "ndebug",
-        "rev": "75c90bd7fb51b9600d9c09b711ea164ed3a12ee1",
-        "type": "github"
-      },
-      "original": {
-        "owner": "atlas-engineer",
-        "repo": "ndebug",
-        "type": "github"
-      }
-    },
     "neovim-flake": {
       "inputs": {
         "flake-utils": "flake-utils_2",
@@ -338,22 +306,6 @@
         "type": "indirect"
       }
     },
-    "nsymbols-src": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1668084135,
-        "narHash": "sha256-Xr1gEVBetjBtWx4Cr7ytI/4q96cGrO7mXWyRsrynC2k=",
-        "owner": "atlas-engineer",
-        "repo": "nsymbols",
-        "rev": "1bbadf4ee73daa23ba1745b834eb3bfd01f93314",
-        "type": "github"
-      },
-      "original": {
-        "owner": "atlas-engineer",
-        "repo": "nsymbols",
-        "type": "github"
-      }
-    },
     "nur": {
       "locked": {
         "lastModified": 1669805596,
@@ -369,38 +321,6 @@
         "type": "github"
       }
     },
-    "nyxt-src": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1670413634,
-        "narHash": "sha256-g5R0L05WI/XuHI1UtuvgkVT8TPFPk4JnG67gDAX873M=",
-        "owner": "atlas-engineer",
-        "repo": "nyxt",
-        "rev": "2ca63b4ff8ebca6023207b2fdeb3ba923d891e54",
-        "type": "github"
-      },
-      "original": {
-        "owner": "atlas-engineer",
-        "repo": "nyxt",
-        "type": "github"
-      }
-    },
-    "ospm-src": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1662634025,
-        "narHash": "sha256-z4jySUW1Gkkr+VsV3qa6FtqAi2J8XApM3WwSDIQ3vUc=",
-        "owner": "atlas-engineer",
-        "repo": "ospm",
-        "rev": "df261dedaa2e98f00b4b9ef6c41c08d231558682",
-        "type": "github"
-      },
-      "original": {
-        "owner": "atlas-engineer",
-        "repo": "ospm",
-        "type": "github"
-      }
-    },
     "root": {
       "inputs": {
         "alacritty-src": "alacritty-src",
@@ -412,14 +332,9 @@
         "emacs-vterm-src": "emacs-vterm-src",
         "firefox-overlay": "firefox-overlay",
         "home-manager": "home-manager",
-        "lisp-unit2-src": "lisp-unit2-src",
-        "ndebug-src": "ndebug-src",
         "neovim-overlay": "neovim-overlay",
         "nixpkgs": "nixpkgs",
-        "nsymbols-src": "nsymbols-src",
         "nur": "nur",
-        "nyxt-src": "nyxt-src",
-        "ospm-src": "ospm-src",
         "rust-overlay": "rust-overlay_2",
         "sf-mono-liga-src": "sf-mono-liga-src",
         "sketchybar-src": "sketchybar-src",
@@ -508,15 +423,15 @@
     },
     "unstable": {
       "locked": {
-        "lastModified": 1670386635,
-        "narHash": "sha256-DGVswuuI2WJTgmoCl3gs+MuEowwEiy2X70X2KPG1vis=",
-        "owner": "nixos",
+        "lastModified": 1670467675,
+        "narHash": "sha256-CQPMHS82+SiGjHcFg+LTTQ8Pg49hs6CNOkvGj9hDtjA=",
+        "owner": "shaunsingh",
         "repo": "nixpkgs",
-        "rev": "317dde2ba4c7d998ae94289b3fc0118814eb9697",
+        "rev": "0af87633ba66a7c4a007ed6e154e6ba40d32e389",
         "type": "github"
       },
       "original": {
-        "owner": "nixos",
+        "owner": "shaunsingh",
         "ref": "master",
         "repo": "nixpkgs",
         "type": "github"

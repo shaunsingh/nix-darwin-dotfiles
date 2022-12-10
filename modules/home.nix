@@ -18,6 +18,7 @@
     discocss
     uutils-coreutils
     python3Full
+    nodejs-16_x
   ];
 
   programs.firefox = {
@@ -295,7 +296,7 @@
     settings = with config.lib.base16.theme; {
       window.padding.x = 45;
       window.padding.y = 45;
-      window.decorations = "none";
+      window.decorations = "buttonless";
       mouse.hide_when_typing = true;
       use_thin_strokes = true;
       cursor.style = "Beam";

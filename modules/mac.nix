@@ -12,11 +12,9 @@ in {
     '';
   };
   environment.systemPackages = with pkgs; [
-    discord-canary
+    discord
     alacritty-ligatures
     wezterm-git
-    # nyxt-3
-    webkitgtk
     firefox-bin
     # emacs-mac
   ];
@@ -49,10 +47,6 @@ in {
       right_padding = 18;
       # shadows and borders
       window_shadow = "float";
-      window_border = "on";
-      window_border_width = 4;
-      active_window_border_color = "0xffffdede";
-	  normal_window_border_color = "0xff4c566a";
       # mouse
       mouse_follows_focus = "off";
       focus_follows_mouse = "off";
