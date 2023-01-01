@@ -1,32 +1,27 @@
-{ config, pkgs, lib, ... }:
+{ pkgs
+, lib
+, inputs
+, ...
+}:
 let scripts = ./sketchybar/scripts;
-in {
-  nix = {
-    package = pkgs.nix;
-    extraOptions = ''
-      system = aarch64-darwin # M1 gang
-      extra-platforms = aarch64-darwin
-      experimental-features = nix-command flakes
-      build-users-group = nixbld
-      sandbox = true
-    '';
-  };
-  environment.systemPackages = with pkgs; [
-    discord
-    alacritty-ligatures
-    wezterm-git
-    firefox-bin
-    # emacs-mac
-  ];
-  fonts = {
-    fontDir.enable = false;
-    fonts = with pkgs; [ ibm-plex emacs-all-the-icons-fonts sf-mono-liga-bin ];
-  };
+in
+{
+  # nix stuff
+  system.stateVersion = 4;
+  security.pam.enableSudoTouchIdAuth = true;
+
+  # shell
   programs.fish.enable = true;
   system.activationScripts.postActivation.text = ''
     # Set the default shell as fish for the user. MacOS doesn't do this like nixOS does
     sudo chsh -s ${lib.getBin pkgs.fish}/bin/fish shauryasingh
   '';
+
+  # font
+  fonts = {
+    fontDir.enable = true;
+    fonts = with pkgs; [ sf-mono-liga-bin ];
+  };
 
   services.yabai = {
     enable = true;
@@ -74,6 +69,9 @@ in {
     '';
   };
 
+  imports = [
+    ./sketchybar
+  ];
   services.sketchybar = {
     enable = true;
     # package = pkgs.sketchybar-git;
@@ -230,10 +228,6 @@ in {
       cmd - return : alacritty msg create-window
     '';
   };
-
-  networking.hostName = "shaunsingh-laptop";
-  system.stateVersion = 4;
-
   system.keyboard = {
     enableKeyMapping = true;
     remapCapsLockToEscape = true;

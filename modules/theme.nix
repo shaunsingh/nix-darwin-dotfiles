@@ -1,8 +1,8 @@
-{ config, base16-carbon-dark, ... }: {
+{ config, base16-oxocarbon, ... }: {
   config = {
     themes.base16 = {
       enable = true;
-      path = "${base16-carbon-dark}/base16-carbon-dark.yaml";
+      path = "${base16-oxocarbon}/base16-oxocarbon-dark.yaml";
     };
   };
 }
