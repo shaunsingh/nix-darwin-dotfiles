@@ -2,30 +2,8 @@
 , lib
 , inputs
 , ...
-}: {
-  # m1 patches
-  imports = [
-    ../hardware/m1/hardware-configuration.nix
-    "${inputs.nixos-m1}/nix/m1-support"
-  ];
-
-  # asahi still needs some apple-provided firmware, which we need to load locally for flakes
-  hardware.asahi.peripheralFirmwareDirectory = ../hardware/m1/firmware;
-
-  # use edge kernel and enable GPU acceleration
-  hardware.asahi.addEdgeKernelConfig = true;
-  hardware.asahi.useExperimentalGPUDriver = true;
-
-  # boot
-  boot.loader = {
-    efi.canTouchEfiVariables = false;
-    systemd-boot = {
-      enable = true;
-      configurationLimit = 5;
-    };
-  };
-
-
+}:
+{
   # give myself sudo rights
   users.users.shauryasingh = {
     isNormalUser = true;
@@ -106,7 +84,7 @@
       noto-fonts-emoji
 
       # apple fonts
-      sf-mono-liga-bin 
+      sf-mono-liga-bin
       # sf-pro
       # ny
     ];
@@ -118,9 +96,9 @@
         autohint = true;
         style = "hintfull";
       };
-  
+
       subpixel.lcdfilter = "default";
-  
+
       defaultFonts = {
         emoji = [ "Noto Color Emoji" ];
         monospace = [ "Liga SFMono Nerd Font" ];

@@ -17,6 +17,22 @@
         "type": "github"
       }
     },
+    "asahi-fwextract-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1671208305,
+        "narHash": "sha256-sv7Dllw5JTDLa/B+nPmNT4v6E2c0R7tS/Y4MNzzzSc4=",
+        "owner": "AsahiLinux",
+        "repo": "asahi-installer",
+        "rev": "0ac64c9ce1c460f4576162a82d239d7e8688a79e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "AsahiLinux",
+        "repo": "asahi-installer",
+        "type": "github"
+      }
+    },
     "base16": {
       "inputs": {
         "nixpkgs": [
@@ -225,6 +241,22 @@
         "type": "github"
       }
     },
+    "linux-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1671028273,
+        "narHash": "sha256-z2bEh3K1mNPQO/KMsB3pS6JT152RZczN2CAYppLuZSU=",
+        "owner": "AsahiLinux",
+        "repo": "linux",
+        "rev": "2fb9510f953092b1cc94e0cb26713f2f152754f8",
+        "type": "github"
+      },
+      "original": {
+        "owner": "AsahiLinux",
+        "repo": "linux",
+        "type": "github"
+      }
+    },
     "lisp-unit2-src": {
       "flake": false,
       "locked": {
@@ -239,6 +271,38 @@
         "owner": "AccelerationNet",
         "repo": "lisp-unit2",
         "type": "github"
+      }
+    },
+    "m1n1-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1672034872,
+        "narHash": "sha256-0IQ2A6y3K6a4EYGSY0EdbBlFHC1dF1i792lUrO6s9P4=",
+        "owner": "AsahiLinux",
+        "repo": "m1n1",
+        "rev": "586157b8bfb6fecb25f314d877d415bbea33e260",
+        "type": "github"
+      },
+      "original": {
+        "owner": "AsahiLinux",
+        "repo": "m1n1",
+        "type": "github"
+      }
+    },
+    "mesa-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1672190503,
+        "narHash": "sha256-q3If3xuFsT0UQRmvyL4juuaOMWwftqFDfCAh4nEpVno=",
+        "ref": "refs/heads/main",
+        "rev": "0a12b60a6b4363315ca3789e7e289240704a26da",
+        "revCount": 164694,
+        "type": "git",
+        "url": "https://gitlab.freedesktop.org/asahi/mesa.git"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://gitlab.freedesktop.org/asahi/mesa.git"
       }
     },
     "ndebug-src": {
@@ -322,23 +386,6 @@
       "original": {
         "owner": "nix-community",
         "repo": "nix-eval-jobs",
-        "type": "github"
-      }
-    },
-    "nixos-m1": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1672100875,
-        "narHash": "sha256-aDfru5+vYoTO5u5LsePgH007Y+AaG9PNo5Al+Hbu/Tw=",
-        "owner": "tpwrules",
-        "repo": "nixos-m1",
-        "rev": "eedc13c8f9b0ca86a1bcf99104389431eb74c32a",
-        "type": "github"
-      },
-      "original": {
-        "owner": "tpwrules",
-        "ref": "main",
-        "repo": "nixos-m1",
         "type": "github"
       }
     },
@@ -460,15 +507,18 @@
     "root": {
       "inputs": {
         "alacritty-src": "alacritty-src",
+        "asahi-fwextract-src": "asahi-fwextract-src",
         "base16": "base16",
         "base16-oxocarbon": "base16-oxocarbon",
         "darwin": "darwin",
         "firefox-overlay": "firefox-overlay",
         "home-manager": "home-manager",
+        "linux-src": "linux-src",
         "lisp-unit2-src": "lisp-unit2-src",
+        "m1n1-src": "m1n1-src",
+        "mesa-src": "mesa-src",
         "ndebug-src": "ndebug-src",
         "neovim-overlay": "neovim-overlay",
-        "nixos-m1": "nixos-m1",
         "nixpkgs": "nixpkgs",
         "nixpkgs-wayland": "nixpkgs-wayland",
         "nsymbols-src": "nsymbols-src",
@@ -479,6 +529,7 @@
         "sf-mono-liga-src": "sf-mono-liga-src",
         "sketchybar-src": "sketchybar-src",
         "sway-src": "sway-src",
+        "u-boot-src": "u-boot-src",
         "unstable": "unstable",
         "yabai-src": "yabai-src"
       }
@@ -549,6 +600,22 @@
       "original": {
         "owner": "swaywm",
         "repo": "sway",
+        "type": "github"
+      }
+    },
+    "u-boot-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1671563192,
+        "narHash": "sha256-DU7d8CFOcnUZg/48rTTkNUhtdTjjPLmlGhIuTUgsjgc=",
+        "owner": "AsahiLinux",
+        "repo": "u-boot",
+        "rev": "ef2bcd848c628b41476a066bbd41a91065a2e550",
+        "type": "github"
+      },
+      "original": {
+        "owner": "AsahiLinux",
+        "repo": "u-boot",
         "type": "github"
       }
     },

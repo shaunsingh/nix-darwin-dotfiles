@@ -16,16 +16,32 @@
       inputs.nixpkgs.follows = "unstable";
     };
     # Asahi linux
-    nixos-m1 = {
-      url = "github:tpwrules/nixos-m1/main";
-      flake = false;
-    };
     nixpkgs-wayland = {
       url = "github:nix-community/nixpkgs-wayland";
       inputs.nixpkgs.follows = "unstable";
     };
     sway-src = {
       url = "github:swaywm/sway";
+      flake = false;
+    };
+    m1n1-src = {
+      url = "github:AsahiLinux/m1n1";
+      flake = false;
+    };
+    u-boot-src = {
+      url = "github:AsahiLinux/u-boot";
+      flake = false;
+    };
+    asahi-fwextract-src = {
+      url = "github:AsahiLinux/asahi-installer";
+      flake = false;
+    };
+    mesa-src = {
+      url = "git+https://gitlab.freedesktop.org/asahi/mesa.git";
+      flake = false;
+    };
+    linux-src = {
+      url = "github:AsahiLinux/linux";
       flake = false;
     };
     # bar
@@ -100,8 +116,7 @@
       system = "aarch64-linux";
       specialArgs = { inherit inputs; };
       modules = [
-        ./modules/shared.nix
-        ./modules/linux.nix
+        ./hosts/mbp-m1-linux
         home-manager.nixosModule
         {
           home-manager = {
@@ -129,8 +144,7 @@
       system = "aarch64-darwin";
       specialArgs = { inherit inputs; };
       modules = [
-        ./modules/shared.nix
-        ./modules/darwin.nix
+        ./hosts/mbp-m1-darwin
         home-manager.darwinModule
         {
           home-manager = {
@@ -147,6 +161,7 @@
                 ./modules/firefox.nix
                 ./modules/theme.nix
                 ./modules/alacritty.nix
+                ./modules/discord.nix
               ];
             };
           };

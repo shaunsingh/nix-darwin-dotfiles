@@ -1,9 +1,4 @@
-{ pkgs
-, lib
-, inputs
-, ...
-}:
-{
+{ pkgs, lib, inputs, ... }: {
   time.timeZone = "America/New_York";
   networking.hostName = "shaunsingh-laptop";
   nix = {
@@ -79,8 +74,7 @@
             doCheck = false;
             cargoDeps = old.cargoDeps.overrideAttrs (_: {
               inherit src;
-              outputHash =
-                "sha256-qRvPBuDJ5K7II1LXOpTINs35XvKALOFQa4h5PPIMZic=";
+              outputHash = "sha256-qRvPBuDJ5K7II1LXOpTINs35XvKALOFQa4h5PPIMZic=";
             });
           });
 
@@ -89,6 +83,94 @@
             version = versionOf inputs.sway-src;
             src = inputs.sway-src;
           });
+          linux-asahi = pkgs.callPackage ../pkgs/m1-kernel { withRust = true; };
+          m1n1 = prev.stdenv.mkDerivation rec {
+            pname = "m1n1";
+            version = versionOf inputs.m1n1-src;
+            src = inputs.m1n1-src;
+
+            makeFlags = [ "ARCH=aarch64-unknown-linux-gnu-" "RELEASE=1" ];
+
+            nativeBuildInputs = [ dtc pkgs.gcc ];
+
+            postPatch = ''
+              substituteInPlace proxyclient/m1n1/asm.py \
+                --replace 'aarch64-linux-gnu-' 'aarch64-unknown-linux-gnu-' \
+                --replace 'TOOLCHAIN = ""' 'TOOLCHAIN = "'$out'/toolchain-bin/"'
+            '';
+
+            installPhase = ''
+              runHook preInstall
+              mkdir -p $out/build
+              cp build/m1n1.bin $out/build
+              runHook postInstall
+            '';
+          };
+          u-boot = (prev.pkgs.buildUBoot rec {
+            version = versionOf inputs.uboot-src;
+            src = inputs.uboot-src;
+
+            defconfig = "apple_m1_defconfig";
+            extraMeta.platforms = [ "aarch64-linux" ];
+            filesToInstall = [ "u-boot-nodtb.bin.gz" "m1n1-u-boot.bin" ];
+            extraConfig = ''
+              CONFIG_IDENT_STRING=" ${version}"
+              CONFIG_VIDEO_FONT_4X6=n
+              CONFIG_VIDEO_FONT_8X16=n
+              CONFIG_VIDEO_FONT_SUN12X22=n
+              CONFIG_VIDEO_FONT_TER12X24=n
+              CONFIG_VIDEO_FONT_TER16X32=y
+            '';
+          }).overrideAttrs (o: {
+            # nixos's downstream patches are not applicable
+            # however, we add in bigger u-boot fonts because the mac laptop screens are high-res
+            patches = [
+              (fetchpatch {
+                url =
+                  "https://git.alpinelinux.org/aports/plain/testing/u-boot-asahi/apritzel-first5-video.patch?id=990110f35b50b74bdb4e902d94fa15b07a8eac9e";
+                sha256 = "sha256-QPvJYxIcQBHbwsj7l96qGUZSipk1sB3ZyniD1Io18dY=";
+                revert = false;
+              })
+
+              (fetchpatch {
+                url =
+                  "https://git.alpinelinux.org/aports/plain/testing/u-boot-asahi/mps-u-boot-ter12x24.patch?id=990110f35b50b74bdb4e902d94fa15b07a8eac9e";
+                sha256 = "sha256-wrQpIYiuNRi/p2p290KCGPmuRxFEOPlbICoFvd+E8p0=";
+                revert = false;
+              })
+            ];
+
+            preInstall = ''
+              # compress so that m1n1 knows U-Boot's size and can find things after it
+              gzip -n u-boot-nodtb.bin
+              cat ${pkgs.m1n1}/build/m1n1.bin arch/arm/dts/t[68]*.dtb u-boot-nodtb.bin.gz > m1n1-u-boot.bin
+            '';
+          });
+          asahi-fwextract = prev.python3.pkgs.buildPythonApplication rec {
+            pname = "asahi-fwextract";
+            version = versionOf inputs.asahi-fwextract-src;
+            src = inputs.asahi-fwextract-src;
+            patches = [ ../patches/add_entry_point.patch ];
+            postPatch = ''
+              substituteInPlace asahi_firmware/img4.py \
+                --replace 'liblzfse.so' '${lzfse}/lib/liblzfse.so'
+              substituteInPlace asahi_firmware/update.py \
+                --replace '"tar"' '"${gnutar}/bin/tar"' \
+                --replace '"xf"' '"-x", "-I", "${gzip}/bin/gzip", "-f"'
+            '';
+            nativeBuildInputs = [ python3.pkgs.setuptools ];
+            doCheck = false;
+          };
+          mesa-asahi = (prev.mesa.override {
+            galliumDrivers = [ "swrast" "asahi" ];
+            vulkanDrivers = [ "swrast" ];
+            enableGalliumNine = false;
+          }).overrideAttrs (old: {
+            version = versionOf inputs.mesa-src;
+            src = inputs.mesa-src;
+            mesonFlags = lib.filter (x: !(lib.hasPrefix "-Dxvmc-libs-path=" x)) oldAttrs.mesonFlags;
+          });
+
           nyxt-asdf = pkgs.lispPackages_new.build-asdf-system {
             pname = "nyxt-asdf";
             version = versionOf inputs.nyxt-src;
@@ -113,26 +195,23 @@
             version = versionOf inputs.nsymbols-src;
             src = inputs.nsymbols-src;
             lisp = pkgs.lispPackages_new.sbcl;
-            lispLibs = with pkgs.lispPackages_new.sbclPackages; [
-              closer-mop
-            ];
+            lispLibs = with pkgs.lispPackages_new.sbclPackages; [ closer-mop ];
           };
           lisp-unit2 =
-            prev.lispPackages_new.sbclPackages.lisp-unit2.overrideLispAttrs
-              (_: {
-                version = versionOf inputs.lisp-unit2-src;
-                src = inputs.lisp-unit2-src;
-              });
-          hu_dot_dwim_dot_defclass-star =
-            prev.lispPackages_new.sbclPackages.hu_dot_dwim_dot_defclass-star.overrideLispAttrs (_: {
-              src = final.fetchFromGitHub {
-                owner = "hu-dwim";
-                repo = "hu.dwim.defclass-star";
-                rev = "2698bd93073f9ba27583351221a3a087fb595626";
-                sha256 =
-                  "0v6bj3xbcpz98bkv3a2skz2dh0p50mqaflgkfbrzx1dzbkl1630y";
-              };
+            prev.lispPackages_new.sbclPackages.lisp-unit2.overrideLispAttrs (_: {
+              version = versionOf inputs.lisp-unit2-src;
+              src = inputs.lisp-unit2-src;
             });
+          hu_dot_dwim_dot_defclass-star =
+            prev.lispPackages_new.sbclPackages.hu_dot_dwim_dot_defclass-star.overrideLispAttrs
+              (_: {
+                src = final.fetchFromGitHub {
+                  owner = "hu-dwim";
+                  repo = "hu.dwim.defclass-star";
+                  rev = "2698bd93073f9ba27583351221a3a087fb595626";
+                  sha256 = "0v6bj3xbcpz98bkv3a2skz2dh0p50mqaflgkfbrzx1dzbkl1630y";
+                };
+              });
           ospm = pkgs.lispPackages_new.build-asdf-system {
             version = versionOf inputs.ospm-src;
             src = inputs.ospm-src;
@@ -232,7 +311,11 @@
           };
 
           # darwin overlays 
-          julia-bin = if prev.stdenv.hostPlatform.isDarwin then final.callPackage ../pkgs/julia-18 { } else prev.julia-bin;
+          julia-bin =
+            if prev.stdenv.hostPlatform.isDarwin then
+              final.callPackage ../pkgs/julia-18 { }
+            else
+              prev.julia-bin;
           sketchybar-git = prev.sketchybar.overrideAttrs (old: rec {
             version = versionOf inputs.sketchybar-src;
             src = inputs.sketchybar-src;

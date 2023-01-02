@@ -7,9 +7,8 @@ let scripts = ./sketchybar/scripts;
 in
 {
   # nix stuff
-  system.stateVersion = 4;
   services.nix-daemon.enable = true;
-  security.pam.enableSudoTouchIdAuth = true;
+  system.stateVersion = 4;
 
   # shell
   programs.fish.enable = true;
