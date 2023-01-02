@@ -3,20 +3,24 @@
 , inputs
 , ...
 }: {
-  # kernel etc.
-  enableRedistributableFirmware = true;
+  # m1 patches
   imports = [
     ../hardware/m1/hardware-configuration.nix
     "${inputs.nixos-m1}/nix/m1-support"
   ];
+
+  # asahi still needs some apple-provided firmware, which we need to load locally for flakes
+  hardware.asahi.peripheralFirmwareDirectory = ../hardware/m1/firmware;
+
+  # use edge kernel and enable GPU acceleration
+  hardware.asahi.addEdgeKernelConfig = true;
+  hardware.asahi.useExperimentalGPUDriver = true;
 
   # boot
   boot.loader = {
     efi.canTouchEfiVariables = false;
     systemd-boot = {
       enable = true;
-      # "error switching console mode" on boot.
-      consoleMode = "auto";
       configurationLimit = 5;
     };
   };
@@ -52,8 +56,7 @@
       bright = [ "1E1E2E" "F38BA8" "A6E3A1" "F9E2AF" "89B4FA" "F5C2E7" "94E2D5" "A6ADC8" ];
     in
     {
-      colors = normal ++ bright;
-      font = "${pkgs.terminus_font}/share/consolefonts/ter-u28n.psf.gz";
+      # colors = normal ++ bright;
       keyMap = "us";
     };
 
@@ -74,64 +77,19 @@
   # disk
   services.fstrim.enable = true;
 
-  # hardware-accelerated graphics
-  hardware.asahi.useExperimentalGPUDriver = true;
-
   # bluetooh support
   hardware.bluetooth.enable = true;
 
   # sound
   services.pipewire = {
     enable = true;
-    wireplumber.enable = true;
     pulse.enable = true;
-    jack.enable = true;
-    alsa = {
-      enable = true;
-      support32Bit = true;
-    };
   };
 
   # network
-  networking.networkmanager.enable = true;
   services.openssh.enable = true;
+  networking.networkmanager.enable = true;
   systemd.services.NetworkManager-wait-online.enable = false;
-
-  # systemd 
-  systemd.user.services = {
-    pipewire.wantedBy = [ "default.target" ];
-    pipewire-pulse.wantedBy = [ "default.target" ];
-  };
-
-  # security
-  security = {
-    rtkit.enable = true;
-
-    apparmor = {
-      enable = true;
-      killUnconfinedConfinables = true;
-      packages = [ pkgs.apparmor-profiles ];
-    };
-
-    pam = {
-      services.login.enableGnomeKeyring = true;
-
-      loginLimits = [
-        {
-          domain = "@wheel";
-          item = "nofile";
-          type = "soft";
-          value = "524288";
-        }
-        {
-          domain = "@wheel";
-          item = "nofile";
-          type = "hard";
-          value = "1048576";
-        }
-      ];
-    };
-  };
 
   # xdg directories
   xdg.portal = {
@@ -148,28 +106,27 @@
       noto-fonts-emoji
 
       # apple fonts
-      sf-mono-liga
-      sf-pro
-      ny
+      sf-mono-liga-bin 
+      # sf-pro
+      # ny
     ];
-  };
-
-  fontconfig = {
-    enable = true;
-    antialias = true;
-    hinting = {
+    fontconfig = {
       enable = true;
-      autohint = true;
-      style = "hintfull";
-    };
-
-    subpixel.lcdfilter = "default";
-
-    defaultFonts = {
-      emoji = [ "Noto Color Emoji" ];
-      monospace = [ "Liga SFMono Nerd Font" ];
-      sansSerif = [ "SF Pro" "Noto Color Emoji" ];
-      serif = [ "New York" "Noto Color Emoji" ];
+      antialias = true;
+      hinting = {
+        enable = true;
+        autohint = true;
+        style = "hintfull";
+      };
+  
+      subpixel.lcdfilter = "default";
+  
+      defaultFonts = {
+        emoji = [ "Noto Color Emoji" ];
+        monospace = [ "Liga SFMono Nerd Font" ];
+        # sansSerif = [ "SF Pro" "Noto Color Emoji" ];
+        # serif = [ "New York" "Noto Color Emoji" ];
+      };
     };
   };
 

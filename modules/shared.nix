@@ -6,14 +6,9 @@
 {
   time.timeZone = "America/New_York";
   networking.hostName = "shaunsingh-laptop";
-  services.nix-daemon.enable = true;
   nix = {
     package = pkgs.nix;
     registry.nixpkgs.flake = inputs.unstable;
-    settings = {
-      trusted-users = [ "shauryasingh" ];
-      allowed-users = [ "shauryasingh" "root" ];
-    };
     extraOptions = ''
       warn-dirty = false
       experimental-features = nix-command flakes
@@ -29,15 +24,13 @@
     overlays =
       let
         versionOf = input: input.rev;
-        badstdenv =
-          (import pkgs.path { system = "aarch64-darwin"; }).stdenv;
+        # badstdenv = (import pkgs.path { system = "aarch64-darwin"; }).stdenv;
       in
       with inputs; [
         nur.overlay
         neovim-overlay.overlay
         nixpkgs-wayland.overlay
         rust-overlay.overlays.default
-        fonts.overlays.default
         firefox-overlay.overlay
         (final: prev: {
           # Generates an stdenv based on clang v15 with mold-macOS as a linker
@@ -92,11 +85,9 @@
           });
 
           # linux overlays
-          sway-borders-git = prev.sway.overrideAttrs (old: {
-            version = versionOf inputs.sway-borders-src;
-            src = inputs.sway-borders-src;
-            CFLAGS = prev.CFLAGS
-              ++ "-Wno-error"; # regular build sometimes fails because of warnings treated as errors.
+          sway-git = prev.sway.overrideAttrs (old: {
+            version = versionOf inputs.sway-src;
+            src = inputs.sway-src;
           });
           nyxt-asdf = pkgs.lispPackages_new.build-asdf-system {
             pname = "nyxt-asdf";

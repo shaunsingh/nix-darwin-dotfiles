@@ -1,6 +1,7 @@
 { pkgs
 , lib
 , inputs
+, config
 , ...
 }: {
   home.packages = with pkgs; [
@@ -10,11 +11,12 @@
   ];
   wayland.windowManager.sway = {
     enable = true;
-    package = pkgs.sway-borders-git;
+    package = pkgs.sway-git;
     config = {
       output = {
         "*" = {
           bg = "\ `find ${../extra/wallpapers/IBM_Developer_Posters.jpg} | shuf -n 1\` fill";
+	  scale = "2";
         };
       };
       input = {
@@ -52,7 +54,7 @@
           childBorder = "#${base0C-hex}";
         };
       };
-      terminal = "${pkgs.alacritty-ligatures}/bin/alacritty";
+      terminal = "${pkgs.foot}/bin/foot";
       menu = "${pkgs.wofi}/bin/wofi --show drun";
       gaps.inner = 18;
       bars = [ ];
@@ -70,17 +72,9 @@
       # Brightness
       bindsym XF86MonBrightnessDown exec "${pkgs.brightnessctl}/bin/brightnessctl set 5%-"
       bindsym XF86MonBrightnessUp exec "${pkgs.brightnessctl}/bin/brightnessctl set +5%"
-
-      # Border Images: needs sway-borders which is finicky at the moment
-      border_images.focused ${../configs/borders/shadows.png}
-      border_images.focused_inactive ${../configs/borders/shadows.png}
-      border_images.unfocused ${../configs/borders/shadows.png}
-      border_images.urgent ${../configs/borders/shadows.png}
     '';
     extraSessionCommands = ''
       export XDG_CURRENT_DESKTOP=sway;
-      export WLR_NO_HARDWARE_CURSORS=1
-      export SDL_VIDEODRIVER=wayland
       export MOZ_ENABLE_WAYLAND=1
       export _JAVA_AWT_WM_NONREPARENTING=1
     '';

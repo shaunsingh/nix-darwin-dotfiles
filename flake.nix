@@ -24,8 +24,8 @@
       url = "github:nix-community/nixpkgs-wayland";
       inputs.nixpkgs.follows = "unstable";
     };
-    sway-borders-src = {
-      url = "github:fluix-dev/sway-borders";
+    sway-src = {
+      url = "github:swaywm/sway";
       flake = false;
     };
     # bar
@@ -42,10 +42,6 @@
     sf-mono-liga-src = {
       url = "github:shaunsingh/SFMono-Nerd-Font-Ligaturized";
       flake = false;
-    };
-    fonts = {
-      url = "github:denbeigh2000/fonts";
-      inputs.nixpkgs.follows = "unstable";
     };
     # Terminal emulator
     alacritty-src = {
@@ -106,7 +102,7 @@
       modules = [
         ./modules/shared.nix
         ./modules/linux.nix
-        home-manager.nixosModules
+        home-manager.nixosModule
         {
           home-manager = {
             useGlobalPkgs = true;
@@ -121,7 +117,8 @@
                 ./modules/home.nix
                 ./modules/theme.nix
                 ./modules/sway.nix
-                ./modules/nyxt.nix
+                ./modules/foot.nix
+                # ./modules/nyxt.nix
               ];
             };
           };
@@ -149,6 +146,7 @@
                 ./modules/home.nix
                 ./modules/firefox.nix
                 ./modules/theme.nix
+                ./modules/alacritty.nix
               ];
             };
           };

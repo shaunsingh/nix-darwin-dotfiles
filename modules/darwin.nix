@@ -8,6 +8,7 @@ in
 {
   # nix stuff
   system.stateVersion = 4;
+  services.nix-daemon.enable = true;
   security.pam.enableSudoTouchIdAuth = true;
 
   # shell
