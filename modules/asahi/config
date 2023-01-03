@@ -1,3 +1,6 @@
+# from https://github.com/AsahiLinux/PKGBUILDs/blob/stable/linux-asahi/config
+# note that this file is not passed to the kernel verbatim, it is parsed and run through `make config`, so stuff below like compiler version will be automatically adjusted for NixOS
+
 #
 # Automatically generated file; DO NOT EDIT.
 # Linux/arm64 6.1.0-rc7 Kernel Configuration
@@ -30,7 +33,7 @@ CONFIG_THREAD_INFO_IN_TASK=y
 CONFIG_INIT_ENV_ARG_LIMIT=32
 # CONFIG_COMPILE_TEST is not set
 # CONFIG_WERROR is not set
-CONFIG_LOCALVERSION="-ARCH"
+# CONFIG_LOCALVERSION="-ARCH"
 # CONFIG_LOCALVERSION_AUTO is not set
 CONFIG_BUILD_SALT=""
 CONFIG_DEFAULT_INIT=""
@@ -6777,7 +6780,7 @@ CONFIG_SQUASHFS_ZLIB=y
 CONFIG_SQUASHFS_LZ4=y
 CONFIG_SQUASHFS_LZO=y
 CONFIG_SQUASHFS_XZ=y
-CONFIG_SQUASHFS_ZSTD=y
+# CONFIG_SQUASHFS_ZSTD is not set
 # CONFIG_SQUASHFS_4K_DEVBLK_SIZE is not set
 # CONFIG_SQUASHFS_EMBEDDED is not set
 CONFIG_SQUASHFS_FRAGMENT_CACHE_SIZE=3
@@ -7665,3 +7668,6 @@ CONFIG_RUST_OVERFLOW_CHECKS=y
 CONFIG_RUST_BUILD_ASSERT_DENY=y
 # end of Rust hacking
 # end of Kernel hacking
+
+# nixos extra stuff
+CONFIG_SQUASHFS_ZSTD=y

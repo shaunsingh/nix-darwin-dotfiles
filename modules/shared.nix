@@ -19,6 +19,16 @@
     overlays =
       let
         versionOf = input: input.rev;
+        configfile = ./asahi/config;
+        readConfig = configfile: import (pkgs.runCommand "config.nix" { } ''
+          echo "{ } // " > "$out"
+          while IFS='=' read key val; do
+            [ "x''${key#CONFIG_}" != "x$key" ] || continue
+            no_firstquote="''${val#\"}";
+            echo '{  "'"$key"'" = "'"''${no_firstquote%\"}"'"; } //' >> "$out"
+          done < "${configfile}"
+          echo "{ }" >> $out
+        '').outPath;
         # badstdenv = (import pkgs.path { system = "aarch64-darwin"; }).stdenv;
       in
       with inputs; [
@@ -83,6 +93,54 @@
             version = versionOf inputs.sway-src;
             src = inputs.sway-src;
           });
+          linux-asahi = (prev.linuxKernel.manualConfig
+            rec {
+              version = versionOf inputs.linux-asahi-src;
+              src = inputs.linux-asahi-src;
+              modDirVersion = version;
+
+              kernelPatches = [
+                # patch the kernel to set the default size to 16k instead of modifying
+                # the config so we don't need to convert our config to the nixos
+                # infrastructure or patch it and thus introduce a dependency on the host
+                # system architecture
+                {
+                  name = "default-pagesize-16k";
+                  patch = ./asahi/default-pagesize-16k.patch;
+                }
+                {
+                  name = "edge-config";
+                  patch = null;
+                  # derived from
+                  # https://github.com/AsahiLinux/PKGBUILDs/blob/stable/linux-asahi/config.edge
+                  extraConfig = ''
+                    DRM_SIMPLEDRM_BACKLIGHT=n
+                    BACKLIGHT_GPIO=n
+                    DRM_APPLE=m
+                    APPLE_SMC=m
+                    APPLE_SMC_RTKIT=m
+                    APPLE_RTKIT=m
+                    APPLE_MAILBOX=m
+                    GPIO_MACSMC=m
+                    LOCALVERSION="-edge-ARCH"
+                    DRM_VGEM=n
+                    DRM_SCHED=y
+                    DRM_GEM_SHMEM_HELPER=y
+                    DRM_ASAHI=m
+                    SUSPEND=y
+                  '';
+                }
+              ];
+
+              inherit configfile;
+              config = readConfig configfile;
+              extraMeta.branch = "6.1";
+            }).overrideAttrs (old: {
+            nativeBuildInputs = (old.nativeBuildInputs or [ ])
+              ++ [ pkgs.rust-bindgen pkgs.rustfmt pkgs.rustPlatform.rust.rustc ];
+            RUST_LIB_SRC = rustPlatform.rustLibSrc;
+          });
+
           m1n1 = prev.stdenv.mkDerivation rec {
             pname = "m1n1";
             version = versionOf inputs.m1n1-src;

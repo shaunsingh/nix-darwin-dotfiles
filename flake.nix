@@ -40,6 +40,10 @@
       url = "git+https://gitlab.freedesktop.org/asahi/mesa.git";
       flake = false;
     };
+    linux-asahi-src = {
+      url = "github:AsahiLinux/linux";
+      flake = false;
+    };
     # bar
     sketchybar-src = {
       url = "github:FelixKratz/SketchyBar";

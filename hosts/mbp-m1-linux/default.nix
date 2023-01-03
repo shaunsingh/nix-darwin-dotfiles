@@ -11,8 +11,7 @@
     ../../modules/shared.nix
 
     # m1 support
-    ../../modules/asahi
-    ../../modules/asahi/support.nix
+    ../../modules/asahi.nix
 
     # linux specific 
     ../../modules/linux.nix

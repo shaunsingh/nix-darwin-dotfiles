@@ -1,14 +1,26 @@
-{ config, pkgs, lib, ... }:
-{
-  boot.kernelPackages = pkgs.callPackage ./package.nix {
-    inherit (config.boot) kernelPatches;
-    withRust = true;
+{ pkgs
+, lib
+, inputs
+, config
+, ...
+}:
+let
+  bootFiles = {
+    "m1n1/boot.bin" = pkgs.runCommand "boot.bin" { } ''
+      cat ${pkgs.m1n1}/build/m1n1.bin > $out
+      cat ${config.boot.kernelPackages.kernel}/dtbs/apple/*.dtb >> $out
+      cat ${pkgs.u-boot}/u-boot-nodtb.bin.gz >> $out
+    '';
   };
-
-  # we definitely want to use CONFIG_ENERGY_MODEL, and
-  # schedutil is a prerequisite for using it
-  # source: https://www.kernel.org/doc/html/latest/scheduler/sched-energy.html
+in
+{
+  # use the asahi kernel 
+  boot.kernelPackages = pkgs.linux-asahi;
   powerManagement.cpuFreqGovernor = lib.mkOverride 800 "schedutil";
+
+  # enable opengl acceleration and wifi with new drivers and peripheral firmware
+  hardware.opengl.package = pkgs.mesa-asahi.drivers;
+  hardware.firmware = pkgs.asahi-peripheral-firmware;
 
   boot.initrd.includeDefaultModules = false;
   boot.initrd.availableKernelModules = [
@@ -48,31 +60,6 @@
     "nvme_apple.flush_interval=0"
   ];
 
-  boot.kernelPatches = [
-    {
-      name = "edge-config";
-      patch = null;
-      # derived from
-      # https://github.com/AsahiLinux/PKGBUILDs/blob/stable/linux-asahi/config.edge
-      extraConfig = ''
-        DRM_SIMPLEDRM_BACKLIGHT=n
-        BACKLIGHT_GPIO=n
-        DRM_APPLE=m
-        APPLE_SMC=m
-        APPLE_SMC_RTKIT=m
-        APPLE_RTKIT=m
-        APPLE_MAILBOX=m
-        GPIO_MACSMC=m
-        LOCALVERSION="-edge-ARCH"
-        DRM_VGEM=n
-        DRM_SCHED=y
-        DRM_GEM_SHMEM_HELPER=y
-        DRM_ASAHI=m
-        SUSPEND=y
-      '';
-    }
-  ];
-
   # U-Boot does not support EFI variables
   # U-Boot does not support switching console mode
   boot.loader = {
@@ -80,6 +67,11 @@
     systemd-boot = {
       enable = true;
       consoleMode = "0";
+      extraFiles = bootFiles;
     };
   };
+
+  # expose m1n1 and u-boot to the system
+  system.extraDependencies = [ pkgs.m1n1 pkgs.u-boot ];
+  system.build.m1n1 = bootFiles."m1n1/boot.bin";
 }
