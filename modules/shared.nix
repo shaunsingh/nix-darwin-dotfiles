@@ -301,8 +301,17 @@
           asahi-edge = prev.recurseIntoAttrs (prev.linuxPackagesFor pkgs.asahi-edge-kernel);
           m1n1 = prev.stdenv.mkDerivation rec {
             pname = "m1n1";
-            version = versionOf inputs.m1n1-src;
-            src = inputs.m1n1-src;
+
+            version = "1.2.3";
+
+            src = prev.fetchFromGitHub {
+              # tracking: https://github.com/AsahiLinux/PKGBUILDs/blob/stable/m1n1/PKGBUILD
+              owner = "AsahiLinux";
+              repo = "m1n1";
+              rev = "v${version}";
+              hash = "sha256-HEhsg3/OkMvAHvu16VFun87SNBPin69CL6XllE7sb4g=";
+              fetchSubmodules = true;
+            };
 
             makeFlags = [ "ARCH=aarch64-unknown-linux-gnu-" "RELEASE=1" ];
 
@@ -341,9 +350,14 @@
             '';
           };
           asahi-u-boot = (prev.buildUBoot rec {
-            version = versionOf inputs.u-boot-src;
-            src = inputs.u-boot-src;
-
+            src = prev.fetchFromGitHub {
+              # tracking: https://github.com/AsahiLinux/PKGBUILDs/blob/stable/uboot-asahi/PKGBUILD
+              owner = "AsahiLinux";
+              repo = "u-boot";
+              rev = "asahi-v2022.10-1";
+              hash = "sha256-/dtTJ+GxC2GFlqduAa2WWPGwktLjM7tUKus6/aUyPNQ=";
+            };
+            version = "2022.10.asahi1-1";
             defconfig = "apple_m1_defconfig";
             extraMeta.platforms = [ "aarch64-linux" ];
             filesToInstall = [ "u-boot-nodtb.bin.gz" "m1n1-u-boot.bin" ];
@@ -422,8 +436,14 @@
             vulkanDrivers = [ "swrast" ];
             enableGalliumNine = false;
           }).overrideAttrs (old: {
-            version = versionOf inputs.mesa-src;
-            src = inputs.mesa-src;
+            version = "23.0.0";
+            src = fetchFromGitLab {
+              domain = "gitlab.freedesktop.org";
+              owner = "asahi";
+              repo = "mesa";
+              rev = "08ff98967079a2e43a04f11fc646eef51a9103f1";
+              hash = "sha256-Y3AVHmajwJSD3cZejalF1SSt1R3RjMJf8SO3x1qTskw=";
+            };
             mesonFlags = lib.filter (x: !(lib.hasPrefix "-Dxvmc-libs-path=" x)) oldAttrs.mesonFlags;
           });
 

@@ -24,26 +24,6 @@
       url = "github:swaywm/sway";
       flake = false;
     };
-    m1n1-src = {
-      url = "github:AsahiLinux/m1n1";
-      flake = false;
-    };
-    u-boot-src = {
-      url = "github:AsahiLinux/u-boot";
-      flake = false;
-    };
-    asahi-fwextract-src = {
-      url = "github:AsahiLinux/asahi-installer";
-      flake = false;
-    };
-    mesa-src = {
-      url = "git+https://gitlab.freedesktop.org/asahi/mesa.git";
-      flake = false;
-    };
-    linux-asahi-src = {
-      url = "github:AsahiLinux/linux";
-      flake = false;
-    };
     # bar
     sketchybar-src = {
       url = "github:FelixKratz/SketchyBar";
