@@ -364,7 +364,7 @@
             nativeBuildInputs = [ pkgs.asahi-fwextract pkgs.cpio ];
             buildCommand = ''
               mkdir extracted
-              asahi-fwextract ${/. + ../hardware/m1/firmware} extracted
+              asahi-fwextract ${/. + ../hosts/mbp-m1-linux/firmware} extracted
               mkdir -p $out/lib/firmware
               cat extracted/firmware.cpio | cpio -id --quiet --no-absolute-filenames
               mv vendorfw/* $out/lib/firmware
