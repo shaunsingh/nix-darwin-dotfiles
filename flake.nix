@@ -16,13 +16,13 @@
       inputs.nixpkgs.follows = "unstable";
     };
     # Asahi linux
+    nixos-m1 = {
+      url = "github:tpwrules/nixos-m1/main";
+      flake = false;
+    };
     nixpkgs-wayland = {
       url = "github:nix-community/nixpkgs-wayland";
       inputs.nixpkgs.follows = "unstable";
-    };
-    sway-src = {
-      url = "github:swaywm/sway";
-      flake = false;
     };
     # bar
     sketchybar-src = {

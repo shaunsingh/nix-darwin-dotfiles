@@ -11,12 +11,12 @@
   ];
   wayland.windowManager.sway = {
     enable = true;
-    package = pkgs.sway-git;
+    package = pkgs.sway-unwrapped;
     config = {
       output = {
         "*" = {
           bg = "\ `find ${../extra/wallpapers/IBM_Developer_Posters.jpg} | shuf -n 1\` fill";
-	  scale = "2";
+          scale = "2";
         };
       };
       input = {

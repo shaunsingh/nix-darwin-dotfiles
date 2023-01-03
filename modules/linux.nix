@@ -12,6 +12,9 @@
     shell = pkgs.fish;
   };
 
+  # use grub
+  boot.loader.grub.enable = true;
+
   # us locale
   services.timesyncd.enable = true;
   i18n = {
@@ -107,6 +110,4 @@
       };
     };
   };
-
-  system.stateVersion = "23.05";
 }
