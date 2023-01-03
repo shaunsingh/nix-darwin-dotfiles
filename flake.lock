@@ -241,22 +241,6 @@
         "type": "github"
       }
     },
-    "linux-src": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1671028273,
-        "narHash": "sha256-z2bEh3K1mNPQO/KMsB3pS6JT152RZczN2CAYppLuZSU=",
-        "owner": "AsahiLinux",
-        "repo": "linux",
-        "rev": "2fb9510f953092b1cc94e0cb26713f2f152754f8",
-        "type": "github"
-      },
-      "original": {
-        "owner": "AsahiLinux",
-        "repo": "linux",
-        "type": "github"
-      }
-    },
     "lisp-unit2-src": {
       "flake": false,
       "locked": {
@@ -513,7 +497,6 @@
         "darwin": "darwin",
         "firefox-overlay": "firefox-overlay",
         "home-manager": "home-manager",
-        "linux-src": "linux-src",
         "lisp-unit2-src": "lisp-unit2-src",
         "m1n1-src": "m1n1-src",
         "mesa-src": "mesa-src",
