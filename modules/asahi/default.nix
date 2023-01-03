@@ -92,7 +92,6 @@
     systemd-boot = {
       enable = true;
       consoleMode = "0";
-      extraFiles = bootFiles;
     };
   };
 }
