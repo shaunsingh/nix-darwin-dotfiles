@@ -278,10 +278,10 @@
             }).overrideAttrs (old: {
             # add rust support
             nativeBuildInputs = (old.nativeBuildInputs or [ ])
-              ++ [ pkgs.rust-bindgen pkgs.rustfmt pkgs.rustPlatform.rust.rustc ];
-            RUST_LIB_SRC = pkgs.rustPlatform.rustLibSrc;
+              ++ [ prev.rust-bindgen prev.rustfmt prev.rustPlatform.rust.rustc ];
+            RUST_LIB_SRC = prev.rustPlatform.rustLibSrc;
           });
-          asahi-edge = pkgs.recurseIntoAttrs (pkgs.linuxPackagesFor pkgs.asahi-edge-kernel);
+          asahi-edge = prev.recurseIntoAttrs (prev.linuxPackagesFor pkgs.asahi-edge-kernel);
           m1n1 = prev.stdenv.mkDerivation rec {
             pname = "m1n1";
             version = versionOf inputs.m1n1-src;
@@ -289,7 +289,7 @@
 
             makeFlags = [ "ARCH=aarch64-unknown-linux-gnu-" "RELEASE=1" ];
 
-            nativeBuildInputs = [ pkgs.dtc pkgs.gcc ];
+            nativeBuildInputs = with prev; [ dtc gcc ];
 
             postPatch = ''
               substituteInPlace proxyclient/m1n1/asm.py \
@@ -304,9 +304,9 @@
               runHook postInstall
             '';
           };
-          asahi-u-boot = (prev.pkgs.buildUBoot rec {
-            version = versionOf inputs.uboot-src;
-            src = inputs.uboot-src;
+          asahi-u-boot = (prev.buildUBoot rec {
+            version = versionOf inputs.u-boot-src;
+            src = inputs.u-boot-src;
 
             defconfig = "apple_m1_defconfig";
             extraMeta.platforms = [ "aarch64-linux" ];
@@ -346,8 +346,19 @@
           });
           asahi-fwextract = prev.python3.pkgs.buildPythonApplication rec {
             pname = "asahi-fwextract";
-            version = versionOf inputs.asahi-fwextract-src;
-            src = inputs.asahi-fwextract-src;
+
+            # patch needs to be fixed for latest version 
+            # version = versionOf inputs.asahi-fwextract-src;
+            # src = inputs.asahi-fwextract-src;
+
+            version = "0.5pre2";
+            src = fetchFromGitHub {
+              owner = "AsahiLinux";
+              repo = "asahi-installer";
+              rev = "v${version}";
+              hash = "sha256-p34eN2iE1s8rupdysjyf6GN8kHkVG9NDw31YKPDNXbk=";
+            };
+
             patches = [ ./asahi/add-entry-point.patch ];
             postPatch = ''
               substituteInPlace asahi_firmware/img4.py \
@@ -356,12 +367,12 @@
                 --replace '"tar"' '"${pkgs.gnutar}/bin/tar"' \
                 --replace '"xf"' '"-x", "-I", "${pkgs.gzip}/bin/gzip", "-f"'
             '';
-            nativeBuildInputs = [ pkgs.python3.pkgs.setuptools ];
+            nativeBuildInputs = [ prev.python3.pkgs.setuptools ];
             doCheck = false;
           };
           asahi-peripheral-firmware = prev.stdenv.mkDerivation rec {
             name = "asahi-peripheral-firmware";
-            nativeBuildInputs = [ pkgs.asahi-fwextract pkgs.cpio ];
+            nativeBuildInputs = [ pkgs.asahi-fwextract prev.cpio ];
             buildCommand = ''
               mkdir extracted
               asahi-fwextract ${/. + ../hosts/mbp-m1-linux/firmware} extracted
