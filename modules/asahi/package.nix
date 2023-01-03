@@ -89,6 +89,6 @@ let
       RUST_LIB_SRC = rustPlatform.rustLibSrc;
     } else
       { });
+  linux-asahi = (pkgs.callPackage linux_asahi_pkg { });
 in
-{ linux-asahi = linux_asahi_pkg; }
-
+pkgs.recurseIntoAttrs (pkgs.linuxPackagesFor linux-asahi)

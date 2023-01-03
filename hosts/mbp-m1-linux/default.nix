@@ -4,9 +4,17 @@
 , ...
 }: {
   imports = [
+    # auto generated 
     ./hardware-configuration.nix
+
+    # shared settings + overlays
     ../../modules/shared.nix
-    ../../modules/m1support.nix
+
+    # m1 support
+    ../../modules/asahi
+    ../../modules/asahi/support.nix
+
+    # linux specific 
     ../../modules/linux.nix
   ];
 }

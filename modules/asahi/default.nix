@@ -1,21 +1,12 @@
-{ pkgs
-, lib
-, inputs
-, config
-, ...
-}:
-let
-  bootFiles = {
-    "m1n1/boot.bin" = pkgs.runCommand "boot.bin" { } ''
-      cat ${pkgs.m1n1}/build/m1n1.bin > $out
-      cat ${config.boot.kernelPackages.kernel}/dtbs/apple/*.dtb >> $out
-      cat ${pkgs.u-boot}/u-boot-nodtb.bin.gz >> $out
-    '';
-  };
-in
+{ config, pkgs, lib, ... }:
 {
-  powerManagement.cpuFreqGovernor = lib.mkOverride 800 "schedutil";
-  boot.kernelPackages = pkgs.linux-asahi;
+  boot.kernelPackages = pkgs.callPackage ./package.nix { withRust = true; };
+
+  # we definitely want to use CONFIG_ENERGY_MODEL, and
+  # schedutil is a prerequisite for using it
+  # source: https://www.kernel.org/doc/html/latest/scheduler/sched-energy.html
+  powerManagement.cpuFreqGovernor = 800 "schedutil";
+
   boot.initrd.includeDefaultModules = false;
   boot.initrd.availableKernelModules = [
     # list of initrd modules stolen from
@@ -94,6 +85,8 @@ in
     }
   ];
 
+  # U-Boot does not support EFI variables
+  # U-Boot does not support switching console mode
   boot.loader = {
     efi.canTouchEfiVariables = false;
     systemd-boot = {
@@ -102,22 +95,4 @@ in
       extraFiles = bootFiles;
     };
   };
-
-  hardware.opengl.package = mesa-asahi.drivers;
-  hardware.firmware = pkgs.stdenv.mkDerivation {
-    name = "asahi-peripheral-firmware";
-
-    nativeBuildInputs = [ pkgs.asahi-fwextract pkgs.cpio ];
-
-    buildCommand = ''
-      mkdir extracted
-      asahi-fwextract ${/. + ../hardware/m1/firmware} extracted
-      mkdir -p $out/lib/firmware
-      cat extracted/firmware.cpio | cpio -id --quiet --no-absolute-filenames
-      mv vendorfw/* $out/lib/firmware
-    '';
-  };
-
-  system.extraDependencies = lib.mkForce [ pkgs.m1n1 pkgs.u-boot ];
-  system.build.m1n1 = bootFiles."m1n1/boot.bin";
 }

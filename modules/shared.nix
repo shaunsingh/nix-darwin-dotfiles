@@ -83,7 +83,6 @@
             version = versionOf inputs.sway-src;
             src = inputs.sway-src;
           });
-          linux-asahi = pkgs.callPackage ../pkgs/m1-kernel { withRust = true; };
           m1n1 = prev.stdenv.mkDerivation rec {
             pname = "m1n1";
             version = versionOf inputs.m1n1-src;
