@@ -323,14 +323,14 @@
             # nixos's downstream patches are not applicable
             # however, we add in bigger u-boot fonts because the mac laptop screens are high-res
             patches = [
-              (fetchpatch {
+              (prev.fetchpatch {
                 url =
                   "https://git.alpinelinux.org/aports/plain/testing/u-boot-asahi/apritzel-first5-video.patch?id=990110f35b50b74bdb4e902d94fa15b07a8eac9e";
                 sha256 = "sha256-QPvJYxIcQBHbwsj7l96qGUZSipk1sB3ZyniD1Io18dY=";
                 revert = false;
               })
 
-              (fetchpatch {
+              (prev.fetchpatch {
                 url =
                   "https://git.alpinelinux.org/aports/plain/testing/u-boot-asahi/mps-u-boot-ter12x24.patch?id=990110f35b50b74bdb4e902d94fa15b07a8eac9e";
                 sha256 = "sha256-wrQpIYiuNRi/p2p290KCGPmuRxFEOPlbICoFvd+E8p0=";
@@ -352,7 +352,7 @@
             # src = inputs.asahi-fwextract-src;
 
             version = "0.5pre2";
-            src = fetchFromGitHub {
+            src = prev.fetchFromGitHub {
               owner = "AsahiLinux";
               repo = "asahi-installer";
               rev = "v${version}";
