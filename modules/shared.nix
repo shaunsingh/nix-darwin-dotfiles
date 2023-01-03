@@ -28,7 +28,7 @@
           done < "${configfile}"
           echo "{ }" >> $out
         '').outPath;
-        pyenv = python3.withPackages (p: with p; [
+        pyenv = pkgs.python3.withPackages (p: with p; [
           construct
           pyserial
         ]);
@@ -239,8 +239,21 @@
           asahi-edge-kernel = (prev.linuxKernel.manualConfig
             rec {
               version = versionOf inputs.linux-asahi-src;
-              src = inputs.linux-asahi-src;
+
+              # use stable commit
+              # src = inputs.linux-asahi-src;
+              # modDirVersion = version;
+
+              version = "6.1.2-asahi";
               modDirVersion = version;
+
+              src = fetchFromGitHub {
+                # tracking: https://github.com/AsahiLinux/PKGBUILDs/blob/stable/linux-asahi/PKGBUILD
+                owner = "AsahiLinux";
+                repo = "linux";
+                rev = "asahi-6.1-2";
+                hash = "sha256-grQytmYoAlPxRI8mYQjZFduD3BH7PA7rz1hyInJb4JA=";
+              };
 
               kernelPatches = [
                 # patch the kernel to set the default size to 16k instead of modifying
