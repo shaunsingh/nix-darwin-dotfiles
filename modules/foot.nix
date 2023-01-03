@@ -7,9 +7,9 @@
   programs.foot = {
     enable = true;
     settings = {
-      main.font = "Liga SFMono Nerd Font:size=12";
-      main.pad = "45x45";
-      cusors.style = "beam";
+      main.font = "Liga SFMono Nerd Font:size=11";
+      main.pad = "27x27";
+      cursor.style = "beam";
       colors = with config.lib.base16.theme; {
         background = "${base00-hex}";
         foreground = "${base06-hex}";

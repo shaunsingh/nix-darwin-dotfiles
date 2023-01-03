@@ -26,37 +26,38 @@
       };
       colors = with config.lib.base16.theme; {
         focused = {
-          border = "#${base01-hex}";
-          background = "#${base03-hex}";
-          text = "#${base03-hex}";
-          indicator = "#${base03-hex}";
-          childBorder = "#${base03-hex}";
+          background = "#${base0E-hex}";
+          indicator = "#${base0E-hex}";
+          border = "#${base0E-hex}";
+          text = "#${base0E-hex}";
+          childBorder = "#${base0E-hex}";
         };
         focusedInactive = {
-          border = "#${base02-hex}";
-          background = "#${base0A-hex}";
-          text = "#${base0A-hex}";
-          indicator = "#${base0A-hex}";
-          childBorder = "#${base0A-hex}";
-        };
-        unfocused = {
-          border = "#${base01-hex}";
           background = "#${base02-hex}";
-          text = "#${base02-hex}";
           indicator = "#${base02-hex}";
+          border = "#${base02-hex}";
+          text = "#${base02-hex}";
           childBorder = "#${base02-hex}";
         };
+        unfocused = {
+          background = "#${base01-hex}";
+          indicator = "#${base01-hex}";
+          border = "#${base01-hex}";
+          text = "#${base01-hex}";
+          childBorder = "#${base01-hex}";
+        };
         urgent = {
-          border = "#${base03-hex}";
-          background = "#${base0C-hex}";
-          text = "#${base0C-hex}";
-          indicator = "#${base0C-hex}";
-          childBorder = "#${base0C-hex}";
+          background = "#${base0A-hex}";
+          indicator = "#${base0A-hex}";
+          border = "#${base0A-hex}";
+          text = "#${base0A-hex}";
+          childBorder = "#${base0A-hex}";
         };
       };
       terminal = "${pkgs.foot}/bin/foot";
       menu = "${pkgs.wofi}/bin/wofi --show drun";
       gaps.inner = 18;
+      bars = [ ];
     };
     extraConfig = ''
       # Remove text on decorations
