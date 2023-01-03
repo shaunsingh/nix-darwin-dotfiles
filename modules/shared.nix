@@ -19,7 +19,6 @@
     overlays =
       let
         versionOf = input: input.rev;
-        configfile = ./asahi/config;
         readConfig = configfile: import (pkgs.runCommand "config.nix" { } ''
           echo "{ } // " > "$out"
           while IFS='=' read key val; do
@@ -93,152 +92,6 @@
             version = versionOf inputs.sway-src;
             src = inputs.sway-src;
           });
-          linux-asahi = (prev.linuxKernel.manualConfig
-            rec {
-              version = versionOf inputs.linux-asahi-src;
-              src = inputs.linux-asahi-src;
-              modDirVersion = version;
-
-              kernelPatches = [
-                # patch the kernel to set the default size to 16k instead of modifying
-                # the config so we don't need to convert our config to the nixos
-                # infrastructure or patch it and thus introduce a dependency on the host
-                # system architecture
-                {
-                  name = "default-pagesize-16k";
-                  patch = ./asahi/default-pagesize-16k.patch;
-                }
-                {
-                  name = "edge-config";
-                  patch = null;
-                  # derived from
-                  # https://github.com/AsahiLinux/PKGBUILDs/blob/stable/linux-asahi/config.edge
-                  extraConfig = ''
-                    DRM_SIMPLEDRM_BACKLIGHT=n
-                    BACKLIGHT_GPIO=n
-                    DRM_APPLE=m
-                    APPLE_SMC=m
-                    APPLE_SMC_RTKIT=m
-                    APPLE_RTKIT=m
-                    APPLE_MAILBOX=m
-                    GPIO_MACSMC=m
-                    LOCALVERSION="-edge-ARCH"
-                    DRM_VGEM=n
-                    DRM_SCHED=y
-                    DRM_GEM_SHMEM_HELPER=y
-                    DRM_ASAHI=m
-                    SUSPEND=y
-                  '';
-                }
-              ];
-
-              inherit configfile;
-              config = readConfig configfile;
-              extraMeta.branch = "6.1";
-            }).overrideAttrs (old: {
-            nativeBuildInputs = (old.nativeBuildInputs or [ ])
-              ++ [ pkgs.rust-bindgen pkgs.rustfmt pkgs.rustPlatform.rust.rustc ];
-            RUST_LIB_SRC = rustPlatform.rustLibSrc;
-          });
-
-          m1n1 = prev.stdenv.mkDerivation rec {
-            pname = "m1n1";
-            version = versionOf inputs.m1n1-src;
-            src = inputs.m1n1-src;
-
-            makeFlags = [ "ARCH=aarch64-unknown-linux-gnu-" "RELEASE=1" ];
-
-            nativeBuildInputs = [ dtc pkgs.gcc ];
-
-            postPatch = ''
-              substituteInPlace proxyclient/m1n1/asm.py \
-                --replace 'aarch64-linux-gnu-' 'aarch64-unknown-linux-gnu-' \
-                --replace 'TOOLCHAIN = ""' 'TOOLCHAIN = "'$out'/toolchain-bin/"'
-            '';
-
-            installPhase = ''
-              runHook preInstall
-              mkdir -p $out/build
-              cp build/m1n1.bin $out/build
-              runHook postInstall
-            '';
-          };
-          u-boot = (prev.pkgs.buildUBoot rec {
-            version = versionOf inputs.uboot-src;
-            src = inputs.uboot-src;
-
-            defconfig = "apple_m1_defconfig";
-            extraMeta.platforms = [ "aarch64-linux" ];
-            filesToInstall = [ "u-boot-nodtb.bin.gz" "m1n1-u-boot.bin" ];
-            extraConfig = ''
-              CONFIG_IDENT_STRING=" ${version}"
-              CONFIG_VIDEO_FONT_4X6=n
-              CONFIG_VIDEO_FONT_8X16=n
-              CONFIG_VIDEO_FONT_SUN12X22=n
-              CONFIG_VIDEO_FONT_TER12X24=n
-              CONFIG_VIDEO_FONT_TER16X32=y
-            '';
-          }).overrideAttrs (o: {
-            # nixos's downstream patches are not applicable
-            # however, we add in bigger u-boot fonts because the mac laptop screens are high-res
-            patches = [
-              (fetchpatch {
-                url =
-                  "https://git.alpinelinux.org/aports/plain/testing/u-boot-asahi/apritzel-first5-video.patch?id=990110f35b50b74bdb4e902d94fa15b07a8eac9e";
-                sha256 = "sha256-QPvJYxIcQBHbwsj7l96qGUZSipk1sB3ZyniD1Io18dY=";
-                revert = false;
-              })
-
-              (fetchpatch {
-                url =
-                  "https://git.alpinelinux.org/aports/plain/testing/u-boot-asahi/mps-u-boot-ter12x24.patch?id=990110f35b50b74bdb4e902d94fa15b07a8eac9e";
-                sha256 = "sha256-wrQpIYiuNRi/p2p290KCGPmuRxFEOPlbICoFvd+E8p0=";
-                revert = false;
-              })
-            ];
-
-            preInstall = ''
-              # compress so that m1n1 knows U-Boot's size and can find things after it
-              gzip -n u-boot-nodtb.bin
-              cat ${pkgs.m1n1}/build/m1n1.bin arch/arm/dts/t[68]*.dtb u-boot-nodtb.bin.gz > m1n1-u-boot.bin
-            '';
-          });
-          asahi-fwextract = prev.python3.pkgs.buildPythonApplication rec {
-            pname = "asahi-fwextract";
-            version = versionOf inputs.asahi-fwextract-src;
-            src = inputs.asahi-fwextract-src;
-            patches = [ ../patches/add_entry_point.patch ];
-            postPatch = ''
-              substituteInPlace asahi_firmware/img4.py \
-                --replace 'liblzfse.so' '${lzfse}/lib/liblzfse.so'
-              substituteInPlace asahi_firmware/update.py \
-                --replace '"tar"' '"${gnutar}/bin/tar"' \
-                --replace '"xf"' '"-x", "-I", "${gzip}/bin/gzip", "-f"'
-            '';
-            nativeBuildInputs = [ python3.pkgs.setuptools ];
-            doCheck = false;
-          };
-          asahi-peripheral-firmware = prev.stdenv.mkDerivation rec {
-            name = "asahi-peripheral-firmware";
-            nativeBuildInputs = [ pkgs.asahi-fwextract pkgs.cpio ];
-            buildCommand = ''
-              mkdir extracted
-              asahi-fwextract ${/. + ../hardware/m1/firmware} extracted
-              mkdir -p $out/lib/firmware
-              cat extracted/firmware.cpio | cpio -id --quiet --no-absolute-filenames
-              mv vendorfw/* $out/lib/firmware
-            '';
-          };
-          mesa-asahi = (prev.mesa.override {
-            galliumDrivers = [ "swrast" "asahi" ];
-            vulkanDrivers = [ "swrast" ];
-            enableGalliumNine = false;
-          }).overrideAttrs (old: {
-            version = versionOf inputs.mesa-src;
-            src = inputs.mesa-src;
-            mesonFlags = lib.filter (x: !(lib.hasPrefix "-Dxvmc-libs-path=" x)) oldAttrs.mesonFlags;
-          });
-
           nyxt-asdf = pkgs.lispPackages_new.build-asdf-system {
             pname = "nyxt-asdf";
             version = versionOf inputs.nyxt-src;
@@ -377,6 +230,154 @@
                 nsymbols
               ]);
           };
+
+          # asahi overlays
+          linuxPackages.asahi-linux-edge = (prev.linuxKernel.manualConfig
+            rec {
+              version = versionOf inputs.linux-asahi-src;
+              src = inputs.linux-asahi-src;
+              modDirVersion = version;
+
+              kernelPatches = [
+                # patch the kernel to set the default size to 16k instead of modifying
+                # the config so we don't need to convert our config to the nixos
+                # infrastructure or patch it and thus introduce a dependency on the host
+                # system architecture
+                {
+                  name = "default-pagesize-16k";
+                  patch = ./asahi/default-pagesize-16k.patch;
+                }
+                {
+                  name = "edge-config";
+                  patch = null;
+                  # derived from
+                  # https://github.com/AsahiLinux/PKGBUILDs/blob/stable/linux-asahi/config.edge
+                  extraConfig = ''
+                    DRM_SIMPLEDRM_BACKLIGHT=n
+                    BACKLIGHT_GPIO=n
+                    DRM_APPLE=m
+                    APPLE_SMC=m
+                    APPLE_SMC_RTKIT=m
+                    APPLE_RTKIT=m
+                    APPLE_MAILBOX=m
+                    GPIO_MACSMC=m
+                    LOCALVERSION="-edge-ARCH"
+                    DRM_VGEM=n
+                    DRM_SCHED=y
+                    DRM_GEM_SHMEM_HELPER=y
+                    DRM_ASAHI=m
+                    SUSPEND=y
+                  '';
+                }
+              ];
+
+              configfile = ./asahi/config;
+              config = readConfig ./asahi/config;
+              extraMeta.branch = "6.1";
+
+            }).overrideAttrs (old: {
+            # add rust support
+            nativeBuildInputs = (old.nativeBuildInputs or [ ])
+              ++ [ pkgs.rust-bindgen pkgs.rustfmt pkgs.rustPlatform.rust.rustc ];
+            RUST_LIB_SRC = rustPlatform.rustLibSrc;
+          });
+          m1n1 = prev.stdenv.mkDerivation rec {
+            pname = "m1n1";
+            version = versionOf inputs.m1n1-src;
+            src = inputs.m1n1-src;
+
+            makeFlags = [ "ARCH=aarch64-unknown-linux-gnu-" "RELEASE=1" ];
+
+            nativeBuildInputs = [ pkgs.dtc pkgs.gcc ];
+
+            postPatch = ''
+              substituteInPlace proxyclient/m1n1/asm.py \
+                --replace 'aarch64-linux-gnu-' 'aarch64-unknown-linux-gnu-' \
+                --replace 'TOOLCHAIN = ""' 'TOOLCHAIN = "'$out'/toolchain-bin/"'
+            '';
+
+            installPhase = ''
+              runHook preInstall
+              mkdir -p $out/build
+              cp build/m1n1.bin $out/build
+              runHook postInstall
+            '';
+          };
+          asahi-u-boot = (prev.pkgs.buildUBoot rec {
+            version = versionOf inputs.uboot-src;
+            src = inputs.uboot-src;
+
+            defconfig = "apple_m1_defconfig";
+            extraMeta.platforms = [ "aarch64-linux" ];
+            filesToInstall = [ "u-boot-nodtb.bin.gz" "m1n1-u-boot.bin" ];
+            extraConfig = ''
+              CONFIG_IDENT_STRING=" ${version}"
+              CONFIG_VIDEO_FONT_4X6=n
+              CONFIG_VIDEO_FONT_8X16=n
+              CONFIG_VIDEO_FONT_SUN12X22=n
+              CONFIG_VIDEO_FONT_TER12X24=n
+              CONFIG_VIDEO_FONT_TER16X32=y
+            '';
+          }).overrideAttrs (o: {
+            # nixos's downstream patches are not applicable
+            # however, we add in bigger u-boot fonts because the mac laptop screens are high-res
+            patches = [
+              (fetchpatch {
+                url =
+                  "https://git.alpinelinux.org/aports/plain/testing/u-boot-asahi/apritzel-first5-video.patch?id=990110f35b50b74bdb4e902d94fa15b07a8eac9e";
+                sha256 = "sha256-QPvJYxIcQBHbwsj7l96qGUZSipk1sB3ZyniD1Io18dY=";
+                revert = false;
+              })
+
+              (fetchpatch {
+                url =
+                  "https://git.alpinelinux.org/aports/plain/testing/u-boot-asahi/mps-u-boot-ter12x24.patch?id=990110f35b50b74bdb4e902d94fa15b07a8eac9e";
+                sha256 = "sha256-wrQpIYiuNRi/p2p290KCGPmuRxFEOPlbICoFvd+E8p0=";
+                revert = false;
+              })
+            ];
+
+            preInstall = ''
+              # compress so that m1n1 knows U-Boot's size and can find things after it
+              gzip -n u-boot-nodtb.bin
+              cat ${pkgs.m1n1}/build/m1n1.bin arch/arm/dts/t[68]*.dtb u-boot-nodtb.bin.gz > m1n1-u-boot.bin
+            '';
+          });
+          asahi-fwextract = prev.python3.pkgs.buildPythonApplication rec {
+            pname = "asahi-fwextract";
+            version = versionOf inputs.asahi-fwextract-src;
+            src = inputs.asahi-fwextract-src;
+            patches = [ ../patches/add_entry_point.patch ];
+            postPatch = ''
+              substituteInPlace asahi_firmware/img4.py \
+                --replace 'liblzfse.so' '${lzfse}/lib/liblzfse.so'
+              substituteInPlace asahi_firmware/update.py \
+                --replace '"tar"' '"${gnutar}/bin/tar"' \
+                --replace '"xf"' '"-x", "-I", "${gzip}/bin/gzip", "-f"'
+            '';
+            nativeBuildInputs = [ pkgs.python3.pkgs.setuptools ];
+            doCheck = false;
+          };
+          asahi-peripheral-firmware = prev.stdenv.mkDerivation rec {
+            name = "asahi-peripheral-firmware";
+            nativeBuildInputs = [ pkgs.asahi-fwextract pkgs.cpio ];
+            buildCommand = ''
+              mkdir extracted
+              asahi-fwextract ${/. + ../hardware/m1/firmware} extracted
+              mkdir -p $out/lib/firmware
+              cat extracted/firmware.cpio | cpio -id --quiet --no-absolute-filenames
+              mv vendorfw/* $out/lib/firmware
+            '';
+          };
+          asahi-mesa = (prev.mesa.override {
+            galliumDrivers = [ "swrast" "asahi" ];
+            vulkanDrivers = [ "swrast" ];
+            enableGalliumNine = false;
+          }).overrideAttrs (old: {
+            version = versionOf inputs.mesa-src;
+            src = inputs.mesa-src;
+            mesonFlags = lib.filter (x: !(lib.hasPrefix "-Dxvmc-libs-path=" x)) oldAttrs.mesonFlags;
+          });
 
           # darwin overlays 
           julia-bin =

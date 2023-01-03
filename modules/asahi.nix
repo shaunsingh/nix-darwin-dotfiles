@@ -9,17 +9,17 @@ let
     "m1n1/boot.bin" = pkgs.runCommand "boot.bin" { } ''
       cat ${pkgs.m1n1}/build/m1n1.bin > $out
       cat ${config.boot.kernelPackages.kernel}/dtbs/apple/*.dtb >> $out
-      cat ${pkgs.u-boot}/u-boot-nodtb.bin.gz >> $out
+      cat ${pkgs.asahi-u-boot}/u-boot-nodtb.bin.gz >> $out
     '';
   };
 in
 {
   # use the asahi kernel 
-  boot.kernelPackages = pkgs.linux-asahi;
+  boot.kernelPackages = pkgs.linuxPackages.asahi-linux-edge;
   powerManagement.cpuFreqGovernor = lib.mkOverride 800 "schedutil";
 
   # enable opengl acceleration and wifi with new drivers and peripheral firmware
-  hardware.opengl.package = pkgs.mesa-asahi.drivers;
+  hardware.opengl.package = pkgs.asahi-mesa.drivers;
   hardware.firmware = pkgs.asahi-peripheral-firmware;
 
   boot.initrd.includeDefaultModules = false;
@@ -72,6 +72,6 @@ in
   };
 
   # expose m1n1 and u-boot to the system
-  system.extraDependencies = [ pkgs.m1n1 pkgs.u-boot ];
+  system.extraDependencies = [ pkgs.m1n1 pkgs.asahi-u-boot ];
   system.build.m1n1 = bootFiles."m1n1/boot.bin";
 }
