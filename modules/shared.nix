@@ -279,7 +279,7 @@
             # add rust support
             nativeBuildInputs = (old.nativeBuildInputs or [ ])
               ++ [ pkgs.rust-bindgen pkgs.rustfmt pkgs.rustPlatform.rust.rustc ];
-            RUST_LIB_SRC = rustPlatform.rustLibSrc;
+            RUST_LIB_SRC = pkgs.rustPlatform.rustLibSrc;
           });
           asahi-edge = pkgs.recurseIntoAttrs (pkgs.linuxPackagesFor pkgs.asahi-edge-kernel);
           m1n1 = prev.stdenv.mkDerivation rec {
