@@ -79,144 +79,15 @@
           });
 
           # linux overlays
-          nyxt-asdf = pkgs.lispPackages_new.build-asdf-system {
-            pname = "nyxt-asdf";
-            version = versionOf inputs.nyxt-src;
-            src = inputs.nyxt-src;
-            systems = [ "nyxt-asdf" ];
-            lisp = pkgs.lispPackages_new.sbcl;
-          };
-          ndebug = pkgs.lispPackages_new.build-asdf-system {
-            pname = "ndebug";
-            version = versionOf inputs.ndebug-src;
-            src = inputs.ndebug-src;
-            lisp = pkgs.lispPackages_new.sbcl;
-            lispLibs = with pkgs.lispPackages_new.sbclPackages; [
-              dissect
-              trivial-custom-debugger
-              trivial-gray-streams
-              bordeaux-threads
-            ];
-          };
-          nsymbols = pkgs.lispPackages_new.build-asdf-system {
-            pname = "nsymbols";
-            version = versionOf inputs.nsymbols-src;
-            src = inputs.nsymbols-src;
-            lisp = pkgs.lispPackages_new.sbcl;
-            lispLibs = with pkgs.lispPackages_new.sbclPackages; [ closer-mop ];
-          };
-          lisp-unit2 =
-            prev.lispPackages_new.sbclPackages.lisp-unit2.overrideLispAttrs (_: {
-              version = versionOf inputs.lisp-unit2-src;
-              src = inputs.lisp-unit2-src;
-            });
-          hu_dot_dwim_dot_defclass-star =
-            prev.lispPackages_new.sbclPackages.hu_dot_dwim_dot_defclass-star.overrideLispAttrs
-              (_: {
-                src = final.fetchFromGitHub {
-                  owner = "hu-dwim";
-                  repo = "hu.dwim.defclass-star";
-                  rev = "2698bd93073f9ba27583351221a3a087fb595626";
-                  sha256 = "0v6bj3xbcpz98bkv3a2skz2dh0p50mqaflgkfbrzx1dzbkl1630y";
-                };
-              });
-          ospm = pkgs.lispPackages_new.build-asdf-system {
-            version = versionOf inputs.ospm-src;
-            src = inputs.ospm-src;
-            pname = "ospm";
-            lisp = pkgs.lispPackages_new.sbcl;
-            lispLibs = with pkgs.lispPackages_new.sbclPackages;
-              [
-                alexandria
-                calispel
-                local-time
-                moptilities
-                named-readtables
-                osicat
-                serapeum
-                trivia
-              ] ++ [ pkgs.hu_dot_dwim_dot_defclass-star ];
-          };
-          nyxt-3 = pkgs.lispPackages_new.build-asdf-system {
-            pname = "nyxt";
-            version = versionOf inputs.nyxt-src;
-            src = inputs.nyxt-src;
-            lisp = pkgs.lispPackages_new.sbcl;
-            systems = [
-              "nyxt"
-              "nyxt/history-tree"
-              "nyxt/class-star"
-              "nyxt/prompter"
-              "nyxt/tests"
-              "nyxt/history-tree/tests"
-              "nyxt/class-star/tests"
-              "nyxt/prompter/tests"
-            ];
-            lispLibs = with pkgs.lispPackages_new.sbclPackages;
-              [
-                alexandria
-                bordeaux-threads
-                calispel
-                cl-base64
-                cl-containers
-                cl-css
-                cl-custom-hash-table
-                enchant
-                cl-gopher
-                cl-html-diff
-                cl-json
-                cl-ppcre
-                cl-ppcre-unicode
-                cl-prevalence
-                cl-qrencode
-                str
-                cl-tld
-                closer-mop
-                clss
-                cluffer
-                dexador
-                flexi-streams
-                iolib
-                lass
-                local-time
-                log4cl
-                lparallel
-                montezuma
-                moptilities
-                named-readtables
-                nfiles
-                nhooks
-                nkeymaps
-                parenscript
-                phos
-                plump
-                quri
-                serapeum
-                swank
-                spinneret
-                trivia
-                trivial-clipboard
-                trivial-features
-                trivial-garbage
-                trivial-package-local-nicknames
-                trivial-types
-                uiop
-                unix-opts
-                cl-cffi-gtk
-                cl-webkit2
-                mk-string-metrics
-                dissect
-                py-configparser
-                slynk
-              ] ++ (with pkgs; [
-                hu_dot_dwim_dot_defclass-star
-                nyxt-asdf
-                ndebug
-                ospm
-                lisp-unit2
-                nsymbols
-              ]);
-          };
+          asahi-mesa = (prev.mesa.override {
+            galliumDrivers = [ "swrast" "asahi" ];
+            vulkanDrivers = [ "swrast" ];
+            enableGalliumNine = false;
+          }).overrideAttrs (old: {
+            version = versionOf inputs.asahi-mesa-src;
+            src = inputs.asahi-mesa-src;
+            mesonFlags = lib.filter (x: !(lib.hasPrefix "-Dxvmc-libs-path=" x)) oldAttrs.mesonFlags;
+          });
 
           # darwin overlays 
           julia-bin =

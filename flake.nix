@@ -24,9 +24,8 @@
       url = "github:nix-community/nixpkgs-wayland";
       inputs.nixpkgs.follows = "unstable";
     };
-    # bar
-    sketchybar-src = {
-      url = "github:FelixKratz/SketchyBar";
+    asahi-mesa = {
+      url = "git+https://gitlab.freedesktop.org/asahi/mesa.git";
       flake = false;
     };
     # Window Management
@@ -64,31 +63,20 @@
       url = "github:oxalica/rust-overlay";
       inputs.nixpkgs.follows = "unstable";
     };
+    # bar
+    sketchybar-src = {
+      url = "github:FelixKratz/SketchyBar";
+      flake = false;
+    };
+    eww = {
+      url = "github:elkowar/eww";
+      inputs.nixpkgs.follows = "unstable";
+      inputs.rust-overlay.follows = "rust-overlay";
+    };
     # Firefox for darwin
     firefox-overlay = {
       url = "github:bandithedoge/nixpkgs-firefox-darwin";
       inputs.nixpkgs.follows = "unstable";
-    };
-    # nyxt
-    nyxt-src = {
-      url = "github:atlas-engineer/nyxt";
-      flake = false;
-    };
-    ndebug-src = {
-      url = "github:atlas-engineer/ndebug";
-      flake = false;
-    };
-    nsymbols-src = {
-      url = "github:atlas-engineer/nsymbols";
-      flake = false;
-    };
-    lisp-unit2-src = {
-      url = "github:AccelerationNet/lisp-unit2";
-      flake = false;
-    };
-    ospm-src = {
-      url = "github:atlas-engineer/ospm";
-      flake = false;
     };
   };
   outputs = { self, nixpkgs, darwin, home-manager, ... }@inputs: {
@@ -113,7 +101,8 @@
                 ./modules/theme.nix
                 ./modules/sway.nix
                 ./modules/foot.nix
-                # ./modules/nyxt.nix
+                ./modules/eww.nix
+                ./modules/nyxt.nix
               ];
             };
           };

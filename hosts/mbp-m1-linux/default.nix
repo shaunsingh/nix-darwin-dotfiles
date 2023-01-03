@@ -18,8 +18,8 @@
   ];
 
   hardware.asahi.addEdgeKernelConfig = true;
-  hardware.asahi.useExperimentalGPUDriver = true;
   hardware.asahi.peripheralFirmwareDirectory = ./firmware;
+  hardware.opengl.package = pkgs.asahi-mesa.drivers;
 
   system.stateVersion = "23.05";
 }

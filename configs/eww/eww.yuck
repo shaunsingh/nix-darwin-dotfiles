@@ -1,0 +1,150 @@
+(defwidget bar [screen]
+  (centerbox :orientation "v"
+    (box :class "segment-top"
+         :valign "start"
+      (top :screen screen))
+    (box :valign "center"
+         :class "middle" 
+      (middle :screen screen))
+    (box :valign "end"
+         :class "segment-bottom" 
+      (bottom :screen screen))))
+
+(defwidget top [screen]
+  (workspaces :wsp_yuck {screen == 1 ? workspaces_1_yuck : workspaces_2_yuck}))
+
+(defwidget workspaces [wsp_yuck]
+  (literal :content wsp_yuck))
+
+(defwidget middle [] (time))
+(defwidget time []
+  (box :orientation "v" 
+       :class "time"
+    hour min sec))
+
+
+(defwidget metric [icon ?font-size]
+  (box :class "metric" 
+       :orientation "v"
+    (label :class "metric-icon" 
+           :style {font-size != "" ? "font-size: ${font-size}rem;" : ""} 
+           :text icon)
+    (children)))
+
+(defwidget bottom [screen] 
+  (box :orientation "v"
+       :valign "end"
+       :space-evenly true
+       :spacing "5"
+
+    (metric :icon "" :font-size 1 (music-button))
+
+    (volume)
+
+    (metric :icon "" 
+            :font-size 0.8
+      "${round((1 - (EWW_DISK["/"].free / EWW_DISK["/"].total)) * 100, 0)}%")
+
+    (metric :icon "" "${round(EWW_RAM.used_mem_perc, 0)}%")
+
+    (metric :icon "" "${round(EWW_CPU.avg, 0)}%")
+
+    (box :class "metric" (date))))
+
+(defwidget music-button []
+  (button :onclick "playerctl play-pause"
+    "${music_data == "" ? "⏸" : music_data.status == "Playing" ? "⏸" : "▶"}"))
+
+(defwidget volume []
+  (box :class "volume-metric"
+       :orientation "v"
+       :space-evenly false
+       :valign "fill"
+       :vexpand false
+    (scale :orientation "h" 
+           :min 0
+           :max 100 
+           :onchange "pamixer --set-volume $(echo {} | sed 's/\\..*//g')"
+           :value volume)
+    (eventbox :onscroll "if [ '{}' == 'up' ]; then pamixer -i 5; else pamixer -d 5; fi"
+              :vexpand true
+              :valign "fill"
+      (box :orientation "v"
+           :valign "fill"
+           :vexpand true
+        (button :onclick "./audio.sh toggle"
+          (label :style "font-size: 1.2em; font-family: DejaVuSansMono Nerd Font Mono"
+                 :text audio_sink))
+        (button :onclick "pavucontrol &"
+          "${volume}%")))))
+
+
+
+
+(defwidget large-sym [sym]
+  (label :class "metric-icon large-symbol" :text sym))
+
+(defwidget date []
+  (box :orientation "v" 
+       :halign "center" 
+    day_word day month year))
+
+; TODO make this not hacky
+(defvar audio_sink "")
+
+(deflisten volume :initial "0" "./audio.sh volume")
+
+(deflisten music_data 
+  :initial `{"status": ""}`
+  `
+  playerctl          metadata --format '{ "status": "{{status}}", "artist": "{{artist}}", "title": "{{title}}"}' || echo '{"status": ""}';
+  # playerctl --follow metadata --format '{ "status": "{{status}}", "artist": "{{artist}}", "title": "{{title}}"}'
+  `)
+
+(defpoll hour :interval "1s" "date +%H")
+(defpoll min  :interval "1s" "date +%M")
+(defpoll sec  :interval "1s" "date +%S")
+
+(defpoll day_word :interval "10m" "date +%a | tr [:upper:] [:lower:]")
+(defpoll day      :interval "10m" "date +%d")
+(defpoll month    :interval "1h"  "date +%m")
+(defpoll year     :interval "1h"  "date +%y")
+
+(defvar workspaces_1_yuck "")
+(defvar workspaces_2_yuck "")
+
+
+(defwindow bar_1
+  :monitor "DisplayPort-0"
+  :stacking "bg"
+  :geometry (geometry :x 0 :y 0 :width "40px" :height "100%")
+  :anchor "top left"
+  :reserve (struts :distance "40px" :side "left")
+  (bar :screen 1))
+
+(defwindow bar_2
+  :monitor "HDMI-A-1"
+  :geometry (geometry :x 0 :y 0 :width "40px" :height "100%")
+  :anchor "top left"
+  :reserve (struts :distance "40px" :side "left")
+  (bar :screen 2))
+
+
+
+
+;(defwidget music-popup []
+;(if-else :cond {music_data.status == "Stopped" || music_data.status == ""}
+;"No music playing"
+;(box :orientation "h" 
+;:valign "fill"
+;:space-evenly false 
+;:spacing 10
+;(button :onclick "playerctl previous" "⏮")
+;"${music_data.artist} - ${music_data.title}"
+;(button :onclick "playerctl next" "⏭"))))
+
+;(defwindow music_popup
+;:monitor 1
+;:anchor "bottom left"
+;:geometry (geometry :x "30px" :y "10px" :height "65px")
+;(music-popup))
