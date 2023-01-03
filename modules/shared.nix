@@ -232,7 +232,7 @@
           };
 
           # asahi overlays
-          linuxPackages.asahi-linux-edge = (prev.linuxKernel.manualConfig
+          asahi-edge-kernel = (prev.linuxKernel.manualConfig
             rec {
               version = versionOf inputs.linux-asahi-src;
               src = inputs.linux-asahi-src;
@@ -281,6 +281,7 @@
               ++ [ pkgs.rust-bindgen pkgs.rustfmt pkgs.rustPlatform.rust.rustc ];
             RUST_LIB_SRC = rustPlatform.rustLibSrc;
           });
+          asahi-edge = pkgs.recurseIntoAttrs (pkgs.linuxPackagesFor pkgs.asahi-edge-kernel);
           m1n1 = prev.stdenv.mkDerivation rec {
             pname = "m1n1";
             version = versionOf inputs.m1n1-src;

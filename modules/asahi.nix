@@ -15,7 +15,7 @@ let
 in
 {
   # use the asahi kernel 
-  boot.kernelPackages = pkgs.linuxPackages.asahi-linux-edge;
+  boot.kernelPackages = pkgs.asahi-edge;
   powerManagement.cpuFreqGovernor = lib.mkOverride 800 "schedutil";
 
   # enable opengl acceleration and wifi with new drivers and peripheral firmware
