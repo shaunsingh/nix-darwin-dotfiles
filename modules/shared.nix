@@ -28,6 +28,10 @@
           done < "${configfile}"
           echo "{ }" >> $out
         '').outPath;
+        pyenv = python3.withPackages (p: with p; [
+          construct
+          pyserial
+        ]);
         # badstdenv = (import pkgs.path { system = "aarch64-darwin"; }).stdenv;
       in
       with inputs; [
