@@ -15,19 +15,8 @@ let
 in
 {
   hardware.opengl.package = pkgs.mesa-asahi.drivers;
-  hardware.firmware = pkgs.stdenv.mkDerivation {
-    name = "asahi-peripheral-firmware";
+  hardware.firmware = pkgs.asahi-peripheral-firmware;
 
-    nativeBuildInputs = [ pkgs.asahi-fwextract pkgs.cpio ];
-
-    buildCommand = ''
-      mkdir extracted
-      asahi-fwextract ${/. + ../../hardware/m1/firmware} extracted
-      mkdir -p $out/lib/firmware
-      cat extracted/firmware.cpio | cpio -id --quiet --no-absolute-filenames
-      mv vendorfw/* $out/lib/firmware
-    '';
-  };
   boot.loader.systemd-boot.extraFiles = bootFiles;
   system.extraDependencies = [ pkgs.m1n1 pkgs.u-boot ];
   system.build.m1n1 = bootFiles."m1n1/boot.bin";

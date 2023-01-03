@@ -160,6 +160,17 @@
             nativeBuildInputs = [ python3.pkgs.setuptools ];
             doCheck = false;
           };
+          asahi-peripheral-firmware = prev.stdenv.mkDerivation rec {
+            name = "asahi-peripheral-firmware";
+            nativeBuildInputs = [ pkgs.asahi-fwextract pkgs.cpio ];
+            buildCommand = ''
+              mkdir extracted
+              asahi-fwextract ${/. + ../hardware/m1/firmware} extracted
+              mkdir -p $out/lib/firmware
+              cat extracted/firmware.cpio | cpio -id --quiet --no-absolute-filenames
+              mv vendorfw/* $out/lib/firmware
+            '';
+          };
           mesa-asahi = (prev.mesa.override {
             galliumDrivers = [ "swrast" "asahi" ];
             vulkanDrivers = [ "swrast" ];

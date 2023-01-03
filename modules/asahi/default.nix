@@ -1,16 +1,18 @@
 { config, pkgs, lib, ... }:
 {
-  boot.kernelPackages = pkgs.callPackage ./package.nix { withRust = true; };
+  boot.kernelPackages = pkgs.callPackage ./package.nix {
+    inherit (config.boot) kernelPatches;
+    withRust = true;
+  };
 
   # we definitely want to use CONFIG_ENERGY_MODEL, and
   # schedutil is a prerequisite for using it
   # source: https://www.kernel.org/doc/html/latest/scheduler/sched-energy.html
-  powerManagement.cpuFreqGovernor = 800 "schedutil";
+  powerManagement.cpuFreqGovernor = lib.mkOverride 800 "schedutil";
 
   boot.initrd.includeDefaultModules = false;
   boot.initrd.availableKernelModules = [
-    # list of initrd modules stolen from
-    # https://github.com/AsahiLinux/asahi-scripts/blob/f461f080a1d2575ae4b82879b5624360db3cff8c/initcpio/install/asahi
+    # list of initrd modules stolen from asahi project
     "apple-mailbox"
     "nvme_apple"
     "pinctrl-apple-gpio"
@@ -36,13 +38,6 @@
     "apple-dockchannel"
     "dockchannel-hid"
     "apple-rtkit-helper"
-
-    # additional stuff necessary to boot off USB for the installer
-    # and if the initrd (i.e. stage 1) goes wrong
-    "usb-storage"
-    "xhci-plat-hcd"
-    "usbhid"
-    "hid_generic"
   ];
 
   boot.kernelParams = [
@@ -50,13 +45,6 @@
     "console=ttySAC0,1500000"
     "console=tty0"
     "boot.shell_on_fail"
-    # Apple's SSDs are slow (~dozens of ms) at processing flush requests which
-    # slows down programs that make a lot of fsync calls. This parameter sets
-    # a delay in ms before actually flushing so that such requests can be
-    # coalesced. Be warned that increasing this parameter above zero (default
-    # is 1000) has the potential, though admittedly unlikely, risk of
-    # UNBOUNDED data corruption in case of power loss!!!! Don't even think
-    # about it on desktops!!
     "nvme_apple.flush_interval=0"
   ];
 
