@@ -298,10 +298,29 @@
             '';
 
             installPhase = ''
-              runHook preInstall
-              mkdir -p $out/build
-              cp build/m1n1.bin $out/build
-              runHook postInstall
+                  runHook preInstall
+                  mkdir -p $out/build
+                  cp build/m1n1.bin $out/build
+                  mkdir -p $out/{bin,script,toolchain-bin}
+                  cp -r proxyclient $out/script
+                  cp -r tools $out/script
+                  for toolpath in $out/script/proxyclient/tools/*.py; do
+                    tool=$(basename $toolpath .py)
+                    script=$out/bin/m1n1-$tool
+                    cat > $script <<EOF
+              #!/bin/sh
+              ${pyenv}/bin/python $toolpath "\$@"
+              EOF
+                    chmod +x $script
+                  done
+                  GCC=${prev.gcc}
+                  BINUTILS=${prev.binutils-unwrapped}
+                  ln -s $GCC/bin/*-gcc $out/toolchain-bin/
+                  ln -s $GCC/bin/*-ld $out/toolchain-bin/
+                  ln -s $BINUTILS/bin/*-objcopy $out/toolchain-bin/
+                  ln -s $BINUTILS/bin/*-objdump $out/toolchain-bin/
+                  ln -s $GCC/bin/*-nm $out/toolchain-bin/
+                  runHook postInstall
             '';
           };
           asahi-u-boot = (prev.buildUBoot rec {
