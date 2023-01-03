@@ -351,10 +351,10 @@
             patches = [ ./asahi/add-entry-point.patch ];
             postPatch = ''
               substituteInPlace asahi_firmware/img4.py \
-                --replace 'liblzfse.so' '${lzfse}/lib/liblzfse.so'
+                --replace 'liblzfse.so' '${pkgs.lzfse}/lib/liblzfse.so'
               substituteInPlace asahi_firmware/update.py \
-                --replace '"tar"' '"${gnutar}/bin/tar"' \
-                --replace '"xf"' '"-x", "-I", "${gzip}/bin/gzip", "-f"'
+                --replace '"tar"' '"${pkgs.gnutar}/bin/tar"' \
+                --replace '"xf"' '"-x", "-I", "${pkgs.gzip}/bin/gzip", "-f"'
             '';
             nativeBuildInputs = [ pkgs.python3.pkgs.setuptools ];
             doCheck = false;
