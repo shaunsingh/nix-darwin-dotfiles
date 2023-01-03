@@ -57,7 +57,6 @@
       terminal = "${pkgs.foot}/bin/foot";
       menu = "${pkgs.wofi}/bin/wofi --show drun";
       gaps.inner = 18;
-      bars = [ ];
     };
     extraConfig = ''
       # Remove text on decorations
@@ -76,6 +75,7 @@
     extraSessionCommands = ''
       export XDG_CURRENT_DESKTOP=sway;
       export MOZ_ENABLE_WAYLAND=1
+      export PAN_MESA_DEBUG = "gl3";
       export _JAVA_AWT_WM_NONREPARENTING=1
     '';
   };
