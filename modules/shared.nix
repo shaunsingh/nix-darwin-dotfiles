@@ -348,7 +348,7 @@
             pname = "asahi-fwextract";
             version = versionOf inputs.asahi-fwextract-src;
             src = inputs.asahi-fwextract-src;
-            patches = [ ../patches/add_entry_point.patch ];
+            patches = [ ./asahi/add-entry-point.patch ];
             postPatch = ''
               substituteInPlace asahi_firmware/img4.py \
                 --replace 'liblzfse.so' '${lzfse}/lib/liblzfse.so'
