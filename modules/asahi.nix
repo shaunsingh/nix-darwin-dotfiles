@@ -20,7 +20,7 @@ in
 
   # enable opengl acceleration and wifi with new drivers and peripheral firmware
   hardware.opengl.package = pkgs.asahi-mesa.drivers;
-  hardware.firmware = pkgs.asahi-peripheral-firmware;
+  hardware.firmware = [ pkgs.asahi-peripheral-firmware ];
 
   boot.initrd.includeDefaultModules = false;
   boot.initrd.availableKernelModules = [
