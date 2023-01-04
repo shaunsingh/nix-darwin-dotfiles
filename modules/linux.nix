@@ -72,6 +72,9 @@
   networking.networkmanager.enable = true;
   systemd.services.NetworkManager-wait-online.enable = false;
 
+  # keyring
+  services.gnome.gnome-keyring.enable = true;
+
   # xdg directories
   xdg.portal = {
     enable = true;

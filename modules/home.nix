@@ -57,7 +57,7 @@
     extraConfig = {
       pull = { ff = "only"; };
       init.defaultBranch = "main";
-      credential.helper = "${
+      credential.helper = lib.mkIf pkgs.stdenv.isLinux "${
           pkgs.git.override { withLibsecret = true; }
         }/bin/git-credential-libsecret";
     };
