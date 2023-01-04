@@ -1,23 +1,94 @@
-(defwidget bar []
-  (centerbox :orientation "v"
-    (box :class "segment-top"
-         :valign "start"
-      (top))
-    (box :valign "center"
-         :class "middle" 
-      (middle))
-    (box :valign "end"
-         :class "segment-bottom" 
-      (bottom))))
-
-(defwidget top [])
-(defwidget middle [])
-(defwidget bottom [])
-
 (defwindow bar
   :monitor 0
-  :stackig "fg"
-  :geometry (geometry :x 0 :y 0 :width "18px" :height "100%")
-  :anchor "top left"
+  :stacking "fg"
+  :geometry (geometry 
+              :x 0 
+              :y 0 
+              :width "18px" 
+              :height "100%" 
+              :anchor "top left")
   :exclusive "true"
-  (bar)
+  (main-bar))
+
+(defwidget main-bar []
+    (centerbox :orientation "v"
+      :class "main-bar"
+      :space-evenly "true"
+      (workspaces)
+      (center)
+      (bottom)))
+
+(defwidget workspaces []
+  (box :class "workspaces"
+       :halign "start"
+    :valign "center"
+    :orientation "horizontal"
+    :spacing 22
+    :space-evenly "false"
+    (button :onclick "swaymsg workspace 1 "
+       "一")
+    (button :onclick "swaymsg workspace 2 "
+       "二")
+    (button :onclick "swaymsg workspace 3 "
+       "三")
+    (button :onclick "swaymsg workspace 4 "
+       "四")
+    (button :onclick "swaymsg workspace 5 "
+       "五")
+    (button :onclick "swaymsg workspace 6 "
+       "六")
+    (button :onclick "swaymsg workspace 7 "
+       "七")
+    (button :onclick "swaymsg workspace 8 "
+       "八")
+    (button :onclick "swaymsg workspace 9 "
+       "九")))
+
+(defwidget center []
+  (box))
+
+(defwidget bottom []
+  (box :class "bottom"
+    :halign "end"
+    :valign "center"
+    :spacing 16
+    :space-evenly "false"
+   (volume)
+   (brightness)
+   (battery)))
+
+(defwidget volume []
+  (box :class "volume"
+    :spacing 5
+    :space-evenly "false"
+      (button :onclick "pamixer -t"
+          :onmiddleclick "pavucontrol &"
+        " "
+        (label :class "volume-label"
+           :text "${volume-level} %"))))
+
+(defwidget brightness []
+  (box :class "brightness"
+    :spacing 5
+    :space-evenly "false"
+    " "
+    (label :class "date-value"
+        :text "${brightness-level} %")))
+
+(defwidget battery []
+  (box :class "battery"
+    :spacing 5
+    :space-evenly "false"
+    "  "
+    (label :class "date-value"
+        :text "${battery-level} %")))
+
+;; Variables
+(defpoll volume-level :interval "300ms"
+  "pamixer --get-volume")
+
+(defpoll brightness-level :interval "500ms"
+  "light | cut -d. -f1")
+
+(defpoll battery-level :interval "20m"
+  "acpi -b | awk '{print $4}' | sed 's/%//;s/,//'")

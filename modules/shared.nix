@@ -27,6 +27,7 @@
         nixpkgs-wayland.overlay
         rust-overlay.overlays.default
         firefox-overlay.overlay
+        prismmc.overlay
         (final: prev: {
           # Generates an stdenv based on clang v15 with mold-macOS as a linker
           # Packages are built with pipe & native optimizations along with -O3

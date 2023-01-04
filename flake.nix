@@ -74,6 +74,11 @@
       url = "github:bandithedoge/nixpkgs-firefox-darwin";
       inputs.nixpkgs.follows = "unstable";
     };
+    # minecraft
+    prismmc = {
+      url = "github:PrismLauncher/PrismLauncher";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs = { self, nixpkgs, darwin, home-manager, ... }@inputs: {
     nixosConfigurations.shaunsingh-laptop = nixpkgs.lib.nixosSystem {
@@ -99,6 +104,7 @@
                 ./modules/foot.nix
                 ./modules/eww.nix
                 ./modules/nyxt.nix
+                ./modules/prismmc.nix
               ];
             };
           };

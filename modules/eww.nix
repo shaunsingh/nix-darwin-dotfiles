@@ -6,7 +6,9 @@
 }:
 let
   dependencies = with pkgs; [
-    # deps
+    pamixer
+    light
+    acpi
   ];
 in
 {
