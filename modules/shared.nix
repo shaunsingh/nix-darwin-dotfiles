@@ -79,6 +79,7 @@
           });
 
           # linux overlays
+          eww = inputs.eww.packages.${pkgs.system}.eww-wayland;
           asahi-mesa = (prev.mesa.override {
             galliumDrivers = [ "swrast" "asahi" ];
             vulkanDrivers = [ "swrast" ];

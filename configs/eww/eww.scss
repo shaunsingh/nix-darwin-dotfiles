@@ -12,63 +12,12 @@ window {
   }
 }
 
-.workspaces {
-  button {
-    background: none;
-    margin: 3px;
-    padding-left: 1px;
-    &.inactive {
-      color: #888974;
-    }
-    &.active {
-      color: #8ec07c;
-    }
-    &.occupied {
-      font-size: 1.01rem;
-    }
-    &.empty {
-      font-size: 0.8rem;
-    }
-  }
-}
-
 .segment-top {
   margin-top: 10px;
 }
 
 .segment-bottom {
   margin-bottom: 10px;
-}
-
-.volume-metric {
-  background-color: #1d2021;
-  color: #ebdbb2;
-  padding: 0;
-
-  .volume-top > scale {
-    margin-bottom: 5px;
-  }
-
-  slider {
-    all: unset;
-  }
-
-  scale trough highlight {
-    all: unset;
-    //background-color: #8ec07c;
-    background-color: #665c54;
-    border-bottom-right-radius: 5px;
-  }
-  scale trough {
-    all: unset;
-    background-color: #1d2021;
-    min-width: 34px;
-    min-height: 2px;
-  }
-}
-
-.large-symbol {
-  font-size: 0.8em;
 }
 
 .metric {
@@ -84,11 +33,4 @@ window {
   padding-top: 7px;
   padding-bottom: 7px;
   color: #a89984;
-}
-
-.music_popup {
-  all: unset;
-  background-color: #1d2021;
-  padding: 0px 20px;
-  margin: 0;
 }

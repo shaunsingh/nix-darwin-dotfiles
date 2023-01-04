@@ -3,10 +3,16 @@
 , inputs
 , lib
 , ...
-}: {
+}:
+let
+  dependencies = with pkgs; [
+    # deps
+  ];
+in
+{
   programs.eww = {
     enable = true;
-    package = inputs.eww.packages.${pkgs.system}.eww-wayland;
+    package = pkgs.eww;
     configDir = ../configs/eww;
   };
 
@@ -18,6 +24,8 @@
     Service = {
       Environment = "PATH=/run/wrappers/bin:${lib.makeBinPath dependencies}";
       ExecStart = "${config.programs.eww.package}/bin/eww daemon --no-daemonize";
+      ExecStartPost = "${config.programs.eww.package}/bin/eww open bar";
+      ExecStopPre = "${config.programs.eww.package}/bin/eww close bar";
       Restart = "on-failure";
     };
     Install.WantedBy = [ "graphical-session.target" ];
