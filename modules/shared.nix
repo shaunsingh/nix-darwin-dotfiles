@@ -83,7 +83,7 @@
 
           # linux overlays
           eww = inputs.eww.packages.${pkgs.system}.eww-wayland;
-          nyxt-gtk = build-asdf-system {
+          nyxt-gtk = prev.lispPackages_new.build-asdf-system {
             inherit (pkgs.nyxt-3) pname lisp src;
             version = "3.0.0";
 
@@ -93,15 +93,15 @@
               mk-string-metrics
             ]);
 
-            nativeBuildInputs = [ pkgs.makeWrapper ];
-            buildInputs = [
+            nativeBuildInputs = with prev; [ makeWrapper ];
+            buildInputs = with prev; [
               # needed for GSETTINGS_SCHEMAS_PATH
-              pkgs.gsettings-desktop-schemas
-              pkgs.glib
-              pkgs.gtk3
+              gsettings-desktop-schemas
+              glib
+              gtk3
 
               # needed for XDG_ICON_DIRS
-              pkgs.gnome.adwaita-icon-theme
+              gnome.adwaita-icon-theme
             ];
 
             buildScript = pkgs.writeText "build-nyxt.lisp" ''
