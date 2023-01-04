@@ -4,6 +4,10 @@
 , config
 , ...
 }:
+let
+  modifier = "Mod4";
+  terminal = "${pkgs.foot}/bin/foot";
+in
 {
   home.pointerCursor = {
     name = "phinger-cursors";
@@ -15,8 +19,6 @@
     systemdIntegration = true;
     package = pkgs.sway-unwrapped;
     config = {
-      modifier = "Mod4";
-      terminal = "${pkgs.foot}/bin/foot";
       menu = "${pkgs.wofi}/bin/wofi --show drun";
       input = {
         "*" = {
@@ -33,7 +35,7 @@
       output = {
         "*" = {
           bg = "${../extra/wallpapers/IBM_Developer_Posters.jpg} fill";
-          scale = 2;
+          scale = "2";
         };
       };
       keybindings = {

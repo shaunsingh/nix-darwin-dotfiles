@@ -84,17 +84,25 @@
           # linux overlays
           eww = inputs.eww.packages.${pkgs.system}.eww-wayland;
           nyxt-gtk = build-asdf-system {
-            lisp = final.lispPackages_new.sbcl;
-            pname = "nyxt";
-            version = "2022-09-22";
+            inherit (pkgs.nyxt-3) pname lisp src;
+            version = "3.0.0";
 
-            inherit (pkgs.nyxt-3) nativeBuildInputs buildInputs buildScript installPhase;
+            lispLibs = pkgs.nyxt-3.lispLibs ++ (with prev.lispPackages_new.sbclPackages; [
+              cl-cffi-gtk
+              cl-webkit2
+              mk-string-metrics
+            ]);
 
-            lispLibs =
-              sbclPackages.nyxt.lispLibs ++
-              (with sbclPackages; [ cl-cffi-gtk cl-webkit2 mk-string-metrics ]);
+            nativeBuildInputs = [ pkgs.makeWrapper ];
+            buildInputs = [
+              # needed for GSETTINGS_SCHEMAS_PATH
+              pkgs.gsettings-desktop-schemas
+              pkgs.glib
+              pkgs.gtk3
 
-            inherit src;
+              # needed for XDG_ICON_DIRS
+              pkgs.gnome.adwaita-icon-theme
+            ];
 
             buildScript = pkgs.writeText "build-nyxt.lisp" ''
               (require :asdf)
@@ -106,7 +114,7 @@
             '';
 
             # Run with WEBKIT_FORCE_SANDBOX=0 if getting a runtime error in webkitgtk-2.34.4
-            installPhase = ql.nyxt.installPhase + ''
+            installPhase = prev.lispPackages_new.sbclPackages.nyxt.installPhase + ''
               rm -v $out/nyxt
               mkdir -p $out/bin
               cp -v nyxt $out/bin
@@ -118,6 +126,7 @@
                 --prefix GIO_EXTRA_MODULES ":" ${pkgs.glib-networking}/lib/gio/modules/
             '';
           };
+
 
           # darwin overlays 
           julia-bin =
