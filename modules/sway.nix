@@ -151,9 +151,4 @@
       export MOZ_ENABLE_WAYLAND = "1";
     '';
   };
-  # xdg directories
-  xdg.portal = {
-    enable = true;
-    wlr.enable = true;
-  };
 }

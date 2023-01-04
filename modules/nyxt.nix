@@ -2,7 +2,7 @@
 , ...
 }: {
   home.packages = with pkgs; [
-    nyxt-3
+    nyxt-gtk
   ];
   xdg.configFile."nyxt" = {
     source = ../configs/nyxt;

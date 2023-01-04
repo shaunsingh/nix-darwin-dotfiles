@@ -76,6 +76,12 @@
   # keyring
   services.gnome.gnome-keyring.enable = true;
 
+  # xdg directories
+  xdg.portal = {
+    enable = true;
+    wlr.enable = true;
+  };
+
   # font + fontconfig
   fonts = {
     fonts = with pkgs; [
