@@ -24,6 +24,7 @@
 
     # utils
     fd
+    gh
     zstd
     (ripgrep.override { withPCRE2 = true; })
   ];

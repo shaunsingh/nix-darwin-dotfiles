@@ -5,17 +5,23 @@
 window {
   background: #161616;
   color: #dde1e6;
-  font-size: 11px;
+  font-size: 13px;
 
   & > * {
-    margin: 3px;
+    margin: 12px;
   }
 }
 
 .segment-top {
-  margin-top: 10px;
+  font-family: "Liga SFMono Nerd Font";
+  margin-top: 9px;
+}
+
+.segment-center {
+  font-family: "Liga SFMono Nerd Font";
 }
 
 .segment-bottom {
-  margin-bottom: 10px;
+  font-family: "Liga SFMono Nerd Font";
+  margin-bottom: 9px;
 }

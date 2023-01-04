@@ -6,9 +6,11 @@
 }:
 let
   dependencies = with pkgs; [
+    # volume
     pamixer
-    light
-    acpi
+    pavucontrol
+    # date
+    uutils-coreutils 
   ];
 in
 {

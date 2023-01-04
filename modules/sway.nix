@@ -58,7 +58,7 @@
       terminal = "${pkgs.foot}/bin/foot";
       menu = "${pkgs.wofi}/bin/wofi --show drun";
       gaps.inner = 18;
-      gaps.left = 36;
+      gaps.left = 45;
       bars = [ ];
     };
     extraConfig = ''
@@ -72,8 +72,8 @@
       default_floating_border normal 0
 
       # Brightness
-      Mod4+Shift+b exec "${pkgs.brightnessctl}/bin/brightnessctl set 5%-"
-      Mod4+Shift+v exec "${pkgs.brightnessctl}/bin/brightnessctl set +5%"
+      # Mod4+b exec "${pkgs.brightnessctl}/bin/brightnessctl set 5%-"
+      # Mod4+v exec "${pkgs.brightnessctl}/bin/brightnessctl set +5%"
     '';
     extraSessionCommands = ''
       export XDG_CURRENT_DESKTOP=sway;
