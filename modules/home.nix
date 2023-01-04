@@ -24,7 +24,6 @@
 
     # utils
     fd
-    gh
     zstd
     (ripgrep.override { withPCRE2 = true; })
   ];
@@ -58,6 +57,9 @@
     extraConfig = {
       pull = { ff = "only"; };
       init.defaultBranch = "main";
+      credential.helper = "${
+          pkgs.git.override { withLibsecret = true; }
+        }/bin/git-credential-libsecret";
     };
   };
 
