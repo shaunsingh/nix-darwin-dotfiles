@@ -47,6 +47,7 @@
       EDITOR = "nvim";
       BROWSER = "nyxt";
       NIXOS_OZONE_WL = "1";
+      WLR_NO_HARDWARE_CURSORS = "1";
     };
     systemPackages = with pkgs; [
       curl
@@ -74,12 +75,6 @@
 
   # keyring
   services.gnome.gnome-keyring.enable = true;
-
-  # xdg directories
-  xdg.portal = {
-    enable = true;
-    wlr.enable = true;
-  };
 
   # font + fontconfig
   fonts = {

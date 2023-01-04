@@ -19,6 +19,7 @@
     overlays =
       let
         versionOf = input: input.rev;
+        nyxt-3-overlay = import ../overlays/nyxt.nix;
         # badstdenv = (import pkgs.path { system = "aarch64-darwin"; }).stdenv;
       in
       with inputs; [
@@ -28,6 +29,7 @@
         rust-overlay.overlays.default
         firefox-overlay.overlay
         prismmc.overlay
+        nyxt-3-overlay
         (final: prev: {
           # Generates an stdenv based on clang v15 with mold-macOS as a linker
           # Packages are built with pipe & native optimizations along with -O3

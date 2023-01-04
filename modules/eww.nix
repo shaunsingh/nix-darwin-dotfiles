@@ -10,7 +10,8 @@ let
     pamixer
     pavucontrol
     # date
-    uutils-coreutils 
+    # uutils-coreutils 
+    coreutils
   ];
 in
 {

@@ -24,7 +24,7 @@
       --text-normal: #${base06-hex};
       --header-primary: #${base05-hex};
       --interactive-active: #${base0E-hex};
-      --background-accent: #${base01-hex};	
+      --background-accent: #${base01-hex};
     }
     .theme-dark .container-1D34oG {
       background-color: #${base00-hex};

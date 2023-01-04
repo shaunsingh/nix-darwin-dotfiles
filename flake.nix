@@ -101,10 +101,10 @@
                 ./modules/home.nix
                 ./modules/theme.nix
                 ./modules/sway.nix
+                ./modules/swaylock.nix
                 ./modules/foot.nix
                 ./modules/eww.nix
                 ./modules/nyxt.nix
-                # ./modules/firefox.nix
                 ./modules/prismmc.nix
               ];
             };
