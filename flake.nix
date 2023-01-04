@@ -24,10 +24,6 @@
       url = "github:nix-community/nixpkgs-wayland";
       inputs.nixpkgs.follows = "unstable";
     };
-    asahi-mesa = {
-      url = "git+https://gitlab.freedesktop.org/asahi/mesa.git";
-      flake = false;
-    };
     # Window Management
     yabai-src = {
       url = "github:FelixKratz/yabai";

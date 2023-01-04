@@ -3,9 +3,9 @@
 }
 
 window {
-  background: #282828;
-  color: #ebdbb2;
-  font-size: 14px;
+  background: #161616;
+  color: #dde1e6;
+  font-size: 11px;
 
   & > * {
     margin: 3px;
@@ -18,19 +18,4 @@ window {
 
 .segment-bottom {
   margin-bottom: 10px;
-}
-
-.metric {
-  background-color: #1d2021;
-  padding: 5px 2px;
-}
-.metric-icon {
-  font-family: "FontAwesome5Free";
-  font-size: 0.7em;
-}
-
-.time {
-  padding-top: 7px;
-  padding-bottom: 7px;
-  color: #a89984;
 }

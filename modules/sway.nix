@@ -57,6 +57,7 @@
       terminal = "${pkgs.foot}/bin/foot";
       menu = "${pkgs.wofi}/bin/wofi --show drun";
       gaps.inner = 18;
+      gaps.left = 36;
       bars = [ ];
     };
     extraConfig = ''

@@ -1,70 +1,23 @@
-(defwidget bar [screen]
+(defwidget bar []
   (centerbox :orientation "v"
     (box :class "segment-top"
          :valign "start"
-      (top :screen screen))
+      (top))
     (box :valign "center"
          :class "middle" 
-      (middle :screen screen))
+      (middle))
     (box :valign "end"
          :class "segment-bottom" 
-      (bottom :screen screen))))
+      (bottom))))
 
-(defwidget metric [icon ?font-size]
-  (box :class "metric" 
-       :orientation "v"
-    (label :class "metric-icon" 
-           :style {font-size != "" ? "font-size: ${font-size}rem;" : ""} 
-           :text icon)
-    (children)))
-
-(defwidget top [screen]
-  (box :orientation "v"
-       :valign "end"
-       :space-evenly true
-       :spacing "5"
-
-    (metric :icon "" 
-            :font-size 0.8
-      "${round((1 - (EWW_DISK["/"].free / EWW_DISK["/"].total)) * 100, 0)}%")))
-
-(defwidget middle [] (time))
-(defwidget time []
-  (box :orientation "v" 
-       :class "time"
-    hour min sec))
-
-(defwidget bottom [screen] 
-  (box :orientation "v"
-       :valign "end"
-       :space-evenly true
-       :spacing "5"
-
-    (metric :icon "" "${round(EWW_RAM.used_mem_perc, 0)}%")
-
-    (metric :icon "" "${round(EWW_CPU.avg, 0)}%")
-
-    (box :class "metric" (date))))
-
-(defwidget date []
-  (box :orientation "v" 
-       :halign "center" 
-    day_word day month year))
-
-(defpoll hour :interval "1s" "date +%H")
-(defpoll min  :interval "1s" "date +%M")
-(defpoll sec  :interval "1s" "date +%S")
-
-(defpoll day_word :interval "10m" "date +%a | tr [:upper:] [:lower:]")
-(defpoll day      :interval "10m" "date +%d")
-(defpoll month    :interval "1h"  "date +%m")
-(defpoll year     :interval "1h"  "date +%y")
+(defwidget top [])
+(defwidget middle [])
+(defwidget bottom [])
 
 (defwindow bar
   :monitor 0
   :stackig "fg"
-  :geometry (geometry :x 0 :y 0 :width "40px" :height "100%")
+  :geometry (geometry :x 0 :y 0 :width "18px" :height "100%")
   :anchor "top left"
-  :reserve (struts :distance "40px" :side "left")
   :exclusive "true"
-  (bar :screen 1))
+  (bar)
