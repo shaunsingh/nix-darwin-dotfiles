@@ -19,6 +19,7 @@
           scale = "2";
         };
       };
+      seat."*".hide_cursor = "when-typing disable";
       input = {
         "*".xkb_layout = "us";
         "type:keyboard".xkb_options = "caps:super";

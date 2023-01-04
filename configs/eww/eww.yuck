@@ -20,9 +20,8 @@
 
 (defwidget workspaces []
   (box :class "workspaces"
-       :halign "start"
-    :valign "center"
-    :orientation "horizontal"
+       :valign "start"
+    :orientation "v"
     :spacing 22
     :space-evenly "false"
     (button :onclick "swaymsg workspace 1 "
@@ -45,12 +44,11 @@
        "九")))
 
 (defwidget center []
-  (box))
+  (box :class "center" :valign "center"))
 
 (defwidget bottom []
   (box :class "bottom"
-    :halign "end"
-    :valign "center"
+    :valign "end"
     :spacing 16
     :space-evenly "false"
    (volume)
@@ -62,10 +60,10 @@
     :spacing 5
     :space-evenly "false"
       (button :onclick "pamixer -t"
-          :onmiddleclick "pavucontrol &"
+          :onmiddleclick "pavucontrol &")
         " "
         (label :class "volume-label"
-           :text "${volume-level} %"))))
+           :text "${volume-level} %")))
 
 (defwidget brightness []
   (box :class "brightness"
