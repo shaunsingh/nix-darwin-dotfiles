@@ -7,28 +7,45 @@
 let
   modifier = "Mod4";
   terminal = "${pkgs.foot}/bin/foot";
+  menu = "${pkgs.rofi-wayland}/bin/rofi -no-lazy-grab -show drun -theme index";
+  ocrScript =
+    let
+      inherit (pkgs) grim libnotify slurp tesseract5 wl-clipboard;
+      _ = lib.getExe;
+    in
+    pkgs.writeShellScriptBin "wl-ocr" ''
+      ${_ grim} -g "$(${_ slurp})" -t ppm - | ${_ tesseract5} - - | ${wl-clipboard}/bin/wl-copy
+      ${_ libnotify} "$(${wl-clipboard}/bin/wl-paste)"
+    '';
 in
 {
   home.pointerCursor = {
     name = "phinger-cursors";
     package = pkgs.phinger-cursors;
-    size = 32;
+    size = 24;
   };
+  home.packages = with pkgs; [ ocrScript ];
   wayland.windowManager.sway = {
     enable = true;
     systemdIntegration = true;
     package = pkgs.sway-unwrapped;
+    seat."*".hide_cursor = "when-typing disable";
     config = {
-      menu = "${pkgs.wofi}/bin/wofi --show drun";
       input = {
-        "*" = {
-          tap = "enabled";
+        "keyboard" = {
           xkb_layout = "us";
           xkb_options = "caps:super";
-          natural_scroll = "enabled";
+        };
+        "type:mouse" = {
+          dwt = "disabled";
+          accel_profile = "flat";
+        };
+        "type:touchpad" = {
+          dwt = "disabled";
+          tap = "enabled";
+          accel_profile = "flat";
         };
       };
-      seat."*".hide_cursor = "when-typing disable";
       gaps.inner = 18;
       gaps.left = 45;
       bars = [ ];
@@ -40,7 +57,13 @@ in
       };
       keybindings = {
         "${modifier}+Return" = "exec ${terminal}";
-        "${modifier}+d" = "exec ${pkgs.wofi}/bin/wofi --show run";
+        "${modifier}+x" = "exec power-menu";
+        "${modifier}+d" = "exec ${menu}";
+        "${modifier}+p" = "exec ${pkgs.grim}/bin/grim 'screenshot-$(date +%Y%m%d%H%M%S).png'";
+        "${modifier}+Shift+p" = "exec ${pkgs.grim}/bin/grim - | ${pkgs.wl-clipboard}/bin/wl-copy";
+        "${modifier}+g" = "exec ${pkgs.grim}/bin/grim -g \'$(${pkgs.slurp}/bin/slurp)' 'screenshot-$(date +%Y%m%d%H%M%S).png";
+        "${modifier}+Shift+g" = "exec ${pkgs.grim}/bin/grim -g '$(${pkgs.slurp}/bin/slurp)' - | ${pkgs.wl-clipboard}/bin/wl-copy";
+        "${modifier}+Shift+o" = "exec wl-ocr";
         "${modifier}+Shift+c" = "reload";
         "${modifier}+Shift+e" = "exit";
         "${modifier}+Shift+q" = "kill";

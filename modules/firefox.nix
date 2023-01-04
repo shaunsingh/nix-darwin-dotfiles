@@ -1,3 +1,4 @@
+# MacOS firefox configuration
 { pkgs
 , lib
 , inputs
@@ -6,17 +7,12 @@
 }: {
   programs.firefox = {
     enable = true;
-    package = pkgs.firefox-bin;
+    package = if pkgs.stdenv.hostPlatform.isDarwin then pkgs.firefox-bin else pkgs.firefox-wayland;
     extensions = with pkgs.nur.repos.rycee.firefox-addons; [
       add-custom-search-engine
       amp2html
       betterttv
-      darkreader
-      languagetool
-      musescore-downloader
       reddit-enhancement-suite
-      sponsorblock
-      tree-style-tab
       tridactyl
       ublock-origin
       umatrix
@@ -247,12 +243,10 @@
         #customization-panelWrapper > .panel-arrowbox > .panel-arrow{ margin-inline-end: initial !important; }
       '';
       settings = {
-        "browser.startup.homepage" = "https://prettycoffee.github.io/fluidity/";
         "browser.ctrlTab.recentlyUsedOrder" = false;
         "browser.newtabpage.enabled" = false;
         "browser.bookmarks.showMobileBookmarks" = true;
         "browser.uidensity" = 1;
-        "browser.urlbar.placeholderName" = "Search Using SearXNG";
         "browser.urlbar.update1" = true;
         "privacy.trackingprotection.enabled" = true;
         "privacy.trackingprotection.socialtracking.enabled" = true;
@@ -262,9 +256,9 @@
         "services.sync.engineStatusChanged.addons" = true;
         "services.sync.engine.prefs" = false;
         "services.sync.engineStatusChanged.prefs" = true;
-        "gfx.webrender.all" = true;
-        "trim_on_minimize" = true;
         "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
+        "gfx.webrender.all" = true;
+        "general.smoothScroll" = true;
       };
     in
     {

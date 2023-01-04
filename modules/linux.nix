@@ -45,7 +45,8 @@
   environment = {
     variables = {
       EDITOR = "nvim";
-      BROWSER = "nyxt";
+      # BROWSER = "nyxt";
+      BROWSER = "firefox";
       NIXOS_OZONE_WL = "1";
       WLR_NO_HARDWARE_CURSORS = "1";
     };
@@ -73,10 +74,21 @@
   networking.networkmanager.enable = true;
   systemd.services.NetworkManager-wait-online.enable = false;
 
-  # keyring
-  services.gnome.gnome-keyring.enable = true;
-
   # xdg directories
+  xdg = {
+    enable = true;
+    userDirs = {
+      enable = true;
+      createDirectories = true;
+    };
+
+    mimeApps = {
+      enable = true;
+      associations.added = associations;
+      defaultApplications = associations;
+    };
+  };
+
   xdg.portal = {
     enable = true;
     wlr.enable = true;

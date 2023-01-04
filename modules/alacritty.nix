@@ -1,3 +1,4 @@
+# builds and configures alacritty with harfbuzz ligature support
 { pkgs
 , lib
 , inputs

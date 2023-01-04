@@ -1,6 +1,8 @@
+# TODO piece this out
 { pkgs
 , lib
 , inputs
+, config
 , ...
 }:
 let scripts = ./sketchybar/scripts;

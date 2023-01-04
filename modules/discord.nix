@@ -1,3 +1,5 @@
+# configure discord for macOS, doesn't support aarch64 linux
+# uses discocss without the module
 { pkgs
 , lib
 , inputs

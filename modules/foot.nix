@@ -1,3 +1,4 @@
+# config for foot terminal, alacritty doesn't want to build
 { pkgs
 , lib
 , inputs

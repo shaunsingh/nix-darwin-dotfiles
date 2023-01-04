@@ -81,6 +81,7 @@
     };
   };
   outputs = { self, nixpkgs, darwin, home-manager, ... }@inputs: {
+    # asahi m1 macbook running wayland (sway)
     nixosConfigurations.shaunsingh-laptop = nixpkgs.lib.nixosSystem {
       system = "aarch64-linux";
       specialArgs = { inherit inputs; };
@@ -102,9 +103,12 @@
                 ./modules/theme.nix
                 ./modules/sway.nix
                 ./modules/swaylock.nix
-                ./modules/foot.nix
+                ./modules/rofi.nix
+                ./modules/dunst.nix
                 ./modules/eww.nix
-                ./modules/nyxt.nix
+                ./modules/foot.nix
+                # ./modules/nyxt.nix
+                ./modules/firefox.nix
                 ./modules/prismmc.nix
               ];
             };
@@ -112,6 +116,7 @@
         }
       ];
     };
+    # m1 macbook running macOS
     darwinConfigurations.shaunsingh-laptop = darwin.lib.darwinSystem {
       system = "aarch64-darwin";
       specialArgs = { inherit inputs; };

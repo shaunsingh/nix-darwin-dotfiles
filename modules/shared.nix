@@ -1,3 +1,4 @@
+# TODO piece this out too, why do i have all of my overlays here?
 { pkgs, lib, inputs, ... }: {
   time.timeZone = "America/New_York";
   networking.hostName = "shaunsingh-laptop";
@@ -83,50 +84,6 @@
 
           # linux overlays
           eww = inputs.eww.packages.${pkgs.system}.eww-wayland;
-          nyxt-gtk = prev.lispPackages_new.build-asdf-system {
-            inherit (pkgs.nyxt-3) pname lisp src;
-            version = "3.0.0";
-
-            lispLibs = pkgs.nyxt-3.lispLibs ++ (with prev.lispPackages_new.sbclPackages; [
-              cl-cffi-gtk
-              cl-webkit2
-              mk-string-metrics
-            ]);
-
-            nativeBuildInputs = with prev; [ makeWrapper ];
-            buildInputs = with prev; [
-              # needed for GSETTINGS_SCHEMAS_PATH
-              gsettings-desktop-schemas
-              glib
-              gtk3
-
-              # needed for XDG_ICON_DIRS
-              gnome.adwaita-icon-theme
-            ];
-
-            buildScript = pkgs.writeText "build-nyxt.lisp" ''
-              (require :asdf)
-              (asdf:load-system :nyxt/gtk-application)
-              (sb-ext:save-lisp-and-die "nyxt" :executable t
-                                               #+sb-core-compression :compression
-                                               #+sb-core-compression t
-                                               :toplevel #'nyxt:entry-point)
-            '';
-
-            # Run with WEBKIT_FORCE_SANDBOX=0 if getting a runtime error in webkitgtk-2.34.4
-            installPhase = prev.lispPackages_new.sbclPackages.nyxt.installPhase + ''
-              rm -v $out/nyxt
-              mkdir -p $out/bin
-              cp -v nyxt $out/bin
-              wrapProgram $out/bin/nyxt \
-                --prefix LD_LIBRARY_PATH : $LD_LIBRARY_PATH \
-                --prefix XDG_DATA_DIRS : $XDG_ICON_DIRS \
-                --prefix XDG_DATA_DIRS : $GSETTINGS_SCHEMAS_PATH \
-                --prefix GIO_EXTRA_MODULES ":" ${pkgs.dconf.lib}/lib/gio/modules/ \
-                --prefix GIO_EXTRA_MODULES ":" ${pkgs.glib-networking}/lib/gio/modules/
-            '';
-          };
-
 
           # darwin overlays 
           julia-bin =
