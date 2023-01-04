@@ -84,9 +84,11 @@
             galliumDrivers = [ "swrast" "asahi" ];
             vulkanDrivers = [ "swrast" ];
             enableGalliumNine = false;
-          }).overrideAttrs (old: {
-            version = versionOf inputs.asahi-mesa-src;
+          }).overrideAttrs (oldAttrs: {
+            version = "23.0.0";
             src = inputs.asahi-mesa-src;
+            # remove flag to configure xvmc functionality as having it
+            # breaks the build because that no longer exists in Mesa 23
             mesonFlags = lib.filter (x: !(lib.hasPrefix "-Dxvmc-libs-path=" x)) oldAttrs.mesonFlags;
           });
 

@@ -24,11 +24,12 @@
   hardware.asahi.peripheralFirmwareDirectory = ./firmware;
 
   # enable graphics acceleration 
+  hardware.asahi.useExperimentalGPUDriver = true;
   hardware.opengl.enable = true;
-  system.replaceRuntimeDependencies = [
-    ({ original = pkgs.mesa; replacement = pkgs.asahi-mesa; })
-    ({ original = pkgs.mesa.drivers; replacement = pkgs.asahi-mesa.drivers; })
-  ];
+  #   system.replaceRuntimeDependencies = [
+  #     ({ original = pkgs.mesa; replacement = pkgs.asahi-mesa; })
+  #     ({ original = pkgs.mesa.drivers; replacement = pkgs.asahi-mesa.drivers; })
+  #   ];
 
   system.stateVersion = "23.05";
 }
