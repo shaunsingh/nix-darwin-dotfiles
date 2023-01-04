@@ -22,7 +22,7 @@ in
   home.pointerCursor = {
     name = "phinger-cursors";
     package = pkgs.phinger-cursors;
-    size = 24;
+    size = 32;
   };
   home.packages = with pkgs; [ ocrScript ];
   wayland.windowManager.sway = {

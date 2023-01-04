@@ -7,7 +7,6 @@
 , ...
 }: {
   home.packages = with pkgs; [
-    # applications
     discord
     discocss
   ];

@@ -101,15 +101,17 @@
                 inputs.base16.hmModule
                 ./modules/home.nix
                 ./modules/theme.nix
+                ./modules/gtk.nix
                 ./modules/sway.nix
                 ./modules/swaylock.nix
                 ./modules/rofi.nix
                 ./modules/dunst.nix
                 ./modules/eww.nix
                 ./modules/foot.nix
-                # ./modules/nyxt.nix
+                ./modules/nyxt.nix
                 ./modules/firefox.nix
                 ./modules/prismmc.nix
+                ./modules/obs-studio.nix
               ];
             };
           };
