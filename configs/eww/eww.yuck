@@ -13,7 +13,6 @@
 (defwidget main-bar []
     (centerbox :orientation "v"
       :class "main-bar"
-      :space-evenly "true"
       (workspaces)
       (center)
       (bottom)))
@@ -22,8 +21,8 @@
   (box :class "workspaces"
        :valign "start"
     :orientation "v"
-    :spacing 22
-    :space-evenly "false"
+    :spacing 5
+    :space-evenly true
     (button :onclick "swaymsg workspace 1 "
        "一")
     (button :onclick "swaymsg workspace 2 "
@@ -48,38 +47,33 @@
 
 (defwidget bottom []
   (box :class "bottom"
+    :orientation "v"
     :valign "end"
-    :spacing 16
-    :space-evenly "false"
+    :space-evenly true
+    :spacing "5"
    (volume)
    (brightness)
    (battery)))
 
 (defwidget volume []
   (box :class "volume"
-    :spacing 5
-    :space-evenly "false"
       (button :onclick "pamixer -t"
           :onmiddleclick "pavucontrol &")
         " "
         (label :class "volume-label"
-           :text "${volume-level} %")))
+           :text "${volume-level}")))
 
 (defwidget brightness []
   (box :class "brightness"
-    :spacing 5
-    :space-evenly "false"
     " "
     (label :class "date-value"
-        :text "${brightness-level} %")))
+        :text "${brightness-level}")))
 
 (defwidget battery []
   (box :class "battery"
-    :spacing 5
-    :space-evenly "false"
     "  "
     (label :class "date-value"
-        :text "${battery-level} %")))
+        :text "${battery-level}")))
 
 ;; Variables
 (defpoll volume-level :interval "300ms"

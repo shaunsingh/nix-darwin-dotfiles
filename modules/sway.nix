@@ -72,8 +72,8 @@
       default_floating_border normal 0
 
       # Brightness
-      bindsym XF86MonBrightnessDown exec "${pkgs.brightnessctl}/bin/brightnessctl set 5%-"
-      bindsym XF86MonBrightnessUp exec "${pkgs.brightnessctl}/bin/brightnessctl set +5%"
+      Mod4+Shift+b exec "${pkgs.brightnessctl}/bin/brightnessctl set 5%-"
+      Mod4+Shift+v exec "${pkgs.brightnessctl}/bin/brightnessctl set +5%"
     '';
     extraSessionCommands = ''
       export XDG_CURRENT_DESKTOP=sway;
