@@ -2,8 +2,9 @@
   description = "Shaurya's Nix Environment";
 
   inputs = {
-    # All packages should follow latest nixpkgs/nur
-    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    # hydra.nixos.org/jobset/mobile-nixos/unstable/evals
+    # these evals have a cross-compiled stdenv available
+    nixpkgs.url = "github:nixos/nixpkgs/9b97ad7b4330aacda9b2343396eb3df8a853b4fc";
     nur.url = "github:nix-community/NUR";
     # Nix-Darwin
     darwin = {
@@ -154,7 +155,7 @@
 
                 # browser
                 ./modules/nyxt.nix
-                # ./modules/firefox.nix
+                ./modules/firefox.nix
 
                 # other
                 # ./modules/prismmc.nix

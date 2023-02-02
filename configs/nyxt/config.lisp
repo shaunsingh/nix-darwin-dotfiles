@@ -58,13 +58,11 @@
     (setf
      (webkit:webkit-settings-enable-developer-extras settings) t
      (webkit:webkit-settings-enable-resizable-text-areas settings) t
-     ;; Use SF Pro 18 as the default font.
      ;; (webkit:webkit-settings-default-font-family settings) "SF Pro Text"
-      (webkit:webkit-settings-default-font-family settings) "Liga SFMono Nerd Font"
-     (webkit:webkit-settings-default-font-size settings) 13
-     ;; Use SF Mono 15 as the monospace font.
+     (webkit:webkit-settings-default-font-family settings) "Liga SFMono Nerd Font"
+     (webkit:webkit-settings-default-font-size settings) 11
      (webkit:webkit-settings-monospace-font-family settings) "Liga SFMono Nerd Font"
-     (webkit:webkit-settings-default-monospace-font-size settings) 11)))
+     (webkit:webkit-settings-default-monospace-font-size settings) 9)))
 
 ;; tells websites to use dark mode by default
 (setf (uiop:getenv "GTK_THEME") "Adwaita:dark")
@@ -119,10 +117,13 @@
 ;; 		          :background-color "#393939")))))))
 
 ;; status-buffer & message-buffer
+(define-configuration status-buffer
+  ((height 31)))
+
 (defun my-status-style ()
   (theme:themed-css (theme *browser*)
      (body
-      :margin "8px"
+      :margin "9px"
       :background-color "#262626"
       :color "#dde1e6")
      (\.loader
