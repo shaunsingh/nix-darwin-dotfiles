@@ -7,9 +7,13 @@
 }: {
   programs.foot = {
     enable = true;
+    server.enable = true;
     settings = {
-      main.font = "Liga SFMono Nerd Font:size=11";
-      main.pad = "27x27";
+      main = {
+        font = "Liga SFMono Nerd Font:size=11";
+        pad = "27x27";
+        dpi-aware = "no";
+      };
       cursor.style = "beam";
       colors = with config.lib.base16.theme; {
         background = "${base00-hex}";

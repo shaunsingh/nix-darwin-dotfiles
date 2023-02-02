@@ -4,7 +4,7 @@
   networking.hostName = "shaunsingh-laptop";
   nix = {
     package = pkgs.nix;
-    registry.nixpkgs.flake = inputs.unstable;
+    registry.nixpkgs.flake = inputs.nixpkgs;
     extraOptions = ''
       warn-dirty = false
       experimental-features = nix-command flakes
@@ -15,40 +15,57 @@
   nixpkgs = {
     config = {
       allowUnfree = true;
-      # replaceStdenv = { pkgs }: pkgs.nativeMoldyRustyClangStdenv;
+      tarball-ttl = 0;
+      contentAddressedByDefault = false;
+      # replaceStdenv = { pkgs }: pkgs.nativeStdenv;
     };
     overlays =
       let
         versionOf = input: input.rev;
-        nyxt-3-overlay = import ../overlays/nyxt.nix;
-        # badstdenv = (import pkgs.path { system = "aarch64-darwin"; }).stdenv;
+        badstdenv = (import pkgs.path { system = "aarch64-linux"; }).stdenv;
       in
       with inputs; [
         nur.overlay
-        neovim-overlay.overlay
+        prismmc.overlay
+        firefox-overlay.overlay
         nixpkgs-wayland.overlay
         rust-overlay.overlays.default
-        firefox-overlay.overlay
-        prismmc.overlay
-        nyxt-3-overlay
+        nixos-apple-silicon.overlays.default
         (final: prev: {
-          # Generates an stdenv based on clang v15 with mold-macOS as a linker
-          # Packages are built with pipe & native optimizations along with -O3
-          # nativeMoldyRustyClangStdenv =
-          #   prev.stdenvAdapters.impureUseNativeOptimizations
-          #     (prev.stdenvAdapters.withCFlags [ "-O3" "-pipe" ]
-          #       (prev.overrideCC prev.llvmPackages_15.stdenv
-          #         (prev.wrapCCWith rec {
-          #           cc = prev.llvmPackages_15.clang-unwrapped;
-          #           bintools = (final.wrapBintoolsWith {
-          #             bintools = final.binutils-unwrapped.overrideAttrs
-          #               (old: {
-          #                 postInstall = ''
-          #                   ln -sf ${final.mold}/bin/ld64.mold $out/bin/ld
-          #                 '';
-          #               });
-          #           });
-          #         })));
+          nativeStdenv = 
+            prev.stdenvAdapters.withCFlags [ 
+              "-Ofast" 
+              "-pipe" 
+              "-mcpu=apple-m1" 
+              # "-fuse-ld=${final.mold}/bin/mold" 
+            ] final.llvmPackages_latest.stdenv;
+
+          # stuff that doesn't like clang (wants gcc/g++)
+          # boost-build = prev.boost-build.override { stdenv = badstdenv; };
+          # jq = prev.jq.override { stdenv = badstdenv; };
+
+          # stuff that doesn't like clang (tests fail)
+          # nghttp2 = prev.nghttp2.overrideAttrs (old: rec { doCheck = false; });
+
+# nativeStdenv = prev.stdenvAdapters.withCFlags [ 
+#     "-Ofast" 
+#     "-pipe" 
+#     "-mcpu=apple-m1" 
+#     "-fuse-ld=${final.mold}/bin/mold" 
+#     ]
+#   (prev.overrideCC final.llvmPackages_latest.stdenv
+#     (prev.wrapCCWith {
+#       cc = final.llvmPackages_latest.clang-unwrapped;
+#       bintools = (final.wrapBintoolsWith {
+#         coreutils = final.uutils-coreutils;
+#         libc = final.glibc;
+#         # build bintools without ld linked
+#         bintools = prev.llvmPackages_latest.bintools.overrideAttrs (o: {
+#           postInstall = "ln -sf ${prev.mold}/bin/mold $out/bin/ld";
+#         });
+#       });
+#     }));
+
           # stuff that doesn't like clang. Build against the default macOS stdenv
           # pkg-config-unwrapped = prev.pkg-config-unwrapped.override { stdenv = badstdenv; };
           # perl = prev.perl.override { stdenv = badstdenv; };
@@ -62,7 +79,8 @@
           # dejagnu = prev.dejagnu.overrideAttrs (old: rec { doCheck = false; });
 
           # shared overlays
-          sf-mono-liga-bin = prev.stdenvNoCC.mkDerivation rec {
+          # neovim = inputs.neovim-nightly.packages.${pkgs.system}.neovim;
+          sf-mono-liga-bin = prev.stdenvNoCC.mkDerivation {
             pname = "sf-mono-liga-bin";
             version = versionOf inputs.sf-mono-liga-src;
             src = inputs.sf-mono-liga-src;
@@ -70,6 +88,35 @@
             installPhase = ''
               mkdir -p $out/share/fonts/opentype
               cp -R $src/*.otf $out/share/fonts/opentype/
+            '';
+          };
+          otf-apple = prev.stdenvNoCC.mkDerivation {
+            name = "otf-apple";
+            version = "1.0";
+            buildInputs = [ prev.p7zip ];
+            src = [
+              inputs.sf-pro-src
+              inputs.sf-compact-src
+              inputs.ny-src
+            ];
+            sourceRoot = "./";
+            preUnpack = "mkdir fonts";
+            unpackCmd = ''
+              7z x $curSrc >/dev/null
+              dir="$(find . -not \( -path ./fonts -prune \) -type d | sed -n 2p)"
+              cd $dir 2>/dev/null
+              7z x *.pkg >/dev/null
+              7z x Payload~ >/dev/null
+              mv Library/Fonts/*.otf ../fonts/
+              cd ../
+              rm -R $dir
+            '';
+          
+            installPhase = ''
+              mkdir -p $out/share/fonts/opentype/{SF\ Pro,SF\ Compact,New\ York}
+              cp -a fonts/SF-Pro*.otf $out/share/fonts/opentype/SF\ Pro
+              cp -a fonts/SF-Compact*.otf $out/share/fonts/opentype/SF\ Compact
+              cp -a fonts/NewYork*.otf $out/share/fonts/opentype/New\ York
             '';
           };
           alacritty-ligatures = prev.alacritty.overrideAttrs (old: rec {
@@ -84,6 +131,126 @@
 
           # linux overlays
           eww = inputs.eww.packages.${pkgs.system}.eww-wayland;
+          swayfx-unwrapped = inputs.swayfx.packages.${pkgs.system}.swayfx-unwrapped;
+          alsa-ucm-conf = prev.alsa-ucm-conf.overrideAttrs (old: rec {
+            installPhase = ''
+              runHook preInstall
+              mkdir -p $out/share/alsa
+              cp -r ucm ucm2 $out/share/alsa
+              cp -r ${inputs.asahi-alsa-src}/ucm2/conf.d/macaudio $out/share/alsa/ucm2/conf.d/macaudio
+              runHook postInstall
+            '';
+          });
+          phocus-oxocarbon = prev.stdenvNoCC.mkDerivation rec {
+            pname = "phocus-oxocarbon";
+            version = versionOf inputs.phocus-src;
+            src = inputs.phocus-src;
+          
+            patches = [
+              ../patches/remove-npm.diff
+              ../patches/gradient.diff
+              ../patches/accent-substitute-all.diff
+            ];
+          
+            postPatch = with colors; ''
+              substituteInPlace scss/gtk-3.0/_colors.scss \
+                --replace "@bg0@" "#161616" \
+                --replace "@bg1@" "#262626" \
+                --replace "@bg2@" "#393939"\
+                --replace "@bg3@" "#424242" \
+                --replace "@bg4@" "#525252" \
+                --replace "@red@" "#ff7eb6" \
+                --replace "@lred@" "#ff7eb6" \
+                --replace "@orange@" "#ee5396" \
+                --replace "@lorange@" "#ee5396" \
+                --replace "@yellow@" "#33b1ff" \
+                --replace "@lyellow@" "#33b1ff" \
+                --replace "@green@" "#42be65" \
+                --replace "@lgreen@" "#42be65" \
+                --replace "@cyan@" "#3ddbd9" \
+                --replace "@lcyan@" "#3ddbd9" \
+                --replace "@blue@" "#08bdba" \
+                --replace "@lblue@" "#08bdba" \
+                --replace "@purple@" "#be95ff" \
+                --replace "@lpurple@" "#be95ff" \
+                --replace "@pink@" "#ff7eb6" \
+                --replace "@lpink@" "#ff7eb6" \
+                --replace "@primary@" "#f2f4f8" \
+                --replace "@secondary@" "#dde1e6"
+            '';
+
+            nativeBuildInputs = [ prev.nodePackages.sass ];
+            installFlags = [ "DESTDIR=$(out)" "PREFIX=" ];
+          };
+          screenshot = pkgs.writeShellScriptBin "screenshot" ''
+            ${pkgs.grim}/bin/grim -g "$(${pkgs.slurp}/bin/slurp)" - -t png | ${pkgs.wl-clipboard}/bin/wl-copy -t image/png
+          '';
+          ocrScript =
+            let
+              inherit (pkgs) grim libnotify slurp tesseract5 wl-clipboard;
+              _ = lib.getExe;
+            in
+            pkgs.writeShellScriptBin "wl-ocr" ''
+              ${_ grim} -g "$(${_ slurp})" -t ppm - | ${_ tesseract5} - - | ${wl-clipboard}/bin/wl-copy
+              ${_ libnotify} "$(${wl-clipboard}/bin/wl-paste)"
+            '';
+          volume = pkgs.writeShellScriptBin "volume" ''
+            #!/bin/sh
+        
+            ${pkgs.pamixer}/bin/pamixer "$@"
+            volume="$(${pkgs.pamixer}/bin/pamixer --get-volume-human)"
+        
+            if [ "$volume" = "muted" ]; then
+                ${pkgs.libnotify}/bin/notify-send -r 69 \
+                    -a "Volume" \
+                    "Muted" \
+                    -t 888 \
+                    -u low
+            else
+                ${pkgs.libnotify}/bin/notify-send -r 69 \
+                    -a "Volume" "Currently at $volume" \
+                    -h int:value:"$volume" \
+                    -t 888 \
+                    -u low
+            fi
+          '';
+          microphone = pkgs.writeShellScriptBin "microphone" ''
+            #!/bin/sh
+        
+            ${pkgs.pamixer}/bin/pamixer --default-source "$@"
+            mic="$(${pkgs.pamixer}/bin/pamixer --default-source --get-volume-human)"
+        
+            if [ "$mic" = "muted" ]; then
+                ${pkgs.libnotify}/bin/notify-send -r 69 \
+                    -a "Microphone" \
+                    "Muted" \
+                    -t 888 \
+                    -u low
+            else
+              ${pkgs.libnotify}/bin/notify-send -r 69 \
+                    -a "Microphone" "Currently at $mic" \
+                    -h int:value:"$mic" \
+                    -t 888 \
+                    -u low
+            fi
+          '';
+          brightness =
+            let
+              brightnessctl = pkgs.brightnessctl + "/bin/brightnessctl";
+            in
+            pkgs.writeShellScriptBin "brightness" ''
+              #!/bin/sh
+        
+              ${brightnessctl} "$@"
+              brightness=$(echo $(($(${brightnessctl} g) * 100 / $(${brightnessctl} m))))
+        
+              ${pkgs.libnotify}/bin/notify-send -r 69 \
+                  -a "Brightness" "Currently at $brightness%" \
+                  -h int:value:"$brightness" \
+                  -t 888 \
+                  -u low
+            '';
+
 
           # darwin overlays 
           julia-bin =

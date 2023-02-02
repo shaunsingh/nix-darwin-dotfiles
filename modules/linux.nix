@@ -8,12 +8,19 @@
   users.users.shauryasingh = {
     isNormalUser = true;
     home = "/home/shauryasingh";
-    extraGroups = [ "wheel" "networkmanager" ];
+    extraGroups = [ 
+      "wheel" 
+      "networkmanager" 
+      "audio" 
+      "video"
+      "render"
+      "docker"
+    ];
     shell = pkgs.fish;
   };
 
-  # use grub
-  boot.loader.grub.enable = true;
+  # use systemd-boot
+  boot.loader.systemd-boot.enable = true;
 
   # us locale
   services.timesyncd.enable = true;
@@ -44,68 +51,77 @@
   # env variables + essential packages
   environment = {
     variables = {
+      # defaults
       EDITOR = "nvim";
       # BROWSER = "nyxt";
       BROWSER = "firefox";
+      # enable wayland 
       NIXOS_OZONE_WL = "1";
-      WLR_NO_HARDWARE_CURSORS = "1";
+      XDG_SESSION_TYPE = "wayland";
+      SDL_VIDEODRIVER = "wayland";
+      CLUTTER_BACKEND = "wayland";
+      GDK_BACKEND = "wayland";
+      # qt wayland settings
+      DISABLE_QT5_COMPAT = "0";
+      QT_AUTO_SCREEN_SCALE_FACTOR = "1";
+      QT_QPA_PLATFORM = "wayland";
+      QT_QPA_PLATFORMTHEME = "qt5ct";
+      QT_STYLE_OVERRIDE = "kvantum";
+      QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
+      # fix java stuff on wayland 
+      _JAVA_AWT_WM_NONREPARENTING = "1";
+      # firefox
+      MOZ_ENABLE_WAYLAND = "1";
+      MOZ_USE_XINPUT2 = "1";
+      MOZ_DISABLE_RDD_SANDBOX = "1";
+      # beta opengl for firefox
+      MESA_GL_VERSION_OVERRIDE = "3.3";   
+      MESA_GLES_VERSION_OVERRIDE = "3.1";
+      MESA_GLSL_VERSION_OVERRIDE = "330";
     };
-    systemPackages = with pkgs; [
-      curl
-      llvmPackages_14.llvm
-      uutils-coreutils
-    ];
   };
 
   # disk
   services.fstrim.enable = true;
 
-  # bluetooh support
+  # bluetooth support
   hardware.bluetooth.enable = true;
+
+  # needed for gtk
+  programs.dconf.enable = true;
 
   # sound
   services.pipewire = {
     enable = true;
     pulse.enable = true;
+    alsa.enable = true;
   };
-
+  
   # network
-  services.openssh.enable = true;
   networking.networkmanager.enable = true;
   systemd.services.NetworkManager-wait-online.enable = false;
 
+  # power
+  services.upower.enable = true;
+
   # xdg directories
-  xdg = {
-    enable = true;
-    userDirs = {
-      enable = true;
-      createDirectories = true;
-    };
-
-    mimeApps = {
-      enable = true;
-      associations.added = associations;
-      defaultApplications = associations;
-    };
-  };
-
   xdg.portal = {
     enable = true;
     wlr.enable = true;
+    extraPortals = [
+      pkgs.xdg-desktop-portal-wlr
+      pkgs.xdg-desktop-portal-gtk
+    ];
   };
 
   # font + fontconfig
   fonts = {
     fonts = with pkgs; [
-      # noto fallbacks
-      noto-fonts
-      noto-fonts-cjk
-      noto-fonts-emoji
-
+      # cjk
+      sarasa-gothic
       # apple fonts
       sf-mono-liga-bin
-      # sf-pro
-      # ny
+      otf-apple
     ];
     fontconfig = {
       enable = true;
@@ -115,14 +131,12 @@
         autohint = true;
         style = "hintfull";
       };
-
       subpixel.lcdfilter = "default";
-
       defaultFonts = {
-        emoji = [ "Noto Color Emoji" ];
+        # emoji = [ "Noto Color Emoji" ];
         monospace = [ "Liga SFMono Nerd Font" ];
-        # sansSerif = [ "SF Pro" "Noto Color Emoji" ];
-        # serif = [ "New York" "Noto Color Emoji" ];
+        sansSerif = [ "SF Pro Text" ];
+        serif = [ "New York Medium" ];
       };
     };
   };

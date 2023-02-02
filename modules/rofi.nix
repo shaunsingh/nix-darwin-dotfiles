@@ -34,15 +34,12 @@ in
   home.packages = with pkgs; [
     rofi-wayland
     power-menu
-    wl-clipboard
-    wtype
   ];
 
   xdg.configFile."rofi/colors.rasi".text = with config.lib.base16.theme; ''
     * {
       background: #${base01-hex};
       prompt: #${base00-hex};
-      border: #${base00-hex};
       text: #${base04-hex};
       select: #${base00-hex};
     }
@@ -75,16 +72,12 @@ in
       y-offset: 0px;
 
       enabled: true;
-      border: 2px solid;
-      border-color: @border;
       background-color: @background;
       cursor: "default";
     }
 
     inputbar {
       enabled: true;
-      border: 0 0 1px 0 solid;
-      border-color: @border;
       background-color: @prompt;
       orientation: horizontal;
       children: [ "entry" ];
@@ -127,9 +120,6 @@ in
     }
 
     element selected.normal {
-      border: 2px solid;
-      border-color: @border;
-      border-radius: 8px;
       background-color: @select;
     }
 

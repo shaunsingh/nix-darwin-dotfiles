@@ -16,16 +16,13 @@
     :open-in-new-tab nil
     :infinite-scroll t
     :safe-search :off
-    :font-size :medium
+    :font-size :large
     :header-behavior :on-fixed
-    :font :helvetica
-    :background-color "161616"
-    :center-alignment t))
+    :font "Liga SFMono Nerd Font"
+    :background-color "161616"))
 
 (define-configuration context-buffer
   ((search-engines (list
-                    ;; engines: is a prefix for `nx-search-engines',
-                    ;; it only works if you load nx-search-engines.
                     (engines:google :shortcut "gmaps"
                                     :object :maps)
                     (make-instance 'search-engine
@@ -36,11 +33,6 @@
                                    :shortcut "golang"
                                    :search-url "https://golang.org/pkg/~a/"
                                    :fallback-url (quri:uri "https://golang.org/pkg/")
-                                   ;; A good example of a custom
-                                   ;; completion function. You can do
-                                   ;; crazy stuff in completion
-                                   ;; function (like reading shell
-                                   ;; commands or files).
                                    :completion-function
                                    (let ((installed-packages
                                            (str:split nyxt::+newline+

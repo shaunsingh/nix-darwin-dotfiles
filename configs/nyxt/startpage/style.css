@@ -1,0 +1,45 @@
+:root {
+    --color-bg: #161616;
+    --color-fg: #dde1e6;
+    --color-accent: #ff7eb6;
+}
+
+html, body {
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: "Liga SFMono Nerd Font";
+}
+
+.container { 
+  position: absolute;
+  margin: 0;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+.png img {
+  width: 256px;
+  height: 256px;
+}
+
+.head { 
+  text-align: center;
+  padding-top: 10px;
+}
+
+.lambda {
+  color: var(--color-accent);
+}
+
+.blinking {
+  animation: opacity 1s ease-in-out infinite;
+  opacity: 1;
+}
+
+@keyframes opacity {
+  0% { opacity: 1; }
+  50% { opacity: 0; }
+  100% { opacity: 1; }
+}

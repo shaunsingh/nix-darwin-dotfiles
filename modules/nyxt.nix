@@ -12,4 +12,8 @@
     source = ../configs/nyxt;
     recursive = true;
   };
+  xdg.dataFile."nyxt/extensions" = {
+    source = ../configs/nyxt/extensions;
+    recursive = true;
+  };
 }
