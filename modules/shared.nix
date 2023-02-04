@@ -40,13 +40,6 @@
               # "-fuse-ld=${final.mold}/bin/mold" 
             ] final.llvmPackages_latest.stdenv;
 
-          # stuff that doesn't like clang (wants gcc/g++)
-          # boost-build = prev.boost-build.override { stdenv = badstdenv; };
-          # jq = prev.jq.override { stdenv = badstdenv; };
-
-          # stuff that doesn't like clang (tests fail)
-          # nghttp2 = prev.nghttp2.overrideAttrs (old: rec { doCheck = false; });
-
 # nativeStdenv = prev.stdenvAdapters.withCFlags [ 
 #     "-Ofast" 
 #     "-pipe" 
@@ -65,6 +58,15 @@
 #         });
 #       });
 #     }));
+
+
+
+          # stuff that doesn't like clang (wants gcc/g++)
+          # boost-build = prev.boost-build.override { stdenv = badstdenv; };
+          # jq = prev.jq.override { stdenv = badstdenv; };
+
+          # stuff that doesn't like clang (tests fail)
+          # nghttp2 = prev.nghttp2.overrideAttrs (old: rec { doCheck = false; });
 
           # stuff that doesn't like clang. Build against the default macOS stdenv
           # pkg-config-unwrapped = prev.pkg-config-unwrapped.override { stdenv = badstdenv; };
@@ -244,11 +246,6 @@
 
 
           # darwin overlays 
-          julia-bin =
-            if prev.stdenv.hostPlatform.isDarwin then
-              final.callPackage ../pkgs/julia-18 { }
-            else
-              prev.julia-bin;
           sketchybar-git = prev.sketchybar.overrideAttrs (old: rec {
             version = versionOf inputs.sketchybar-src;
             src = inputs.sketchybar-src;

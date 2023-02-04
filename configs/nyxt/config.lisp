@@ -363,7 +363,7 @@
 	 (quri:merge-uris (quri:uri name)
 			  (quri:uri "https://cdnjs.cloudflare.com/ajax/libs/ace/1.14.0/")))
        '("keybinding-vim.min.js"
-         "theme-solarized_light.min.js"
+         "theme-xcode.min.js"
          "mode-abap.min.js"
          "mode-abc.min.js"
          "mode-actionscript.min.js"
@@ -800,7 +800,7 @@
              ("#kbshortcutmenu"
               :background-color theme:background
               :color theme:on-background))))
-   (:theme "ace/theme/solarized_light")
+   (:theme "ace/theme/xcode")
    (:keybindings "ace/keyboard/vim")))
 
 (define-configuration nyxt/editor-mode::editor-buffer
