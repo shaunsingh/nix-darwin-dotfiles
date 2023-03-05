@@ -1,6 +1,6 @@
 (in-package #:nyxt-user)
 
-(define-panel-command vsplit-internal (&key (url (quri:render-uri (url (current-buffer)))))
+(define-panel-command-global vsplit (&key (url (quri:render-uri (url (current-buffer)))))
     (panel "*Duplicate panel*" :right)
   "Duplicate the current buffer URL in the panel buffer on the right.
 
@@ -11,10 +11,3 @@ A poor man's vsplit :("
     (sleep 0.3)
     (buffer-load (quri:uri url) :buffer panel))
   "")
-
-(define-command-global vsplit ()
-  "Based on `vsplit-internal' above."
-  (if (nyxt/renderer/gtk:panel-buffers-right
-       (current-window))
-      (delete-all-panel-buffers (current-window))
-      (vsplit-internal)))

@@ -76,19 +76,19 @@
       :white-space "nowrap"
       :overflow "hidden")
     ;; add a generous amount of padding around everything
-    `("#vi-mode, #buffers, #percentage, #url, #minions, #minion-button, #tabs"
+    `("#vi-mode, #buffers, #percentage, #url, #minions, #tabs, #modes"
       :padding-left "9px")
     ;; url can be nice and bright
-    `("#url, #minion-button"
+    `("#url"
       :color "#ffffff"
       :font-weight "bold")
+    ;; modes can be dull and dark
+    `("#modes"
+      :color "#a2a9b0")
     ;; button tweaks incl vim color
     `(button
       :all "unset"
       :color "#dde1e6")
-    ;; tab buttons can be slightly smaller
-    `("button[type=tab]"
-      :font-size "9px")
     ;; bold on hover
     `("button:hover"
       :font-weight "bold")))
@@ -126,41 +126,16 @@
         :title content
         (nyxt:set-url)))))
 
-;; I find the default "N" and "I" not discriptive enough at a quick glance, lets fix that
-(defmethod nyxt:mode-status ((status status-buffer) (vi-normal nyxt/vi-mode:vi-normal-mode))
-  (spinneret:with-html-string
-    (:button :type "button"
-             :title "vi-normal-mode"
-             :onclick (ps:ps (nyxt/ps:lisp-eval (:title "vi-insert-mode") (nyxt/vi-mode:vi-insert-mode)))
-             (:code "vi-normal-mode"))))
-(defmethod nyxt:mode-status ((status status-buffer) (vi-normal nyxt/vi-mode:vi-insert-mode))
-  (spinneret:with-html-string
-    (:button :type "button"
-             :title "vi-insert-mode"
-             :onclick (ps:ps (nyxt/ps:lisp-eval (:title "vi-normal-mode") (nyxt/vi-mode:vi-normal-mode)))
-             (:code "vi-insert-mode"))))
-
 ;; mimick emacs' minions
 (defmethod my-format-minions ((status status-buffer))
   (let ((buffer (current-buffer (window status))))
     (if (modable-buffer-p buffer)
-        (let* ((sorted-modes (nyxt::sort-modes-for-status (modes buffer)))
-               (mode (first sorted-modes)))
-          (spinneret:with-html-string
-            (alexandria:when-let ((formatted-mode (mode-status status mode)))
-              (if (html-string-p formatted-mode)
-                  (:raw formatted-mode)
-                  (:nbutton
-                    :buffer status
-                    :text formatted-mode
-                    :title (format nil "Describe ~a" mode)
-                    (describe-class :class (name mode)))))
-            (:nbutton
-              :buffer status
-              :id "minion-button"
-              :text ";-"
-              :title (str:concat "Enabled modes: " (nyxt::modes-string buffer))
-              (nyxt:toggle-modes))))
+        (spinneret:with-html-string
+          (:nbutton
+            :buffer status
+            :text ";-"
+            :title (str:concat "Enabled modes: " (nyxt::modes-string buffer))
+            (nyxt:toggle-modes)))
     "")))
 
 ;; redefine format-status to put changes in effect
@@ -190,10 +165,14 @@
             ;; view modes
             (:div :id "minions"
                   (:raw 
-                   "("
-                   (my-format-minions status)
-                   ")"))
+                   (my-format-minions status)))
             ;; show open tabs
             (:div :id "tabs"
                   (:raw
-                   (format-status-tabs status)))))))
+                   (format-status-tabs status)))
+            ;; show open tabs
+            (:div :id "modes"
+                  (:raw
+                   "("
+                   (nyxt::modes-string buffer)
+                   ")"))))))

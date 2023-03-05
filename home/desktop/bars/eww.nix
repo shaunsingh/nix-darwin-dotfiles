@@ -45,7 +45,7 @@
       (defwidget time []
         (box :class "time"
              :orientation "v"
-          hour min sec))
+          hour min type))
 
       (defwidget date []
         (box :class "date"
@@ -62,19 +62,22 @@
         (button :class "icon"
                 :orientation "v"
           (circular-progress :value brightness-level
+                             :tooltip "brightness: ''${brightness-level}"
                              :thickness 3)))
 
       (defwidget volume []
         (button :class "icon"
                 :orientation "v"
           (circular-progress :value volume-level
+                             :tooltip "volume: ''${volume-level}"
                              :thickness 3)))
 
       (defwidget battery []
         (button :class "icon"
                 :orientation "v"
                 :onclick ""
-          (circular-progress :value battery-level
+          (circular-progress :value "''${EWW_BATTERY['macsmc-battery'].capacity}"
+                             :tooltip "battery_level: ''${EWW_BATTERY['macsmc-battery'].capacity}%"
                              :thickness 3)))
 
       (defwidget current-tag []
@@ -84,19 +87,17 @@
           "''${active-tag}"))
 
       (defvar active-tag "1")
-      (defpoll hour :interval "1m" "date +%H")
+      (defpoll hour :interval "1m" "date +%I")
       (defpoll min  :interval "1m" "date +%M")
-      (defpoll sec  :interval "1s" "date +%S")
+      (defpoll type :interval "1m" "date +%p")
 
       (defpoll day   :interval "10m" "date +%d")
       (defpoll month :interval "1h"  "date +%m")
       (defpoll year  :interval "1h"  "date +%y")
 
+      ;; this is updated by the helper script
       (defvar brightness-level 66)
       (defvar volume-level 33)
-      (deflisten battery-level
-         `cat /sys/class/power_supply/macsmc-battery/capacity`)
-
     ''
     + (
       if withSway
@@ -119,7 +120,7 @@
                        { "tag": 7, "label": "七" },
                        { "tag": 8, "label": "八" },
                        { "tag": 9, "label": "九" },
-                       { "tag": 0, "label": "rM" }]')
+                       { "tag": 0, "label": "H" }]')
 
       ''
       else ''
@@ -169,7 +170,7 @@
     '');
 
   ewwScss = pkgs.writeText "eww.scss" (with config.lib.base16.theme; ''
-    $base00: #${base00-hex};
+    $base00: #${baseBLEND-hex};
     $base01: #${base01-hex};
     $base02: #${base02-hex};
     $base03: #${base03-hex};
@@ -185,6 +186,7 @@
     $base0D: #${base0D-hex};
     $base0E: #${base0E-hex};
     $base0F: #${base0F-hex};
+    $baseIBM: #${baseIBM-hex};
 
     * {
       all: unset;
@@ -209,6 +211,7 @@
       background-color: $base01;
       padding: 6px 9px 6px 6px;
       border-left: 3px solid $base0C;
+      border-radius: 0px 3px 3px 0px;
     }
 
     .segment-center {
@@ -229,15 +232,14 @@
 
     .icon {
       background-color: $base01;
-      padding: 9px 9px;
+      padding: 9px;
       margin-bottom: 9px;
       border-radius: 3px;
     }
 
     .current-tag {
-      color: $base00;
-      background-color: $base0B;
-      padding: 9px 0px 9px;
+      color: $base05;
+      background-color: $baseIBM;
       border-radius: 3px;
     }
   '');

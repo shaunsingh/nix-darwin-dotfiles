@@ -19,6 +19,14 @@
           command = "${pkgs.eww-wayland-git}/bin/eww open bar && ${pkgs.eww-wayland-git}/bin/eww open bar2";
           always = false;
         }
+        {
+          command = "${pkgs.pamixer}/bin/pamixer --set-volume 33";
+          always = false;
+        }
+        {
+          command = "${pkgs.brightnessctl}/bin/brightnessctl s 66%";
+          always = false;
+        }
       ];
       seat."*".hide_cursor = "when-typing disable";
       input = {
@@ -47,7 +55,7 @@
           concatAttrs
           (map
             (i: {
-              "${modifier}+${toString i}" = "exec 'swaymsg workspace ${toString i} && ${pkgs.eww}/bin/eww update active-tag=${toString i}'";
+              "${modifier}+${toString i}" = "exec 'swaymsg workspace ${toString i} && ${pkgs.eww-wayland-git}/bin/eww update active-tag=${toString i}'";
               "${modifier}+Shift+${toString i}" = "exec 'swaymsg move container to workspace ${toString i}'";
             })
             (lib.range 0 9));

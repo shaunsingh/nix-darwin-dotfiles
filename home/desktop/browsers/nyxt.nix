@@ -6,7 +6,7 @@
   ...
 }: {
   home.packages = with pkgs; [
-    nyxt
+    nyxt-dev
   ];
   xdg.configFile."nyxt" = {
     source = ../../../configs/nyxt;

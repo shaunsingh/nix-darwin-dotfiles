@@ -1,4 +1,4 @@
-final: prev: {
+final: prev: rec {
   kickoff = prev.callPackage ../derivations/kickoff.nix {};
   kickoff-dot-desktop = prev.callPackage ../derivations/kickoff-dot-desktop.nix {};
   otf-apple = prev.callPackage ../derivations/otf-apple.nix {};
@@ -17,4 +17,10 @@ final: prev: {
         inherit (prev.darwin) apple_sdk;
       })
     else prev.webkitgtk;
+  pure-protobuf = prev.callPackage ../derivations/pure-protobuf.nix {
+    buildPythonPackage = prev.python310Packages.buildPythonPackage;
+  };
+  pytest-harvest = prev.callPackage ../derivations/pytest-harvest.nix {};
+  pytest-steps = prev.callPackage ../derivations/pytest-steps.nix { inherit pytest-harvest; };
+  komikku = prev.callPackage ../derivations/komikku.nix { inherit pure-protobuf pytest-steps; };
 }

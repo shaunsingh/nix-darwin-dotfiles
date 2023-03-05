@@ -1,10 +1,5 @@
 (in-package #:nyxt-user)
 
-;; stolen from time.lisp
-(defun sort-by-time (sequence &key (key #'last-access))
-  "Return a timely ordered SEQUENCE by KEY.  More recent elements come first."
-  (sort sequence #'local-time:timestamp> :key key))
-
 ;; stolen from nx-fruit
 (defparameter list-of-fruits
   (list "abiu"
@@ -210,6 +205,11 @@
               (capitalize-word word)
               (capitalize-word current-fruit)
               current-day))))
+
+;; stolen from time.lisp
+(defun sort-by-time (sequence &key (key #'last-access))
+  "Return a timely ordered SEQUENCE by KEY.  More recent elements come first."
+  (sort sequence #'local-time:timestamp> :key key))
 
 ;; now to bring it all together
 (define-internal-page-command-global startpage ()

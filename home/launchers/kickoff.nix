@@ -14,7 +14,7 @@
       fonts = ["Liga SFMono Nerd Font"];
       font_size = 21.0;
       colors = with config.lib.base16.theme; {
-        background = "#${base00-hex}DD";
+        background = "#${baseBLEND-hex}DD";
         prompt = "#${base0C-hex}FF";
         text = "#${base04-hex}FF";
         text_query = "#${base06-hex}FF";

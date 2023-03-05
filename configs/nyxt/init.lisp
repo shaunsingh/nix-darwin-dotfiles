@@ -56,8 +56,8 @@ loads."
      :depends-on (,system) ,@(when file
                                 `(:components (,file)))))
 
+;; (load-after-system* :nx-dark-reader "dark-reader")
 ;; (load-after-system* :nx-kaomoji "kaomoji")
-(load-after-system* :nx-dark-reader "dark-reader")
 (load-after-system* :nx-search-engines "search-engines")
 
 ;; additional files to unconventionally load
@@ -70,8 +70,10 @@ loads."
 
 ;; simple web-buffer customization
 (define-configuration web-buffer
-  ;; dont autocomplete when unessecary
-  ((search-always-auto-complete-p nil)
+  (;; zoom in a bit
+   ;; (current-zoom-ratio 1.18)
+   ;; dont autocomplete when unessecary
+   (search-always-auto-complete-p nil)
    ;; basic mode setup for web-buffer
    (default-modes `(,@*web-buffer-modes*
         ,@%slot-value%))))
@@ -110,6 +112,7 @@ loads."
     (setf
      ;; enable encrypted (DRM) content
      ;; (webkit:webkit-settings-enable-encrypted-media settings) t
+
      ;; enable resizable text areas
      (webkit:webkit-settings-enable-resizable-text-areas settings) t
      ;; enable inspect

@@ -6,7 +6,7 @@ final: prev: rec {
     ];
   });
 
-  wlroots-sway =
+  wlroots-hidpi =
     (prev.wlroots.overrideAttrs (_: {
       src = prev.fetchFromGitLab {
         domain = "gitlab.freedesktop.org";
@@ -41,7 +41,7 @@ final: prev: rec {
 
       buildInputs = oa.buildInputs ++ [prev.pcre2 prev.xorg.xcbutilwm];
     }))
-    .override {wlroots_0_16 = wlroots-sway;};
+    .override {wlroots_0_16 = wlroots-hidpi;};
 
   sway-hidpi = prev.sway.override {
     inherit sway-unwrapped;

@@ -14,10 +14,10 @@
     [
       # spotify client
       psst
-      # email client
-      thunderbird
       # font viewer
       font-manager
+      # manga
+      komikku
     ]
     ++ lib.optionals isWayland [
       # vnc client

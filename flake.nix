@@ -48,7 +48,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     base16-oxocarbon = {
-      url = "github:nyoom-engineering/base16-oxocarbon";
+      url = "github:shaunsingh/base16-oxocarbon";
       flake = false;
     };
 
@@ -165,6 +165,7 @@
       hm-modules,
       useNur ? true,
       useHomeManager ? true,
+      withMail ? false,
       withSway ? false,
       withRiver ? false,
       withBindings ? false,
@@ -235,6 +236,7 @@
                     ./home/cli
                   ]
                   ++ nixpkgs.lib.lists.optionals useNur [nur.hmModules.nur]
+                  ++ nixpkgs.lib.lists.optionals withMail [./home/mail.nix]
                   ++ nixpkgs.lib.lists.optionals withSway [./home/wm/sway.nix]
                   ++ nixpkgs.lib.lists.optionals withRiver [./home/wm/river.nix]
                   ++ nixpkgs.lib.lists.optionals isGui [
@@ -281,8 +283,8 @@
       # asahi on M1 Macbook pro
       nixos-asahi-aarch64 = mkSystemConfig {
         system = "aarch64-linux";
+        withMail = true;
         withSway = true;
-        # withRiver = ;
         withBindings = true;
         modules = [
           ./hosts/nixos-asahi-aarch64

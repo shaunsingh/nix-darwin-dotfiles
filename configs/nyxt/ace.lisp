@@ -1,5 +1,7 @@
 (in-package #:nyxt-user)
 
+;; this file was written and edited with ace inside nyxt :)
+
 (define-mode ace-mode (nyxt/editor-mode:editor-mode nyxt/passthrough-mode:passthrough-mode)
   "Mode for usage with the Ace editor."
   ((style
@@ -93,10 +95,7 @@
          "ext-searchbox.min.js"
          "ext-settings_menu.min.js"
          "ext-split.min.js"
-         "ext-whitespace.min.js"
-         "ext-themelist.min.js"
-         "ext-prompt.min.js"
-         "ext-statusbar.min.js")))
+         "ext-whitespace.min.js")))
     (epilogue
       (str:concat
        (ps:ps
@@ -116,11 +115,8 @@
            (req "ace/ext/searchbox")
            (req "ace/ext/split")
            (req "ace/ext/language_tools")
-           (req "ace/ext/themelist")
            (req "ace/ext/code_lens")
            (req "ace/ext/whitespace")
-           (req "ace/ext/prompt")
-           (req "ace/ext/statusbar")
            (ps:chain (req "ace/ext/settings_menu") (init editor))
            (ps:chain (req "ace/ext/keybinding_menu") (init editor))
            (ps:chain editor session
@@ -129,8 +125,9 @@
            (ps:chain editor commands
                      (add-command (ps:chain ace (require "ace/ext/beautify") commands 0)))
            ;; editor config
-           (ps:chain editor (set-option "cursorStyle" "smooth slim"))   ;; animated cursor
+           (ps:chain editor (set-option "cursorStyle" "wide"))          ;; static cursor
            (ps:chain editor (set-option "readOnly" nil))                ;; set read and write file
+           (ps:chain editor (set-option "fontSize" 15))                 ;; make text a bit bigger
            (ps:chain editor (set-option "showLineNumbers" nil))         ;; disable line numbers
            (ps:chain editor (set-option "showPrintMargin" t))           ;; enable print margin (colorline)
            (ps:chain editor (set-option "displayIndentGuides" nil))     ;; disable indent markers

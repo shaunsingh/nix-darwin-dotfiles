@@ -7,6 +7,11 @@
 }: {
   xdg.enable = true;
 
+  services.gpg-agent = {
+    enable = true;
+    enableSshSupport = true;
+  };
+
   # symlinks don't work with finder + spotlight, copy them instead
   disabledModules = ["targets/darwin/linkapps.nix"];
   home.activation = lib.mkIf pkgs.stdenv.isDarwin {

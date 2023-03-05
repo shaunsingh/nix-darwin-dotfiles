@@ -14,9 +14,9 @@ final: prev: {
     #!/bin/sh
 
     ${prev.pamixer}/bin/pamixer "$@"
-    volume="$(${prev.pamixer}/bin/pamixer --get-volume-human)"
+    volume="$(${prev.pamixer}/bin/pamixer --get-volume)"
 
-    if [ "$volume" = "muted" ]; then
+    if [ $volume = 0 ]; then
         ${prev.libnotify}/bin/notify-send -r 69 \
             -a "Volume" \
             "Muted" \
@@ -24,11 +24,13 @@ final: prev: {
             -u low
     else
         ${prev.libnotify}/bin/notify-send -r 69 \
-            -a "Volume" "Currently at $volume" \
+            -a "Volume" "Currently at $volume%" \
             -h int:value:"$volume" \
             -t 888 \
             -u low
     fi
+
+    ${prev.eww-wayland-git}/bin/eww update volume-level=$volume
   '';
   microphone = prev.writeShellScriptBin "microphone" ''
     #!/bin/sh
@@ -64,5 +66,11 @@ final: prev: {
           -h int:value:"$brightness" \
           -t 888 \
           -u low
+
+
+      ${prev.eww-wayland-git}/bin/eww update brightness-level=$brightness
     '';
+  nyxt-dev = prev.writeShellScriptBin "nyxt" ''
+    nix-shell ~/Projects/nyxt-git/build-scripts/shell.nix --run ~/Projects/nyxt-git/nyxt
+  '';
 }
