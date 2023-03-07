@@ -74,16 +74,16 @@
                                    :fallback-url (quri:uri "https://www.openstreetmap.org/"))
 
                     ;; general search engines
-                    (engines:google)
                     (engines:duckduckgo-html-only)
                     (apply #'engines:duckduckgo-images
                            *duckduckgo-keywords*)
                     (apply #'engines:duckduckgo
                            :shortcut "d" *duckduckgo-keywords*)
+                    (engines:searx :base-search-url "https://xo.wtf/search?q=~a")
                     (make-instance 'search-engine
                                    :shortcut "kagi"
                                    :search-url "https://kagi.com/search?q=~a"
                                    :fallback-url (quri:uri "https://kagi.com/"))
 
                     ;; default search
-                    (engines:searx :base-search-url "https://xo.wtf/search?q=~a")))))
+                    (engines:google)))))

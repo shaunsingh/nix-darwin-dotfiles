@@ -663,6 +663,22 @@
         "type": "github"
       }
     },
+    "nx-notmuch-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1631409193,
+        "narHash": "sha256-q0JQT6kD6txDBvlvWUwzYFiNfmxZIZFB7ztMlr208Pw=",
+        "owner": "igoralmeida",
+        "repo": "nx-notmuch",
+        "rev": "cef9ba31e180d57c80983978c940a03765afb9fe",
+        "type": "github"
+      },
+      "original": {
+        "owner": "igoralmeida",
+        "repo": "nx-notmuch",
+        "type": "github"
+      }
+    },
     "nx-search-engines-src": {
       "flake": false,
       "locked": {
@@ -700,6 +716,7 @@
         "nur": "nur",
         "nx-dark-reader-src": "nx-dark-reader-src",
         "nx-kaomoji-src": "nx-kaomoji-src",
+        "nx-notmuch-src": "nx-notmuch-src",
         "nx-search-engines-src": "nx-search-engines-src",
         "rust-overlay": "rust-overlay_2",
         "stable": "stable",

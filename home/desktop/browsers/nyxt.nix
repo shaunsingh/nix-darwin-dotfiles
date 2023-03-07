@@ -7,6 +7,7 @@
 }: {
   home.packages = with pkgs; [
     nyxt-dev
+    sbcl
   ];
   xdg.configFile."nyxt" = {
     source = ../../../configs/nyxt;
@@ -22,6 +23,10 @@
   };
   xdg.dataFile."nyxt/extensions/nx-search-engines" = {
     source = inputs.nx-search-engines-src;
+    recursive = true;
+  };
+  xdg.dataFile."nyxt/extensions/nx-notmuch" = {
+    source = inputs.nx-notmuch-src;
     recursive = true;
   };
   xdg.configFile."nyxt/base16.lisp".text = with config.lib.base16.theme; ''

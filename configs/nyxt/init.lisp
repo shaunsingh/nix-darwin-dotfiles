@@ -56,8 +56,10 @@ loads."
      :depends-on (,system) ,@(when file
                                 `(:components (,file)))))
 
-;; (load-after-system* :nx-dark-reader "dark-reader")
+;; (ql:quickload "nx-notmuch")
+;; (load-after-system* :nx-notmuch)
 ;; (load-after-system* :nx-kaomoji "kaomoji")
+(load-after-system* :nx-dark-reader "dark-reader")
 (load-after-system* :nx-search-engines "search-engines")
 
 ;; additional files to unconventionally load
@@ -119,9 +121,19 @@ loads."
      (webkit:webkit-settings-enable-developer-extras settings) t
      ;; use SF Pro Text as proportional font
      (webkit:webkit-settings-default-font-family settings) "SF Pro Text"
-     (webkit:webkit-settings-default-font-size settings) 11
+     (webkit:webkit-settings-default-font-size settings) 18
      ;; use Liga SFMono Nerd Font as monospace font
      (webkit:webkit-settings-monospace-font-family settings) "Liga SFMono Nerd Font"
-     (webkit:webkit-settings-default-monospace-font-size settings) 11
+     (webkit:webkit-settings-default-monospace-font-size settings) 15
      ;; use Unifont for icons
-     (webkit:webkit-settings-pictograph-font-family settings) "Unifont")))
+     (webkit:webkit-settings-pictograph-font-family settings) "Unifont")
+    ;; Set the view background to black.
+    (cffi:foreign-funcall
+     "webkit_web_view_set_background_color"
+     :pointer (g:pointer (nyxt/renderer/gtk:gtk-object buffer))
+     ;; GdkRgba is simply an array of four doubles.
+     :pointer (cffi:foreign-alloc
+               :double
+               :count 4
+               ;; red green blue alpha
+               :initial-contents '(0d0 0d0 0d0 1d0)))))

@@ -226,55 +226,11 @@
                  (:p (format nil "No bookmarks in ~s." (files:expand (nyxt/bookmark-mode:bookmarks-file mode)))))))))
     (let ((current-year (local-time:timestamp-year (local-time:now)))
           (dashboard-style (theme:themed-css (theme *browser*)
-                              ;; monospacing
-                              `(*
-                                :font-family ,*font*
-                                :font-size "11px")
-                              ;; general settings
-                              `(body
-                                :background-color ,*base00*
-                                :color ,*base04*
-                                :margin "4% 6%")
-                              ;; enable overflow
-                              `("#container"
-                                :white-space "nowrap"
-                                :overflow "hidden")
-                              ;; remove margins
-                              `("h1, h2, h3"
-                                :margin "0px")
-                              ;; colors
-                              `("h2, h3"
-                                :color ,*base05*)
-                              ;; fonts
-                              `("h1, #subtitle"
-                                :color ,*base06*
-                                :font-family "SF Pro Display"
-                                :font-size "72px"
-                                :margin-bottom "-9px") 
-                              `("h2, #motto"
-                                :font-family "SF Pro Text"
-                                :font-size "27px"
-                                :margin-left "3px")
-                              `("h3"
-                                :font-family "SF Pro Text"
-                                :font-size "18px"
-                                :margin-bottom "2px")
-                              `("p, li, ul, a"
-                                :font-size "13px")
-                              ;; margins
-                              `("#buttons"
-                                :margin-left "9px") 
-                              `("h3, ul"
-                                :margin-left "27px")
-                              `("ul"
-                                :margin-top "0px"
-                                :list-style-type "katakana")
-                              `("a"
-                                :white-space "pre-wrap")
                               `("#motto"
+                                :font-size "27px"
                                 :margin"18px"
+                                :margin-left "3px"
                                 :color ,*base08*)
-                              ;; system info render
                               `("#copyright"
                                 :position "absolute"
                                 :text-align "right"

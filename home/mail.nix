@@ -7,6 +7,10 @@
 }: {
   programs.mbsync.enable = true;
   programs.msmtp.enable = true;
+  programs.astroid = {
+    enable = true;
+    externalEditor = "foot nvim -c 'set ft=mail' '+set fileencoding=utf-8' '+set ff=unix' '+set enc=utf-8' '+set fo+=w' %1";
+  };
   programs.notmuch = {
     enable = true;
     hooks = {
@@ -19,7 +23,7 @@
     accounts = {
       "shaunsingh0207" = {
         address = "shaunsingh0207@gmail.com";
-        userName = "shaunsingh@gmail.com";
+        userName = "shaunsingh0207@gmail.com";
         realName = "Shaurya Singh";
         primary = true;
 
@@ -38,7 +42,7 @@
           showSignature = "append";
         };
 
-        passwordCommand = "${pkgs.gnupg}/bin/gpg -q --for-your-eyes-only --no-tty --exit-on-status-write-error --batch --passphrase-file ${config.home.homeDirectory}/.config/mail/shaunsingh0207.pass -d ${config.home.homeDirectory}/.cache/mail/shaunsingh0207.pass.gpg";
+        passwordCommand = "${pkgs.gnupg}/bin/gpg -q --for-your-eyes-only --no-tty --exit-on-status-write-error --batch --passphrase-file ~/.config/mail/shaunsingh0207.pass -d ~/.cache/mail/shaunsingh0207.pass.gpg";
 
         msmtp.enable = true;
         notmuch.enable = true;

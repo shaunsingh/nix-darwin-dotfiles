@@ -64,7 +64,8 @@
   (theme:themed-css (theme *browser*)
     ;; by default nyxt sets a proportional font
     `(*
-      :font-family ,*font*)
+      :font-family ,*font*
+      :font-size "11px")
     ;; add some padding around the body
     `(body
       :margin "9px"

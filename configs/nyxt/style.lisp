@@ -16,12 +16,11 @@
  ((message-buffer-style
   (theme:themed-css (theme *browser*)
     `(*
-      :font-family ,*font*)
+      :font-family ,*font*
+      :font-size "11px")
     `(body
       :background-color ,*base00*
       :color ,*base05*
-      :opacity 1
-      :font-size "11px"
       :padding 0
       :padding-left "9px"
       :margin "3px")))))
@@ -33,63 +32,72 @@
             (theme:themed-css (theme *browser*)  
               `(*
                 :font-family ,*font*
-                :font-size "11px")
-              `("#prompt-area"
-                :display "grid"
-                :grid-template-columns "auto auto 1fr auto")
-              `("#prompt, #prompt-extra, #prompt-area"
-                :font-size "13px"
+                :font-size "13px")
+              `(body
+                :border "0px")
+              `("#prompt, #prompt-extra, #prompt-area, #close-button"
                 :background-color ,*base01*
-                :color ,*base06*
-                :line-height "unset"
-                :padding "5px"
-                :padding-left "9px")
-              `("#input"
-                :background-color ,*base00*
                 :color ,*base05*)
-              `(button
-                :all "unset"
-                :background-color ,*base00*
-                :font-size "13px"
-                :margin "2px 12px 2px 0px"
-                :padding "3px 6px")
+              `("#prompt"
+                :margin-left "9px"
+                :margin-right "9px"
+                :font-weight "bold")
+              `("#prompt-area"
+                :border "0px")
+              `(".arrow-right, .arrow-left"
+                :all "unset")
               `("button[title=vi-normal-mode], button[title=vi-insert-mode]:hover"
-                :color ,*base0F*)
+                :color ,*base08*
+                :padding "4.25px 0px 0px 12.5px")
               `("button[title=vi-insert-mode], button[title=vi-normal-mode]:hover"
-                :color ,*base0C*)
+                :color ,*base0C*
+                :padding "4.25px 0px 0px 12.5px")
+              `("#close-button"
+                :padding-right "9px")
               `(".source"
                 :margin "0px")
               `(".source-name"
+                :padding "3px 18px"
                 :color ,*base05*)
+              `(".source-content"
+                :padding "2px 18px"
+                :margin "0px")
               `(".source-content th"
                 :background-color ,*base01*
                 :border-color ,*base01*
                 :color ,*base05*)
               `("#selection"
-                :color ,*base00*)
-              `(".marked"
-                :background-color ,*base02*
-                :color ,*base02*))))))
+                :color ,*base00*))))))
 
 ;; web buffer appearence
 (define-configuration web-buffer
   ((style (str:concat
             %slot-value%
             (theme:themed-css (theme *browser*)
+              `(*
+                :font-family ,*font*
+                :font-size "11px")
+              `(body
+                :margin "4% 6%")
+              `("#container"
+                :white-space "nowrap"
+                :overflow "hidden")
+              ;; reset margins
+              `("h1, h2, h3"
+                :margin "0px")
+              ;; brighten link/button on hover
               `("a:hover"
                 :color ,*base04*)
               `("a:active"
                 :color ,*base06*)
               `(".button"
-                :background-color ,(make-important *base00*)
-                :background-color ,*base00*
-                :border-color ,*base00*
-                :color ,*base04*)
-              `(".button:hover"
                 :background-color ,(make-important *base01*)
-                :color ,*base04*
                 :border-color ,(make-important *base01*)
-                :opacity 1)
+                :color ,*base05*)
+              `(".button:hover"
+                :background-color ,(make-important *base02*)
+                :border-color ,(make-important *base02*)
+                :color ,*base06*)
               `(".button:active"
                 :background-color ,(make-important *base01*)
                 :border-color ,(make-important *base01*)
@@ -98,51 +106,52 @@
                 :color ,*base0C*)
               `(".button:visited:active"
                 :color ,*base00*)
-              `("h2, h3, h4, h5, h6"
-                :color ,(make-important *base05*))
+              ;; headings config
+              `("h1, #subtitle"
+                :font-family "SF Pro Display"
+                :font-size "72px"
+                :margin-bottom "-9px")
+              `("h1"
+                :color ,(make-important *base06*))
               `("#subtitle"
-                :color ,(make-important *base0C*)))))))
+                :color ,(make-important *base0C*))
+              `("h2"
+                :font-family "sans-serif"
+                :font-size "27px"
+                :margin-left "3px"
+                :margin-bottom "2px"
+                :color ,(make-important *base0C*))
+              `("h3"
+                :font-family "sans-serif"
+                :font-size "18px"
+                :margin-left "27px"
+                :margin-bottom "2px"
+                :color ,(make-important *base0E*))
+              `("h4"
+                :color ,(make-important *base0F*))
+              `("h5"
+                :color ,(make-important *base09*))
+              ;; small things config
+              `("p, li, ul, a"
+                :font-size "13px")
+              `("p, #buttons"
+                :margin-left "9px") 
+              `("ul"
+                :margin-top "0px"
+                :list-style-type "hiragana"
+                :margin-left "36px")
+              `("a"
+                :white-space "pre-wrap"))))))
 
 ;; repl buffer appearence
 (define-configuration nyxt/repl-mode:repl-mode
   ((style (str:concat
             %slot-value%
             (theme:themed-css (theme *browser*)
+              `(*
+                :font-family ,*font*
+                :font-size "13px")
               `(".input"
-                :background-color ,*base01*
-                :border-color ,*base01*
-                :color ,*base05*)
-              `(".input-buffer"
-                :background-color ,*base00*
-                :color ,*base04*
-                :opacity 1)
-              `(".button"
-                :background-color ,*base00*
-                :background-color ,*base00*
-                :border-color ,*base00*
-                :color ,*base04*)
-              `(".button:hover"
-                :background-color ,*base01*
-                :color ,*base04*
-                :border-color ,*base01*
-                :opacity 1)
-              `(".button:active"
-                :background-color ,*base01*
-                :border-color ,*base01*
-                :color ,*base04*)
-              `(".input-buffer::placeholder"
-                :color ,*base0C*))))))
-
-;; small web appearence
-(define-configuration nyxt/small-web-mode:small-web-mode
-  ((style (str:concat
-            %slot-value%
-            (theme:themed-css (theme *browser*)
-              `("pre"
                 :background-color ,*base00*)
-              `("a.button.search"
-                :color ,*base04*
-                :border-color ,*base04*)
-              `("a.button.error"
-                :color ,*base0C*
-                :border-color ,*base0C*))))))
+              `("select.button"
+                :background-color ,*base00*))))))

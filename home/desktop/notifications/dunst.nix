@@ -58,4 +58,5 @@
       };
     };
   };
+  services.poweralertd.enable = true;
 }

@@ -65,6 +65,10 @@
       url = "github:aartaka/nx-search-engines";
       flake = false;
     };
+    nx-notmuch-src = {
+      url = "github:igoralmeida/nx-notmuch";
+      flake = false;
+    };
 
     ### --- de-duplicate flake inputs
 

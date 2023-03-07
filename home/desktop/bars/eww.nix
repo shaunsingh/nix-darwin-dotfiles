@@ -120,7 +120,7 @@
                        { "tag": 7, "label": "七" },
                        { "tag": 8, "label": "八" },
                        { "tag": 9, "label": "九" },
-                       { "tag": 0, "label": "H" }]')
+                       { "tag": 0, "label": "" }]')
 
       ''
       else ''

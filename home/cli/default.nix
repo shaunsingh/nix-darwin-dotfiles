@@ -31,8 +31,6 @@
       gitoxide
       # editor
       neovim-nightly
-      #
-      asahi-battery-threshold
     ]
     ++ lib.optionals isWayland [
       # clipboard
