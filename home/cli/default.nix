@@ -13,6 +13,7 @@
     ./git.nix
     ./starship.nix
     ./zoxide.nix
+    ./tmux.nix
   ];
 
   home.packages = with pkgs;

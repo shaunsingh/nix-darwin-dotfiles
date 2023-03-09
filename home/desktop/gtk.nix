@@ -9,8 +9,8 @@
     enable = true;
     font.name = "Liga SFMono Nerd Font";
     iconTheme = {
-      package = pkgs.papirus-icon-theme;
-      name = "Papirus-Dark";
+      package = pkgs.whitesur-icon-theme;
+      name = "WhiteSur-dark";
     };
     theme = {
       name = "phocus";

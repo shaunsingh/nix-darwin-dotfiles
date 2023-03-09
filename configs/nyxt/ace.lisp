@@ -127,6 +127,7 @@
            ;; editor config
            (ps:chain editor (set-option "cursorStyle" "wide"))          ;; static cursor
            (ps:chain editor (set-option "readOnly" nil))                ;; set read and write file
+           (ps:chain editor (set-option "fontSize" 15))                 ;; bigger default font
            (ps:chain editor (set-option "showLineNumbers" nil))         ;; disable line numbers
            (ps:chain editor (set-option "showPrintMargin" t))           ;; enable print margin (colorline)
            (ps:chain editor (set-option "displayIndentGuides" nil))     ;; disable indent markers

@@ -55,6 +55,6 @@
 (
 ((match-domain "discord.com" "github.com" "www.reddit.com" "duckduckgo.com")  :excluded (nx-dark-reader:dark-reader-mode))
 ((match-domain "discord.com" "reddit.com" "youtube.com" "duckduckgo.com")  :excluded (nyxt/history-mode:history-mode))
-((match-domain "9front.org")  :excluded (nyxt/reduce-tracking-mode:reduce-tracking-mode))
+((match-domain "9front.org" "10.11.99.1")  :excluded (nyxt/force-https-mode:force-https-mode))
 ((match-regex "^https?://([a-z0-9.-]+.)?[a-z2-7]{56}.onion")  :included (nyxt-user:tor-proxy-mode) :excluded (nyxt/force-https-mode:force-https-mode))
 )

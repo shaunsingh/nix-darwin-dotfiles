@@ -5,7 +5,6 @@ final: prev: rec {
   phocus-oxocarbon = prev.callPackage ../derivations/phocus-oxocarbon.nix {};
   sf-mono-liga-bin = prev.callPackage ../derivations/sf-mono-liga-bin.nix {};
   xremap = prev.callPackage ../derivations/xremap.nix {};
-  bato = prev.callPackage ../derivations/bato.nix {};
   rip = prev.callPackage ../derivations/rip.nix {};
   asahi-battery-threshold = prev.callPackage ../derivations/asahi-battery-threshold.nix {};
   webkitgtk =

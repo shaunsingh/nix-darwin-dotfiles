@@ -15,7 +15,7 @@
     nur.url = "github:nix-community/NUR";
 
     # Default Nixpkgs for packages
-    nixpkgs.follows = "mobile";
+    nixpkgs.follows = "master";
 
     ### --- platform support
 
@@ -296,7 +296,6 @@
         ];
         hm-modules = [
           ./home/themes/oxocarbon-dark.nix
-          ./home/desktop/services/bato.nix
           ./home/desktop/services/asahi-battery-threshold.nix
         ];
       };

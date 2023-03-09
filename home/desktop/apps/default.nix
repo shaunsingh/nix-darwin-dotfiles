@@ -18,6 +18,8 @@
       font-manager
       # manga
       komikku
+      # file manager
+      xfce.thunar
     ]
     ++ lib.optionals isWayland [
       # vnc client

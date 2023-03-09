@@ -141,6 +141,11 @@
       # shadow_blur_radius 27
       # corner_radius 3
 
+      # gestures
+      bindgesture swipe:3:right workspace prev
+      bindgesture swipe:3:left workspace next
+      # bindgesture swipe:3:up workspace view
+
       # start a headless vnc session for headless display
       exec swaymsg create_output
       output HEADLESS-1 mode 1404x1872 scale 2.0
