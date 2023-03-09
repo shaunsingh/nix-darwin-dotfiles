@@ -44,7 +44,8 @@
                "commands"                           ;; user commands
                "split"                              ;; support for "splits"
                "tor"                                ;; .onion management
-               "ace"))                              ;; support for ace text editor
+               "ace"                                ;; support for ace text editor
+               "fetch"))                            ;; system fetch
 
 ;; additional extensions to load
 (defmacro load-after-system* (system &optional file)

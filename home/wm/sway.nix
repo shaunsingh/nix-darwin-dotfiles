@@ -144,7 +144,7 @@
       # gestures
       bindgesture swipe:3:right workspace prev
       bindgesture swipe:3:left workspace next
-      # bindgesture swipe:3:up workspace view
+      bindgesture swipe:3:up exec ${pkgs.sov}/bin/sov
 
       # start a headless vnc session for headless display
       exec swaymsg create_output
