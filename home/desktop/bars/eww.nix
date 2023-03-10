@@ -50,7 +50,7 @@
       (defwidget date []
         (box :class "date"
              :orientation "v"
-          day month year))
+          year month day))
 
       (defwidget menu []
         (button :class "icon"
@@ -62,14 +62,12 @@
         (button :class "icon"
                 :orientation "v"
           (circular-progress :value brightness-level
-                             :tooltip "brightness: ''${brightness-level}"
                              :thickness 3)))
 
       (defwidget volume []
         (button :class "icon"
                 :orientation "v"
           (circular-progress :value volume-level
-                             :tooltip "volume: ''${volume-level}"
                              :thickness 3)))
 
       (defwidget battery []
@@ -77,7 +75,6 @@
                 :orientation "v"
                 :onclick ""
           (circular-progress :value "''${EWW_BATTERY['macsmc-battery'].capacity}"
-                             :tooltip "battery_level: ''${EWW_BATTERY['macsmc-battery'].capacity}%"
                              :thickness 3)))
 
       (defwidget current-tag []
@@ -148,10 +145,8 @@
     + ''
       (defwindow bar
         :monitor 0
-        :stacking "fg"
+        :stacking "bottom"
         :geometry (geometry
-                    :x 0
-                    :y 0
                     :height "100%"
                     :anchor "left center")
         :exclusive true
@@ -159,10 +154,8 @@
 
       (defwindow bar2
         :monitor 1
-        :stacking "fg"
+        :stacking "bottom"
         :geometry (geometry
-                    :x 0
-                    :y 0
                     :height "100%"
                     :anchor "left center")
         :exclusive true
@@ -170,7 +163,7 @@
     '');
 
   ewwScss = pkgs.writeText "eww.scss" (with config.lib.base16.theme; ''
-    $base00: #${baseBLEND-hex};
+    $base00: rgba(13,13,13,0.87);
     $base01: #${base01-hex};
     $base02: #${base02-hex};
     $base03: #${base03-hex};
@@ -195,10 +188,10 @@
     window {
       font-family: "Liga SFMono Nerd Font";
       font-size: 13px;
-      background: $base00;
+      background-color: rgba(0,0,0,0);
       color: $base04;
       & > * {
-        margin: 0px 12px 12px;
+        margin: 0px 0px 12px 12px;
       }
     }
 
@@ -208,16 +201,8 @@
 
     .active {
       color: $base06;
-      background-color: $base01;
       padding: 6px 9px 6px 6px;
       border-left: 3px solid $base0C;
-      border-radius: 0px 3px 3px 0px;
-    }
-
-    .segment-center {
-      background-color: $base01;
-      padding: 9px;
-      border-radius: 3px;
     }
 
     .time {
@@ -231,15 +216,17 @@
     }
 
     .icon {
-      background-color: $base01;
+      background-color: $base00;
       padding: 9px;
-      margin-bottom: 9px;
+      margin: 4.5px 0px;
       border-radius: 3px;
     }
 
     .current-tag {
-      color: $base05;
-      background-color: $baseIBM;
+      color: $base00;
+      background-color: $base0E;
+      padding: 9px;
+      margin: 4.5px 0px;
       border-radius: 3px;
     }
   '');

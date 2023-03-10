@@ -73,9 +73,7 @@ loads."
 
 ;; simple web-buffer customization
 (define-configuration web-buffer
-  (;; zoom in a bit
-   ;; (current-zoom-ratio 1.18)
-   ;; dont autocomplete when unessecary
+  (;; dont autocomplete when unessecary
    (search-always-auto-complete-p nil)
    ;; basic mode setup for web-buffer
    (default-modes `(,@*web-buffer-modes*
@@ -113,19 +111,18 @@ loads."
   (let* ((settings (webkit:webkit-web-view-get-settings
                     (nyxt/renderer/gtk::gtk-object buffer))))
     (setf
-     ;; enable encrypted (DRM) content
-     ;; (webkit:webkit-settings-enable-encrypted-media settings) t
-
+     ;; enable encrypted (DRM) content if possible
+     (webkit:webkit-settings-enable-encrypted-media settings) t
      ;; enable resizable text areas
      (webkit:webkit-settings-enable-resizable-text-areas settings) t
      ;; enable inspect
      (webkit:webkit-settings-enable-developer-extras settings) t
      ;; use SF Pro Text as proportional font
      (webkit:webkit-settings-default-font-family settings) "SF Pro Text"
-     (webkit:webkit-settings-default-font-size settings) 18
+     (webkit:webkit-settings-default-font-size settings) 15
      ;; use Liga SFMono Nerd Font as monospace font
      (webkit:webkit-settings-monospace-font-family settings) "Liga SFMono Nerd Font"
-     (webkit:webkit-settings-default-monospace-font-size settings) 15
+     (webkit:webkit-settings-default-monospace-font-size settings) 13
      ;; use Unifont for icons
      (webkit:webkit-settings-pictograph-font-family settings) "Unifont")
     ;; Set the view background to black.

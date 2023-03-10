@@ -244,6 +244,7 @@
                   ++ nixpkgs.lib.lists.optionals withSway [./home/wm/sway.nix]
                   ++ nixpkgs.lib.lists.optionals withRiver [./home/wm/river.nix]
                   ++ nixpkgs.lib.lists.optionals isGui [
+                    ./home/xdg.nix
                     ./home/desktop/gtk.nix
                     ./home/desktop/cursor.nix
                     ./home/desktop/apps

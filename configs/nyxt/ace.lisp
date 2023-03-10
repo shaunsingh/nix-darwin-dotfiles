@@ -31,7 +31,7 @@
      (:style (style ace)))
     (:body
      (:script
-      :src "https://cdnjs.cloudflare.com/ajax/libs/ace/1.15.2/ace.min.js"
+      :src "https://cdnjs.cloudflare.com/ajax/libs/ace/1.15.3/ace.min.js"
       :crossorigin "anonymous"
       :type "text/javascript"
       :charset "utf-8"
@@ -74,7 +74,7 @@
      (mapcar
        (lambda (name)
          (quri:merge-uris (quri:uri name)
-        (quri:uri "https://cdnjs.cloudflare.com/ajax/libs/ace/1.15.2/")))
+        (quri:uri "https://cdnjs.cloudflare.com/ajax/libs/ace/1.15.3/")))
        '(;; vim keybinding support
          "keybinding-vim.min.js"
          ;; themes
@@ -82,8 +82,10 @@
          ;; language modes
          "mode-java.min.js"
          "mode-lisp.min.js"
+         "mode-nix.min.js"
          ;; language snippets
          "snippets/java.min.js"
+         "snippets/nix.min.js"
          ;; language workers
          "worker-base.min.js"
          ;; extensions
