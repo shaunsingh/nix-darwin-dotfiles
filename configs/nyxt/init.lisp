@@ -32,7 +32,7 @@
   '(nyxt/vi-mode:vi-normal-mode                     ;; vi bindings
     nyxt/style-mode:dark-mode;                      ;; dark mode
     nyxt/blocker-mode:blocker-mode                  ;; basic adblock
-    nyxt/force-https-mode:force-https-mode          ;; force https
+    ;; nyxt/force-https-mode:force-https-mode          ;; force https
     nyxt/user-script-mode:user-script-mode          ;; user scripts
     nyxt/reduce-tracking-mode:reduce-tracking-mode  ;; reduce tracking
     nyxt/bookmarklets-mode:bookmarklets-mode)       ;; javascript bookmarks
@@ -45,6 +45,7 @@
                "split"                              ;; support for "splits"
                "tor"                                ;; .onion management
                "ace"                                ;; support for ace text editor
+               "mpv"                                ;; viewing videos/audio in mpv
                "fetch"))                            ;; system fetch
 
 ;; additional extensions to load
@@ -117,6 +118,8 @@ loads."
      (webkit:webkit-settings-enable-resizable-text-areas settings) t
      ;; enable inspect
      (webkit:webkit-settings-enable-developer-extras settings) t
+     ;; enable webgl support
+     (webkit:webkit-settings-enable-webgl settings) t
      ;; use SF Pro Text as proportional font
      (webkit:webkit-settings-default-font-family settings) "SF Pro Text"
      (webkit:webkit-settings-default-font-size settings) 15

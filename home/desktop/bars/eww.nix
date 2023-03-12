@@ -208,6 +208,7 @@
     }
 
     .segment-center {
+      margin-top: 18px;
       padding: 9px;
     }
 

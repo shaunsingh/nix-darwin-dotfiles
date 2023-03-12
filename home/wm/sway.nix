@@ -40,9 +40,9 @@
         };
         "type:touchpad" = {
           tap = "enabled";
-          drag = "enabled";
           accel_profile = "adaptive";
-          scroll_factor = "0.3";
+          scroll_factor = "0.45";
+          pointer_accel = "0.32";
         };
       };
       bars = [];

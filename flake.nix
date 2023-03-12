@@ -255,7 +255,7 @@
                   ++ nixpkgs.lib.lists.optionals isWayland [
                     ./home/desktop/kanshi.nix
                     ./home/desktop/swaybg.nix
-                    ./home/lockers/waylock.nix
+                    # ./home/lockers/waylock.nix
                     ./home/desktop/term/foot.nix
                     ./home/launchers/kickoff.nix
                     ./home/desktop/notifications/dunst.nix
@@ -290,7 +290,7 @@
         system = "aarch64-linux";
         withMail = true;
         withSway = true;
-        withBindings = true;
+        withBindings = false;
         modules = [
           ./hosts/nixos-asahi-aarch64
           ./users/shared/nixos/hardware

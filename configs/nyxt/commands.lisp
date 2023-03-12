@@ -49,7 +49,6 @@
  'search-translate-selection
  "Translate Selection")
 
-
 ;; open markdown preview in a split
 (defun prompt-for-markdown-file ()
   (uiop:native-namestring
@@ -90,3 +89,22 @@
   "Close grip preview window"
   (delete-all-panel-buffers)
   (uiop:launch-program "pkill grip"))
+
+;; terminal stuff
+(define-command-global open-terminal ()
+  "Open a terminal in a new buffer"
+  (let ((term-buffer (make-buffer :title "*term*"
+                                  :url "http://localhost:7681/"
+                                  :modes 'nyxt/passthrough-mode:passthrough-mode)))
+    (set-current-buffer term-buffer)))
+
+(define-panel-command-global open-terminal-split ()
+    (panel "*term split*" :right)
+  "Open a terminal on the right buffer"
+  (run-thread "term loader"
+    (setf 
+      (ffi-width panel) (round (/ (ffi-width (current-window)) 2)))
+    (sleep 0.3)
+    (buffer-load (quri:uri "http://localhost:7681/")
+                 :buffer panel))
+  "")
