@@ -48,3 +48,45 @@
 (ffi-add-context-menu-command
  'search-translate-selection
  "Translate Selection")
+
+
+;; open markdown preview in a split
+(defun prompt-for-markdown-file ()
+  (uiop:native-namestring
+   (pathname
+    (prompt1
+     :prompt "Open markdown file"
+     :extra-modes 'nyxt/file-manager-mode:file-manager-mode
+     :input (uiop:native-namestring (uiop:getcwd))
+     :sources
+     (list (make-instance 'nyxt/file-manager-mode:file-source
+                          :name "Existing file"
+                          :actions-on-return #'identity)
+           (make-instance 'prompter:raw-source
+                          :name "Create new file"))))))
+
+(define-panel-command open-preview ()
+    (panel "*markdown preview*" :right)
+  "Open a file to preview using grip on the right buffer"
+  (run-thread "grip loader"
+    (setf 
+      (ffi-width panel) (round (/ (ffi-width (current-window)) 2)))
+    (sleep 0.3)
+    (buffer-load (quri:uri "http://localhost:6419")
+                 :buffer panel))
+  "")
+
+(define-command-global open-markdown (&key (file (prompt-for-markdown-file)))
+  "Open a markdown file with a grip-powered preview."
+  (flet ((launch-grip (file-path)
+           (uiop:launch-program (format nil "grip ~a" file-path))))
+    (let ((buffer (make-instance 'nyxt/editor-mode::editor-buffer
+                                 :url (quri:make-uri :scheme "editor" :path file))))
+      (set-current-buffer buffer)
+      (launch-grip file)
+      (open-preview))))
+
+(define-command-global close-preview ()
+  "Close grip preview window"
+  (delete-all-panel-buffers)
+  (uiop:launch-program "pkill grip"))

@@ -155,3 +155,17 @@
                 :background-color ,*base00*)
               `("select.button"
                 :background-color ,*base00*))))))
+
+;; small web (gopher/whatever) appearence
+(define-configuration nyxt/small-web-mode:small-web-mode
+  ((style (str:concat
+            %slot-value%
+            (theme:themed-css (theme *browser*)
+              `("pre"
+                :background-color ,*base00*)
+              `("a.button.search"
+                :color ,*base04*
+                :border-color ,*base04*)
+              `("a.button.error"
+                :color ,*base0C*
+                :border-color ,*base0C*))))))

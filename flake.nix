@@ -297,7 +297,6 @@
         ];
         hm-modules = [
           ./home/themes/oxocarbon-dark.nix
-          ./home/desktop/apps/zathura.nix
           ./home/desktop/services/asahi-battery-threshold.nix
         ];
       };

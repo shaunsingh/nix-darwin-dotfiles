@@ -8,6 +8,8 @@
 }: {
   imports = [
     ./discord.nix
+    # ./obs-studio.nix
+    ./zathura.nix
   ];
 
   home.packages = with pkgs;
@@ -20,6 +22,11 @@
       komikku
       # file manager
       xfce.thunar
+      # image viewer
+      xfce.ristretto
+      xfce.tumbler
+      # torrent
+      transmission-gtk
     ]
     ++ lib.optionals isWayland [
       # vnc client

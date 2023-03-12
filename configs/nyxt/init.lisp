@@ -124,14 +124,4 @@ loads."
      (webkit:webkit-settings-monospace-font-family settings) "Liga SFMono Nerd Font"
      (webkit:webkit-settings-default-monospace-font-size settings) 13
      ;; use Unifont for icons
-     (webkit:webkit-settings-pictograph-font-family settings) "Unifont")
-    ;; Set the view background to black.
-    (cffi:foreign-funcall
-     "webkit_web_view_set_background_color"
-     :pointer (g:pointer (nyxt/renderer/gtk:gtk-object buffer))
-     ;; GdkRgba is simply an array of four doubles.
-     :pointer (cffi:foreign-alloc
-               :double
-               :count 4
-               ;; red green blue alpha
-               :initial-contents '(0d0 0d0 0d0 1d0)))))
+     (webkit:webkit-settings-pictograph-font-family settings) "Unifont")))

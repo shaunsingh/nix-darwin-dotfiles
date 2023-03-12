@@ -117,7 +117,7 @@
                        { "tag": 7, "label": "七" },
                        { "tag": 8, "label": "八" },
                        { "tag": 9, "label": "九" },
-                       { "tag": 0, "label": "" }]')
+                       { "tag": 0, "label": "rM" }]')
 
       ''
       else ''
@@ -163,7 +163,8 @@
     '');
 
   ewwScss = pkgs.writeText "eww.scss" (with config.lib.base16.theme; ''
-    $base00: rgba(13,13,13,0.87);
+    $baseTR: rgba(13,13,13,0.13);
+    $base00: #${baseBLEND-hex};
     $base01: #${base01-hex};
     $base02: #${base02-hex};
     $base03: #${base03-hex};
@@ -202,7 +203,12 @@
     .active {
       color: $base06;
       padding: 6px 9px 6px 6px;
+      background-color: $baseTR;
       border-left: 3px solid $base0C;
+    }
+
+    .segment-center {
+      padding: 9px;
     }
 
     .time {
