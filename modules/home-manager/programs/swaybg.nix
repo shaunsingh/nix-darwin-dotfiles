@@ -1,13 +1,14 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}: let
+{ config
+, lib
+, pkgs
+, ...
+}:
+let
   inherit (lib.options) mkEnableOption mkOption;
   inherit (lib.modules) mkIf;
   cfg = config.programs.swaybg;
-in {
+in
+{
   options.programs.swaybg = with lib.types; {
     enable = mkEnableOption "swaybg";
 
@@ -28,7 +29,7 @@ in {
     };
 
     mode = mkOption {
-      type = enum ["stretch" "fit" "fill" "center" "tile" "solid_color"];
+      type = enum [ "stretch" "fit" "fill" "center" "tile" "solid_color" ];
       default = "fill";
       description = ''
         The background mode to use for the image
@@ -48,8 +49,8 @@ in {
     systemd.user.services.swaybg = {
       Unit = {
         Description = "swaybg background service";
-        PartOf = ["graphical-session.target"];
-        After = ["graphical-session.target"];
+        PartOf = [ "graphical-session.target" ];
+        After = [ "graphical-session.target" ];
       };
 
       Service = {
@@ -58,7 +59,7 @@ in {
         Restart = "on-failure";
       };
 
-      Install.WantedBy = [cfg.systemdTarget];
+      Install.WantedBy = [ cfg.systemdTarget ];
     };
   };
 }

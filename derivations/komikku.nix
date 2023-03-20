@@ -14,14 +14,14 @@
 , python3
 , wrapGAppsHook4
 , nix-update-script
-# additions
-, pure-protobuf
+, # additions
+  pure-protobuf
 , pytest-steps
+,
 }:
-
 python3.pkgs.buildPythonApplication rec {
   pname = "komikku";
-  version = "1.9.0";
+  version = "1.14.0";
 
   format = "other";
 
@@ -29,7 +29,7 @@ python3.pkgs.buildPythonApplication rec {
     owner = "valos";
     repo = "Komikku";
     rev = "v${version}";
-    sha256 = "sha256-UFam3C9jZNuJvTlccyUvhp4z624hPByPhX7cPROv528=";
+    sha256 = "sha256-RWb2JfpQvmdM3zrUO+vxSs0wgz/fU+uNR1FB8fuodt4=";
   };
 
   nativeBuildInputs = [

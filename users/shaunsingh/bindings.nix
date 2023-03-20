@@ -1,13 +1,12 @@
-{
-  pkgs,
-  lib,
-  inputs,
-  config,
-  isWayland,
-  withSway,
-  ...
+{ pkgs
+, lib
+, inputs
+, config
+, isWayland
+, withSway
+, ...
 }: {
-  imports = [../../modules/nixos/services/xremap];
+  imports = [ ../../modules/nixos/services/xremap ];
   services.xremap = {
     inherit withSway;
     serviceMode = "user";
@@ -31,7 +30,7 @@
           {
             name = "global";
             remap = {
-              "Super-f" = {launch = "['${pkgs.firefox}/bin/firefox']";};
+              "Super-f" = { launch = "['${pkgs.firefox}/bin/firefox']"; };
             };
           }
         ]
@@ -40,7 +39,7 @@
             name = "wayland";
             remap = {
               # "Super-Enter" = { launch = "['${pkgs.foot}/bin/foot']"; };
-              "C-w" = {launch = "['${pkgs.foot}/bin/foot']";};
+              "C-w" = { launch = "['${pkgs.foot}/bin/foot']"; };
             };
           }
         ];

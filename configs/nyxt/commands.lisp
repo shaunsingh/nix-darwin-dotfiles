@@ -50,11 +50,11 @@
  "Translate Selection")
 
 ;; open markdown preview in a split
-(defun prompt-for-markdown-file ()
+(defun my-prompt-for-file ()
   (uiop:native-namestring
    (pathname
     (prompt1
-     :prompt "Open markdown file"
+     :prompt "Open file"
      :extra-modes 'nyxt/file-manager-mode:file-manager-mode
      :input (uiop:native-namestring (uiop:getcwd))
      :sources
@@ -75,7 +75,7 @@
                  :buffer panel))
   "")
 
-(define-command-global open-markdown (&key (file (prompt-for-markdown-file)))
+(define-command-global open-markdown (&key (file (my-prompt-for-file)))
   "Open a markdown file with a grip-powered preview."
   (flet ((launch-grip (file-path)
            (uiop:launch-program (format nil "grip ~a" file-path))))

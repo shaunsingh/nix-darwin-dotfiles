@@ -1,9 +1,8 @@
-{
-  pkgs,
-  lib,
-  inputs,
-  config,
-  ...
+{ pkgs
+, lib
+, inputs
+, config
+, ...
 }: {
   wayland.windowManager.sway = {
     enable = true;
@@ -28,7 +27,10 @@
           always = false;
         }
       ];
-      seat."*".hide_cursor = "when-typing disable";
+      window = {
+        titlebar = true;
+        border = 0;
+      };
       input = {
         "keyboard" = {
           xkb_layout = "us";
@@ -42,24 +44,30 @@
           tap = "enabled";
           accel_profile = "adaptive";
           scroll_factor = "0.45";
-          pointer_accel = "0.32";
+          pointer_accel = "0.27";
         };
       };
-      bars = [];
+      # output = {
+      #   "*" = {
+      #     background = "#${config.lib.base16.theme.baseDARK-hex} solid_color";
+      #   };
+      # };
+      bars = lib.mkForce [ ];
       gaps.outer = 18;
       defaultWorkspace = "workspace 1";
-      keybindings = let
-        modifier = "Mod4";
-        concatAttrs = lib.fold (x: y: x // y) {};
-        tagBinds =
-          concatAttrs
-          (map
-            (i: {
-              "${modifier}+${toString i}" = "exec 'swaymsg workspace ${toString i} && ${pkgs.eww-wayland-git}/bin/eww update active-tag=${toString i}'";
-              "${modifier}+Shift+${toString i}" = "exec 'swaymsg move container to workspace ${toString i}'";
-            })
-            (lib.range 0 9));
-      in
+      keybindings =
+        let
+          modifier = "Mod4";
+          concatAttrs = lib.fold (x: y: x // y) { };
+          tagBinds =
+            concatAttrs
+              (map
+                (i: {
+                  "${modifier}+${toString i}" = "exec 'swaymsg workspace ${toString i} && ${pkgs.eww-wayland-git}/bin/eww update active-tag=${toString i}'";
+                  "${modifier}+Shift+${toString i}" = "exec 'swaymsg move container to workspace ${toString i}'";
+                })
+                (lib.range 0 9));
+        in
         tagBinds
         // {
           "${modifier}+Return" = "exec ${pkgs.foot}/bin/foot";

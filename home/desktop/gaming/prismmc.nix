@@ -1,9 +1,8 @@
-{
-  pkgs,
-  lib,
-  inputs,
-  config,
-  ...
+{ pkgs
+, lib
+, inputs
+, config
+, ...
 }: {
-  home.packages = with pkgs; [prismlauncher];
+  home.packages = with pkgs; [ prismlauncher ];
 }

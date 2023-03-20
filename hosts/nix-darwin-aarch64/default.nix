@@ -1,8 +1,7 @@
-{
-  pkgs,
-  lib,
-  inputs,
-  ...
+{ pkgs
+, lib
+, inputs
+, ...
 }: {
   security.pam.enableSudoTouchIdAuth = true;
   networking.hostName = "shaunsingh-nix-darwin-mbp";

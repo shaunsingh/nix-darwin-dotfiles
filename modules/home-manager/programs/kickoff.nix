@@ -1,13 +1,13 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
+{ config
+, lib
+, pkgs
+, ...
 }:
 with lib; let
   cfg = config.programs.kickoff;
-  tomlFormat = pkgs.formats.toml {};
-in {
+  tomlFormat = pkgs.formats.toml { };
+in
+{
   options = {
     programs.kickoff = {
       enable =
@@ -23,7 +23,7 @@ in {
 
       settings = mkOption {
         type = tomlFormat.type;
-        default = {};
+        default = { };
         description = ''
           Configuration written to
           <filename>$XDG_CONFIG_HOME/kickoff/config.toml</filename>
@@ -45,9 +45,9 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home.packages = [cfg.package];
+    home.packages = [ cfg.package ];
 
-    xdg.configFile."kickoff/config.toml" = mkIf (cfg.settings != {}) {
+    xdg.configFile."kickoff/config.toml" = mkIf (cfg.settings != { }) {
       source = tomlFormat.generate "config.toml" cfg.settings;
     };
   };

@@ -1,16 +1,15 @@
-{
-  pkgs,
-  lib,
-  inputs,
-  config,
-  ...
+{ pkgs
+, lib
+, inputs
+, config
+, ...
 }: {
   system.keyboard = {
     enableKeyMapping = true;
     remapCapsLockToEscape = true;
   };
   system.defaults = {
-    screencapture = {location = "/tmp";};
+    screencapture = { location = "/tmp"; };
     dock = {
       autohide = true;
       showhidden = true;

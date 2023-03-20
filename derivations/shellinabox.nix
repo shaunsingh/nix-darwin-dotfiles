@@ -1,5 +1,16 @@
-{ lib, stdenv, fetchFromGitHub, fetchurl, fetchpatch, autoreconfHook, pam, openssl, openssh, shadow, makeWrapper }:
-
+{ lib
+, stdenv
+, fetchFromGitHub
+, fetchurl
+, fetchpatch
+, autoreconfHook
+, pam
+, openssl
+, openssh
+, shadow
+, makeWrapper
+,
+}:
 stdenv.mkDerivation rec {
   version = "2.20";
   pname = "shellinabox";

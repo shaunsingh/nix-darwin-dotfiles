@@ -1,7 +1,7 @@
-{
-  stdenvNoCC,
-  fetchFromGitHub,
-  nodePackages,
+{ stdenvNoCC
+, fetchFromGitHub
+, nodePackages
+,
 }:
 stdenvNoCC.mkDerivation rec {
   pname = "phocus-oxocarbon";
@@ -47,6 +47,6 @@ stdenvNoCC.mkDerivation rec {
       --replace "@secondary@" "#dde1e6"
   '';
 
-  nativeBuildInputs = [nodePackages.sass];
-  installFlags = ["DESTDIR=$(out)" "PREFIX="];
+  nativeBuildInputs = [ nodePackages.sass ];
+  installFlags = [ "DESTDIR=$(out)" "PREFIX=" ];
 }

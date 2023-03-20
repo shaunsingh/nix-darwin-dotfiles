@@ -1,10 +1,9 @@
-{
-  pkgs,
-  lib,
-  inputs,
-  config,
-  isWayland,
-  ...
+{ pkgs
+, lib
+, inputs
+, config
+, isWayland
+, ...
 }: {
   environment = {
     sessionVariables = {

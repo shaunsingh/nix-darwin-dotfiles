@@ -1,6 +1,6 @@
-{
-  stdenvNoCC,
-  fetchFromGitHub,
+{ stdenvNoCC
+, fetchFromGitHub
+,
 }:
 stdenvNoCC.mkDerivation rec {
   pname = "sf-mono-liga-bin";

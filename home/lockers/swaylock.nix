@@ -1,10 +1,9 @@
-{
-  pkgs,
-  lib,
-  config,
-  ...
+{ pkgs
+, lib
+, config
+, ...
 }: {
-  home.packages = with pkgs; [swaylock-effects];
+  home.packages = with pkgs; [ swaylock-effects ];
 
   programs.swaylock = {
     settings = with config.lib.base16.theme; {

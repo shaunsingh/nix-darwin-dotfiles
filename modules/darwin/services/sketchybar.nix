@@ -1,8 +1,7 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
+{ config
+, lib
+, pkgs
+, ...
 }:
 with lib; let
   cfg = config.services.sketchybar;
@@ -13,7 +12,8 @@ with lib; let
     destination = "/sketchybar/sketchybarrc";
     executable = true;
   };
-in {
+in
+{
   options = with types; {
     services.sketchybar.enable = mkOption {
       type = bool;
@@ -40,10 +40,10 @@ in {
   };
 
   config = mkIf cfg.enable {
-    environment.systemPackages = [cfg.package];
+    environment.systemPackages = [ cfg.package ];
 
     launchd.user.agents.sketchybar = {
-      serviceConfig.ProgramArguments = ["${cfg.package}/bin/sketchybar"];
+      serviceConfig.ProgramArguments = [ "${cfg.package}/bin/sketchybar" ];
 
       serviceConfig.KeepAlive = true;
       serviceConfig.RunAtLoad = true;

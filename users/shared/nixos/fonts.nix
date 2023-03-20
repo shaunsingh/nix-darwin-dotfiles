@@ -1,9 +1,8 @@
-{
-  pkgs,
-  lib,
-  inputs,
-  config,
-  ...
+{ pkgs
+, lib
+, inputs
+, config
+, ...
 }: {
   fonts.fontconfig = {
     enable = true;
@@ -15,9 +14,9 @@
     };
     subpixel.lcdfilter = "default";
     defaultFonts = {
-      monospace = ["Liga SFMono Nerd Font"];
-      sansSerif = ["SF Pro Text"];
-      serif = ["New York Medium"];
+      monospace = [ "Liga SFMono Nerd Font" ];
+      sansSerif = [ "SF Pro Text" ];
+      serif = [ "New York Medium" ];
     };
   };
 }

@@ -1,9 +1,8 @@
-{
-  pkgs,
-  lib,
-  inputs,
-  config,
-  ...
+{ pkgs
+, lib
+, inputs
+, config
+, ...
 }: {
   home.pointerCursor = {
     name = "phinger-cursors";
@@ -11,9 +10,20 @@
     size = 32;
   };
   gtk = {
-    gtk2.extraConfig = "gtk-cursor-theme-size=32";
-    gtk3.extraConfig."gtk-cursor-theme-size" = 32;
-    gtk4.extraConfig."gtk-cursor-theme-size" = 32;
+    cursorTheme = {
+      name = "phinger-cursors";
+      package = pkgs.phinger-cursors;
+    };
+    gtk3.extraConfig = {
+      Settings = ''
+        gtk-application-prefer-dark-theme=1
+      '';
+    };
+    gtk4.extraConfig = {
+      Settings = ''
+        gtk-application-prefer-dark-theme=1
+      '';
+    };
   };
   home.sessionVariables = {
     XCURSOR_THEME = "phinger-cursors";

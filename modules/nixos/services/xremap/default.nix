@@ -1,19 +1,19 @@
-{
-  config,
-  pkgs,
-  lib,
-  ...
+{ config
+, pkgs
+, lib
+, ...
 }:
 with lib; let
   cfg = config.services.xremap;
-in {
+in
+{
   imports = [
     ./user-service.nix
     ./system-service.nix
   ];
   options.services.xremap = {
     serviceMode = mkOption {
-      type = types.enum ["user" "system"];
+      type = types.enum [ "user" "system" ];
       default = "system";
       description = ''
         The mode the service will run as.
@@ -40,7 +40,7 @@ in {
       type = types.attrs;
       description = "Xremap configuration. See xremap repo for examples";
       default = {
-        modmap = [];
+        modmap = [ ];
       };
       example = ''
         {

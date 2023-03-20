@@ -1,8 +1,7 @@
-{
-  pkgs,
-  lib,
-  inputs,
-  ...
+{ pkgs
+, lib
+, inputs
+, ...
 }: {
   imports = [
     inputs.nixos-wsl.nixosModules.wsl
@@ -32,7 +31,7 @@
   security.pam.services.xdm.enableGnomeKeyring = true;
 
   programs.ssh.startAgent = true;
-  services.openssh.ports = [2022];
+  services.openssh.ports = [ 2022 ];
 
   networking.hostName = "shaunsingh-nix-wsl";
 }

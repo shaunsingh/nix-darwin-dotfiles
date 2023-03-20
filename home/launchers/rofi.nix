@@ -1,10 +1,10 @@
-{
-  pkgs,
-  lib,
-  inputs,
-  config,
-  ...
-}: let
+{ pkgs
+, lib
+, inputs
+, config
+, ...
+}:
+let
   power-menu = pkgs.writeShellScriptBin "power-menu" ''
     #!/bin/sh
 
@@ -29,7 +29,8 @@
     		;;
     esac
   '';
-in {
+in
+{
   home.packages = with pkgs; [
     rofi-wayland
     power-menu

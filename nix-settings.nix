@@ -1,8 +1,8 @@
-{
-  inputs,
-  system,
-  nixpkgs,
-  max-jobs,
+{ inputs
+, system
+, nixpkgs
+, max-jobs
+,
 }: {
   daemonCPUSchedPolicy = "idle";
   daemonIOSchedClass = "idle";
@@ -16,12 +16,14 @@
     http-connections = 0
   '';
 
-  nixPath = let
-    path = toString ./.;
-  in [
-    "nixpkgs=${nixpkgs}"
-    "home-manager=${inputs.home-manager}"
-  ];
+  nixPath =
+    let
+      path = toString ./.;
+    in
+    [
+      "nixpkgs=${nixpkgs}"
+      "home-manager=${inputs.home-manager}"
+    ];
 
   package = inputs.master.legacyPackages.${system}.nix;
 
@@ -50,6 +52,6 @@
       "nixpkgs-wayland.cachix.org-1:3lwxaILxMRkVhehr5StQprHdEo4IrE8sRho9R9HOLYA="
     ];
 
-    trusted-users = ["root" "shauryasingh"];
+    trusted-users = [ "root" "shauryasingh" ];
   };
 }

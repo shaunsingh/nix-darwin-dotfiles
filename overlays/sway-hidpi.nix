@@ -27,8 +27,7 @@ final: prev: rec {
           revert = true;
         })
       ];
-    }))
-    .override {inherit xwayland;};
+    })).override { inherit xwayland; };
 
   sway-unwrapped =
     (prev.sway-unwrapped.overrideAttrs (oa: {
@@ -39,9 +38,8 @@ final: prev: rec {
         sha256 = "sha256-WRvJsSvDv2+qirqkpaV2c7fFOgJAT3sXxPtKLure580=";
       };
 
-      buildInputs = oa.buildInputs ++ [prev.pcre2 prev.xorg.xcbutilwm];
-    }))
-    .override {wlroots_0_16 = wlroots-hidpi;};
+      buildInputs = oa.buildInputs ++ [ prev.pcre2 prev.xorg.xcbutilwm ];
+    })).override { wlroots_0_16 = wlroots-hidpi; };
 
   sway-hidpi = prev.sway.override {
     inherit sway-unwrapped;

@@ -6,7 +6,7 @@ final: prev: {
       "-mcpu=apple-m1"
       # "-fuse-ld=${final.mold}/bin/mold"
     ]
-    final.llvmPackages_latest.stdenv;
+      final.llvmPackages_latest.stdenv;
   # nativeStdenv = prev.stdenvAdapters.withCFlags [
   #     "-Ofast"
   #     "-pipe"

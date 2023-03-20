@@ -1,11 +1,11 @@
-{
-  lib,
-  rustPlatform,
-  fetchFromGitHub,
-  pkg-config,
-  fontconfig,
-  libxkbcommon,
-  wayland,
+{ lib
+, rustPlatform
+, fetchFromGitHub
+, pkg-config
+, fontconfig
+, libxkbcommon
+, wayland
+,
 }:
 rustPlatform.buildRustPackage rec {
   pname = "kickoff";
@@ -20,8 +20,8 @@ rustPlatform.buildRustPackage rec {
 
   cargoSha256 = "sha256-kifOE795rM8QpDNCF3MQi4M15w/8OsmNK6cqkizOwG0=";
 
-  nativeBuildInputs = [pkg-config];
-  buildInputs = [fontconfig libxkbcommon wayland];
+  nativeBuildInputs = [ pkg-config ];
+  buildInputs = [ fontconfig libxkbcommon wayland ];
 
   postFixup = ''
     patchelf $out/bin/kickoff --add-rpath ${lib.makeLibraryPath buildInputs}

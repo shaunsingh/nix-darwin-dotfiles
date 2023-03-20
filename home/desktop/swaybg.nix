@@ -1,11 +1,10 @@
-{
-  pkgs,
-  lib,
-  inputs,
-  config,
-  ...
+{ pkgs
+, lib
+, inputs
+, config
+, ...
 }: {
-  imports = [../../modules/home-manager/programs/swaybg.nix];
+  imports = [ ../../modules/home-manager/programs/swaybg.nix ];
   programs.swaybg = {
     enable = true;
     image = ../../configs/wallpapers/cell_od11.png;

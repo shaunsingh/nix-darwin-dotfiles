@@ -1,12 +1,12 @@
 final: prev: rec {
-  kickoff = prev.callPackage ../derivations/kickoff.nix {};
-  kickoff-dot-desktop = prev.callPackage ../derivations/kickoff-dot-desktop.nix {};
-  otf-apple = prev.callPackage ../derivations/otf-apple.nix {};
-  phocus-oxocarbon = prev.callPackage ../derivations/phocus-oxocarbon.nix {};
-  sf-mono-liga-bin = prev.callPackage ../derivations/sf-mono-liga-bin.nix {};
-  xremap = prev.callPackage ../derivations/xremap.nix {};
-  rip = prev.callPackage ../derivations/rip.nix {};
-  asahi-battery-threshold = prev.callPackage ../derivations/asahi-battery-threshold.nix {};
+  kickoff = prev.callPackage ../derivations/kickoff.nix { };
+  kickoff-dot-desktop = prev.callPackage ../derivations/kickoff-dot-desktop.nix { };
+  otf-apple = prev.callPackage ../derivations/otf-apple.nix { };
+  phocus-oxocarbon = prev.callPackage ../derivations/phocus-oxocarbon.nix { };
+  sf-mono-liga-bin = prev.callPackage ../derivations/sf-mono-liga-bin.nix { };
+  xremap = prev.callPackage ../derivations/xremap.nix { };
+  rip = prev.callPackage ../derivations/rip.nix { };
+  asahi-battery-threshold = prev.callPackage ../derivations/asahi-battery-threshold.nix { };
   webkitgtk =
     if prev.stdenv.isDarwin
     then
@@ -19,9 +19,8 @@ final: prev: rec {
   pure-protobuf = prev.callPackage ../derivations/pure-protobuf.nix {
     buildPythonPackage = prev.python3Packages.buildPythonPackage;
   };
-  pytest-harvest = prev.callPackage ../derivations/pytest-harvest.nix {};
+  pytest-harvest = prev.callPackage ../derivations/pytest-harvest.nix { };
   pytest-steps = prev.callPackage ../derivations/pytest-steps.nix { inherit pytest-harvest; };
   komikku = prev.callPackage ../derivations/komikku.nix { inherit pure-protobuf pytest-steps; };
   shellinabox = prev.callPackage ../derivations/shellinabox.nix { openssl = prev.openssl_1_1; };
-  wetty = prev.callPackage ../derivations/wetty.nix { };
 }

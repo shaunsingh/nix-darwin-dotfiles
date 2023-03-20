@@ -3,4 +3,4 @@
   :description "opinionated config for Nyxt."
   :homepage "https://github.com/shaunsingh/nix-darwin-dotfiles"
   :license "MIT"
-  :components ((:file "init")))
+  :components ((:file "config")))

@@ -1,10 +1,9 @@
-{
-  pkgs,
-  lib,
-  inputs,
-  config,
-  isWayland,
-  ...
+{ pkgs
+, lib
+, inputs
+, config
+, isWayland
+, ...
 }: {
   imports = [
     ./discord.nix
@@ -15,11 +14,12 @@
   home.packages = with pkgs;
     [
       psst
-      font-manager
+      zotero
       komikku
       xfce.thunar
-      xfce.ristretto
       xfce.tumbler
+      font-manager
+      xfce.ristretto
       transmission-gtk
     ]
     ++ lib.optionals isWayland [

@@ -1,7 +1,7 @@
-{
-  stdenvNoCC,
-  fetchurl,
-  p7zip,
+{ stdenvNoCC
+, fetchurl
+, p7zip
+,
 }:
 stdenvNoCC.mkDerivation {
   pname = "otf-apple";
@@ -26,7 +26,7 @@ stdenvNoCC.mkDerivation {
     })
   ];
 
-  buildInputs = [p7zip];
+  buildInputs = [ p7zip ];
   sourceRoot = "./";
   preUnpack = "mkdir fonts";
   unpackCmd = ''

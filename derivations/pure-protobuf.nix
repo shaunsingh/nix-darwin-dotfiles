@@ -2,8 +2,8 @@
 , buildPythonPackage
 , fetchFromGitHub
 , python3
+,
 }:
-
 buildPythonPackage rec {
   pname = "pure-protobuf";
   version = "2.2.0";

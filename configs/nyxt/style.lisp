@@ -109,7 +109,7 @@
               ;; headings config
               `("h1, #subtitle"
                 :font-family "SF Pro Display"
-                :font-size "72px"
+                :font-size "63px"
                 :margin-bottom "-9px")
               `("h1"
                 :color ,(make-important *base06*))

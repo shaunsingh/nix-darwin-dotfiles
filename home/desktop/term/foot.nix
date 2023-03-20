@@ -1,19 +1,22 @@
-{
-  pkgs,
-  lib,
-  inputs,
-  config,
-  ...
+{ pkgs
+, lib
+, inputs
+, config
+, ...
 }: {
   programs.foot = {
     enable = true;
-    server.enable = true;
     settings = {
       main = {
         font = "Liga SFMono Nerd Font:size=11";
         pad = "27x27";
         dpi-aware = "no";
+        notify = "${pkgs.libnotify}/bin/notify-send -a foot -i foot \${title} \${body}";
       };
+      mouse.hide-when-typing = "yes";
+      scrollback.lines = 32768;
+      url.launch = "${pkgs.xdg-utils}/bin/xdg-open \${url}";
+      tweak.grapheme-shaping = "yes";
       cursor.style = "beam";
       colors = with config.lib.base16.theme; {
         background = "${base00-hex}";

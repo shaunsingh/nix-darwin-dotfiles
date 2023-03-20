@@ -1,8 +1,7 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
+{ config
+, lib
+, pkgs
+, ...
 }:
 with lib; let
   cfg = config.wayland.windowManager.river;
@@ -12,9 +11,10 @@ with lib; let
     systemctl --user start river-session.target
   '';
 
-  genBind = mode: let
-    binds = with cfg.config; zipLists (attrNames keybindings.${mode}) (attrValues keybindings.${mode});
-  in
+  genBind = mode:
+    let
+      binds = with cfg.config; zipLists (attrNames keybindings.${mode}) (attrValues keybindings.${mode});
+    in
     toString (forEach binds
       (x: "riverctl map${optionalString (mode == "pointer") "-pointer"} ${
         if mode == "pointer"
@@ -58,7 +58,8 @@ with lib; let
     riverctl default-layout ${cfg.config.layoutGenerator.name}
     exec ${cfg.config.layoutGenerator.name} ${cfg.config.layoutGenerator.arguments}
   '';
-in {
+in
+{
   options.wayland.windowManager.river = {
     enable = mkEnableOption "river wayland compositor";
 
@@ -86,9 +87,9 @@ in {
 
     extraSessionVariables = mkOption {
       type = types.attrs;
-      default = {};
+      default = { };
       description = "Extra session variables set when running the compositor.";
-      example = {MOZ_ENABLE_WAYLAND = "1";};
+      example = { MOZ_ENABLE_WAYLAND = "1"; };
     };
 
     config = {
@@ -169,10 +170,10 @@ in {
         type = types.attrs;
 
         default = {
-          normal = {};
-          locked = {};
-          passthrough = {};
-          pointer = {};
+          normal = { };
+          locked = { };
+          passthrough = { };
+          pointer = { };
         };
 
         description = "An attribute set that assigns a key press to an action in a mode using a key symbol.";
@@ -208,16 +209,16 @@ in {
 
   config = mkIf cfg.enable {
     home.packages =
-      [(cfg.package.override {xwaylandSupport = cfg.xwayland;})]
+      [ (cfg.package.override { xwaylandSupport = cfg.xwayland; }) ]
       ++ (optional cfg.xwayland pkgs.xwayland);
 
     systemd.user.targets.river-session = mkIf cfg.systemdIntegration {
       Unit = {
         Description = "River compositor session";
         Documentation = "man:systemd.special(7)";
-        BindsTo = ["graphical-session.target"];
-        Wants = ["graphical-session-pre.target"];
-        After = ["graphical-session-pre.target"];
+        BindsTo = [ "graphical-session.target" ];
+        Wants = [ "graphical-session-pre.target" ];
+        After = [ "graphical-session-pre.target" ];
       };
     };
 

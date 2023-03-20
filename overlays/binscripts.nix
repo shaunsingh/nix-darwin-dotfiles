@@ -2,10 +2,11 @@ final: prev: {
   screenshot = prev.writeShellScriptBin "screenshot" ''
     ${prev.grim}/bin/grim -g "$(${prev.slurp}/bin/slurp)" - -t png | ${prev.wl-clipboard}/bin/wl-copy -t image/png
   '';
-  ocrScript = let
-    inherit (prev) grim libnotify slurp tesseract5 wl-clipboard;
-    _ = prev.lib.getExe;
-  in
+  ocrScript =
+    let
+      inherit (prev) grim libnotify slurp tesseract5 wl-clipboard;
+      _ = prev.lib.getExe;
+    in
     prev.writeShellScriptBin "wl-ocr" ''
       ${_ grim} -g "$(${_ slurp})" -t ppm - | ${_ tesseract5} - - | ${wl-clipboard}/bin/wl-copy
       ${_ libnotify} "$(${wl-clipboard}/bin/wl-paste)"
@@ -52,9 +53,10 @@ final: prev: {
             -u low
     fi
   '';
-  brightness = let
-    brightnessctl = prev.brightnessctl + "/bin/brightnessctl";
-  in
+  brightness =
+    let
+      brightnessctl = prev.brightnessctl + "/bin/brightnessctl";
+    in
     prev.writeShellScriptBin "brightness" ''
       #!/bin/sh
 

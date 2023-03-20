@@ -1,9 +1,8 @@
-{
-  pkgs,
-  lib,
-  inputs,
-  config,
-  ...
+{ pkgs
+, lib
+, inputs
+, config
+, ...
 }: {
   services.dunst = {
     enable = true;
@@ -35,7 +34,7 @@
       };
 
       # disable notifs in fullscreen
-      fullscreen_delay_everything = {fullscreen = "delay";};
+      fullscreen_delay_everything = { fullscreen = "delay"; };
 
       # colors
       urgency_low = {

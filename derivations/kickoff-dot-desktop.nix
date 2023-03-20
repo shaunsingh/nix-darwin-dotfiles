@@ -1,6 +1,6 @@
-{
-  rustPlatform,
-  fetchFromGitHub,
+{ rustPlatform
+, fetchFromGitHub
+,
 }:
 rustPlatform.buildRustPackage rec {
   pname = "kickoff-dot-desktop";

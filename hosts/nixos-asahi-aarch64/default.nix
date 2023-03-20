@@ -1,8 +1,7 @@
-{
-  pkgs,
-  lib,
-  inputs,
-  ...
+{ pkgs
+, lib
+, inputs
+, ...
 }: {
   imports = [
     # auto generated
@@ -11,7 +10,7 @@
   ];
 
   # overlay
-  nixpkgs.overlays = [inputs.nixos-apple-silicon.overlays.apple-silicon-overlay];
+  nixpkgs.overlays = [ inputs.nixos-apple-silicon.overlays.apple-silicon-overlay ];
 
   # new kernel
   hardware.asahi.addEdgeKernelConfig = true;
@@ -30,12 +29,12 @@
   };
 
   # fix headphones hack
-  environment.systemPackages = [pkgs.asahi-alsa-utils];
+  environment.systemPackages = [ pkgs.asahi-alsa-utils ];
   systemd.user.services.fix-asahi-jack = {
     script = ''
       ${pkgs.asahi-alsa-utils}/bin/amixer -c 0 set 'Jack Mixer' 100%
     '';
-    wantedBy = ["default.target"];
+    wantedBy = [ "default.target" ];
   };
 
   # use systemd-boot
