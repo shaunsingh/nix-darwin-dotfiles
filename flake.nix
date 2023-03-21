@@ -206,6 +206,10 @@
                 (myDarwinModules
                 ++ [
                   ./users/shared/darwin
+                  ./users/shared/darwin/fish.nix
+                  ./users/shared/darwin/skhd.nix
+                  ./users/shared/darwin/yabai.nix
+                  # ./users/shared/darwin/sketchybar.nix
                 ])
               else
                 (myNixosModules
@@ -245,6 +249,11 @@
                     ++ nixpkgs.lib.lists.optionals withMail [ ./home/mail.nix ]
                     ++ nixpkgs.lib.lists.optionals withSway [ ./home/wm/sway.nix ]
                     ++ nixpkgs.lib.lists.optionals withRiver [ ./home/wm/river.nix ]
+                    ++ nixpkgs.lib.lists.optionals isDarwin [
+                      ./home/desktop/apps
+                      ./home/desktop/term/alacritty.nix
+                      ./home/desktop/browsers/firefox.nix
+                    ]
                     ++ nixpkgs.lib.lists.optionals isGui [
                       ./home/xdg.nix
                       ./home/desktop/gtk.nix
@@ -293,7 +302,6 @@
           system = "aarch64-linux";
           withMail = true;
           withSway = true;
-          withBindings = false;
           modules = [
             ./hosts/nixos-asahi-aarch64
             ./users/shared/nixos/hardware
@@ -319,13 +327,7 @@
           system = "aarch64-darwin";
           modules = [ ./hosts/nix-darwin-aarch64 ];
           hm-modules = [
-            inputs.base16.hmModule
-            ./home/themes/oxocarbon.nix
-
-            ./home/cli
-
-            ./home/desktop/browsers/firefox.nix
-            ./home/desktop/term/alacritty.nix
+            ./home/themes/oxocarbon-dark.nix
           ];
         };
       };

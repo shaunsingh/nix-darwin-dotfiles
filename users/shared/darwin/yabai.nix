@@ -3,7 +3,11 @@
 , inputs
 , config
 , ...
-}: {
+}: 
+let
+  scripts = ../../../configs/sketchybar;
+in
+{
   services.yabai = {
     enable = true;
     enableScriptingAddition = true;

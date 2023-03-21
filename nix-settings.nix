@@ -2,7 +2,6 @@
 , system
 , nixpkgs
 , max-jobs
-,
 }: {
   daemonCPUSchedPolicy = "idle";
   daemonIOSchedClass = "idle";
@@ -14,6 +13,9 @@
     keep-outputs = true
     keep-derivations = true
     http-connections = 0
+  '' ++ nixpkgs.lib.mkIf nixpkgs.pkgs.stdenv.isDarwin ''
+    extra-platforms = aarch64-darwin x86_64-darwin
+    build-users-group = nixbld
   '';
 
   nixPath =
