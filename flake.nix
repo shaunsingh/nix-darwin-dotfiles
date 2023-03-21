@@ -193,10 +193,7 @@
               agenix.nixosModules.default
               ./users/shared
               {
-                nix = import ./nix-settings.nix {
-                  inherit inputs system nixpkgs;
-                  max-jobs = 8;
-                };
+                nix = import ./nix-settings.nix { inherit inputs system nixpkgs; };
                 nixpkgs = { inherit config overlays; };
               }
             ]
