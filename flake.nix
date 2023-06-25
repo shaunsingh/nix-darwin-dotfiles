@@ -15,7 +15,7 @@
     nur.url = "github:nix-community/NUR";
 
     # Default Nixpkgs for packages
-    nixpkgs.follows = "mobile";
+    nixpkgs.follows = "unstable";
 
     ### --- platform support
 
@@ -138,10 +138,10 @@
             }
             // {
               /*
-            one can access these branches like so:
+                one can access these branches like so:
 
-            `pkgs.stable.mpd'
-            `pkgs.master.linuxPackages_xanmod'
+                `pkgs.stable.mpd'
+                `pkgs.master.linuxPackages_xanmod'
               */
               master = import master { inherit config system; };
               unstable = import unstable { inherit config system; };
@@ -204,8 +204,8 @@
                 ++ [
                   ./users/shared/darwin
                   ./users/shared/darwin/fish.nix
-                  ./users/shared/darwin/skhd.nix
-                  ./users/shared/darwin/yabai.nix
+                  # ./users/shared/darwin/yabai.nix
+                  # ./users/shared/darwin/skhd.nix
                   # ./users/shared/darwin/sketchybar.nix
                 ])
               else
@@ -247,9 +247,8 @@
                     ++ nixpkgs.lib.lists.optionals withSway [ ./home/wm/sway.nix ]
                     ++ nixpkgs.lib.lists.optionals withRiver [ ./home/wm/river.nix ]
                     ++ nixpkgs.lib.lists.optionals isDarwin [
-                      ./home/desktop/apps
                       ./home/desktop/term/alacritty.nix
-                      ./home/desktop/browsers/firefox.nix
+                      # ./home/desktop/browsers/firefox.nix
                     ]
                     ++ nixpkgs.lib.lists.optionals isGui [
                       ./home/xdg.nix

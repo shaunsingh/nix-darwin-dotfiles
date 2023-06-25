@@ -2,10 +2,6 @@
 , system
 , nixpkgs
 }: {
-  daemonCPUSchedPolicy = "idle";
-  daemonIOSchedClass = "idle";
-  daemonIOSchedPriority = 5;
-
   nixPath =
     let
       path = toString ./.;

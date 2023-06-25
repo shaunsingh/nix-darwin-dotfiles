@@ -896,7 +896,7 @@
         "nixos-apple-silicon": "nixos-apple-silicon",
         "nixos-wsl": "nixos-wsl",
         "nixpkgs": [
-          "mobile"
+          "unstable"
         ],
         "nixpkgs-fmt": "nixpkgs-fmt",
         "nixpkgs-wayland": "nixpkgs-wayland",
