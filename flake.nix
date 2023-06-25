@@ -104,22 +104,7 @@
         "x86_64-darwin"
       ];
 
-      # builtins.readDir, but recurses into directories.
-      readDirRecursive = dir:
-        nixpkgs.lib.mapAttrs
-          (name: type:
-            if type == "directory"
-            then readDirRecursive "${dir}/${name}"
-            else type)
-          (builtins.readDir dir);
-
-      # adapatation of f2k's config that handles recursive reads
-      filterNixFiles = k: v: v == "regular" && nixpkgs.lib.hasSuffix ".nix" k;
-      importNixFiles = path:
-        with nixpkgs.lib;
-        (lists.forEach (mapAttrsToList (name: _: path + ("/" + name))
-          (filterAttrs filterNixFiles (readDirRecursive path))))
-          import;
+      importNixFiles = path: with nixpkgs.lib; map import (__filter (hasSuffix "nix") (filesystem.listFilesRecursive path));
 
       ### --- import stuff I should probably upstream
       myNixosModules = importNixFiles ./modules/nixos;
@@ -347,21 +332,11 @@
 
       formatter =
         forAllSystems (system: inputs.nixpkgs-fmt.defaultPackage.${system});
-
-      ### --- make it easier to `nix build *` linux machines
-
-      utm =
-        self.nixosConfigurations.nixos-utm-aarch64.config.system.build.toplevel;
-      virtualboy =
-        self.nixosConfigurations.nixos-virtualboy-x86_64.config.system.build.toplevel;
-      wsl2 =
-        self.nixosConfigurations.nix-wsl-x86_64.config.system.build.toplevel;
-      asahi =
-        self.nixosConfigurations.nixos-asahi-aarch64.config.system.build.toplevel;
     };
 
   nixConfig = {
     commit-lockfile-summary = "flake: bump inputs";
+
     substituters = [
       "https://cache.nixos.org?priority=10"
       "https://cache.ngi0.nixos.org/"
