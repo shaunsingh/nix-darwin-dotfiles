@@ -40,14 +40,12 @@
     ];
     trusted-users = [ "root" "shauryasingh" ];
 
-    sandbox = "true";
     max-jobs = "auto";
     http-connections = 0;
     experimental-features = [ "nix-command" "flakes" "ca-derivations" ];
   };
 
   # darwin stuff
-  configureBuildUsers = true;
   extraOptions = nixpkgs.lib.mkIf nixpkgs.pkgs.stdenv.isDarwin ''
     extra-platforms = aarch64-darwin x86_64-darwin
     build-users-group = nixbld
