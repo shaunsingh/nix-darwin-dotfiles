@@ -15,7 +15,6 @@
     [
       psst
       zotero
-      komikku
       xfce.thunar
       xfce.tumbler
       font-manager

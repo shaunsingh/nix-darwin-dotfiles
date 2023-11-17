@@ -18,7 +18,7 @@ let
       river
     ]
     ++ lib.optionals withSway [
-      sway-hidpi
+      sway
     ];
   ewwYuck = pkgs.writeText "eww.yuck" (''
     (defwidget bar []

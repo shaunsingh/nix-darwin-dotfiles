@@ -10,6 +10,7 @@
     ./locale.nix
     ./fonts.nix
     ./xdg.nix
+    ./steam.nix
   ];
 
   programs.dconf.enable = true;

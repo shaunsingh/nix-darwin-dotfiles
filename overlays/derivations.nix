@@ -21,6 +21,5 @@ final: prev: rec {
   };
   pytest-harvest = prev.callPackage ../derivations/pytest-harvest.nix { };
   pytest-steps = prev.callPackage ../derivations/pytest-steps.nix { inherit pytest-harvest; };
-  komikku = prev.callPackage ../derivations/komikku.nix { inherit pure-protobuf pytest-steps; };
   shellinabox = prev.callPackage ../derivations/shellinabox.nix { openssl = prev.openssl_1_1; };
 }

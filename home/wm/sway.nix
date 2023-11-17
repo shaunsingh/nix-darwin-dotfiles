@@ -6,7 +6,6 @@
 }: {
   wayland.windowManager.sway = {
     enable = true;
-    package = pkgs.sway-hidpi;
     systemdIntegration = true;
     extraSessionCommands = ''
       export XDG_CURRENT_DESKTOP=sway;
@@ -47,11 +46,11 @@
           pointer_accel = "0.27";
         };
       };
-      # output = {
-      #   "*" = {
-      #     background = "#${config.lib.base16.theme.baseDARK-hex} solid_color";
-      #   };
-      # };
+      output = {
+        "*" = {
+          background = "#${config.lib.base16.theme.baseDARK-hex} solid_color";
+        };
+      };
       bars = lib.mkForce [ ];
       gaps.outer = 18;
       defaultWorkspace = "workspace 1";

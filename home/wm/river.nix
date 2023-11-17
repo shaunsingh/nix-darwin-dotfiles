@@ -4,7 +4,6 @@
 , config
 , ...
 }: {
-  imports = [ ../../modules/home-manager/wayland/windowManager/river ];
   wayland.windowManager.river = {
     enable = true;
     systemdIntegration = true;

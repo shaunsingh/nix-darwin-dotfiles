@@ -9,8 +9,8 @@
     shellAliases = with pkgs; {
       ":q" = "exit";
       git-rebase = "git rebase -i HEAD~2";
-      ll = "${pkgs.exa}/bin/exa -lF --color-scale --no-user --no-time --no-permissions --group-directories-first --icons -a";
-      ls = "${pkgs.exa}/bin/exa -lF --group-directories-first --icons -a";
+      ll = "${pkgs.eza}/bin/eza -lF --color-scale --no-user --no-time --no-permissions --group-directories-first --icons -a";
+      ls = "${pkgs.eza}/bin/eza -lF --group-directories-first --icons -a";
       cp = "${pkgs.xcp}/bin/xcp";
       top = "${pkgs.bottom}/bin/btm";
       cat = "${pkgs.bat}/bin/bat --paging=never";

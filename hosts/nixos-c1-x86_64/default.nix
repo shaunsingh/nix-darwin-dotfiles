@@ -1,8 +1,19 @@
 { pkgs
 , lib
 , inputs
+, config
 , ...
-}: {
+}:
+let 
+  nverStable = config.boot.kernelPackages.nvidiaPackages.stable.version;
+  nverBeta = config.boot.kernelPackages.nvidiaPackages.beta.version;
+  nvidiaPackage =
+    if (lib.versionOlder nverBeta nverStable)
+    then config.boot.kernelPackages.nvidiaPackages.stable
+    else config.boot.kernelPackages.nvidiaPackages.beta;
+  extraEnv = { WLR_NO_HARDWARE_CURSORS = "1"; };
+in
+{
   imports = [
     # auto generated
     ./hardware-configuration.nix
@@ -20,20 +31,11 @@
 
   hardware = {
     cpu.amd.updateMicrocode = true;
-
-    /*
-      hardware-configuration.nix enables this by default because of this line:
-
-      >  imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
-
-      See https://github.com/NixOS/nixpkgs/blob/master/nixos/modules/installer/scan/not-detected.nix
-    */
     enableRedistributableFirmware = true;
-
     nvidia = {
       modesetting.enable = true;
-      open = true;
-      package = config.boot.kernelPackages.nvidiaPackages.beta;
+      package = nvidiaPackage;
+      powerManagement.enable = false;
     };
 
     opengl = {
@@ -44,27 +46,20 @@
   }; 
 
   environment = {
-    sessionVariables = {
-      NIXOS_OZONE_WL = "1";
-      WLR_NO_HARDWARE_CURSORS = "1";
-      NVD_BACKEND = "direct";
-      LIBVA_DRIVER_NAME = "nvidia";
-      MOZ_DISABLE_RDD_SANDBOX = "1";
-      MOZ_GLX_TEST_EARLY_WL_ROUNDTRIP = "1";
-    };
-
-    greetd = {
-      enable = true;
-      settings = {
-        default_session.command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd 'sway --unsupported-gpu'";
-
-        initial_session = {
-          command = "sway --unsupported-gpu";
-          user = "shaunsingh";
-        };
-      };
-    };
+    variables = extraEnv;
+    sessionVariables = extraEnv;
+    systemPackages = with pkgs; [
+      glxinfo
+      vulkan-tools
+    ];
   };
+
+  services.xserver = {
+    videoDrivers = [ "nvidia" ];
+    displayManager.gdm.wayland = true;
+  };
+
+  programs.fish.enable = true;
 
   # use systemd-boot
   boot.loader.systemd-boot.enable = true;

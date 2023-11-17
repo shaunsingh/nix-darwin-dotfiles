@@ -4,7 +4,6 @@
 , config
 , ...
 }: {
-  imports = [ ../../modules/home-manager/programs/kickoff.nix ];
   programs.kickoff = {
     enable = true;
     settings = {

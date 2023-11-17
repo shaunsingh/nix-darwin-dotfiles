@@ -200,7 +200,6 @@
                   ./users/shaunsingh/bindings.nix
                 ])
                 ++ nixpkgs.lib.lists.optionals withSway [ ./users/shared/nixos/sway ]
-                ++ nixpkgs.lib.lists.optionals withRiver [ ./users/shared/nixos/river ]
                 ++ nixpkgs.lib.lists.optionals isGui [ ./users/shared/nixos/hardware ]
                 ++ nixpkgs.lib.lists.optionals isWayland [ ./users/shared/nixos/wayland ])
             )
@@ -222,10 +221,9 @@
                       ./home
                       ./home/cli
                     ]
-                    ++ nixpkgs.lib.lists.optionals useNur [ nur.hmModules.nur ]
+                    ++ nixpkgs.lib.lists.optionals useNur [ inputs.nur.hmModules.nur ]
                     ++ nixpkgs.lib.lists.optionals withMail [ ./home/mail.nix ]
                     ++ nixpkgs.lib.lists.optionals withSway [ ./home/wm/sway.nix ]
-                    ++ nixpkgs.lib.lists.optionals withRiver [ ./home/wm/river.nix ]
                     ++ nixpkgs.lib.lists.optionals isDarwin [
                       ./home/desktop/term/alacritty.nix
                       # ./home/desktop/browsers/firefox.nix
@@ -241,10 +239,10 @@
                     ]
                     ++ nixpkgs.lib.lists.optionals isWayland [
                       ./home/desktop/kanshi.nix
-                      ./home/desktop/swaybg.nix
+                      # ./home/desktop/swaybg.nix
                       # ./home/lockers/waylock.nix
                       ./home/desktop/term/foot.nix
-                      ./home/launchers/kickoff.nix
+                      # ./home/launchers/kickoff.nix
                       ./home/desktop/notifications/dunst.nix
                     ];
                 };
@@ -291,7 +289,6 @@
         # computer-1
         nixos-c1-x86_64 = mkSystemConfig {
           system = "x86_64-linux";
-          withMail = true;
           withSway = true;
           modules = [
             ./hosts/nixos-c1-x86_64
@@ -299,7 +296,6 @@
           ];
           hm-modules = [
             ./home/themes/oxocarbon-dark.nix
-            ./home/desktop/gaming/steam.nix
           ];
         };
 
