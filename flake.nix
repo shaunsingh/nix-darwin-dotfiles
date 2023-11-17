@@ -28,9 +28,6 @@
     # manage home env
     home-manager.url = "github:nix-community/home-manager";
 
-    # secrets
-    agenix.url = "github:ryantm/agenix";
-
     # formatting
     nixpkgs-fmt.url = "github:nix-community/nixpkgs-fmt";
 
@@ -39,6 +36,8 @@
     rust-overlay.url = "github:oxalica/rust-overlay";
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
 
+    # gaming
+    nix-gaming.url = "github:fufexan/nix-gaming";
     # desktop
     eww.url = "github:elkowar/eww";
 
@@ -72,7 +71,6 @@
 
     ### --- de-duplicate flake inputs
 
-    agenix.inputs.nixpkgs.follows = "nixpkgs";
     nixos-wsl.inputs.nixpkgs.follows = "nixpkgs";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
     nixos-apple-silicon.inputs.nixpkgs.follows = "nixpkgs";
@@ -85,8 +83,6 @@
     { self
     , nixpkgs
     , home-manager
-    , nur
-    , agenix
     , nix-darwin
     , ...
     } @ inputs:
@@ -175,7 +171,6 @@
           modules =
             modules
             ++ [
-              agenix.nixosModules.default
               ./users/shared
               {
                 nix = import ./nix-settings.nix { inherit inputs system nixpkgs; };
@@ -293,6 +288,21 @@
           ];
         };
 
+        # computer-1
+        nixos-c1-x86_64 = mkSystemConfig {
+          system = "x86_64-linux";
+          withMail = true;
+          withSway = true;
+          modules = [
+            ./hosts/nixos-c1-x86_64
+            ./users/shared/nixos/hardware
+          ];
+          hm-modules = [
+            ./home/themes/oxocarbon-dark.nix
+            ./home/desktop/gaming/steam.nix
+          ];
+        };
+
         # WSL2 on Win11
         nix-wsl-x86_64 = mkSystemConfig {
           system = "x86_64-linux";
@@ -342,6 +352,7 @@
       "https://cache.ngi0.nixos.org/"
       "https://nix-community.cachix.org?priority=5"
       "https://nixpkgs-wayland.cachix.org"
+      "https://nix-gaming.cachix.org"
     ];
   };
 }
