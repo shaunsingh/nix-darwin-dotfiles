@@ -9,7 +9,7 @@
 {
   imports = [
     # Append your custom home-manager modules in this list
-    ../../modules/home-manager/wayland/kickoff.nix
+    ../../modules/shared/home-manager/wayland/kickoff.nix
   ];
 
   ### -- colorscheme
