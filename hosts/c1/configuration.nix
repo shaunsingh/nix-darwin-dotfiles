@@ -79,4 +79,15 @@ in
     glxinfo
     vulkan-tools
   ];
+
+  services.greetd = {
+    enable = true;
+    settings = {
+      default_session.command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd 'sway --unsupported-gpu'";
+      initial_session = {
+        command = "sway --unsupported-gpu";
+        user = "shaurizard";
+      };
+    };
+  };
 }
