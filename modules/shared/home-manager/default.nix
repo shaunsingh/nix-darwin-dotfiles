@@ -7,13 +7,6 @@
   - Appendix A. Configuration Options: https://nix-community.gitlab.io/home-manager/options.html
 */
 {
-  config = {
-    themes.base16 = {
-      enable = true;
-      path = "${inputs.base16-oxocarbon}/base16-oxocarbon-dark.yaml";
-    };
-  };
-
   home = {
     packages = builtins.attrValues {
       inherit (pkgs)
@@ -81,8 +74,12 @@
     };
   };
 
-  programs = {
+  themes.base16 = {
+    enable = true;
+    path = "${inputs.base16-oxocarbon}/base16-oxocarbon-dark.yaml";
+  };
 
+  programs = {
     zoxide = {
       enable = true;
       options = [ "--cmd cd" ];
