@@ -66,7 +66,6 @@
           vim
           curl
           fd
-          ripgrep
           man-pages-posix
           wget
           git;

@@ -41,9 +41,6 @@
     # language support
     rust-overlay.url = "github:oxalica/rust-overlay";
 
-    # gaming
-    nix-gaming.url = "github:fufexan/nix-gaming";
-
     # desktop
     eww.url = "github:elkowar/eww";
     eww.inputs.rust-overlay.follows = "rust-overlay";

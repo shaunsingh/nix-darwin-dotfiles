@@ -17,7 +17,6 @@
   home = {
     packages = __attrValues {
       inherit (pkgs)
-        bat
         ripgrep
         difftastic
         nixpkgs-fmt

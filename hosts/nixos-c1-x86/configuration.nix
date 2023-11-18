@@ -16,9 +16,6 @@ in
   imports = [
     # auto generated
     ./hardware-configuration.nix
-
-    # gaming
-    inputs.nix-gaming.nixosModules.steamCompat
   ];
 
   nixpkgs.config = {
@@ -71,9 +68,6 @@ in
       enable = true;
       remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
       dedicatedServer.openFirewall = true;
-      extraCompatPackages = [
-        inputs.nix-gaming.packages.${pkgs.system}.proton-ge
-      ];
     };
     gamescope = {
       enable = true;
