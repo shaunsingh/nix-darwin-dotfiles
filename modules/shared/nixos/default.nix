@@ -195,8 +195,6 @@
       jack.enable = true;
       pulse.enable = true;
     };
-
-    usbmuxd.enable = true;
   };
 
   systemd = {
