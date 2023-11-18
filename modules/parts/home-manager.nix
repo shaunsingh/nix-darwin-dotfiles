@@ -57,6 +57,11 @@ let
               username = __elemAt (lib.strings.split "@" name) 0;
               inherit (opts.config) stateVersion;
 
+              packages = __attrValues {
+                inherit (pkgs)
+                  hello;
+              };
+
               homeDirectory = lib.mkMerge [
                 (lib.mkIf pkgs.stdenv.isDarwin "/Users/${config.home.username}")
                 (lib.mkIf pkgs.stdenv.isLinux "/home/${config.home.username}")
