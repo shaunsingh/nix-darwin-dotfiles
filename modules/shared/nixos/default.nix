@@ -214,7 +214,7 @@
     timeZone = "America/New_York";
   };
 
-  users.users.shaurizard= {
+  users.users.shaurizard = {
     isNormalUser = true;
     home = "/home/shaurizard";
     shell = pkgs.fish;
@@ -235,7 +235,7 @@
   systemd.user.services.sunshine = {
     enable = true;
     description = "sunshine";
-    wantedBy = ["graphical-session.target"];
+    wantedBy = [ "graphical-session.target" ];
     serviceConfig = {
       ExecStart = "${master.sunshine}/bin/sunshine";
     };
@@ -246,8 +246,8 @@
     KERNEL=="uinput", SUBSYSTEM=="misc", OPTIONS+="static_node=uinput", TAG+="uaccess"
   '';
 
-  networking.firewall.allowedTCPPorts = [47984 47989 47990 48010];
-  networking.firewall.allowedUDPPorts = [47998 47999 48000];
+  networking.firewall.allowedTCPPorts = [ 47984 47989 47990 48010 ];
+  networking.firewall.allowedUDPPorts = [ 47998 47999 48000 ];
 
-  boot.kernelModules = ["uinput"];
+  boot.kernelModules = [ "uinput" ];
 }

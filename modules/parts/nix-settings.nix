@@ -3,34 +3,34 @@
 # Nix daemon settings that can't be put in `nixConfig`.
 {
 
-# TODO buildmachines
-#   buildMachines = lib.optionals stdenv.isDarwin [
-#     {
-#       hostName = "192.168.1.9";
-#       system = "x86_64-linux";
-#       sshUser = "moni";
-#       sshKey = "/Users/moni/.ssh/id_ed25519";
-#       publicHostKey = "c3NoLWVkMjU1MTkgQUFBQUMzTnphQzFsWkRJMU5URTVBQUFBSUtyUGRxSWlUckdxbk42ZUFoUnVHbDlaVjJzVXovSVI4NVQzL1R6VVQ0T2wgcm9vdEBzdGFyY3J1aXNlcgo=";
-#       maxJobs = 6;
-#       speedFactor = 2;
-#       supportedFeatures = [ "nixos-test" "benchmark" "big-parallel" "kvm" ];
-#       mandatoryFeatures = [ ];
-#     }
-# 
-#     {
-#       hostName = "localhost";
-#       system = "aarch64-linux";
-#       sshUser = "builder";
-#       sshKey = "/Users/moni/.ssh/builder_ed25519";
-#       publicHostKey = "c3NoLWVkMjU1MTkgQUFBQUMzTnphQzFsWkRJMU5URTVBQUFBSUpCV2N4Yi9CbGFxdDFhdU90RStGOFFVV3JVb3RpQzVxQkorVXVFV2RWQ2Igcm9vdEBuaXhvcwo=";
-#       maxJobs = 6;
-#       speedFactor = 3;
-#       supportedFeatures = [ "nixos-test" "benchmark" "big-parallel" "kvm" ];
-#       mandatoryFeatures = [ ];
-#     }
-#   ];
-# 
-#   distributedBuilds = true;
+  # TODO buildmachines
+  #   buildMachines = lib.optionals stdenv.isDarwin [
+  #     {
+  #       hostName = "192.168.1.9";
+  #       system = "x86_64-linux";
+  #       sshUser = "moni";
+  #       sshKey = "/Users/moni/.ssh/id_ed25519";
+  #       publicHostKey = "c3NoLWVkMjU1MTkgQUFBQUMzTnphQzFsWkRJMU5URTVBQUFBSUtyUGRxSWlUckdxbk42ZUFoUnVHbDlaVjJzVXovSVI4NVQzL1R6VVQ0T2wgcm9vdEBzdGFyY3J1aXNlcgo=";
+  #       maxJobs = 6;
+  #       speedFactor = 2;
+  #       supportedFeatures = [ "nixos-test" "benchmark" "big-parallel" "kvm" ];
+  #       mandatoryFeatures = [ ];
+  #     }
+  # 
+  #     {
+  #       hostName = "localhost";
+  #       system = "aarch64-linux";
+  #       sshUser = "builder";
+  #       sshKey = "/Users/moni/.ssh/builder_ed25519";
+  #       publicHostKey = "c3NoLWVkMjU1MTkgQUFBQUMzTnphQzFsWkRJMU5URTVBQUFBSUpCV2N4Yi9CbGFxdDFhdU90RStGOFFVV3JVb3RpQzVxQkorVXVFV2RWQ2Igcm9vdEBuaXhvcwo=";
+  #       maxJobs = 6;
+  #       speedFactor = 3;
+  #       supportedFeatures = [ "nixos-test" "benchmark" "big-parallel" "kvm" ];
+  #       mandatoryFeatures = [ ];
+  #     }
+  #   ];
+  # 
+  #   distributedBuilds = true;
 
   extraOptions = ''
     keep-outputs = true

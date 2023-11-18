@@ -19,9 +19,6 @@
         clang
         ffmpeg
         zotero
-        xfce.thunar
-        xfce.tumbler
-        xfce.ristretto
         transmission-gtk
         font-manager
         wayland-utils
@@ -703,7 +700,7 @@
             }
           }
         '';
-  
+
         settings = {
           "browser.ctrlTab.recentlyUsedOrder" = false;
           "browser.uidensity" = 1;
@@ -822,124 +819,126 @@
   programs.eww = {
     enable = true;
     package = pkgs.eww-wayland-git;
-    configDir = 
-      let 
-        ewwYuck = pkgs.writeText "eww.yuck" (''
-          (defwidget bar []
-            (centerbox :orientation "v"
-                       :halign "center"
-              (box :class "segment-top"
-                   :valign "start"
+    configDir =
+      let
+        ewwYuck = pkgs.writeText "eww.yuck" (
+          ''
+            (defwidget bar []
+              (centerbox :orientation "v"
+                         :halign "center"
+                (box :class "segment-top"
+                     :valign "start"
+                     :orientation "v"
+                  (tags))
+                (box :class "segment-center"
+                     :valign "center"
+                     :orientation "v"
+                  (time)
+                  (date))
+                (box :class "segment-bottom"
+                     :valign "end"
+                     :orientation "v"
+                  (menu)
+                  (brightness)
+                  (volume)
+                  (battery)
+                  (current-tag))))
+      
+            (defwidget time []
+              (box :class "time"
                    :orientation "v"
-                (tags))
-              (box :class "segment-center"
-                   :valign "center"
+                hour min type))
+      
+            (defwidget date []
+              (box :class "date"
                    :orientation "v"
-                (time)
-                (date))
-              (box :class "segment-bottom"
-                   :valign "end"
-                   :orientation "v"
-                (menu)
-                (brightness)
-                (volume)
-                (battery)
-                (current-tag))))
+                year month day))
       
-          (defwidget time []
-            (box :class "time"
-                 :orientation "v"
-              hour min type))
+            (defwidget menu []
+              (button :class "icon"
+                      :orientation "v"
+                      :onclick "''${EWW_CMD} open --toggle notifications-menu"
+                 ""))
       
-          (defwidget date []
-            (box :class "date"
-                 :orientation "v"
-              year month day))
+            (defwidget brightness []
+              (button :class "icon"
+                      :orientation "v"
+                (circular-progress :value brightness-level
+                                   :thickness 3)))
       
-          (defwidget menu []
-            (button :class "icon"
-                    :orientation "v"
-                    :onclick "''${EWW_CMD} open --toggle notifications-menu"
-               ""))
+            (defwidget volume []
+              (button :class "icon"
+                      :orientation "v"
+                (circular-progress :value volume-level
+                                   :thickness 3)))
       
-          (defwidget brightness []
-            (button :class "icon"
-                    :orientation "v"
-              (circular-progress :value brightness-level
-                                 :thickness 3)))
+            (defwidget battery []
+              (button :class "icon"
+                      :orientation "v"
+                      :onclick ""
+                (circular-progress :value "''${EWW_BATTERY['macsmc-battery'].capacity}"
+                                   :thickness 3)))
       
-          (defwidget volume []
-            (button :class "icon"
-                    :orientation "v"
-              (circular-progress :value volume-level
-                                 :thickness 3)))
+            (defwidget current-tag []
+              (button :class "current-tag"
+                      :orientation "v"
+                      :onclick "kickoff & disown"
+                "''${active-tag}"))
       
-          (defwidget battery []
-            (button :class "icon"
-                    :orientation "v"
-                    :onclick ""
-              (circular-progress :value "''${EWW_BATTERY['macsmc-battery'].capacity}"
-                                 :thickness 3)))
+            (defvar active-tag "1")
+            (defpoll hour :interval "1m" "date +%I")
+            (defpoll min  :interval "1m" "date +%M")
+            (defpoll type :interval "1m" "date +%p")
       
-          (defwidget current-tag []
-            (button :class "current-tag"
-                    :orientation "v"
-                    :onclick "kickoff & disown"
-              "''${active-tag}"))
+            (defpoll day   :interval "10m" "date +%d")
+            (defpoll month :interval "1h"  "date +%m")
+            (defpoll year  :interval "1h"  "date +%y")
       
-          (defvar active-tag "1")
-          (defpoll hour :interval "1m" "date +%I")
-          (defpoll min  :interval "1m" "date +%M")
-          (defpoll type :interval "1m" "date +%p")
-      
-          (defpoll day   :interval "10m" "date +%d")
-          (defpoll month :interval "1h"  "date +%m")
-          (defpoll year  :interval "1h"  "date +%y")
-      
-          ;; this is updated by the helper script
-          (defvar brightness-level 66)
-          (defvar volume-level 33)
+            ;; this is updated by the helper script
+            (defvar brightness-level 66)
+            (defvar volume-level 33)
 
-          ;; sway
-          (defwidget tags []
-            (box :class "tags"
-                 :orientation "v"
-                 :halign "center"
-              (for tag in tags
-                (box :class {active-tag == tag.tag ? "active" : "inactive"}
-                  (button :onclick "swaymsg workspace ''${tag.tag} ; ''${EWW_CMD} update active-tag=''${tag.tag}"
-                    "''${tag.label}")))))
+            ;; sway
+            (defwidget tags []
+              (box :class "tags"
+                   :orientation "v"
+                   :halign "center"
+                (for tag in tags
+                  (box :class {active-tag == tag.tag ? "active" : "inactive"}
+                    (button :onclick "swaymsg workspace ''${tag.tag} ; ''${EWW_CMD} update active-tag=''${tag.tag}"
+                      "''${tag.label}")))))
       
-          (defvar tags '[{ "tag": 1, "label": "一" },
-                         { "tag": 2, "label": "二" },
-                         { "tag": 3, "label": "三" },
-                         { "tag": 4, "label": "四" },
-                         { "tag": 5, "label": "五" },
-                         { "tag": 6, "label": "六" },
-                         { "tag": 7, "label": "七" },
-                         { "tag": 8, "label": "八" },
-                         { "tag": 9, "label": "九" },
-                         { "tag": 0, "label": "" }]')
+            (defvar tags '[{ "tag": 1, "label": "一" },
+                           { "tag": 2, "label": "二" },
+                           { "tag": 3, "label": "三" },
+                           { "tag": 4, "label": "四" },
+                           { "tag": 5, "label": "五" },
+                           { "tag": 6, "label": "六" },
+                           { "tag": 7, "label": "七" },
+                           { "tag": 8, "label": "八" },
+                           { "tag": 9, "label": "九" },
+                           { "tag": 0, "label": "" }]')
       
-          (defwindow bar
-            :monitor 0
-            :stacking "bottom"
-            :geometry (geometry
-                        :height "100%"
-                        :anchor "left center")
-            :exclusive true
-            (bar))
+            (defwindow bar
+              :monitor 0
+              :stacking "bottom"
+              :geometry (geometry
+                          :height "100%"
+                          :anchor "left center")
+              :exclusive true
+              (bar))
       
-          (defwindow bar2
-            :monitor 1
-            :stacking "bottom"
-            :geometry (geometry
-                        :height "100%"
-                        :anchor "left center")
-            :exclusive true
-            (bar))
-        '');
-      
+            (defwindow bar2
+              :monitor 1
+              :stacking "bottom"
+              :geometry (geometry
+                          :height "100%"
+                          :anchor "left center")
+              :exclusive true
+              (bar))
+          ''
+        );
+
         ewwScss = pkgs.writeText "eww.scss" (with config.lib.base16.theme; ''
           $baseTR: rgba(13,13,13,0.13);
           $base00: #${baseBLEND-hex};
@@ -1015,7 +1014,7 @@
             border-radius: 3px;
           }
         '');
-      
+
         ewwConf = pkgs.linkFarm "ewwConf" [
           {
             name = "eww.scss";
@@ -1026,8 +1025,8 @@
             path = ewwYuck;
           }
         ];
-      in  
-        ewwConf;
+      in
+      ewwConf;
   };
   systemd.user.services.eww = {
     Unit = {
@@ -1035,8 +1034,8 @@
       PartOf = [ "graphical-session.target" ];
     };
     Service = {
-      Environment = 
-        let 
+      Environment =
+        let
           dependencies = with pkgs;
             [
               kickoff
@@ -1045,8 +1044,8 @@
               coreutils
               sway
             ];
-        in  
-          "PATH=/run/wrappers/bin:${lib.makeBinPath dependencies}";
+        in
+        "PATH=/run/wrappers/bin:${lib.makeBinPath dependencies}";
       ExecStart = "${config.programs.eww.package}/bin/eww daemon --no-daemonize";
       Restart = "on-failure";
     };
@@ -1067,24 +1066,24 @@
 
   ### -- sleep
   services.swayidle =
-      let
-        display = status: "swaymsg 'output * power ${status}'";
-      in
-      {
-        enable = true;
-        package = inputs'.nixpkgs-wayland.packages.swayidle;
+    let
+      display = status: "swaymsg 'output * power ${status}'";
+    in
+    {
+      enable = true;
+      package = inputs'.nixpkgs-wayland.packages.swayidle;
 
-        events = [
-          { event = "before-sleep"; command = display "off"; }
-          { event = "before-sleep"; command = "swaylock"; }
-          { event = "after-resume"; command = display "on"; }
-          { event = "lock"; command = display "off"; }
-          { event = "unlock"; command = display "on"; }
-        ];
+      events = [
+        { event = "before-sleep"; command = display "off"; }
+        { event = "before-sleep"; command = "swaylock"; }
+        { event = "after-resume"; command = display "on"; }
+        { event = "lock"; command = display "off"; }
+        { event = "unlock"; command = display "on"; }
+      ];
 
-        timeouts = [
-          { timeout = 300; command = display "off"; resumeCommand = display "on"; }
-          { timeout = 310; command = "swaylock"; }
-        ];
-      };
+      timeouts = [
+        { timeout = 300; command = display "off"; resumeCommand = display "on"; }
+        { timeout = 310; command = "swaylock"; }
+      ];
+    };
 }

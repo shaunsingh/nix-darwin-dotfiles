@@ -14,9 +14,7 @@
       system = "x86_64-linux";
       stateVersion = "23.05";
 
-      modules = [
-        ./nixos-c1-x86/configuration.nix
-      ];
+      modules = [ ./nixos-c1-x86/configuration.nix ];
     };
   };
 }

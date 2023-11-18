@@ -11,7 +11,7 @@ _:
     firefox-unwrapped = prev.firefox-unwrapped.overrideAttrs (old: {
       patches = (old.patches or [ ]) ++ [ ./patches/D164578.diff ];
     });
-     
+
     ### -- scripting
     screenshot = prev.writeShellScriptBin "screenshot" ''
       ${prev.grim}/bin/grim -g "$(${prev.slurp}/bin/slurp)" - -t png | ${prev.wl-clipboard}/bin/wl-copy -t image/png

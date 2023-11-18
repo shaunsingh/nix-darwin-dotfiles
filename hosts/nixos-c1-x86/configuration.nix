@@ -4,7 +4,7 @@
 , config
 , ...
 }:
-let 
+let
   nverStable = config.boot.kernelPackages.nvidiaPackages.stable.version;
   nverBeta = config.boot.kernelPackages.nvidiaPackages.beta.version;
   nvidiaPackage =
@@ -42,7 +42,7 @@ in
       driSupport = true;
       driSupport32Bit = true;
     };
-  }; 
+  };
 
   environment.systemPackages = with pkgs; [
     glxinfo
