@@ -7,9 +7,17 @@
   - Appendix A. Configuration Options: https://nix-community.gitlab.io/home-manager/options.html
 */
 {
+  config = {
+    themes.base16 = {
+      enable = true;
+      path = "${inputs.base16-oxocarbon}/base16-oxocarbon-dark.yaml";
+    };
+  };
+
   home = {
     packages = builtins.attrValues {
       inherit (pkgs)
+        bat
         ripgrep
         difftastic
         nixpkgs-fmt
@@ -74,12 +82,8 @@
     };
   };
 
-  themes.base16 = {
-    enable = true;
-    path = "${inputs.base16-oxocarbon}/base16-oxocarbon-dark.yaml";
-  };
-
   programs = {
+
     zoxide = {
       enable = true;
       options = [ "--cmd cd" ];
@@ -127,25 +131,25 @@
         nix_shell.symbol = " ";
       };
     };
-    git = {
-      enable = true;
-      userName = "shaunsingh";
-      userEmail = "shaunsingh0207@gmail.com";
-      ignores = [ "**/.idea/" "**/.vscode/settings.json" "**/.direnv/" "**/.DS_Store" ];
-      extraConfig = {
-        pull = { ff = "only"; };
-        init.defaultBranch = "main";
-        extraConfig = {
-          diff.tool = "difftastic";
-          pager.difftool = true;
-
-          difftool = {
-            prompt = false;
-            difftastic.cmd = ''${lib.getExe pkgs.difftastic} "$LOCAL" "$REMOTE"'';
-          };
-        };
-      };
-    };
+#     git = {
+#       enable = true;
+#       userName = "shaunsingh";
+#       userEmail = "shaunsingh0207@gmail.com";
+#       ignores = [ "**/.idea/" "**/.vscode/settings.json" "**/.direnv/" "**/.DS_Store" ];
+#       extraConfig = {
+#         pull = { ff = "only"; };
+#         init.defaultBranch = "main";
+#         extraConfig = {
+#           diff.tool = "difftastic";
+#           pager.difftool = true;
+# 
+#           difftool = {
+#             prompt = false;
+#             difftastic.cmd = ''${lib.getExe pkgs.difftastic} "$LOCAL" "$REMOTE"'';
+#           };
+#         };
+#       };
+#     };
     fish = {
       enable = true;
       shellAliases = {
