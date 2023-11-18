@@ -5,7 +5,7 @@ let
   inherit (lib) types;
 
   cfg = config.parts.nixosConfigurations;
-  configurations = __mapAttrs (_: value: value._nixos) cfg;
+  configurations = builtins.mapAttrs (_: value: value._nixos) cfg;
 
   nixosOpts = { config, name, ... }: {
     options = {

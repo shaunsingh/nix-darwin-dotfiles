@@ -14,7 +14,7 @@
 
   ### -- home
   home = {
-    packages = __attrValues {
+    packages = builtins.attrValues {
       inherit (pkgs)
         clang
         ffmpeg

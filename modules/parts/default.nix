@@ -61,7 +61,7 @@
       };
 
       # NixOS and nix-darwin base environment.systemPackages
-      basePackagesFor = pkgs: __attrValues {
+      basePackagesFor = pkgs: builtins.attrValues {
         inherit (pkgs)
           vim
           curl

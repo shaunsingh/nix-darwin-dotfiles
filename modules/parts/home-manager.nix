@@ -5,7 +5,7 @@ let
   inherit (lib) types;
 
   cfg = config.parts.homeConfigurations;
-  configurations = __mapAttrs (_: value: value._home) cfg;
+  configurations = builtins.mapAttrs (_: value: value._home) cfg;
 
   homeOpts = opts@{ config, lib, name, ... }: {
     options = {
@@ -54,10 +54,10 @@ let
             nixpkgs = removeAttrs ctx.nixpkgs [ "hostPlatform" ];
 
             home = {
-              username = __elemAt (lib.strings.split "@" name) 0;
+              username = builtins.elemAt (lib.strings.split "@" name) 0;
               inherit (opts.config) stateVersion;
 
-              packages = __attrValues {
+              packages = builtins.attrValues {
                 inherit (pkgs)
                   hello;
               };

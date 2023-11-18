@@ -50,7 +50,7 @@
 
   settings = {
     accept-flake-config = true;
-    flake-registry = __toFile "begone-evil.json" (__toJSON { flakes = [ ]; version = 2; });
+    flake-registry = builtins.toFile "begone-evil.json" (builtins.toJSON { flakes = [ ]; version = 2; });
 
     experimental-features = [
       "auto-allocate-uids"

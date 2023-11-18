@@ -12,7 +12,7 @@
   disabledModules = [ "targets/darwin/linkapps.nix" ];
 
   home = {
-    packages = __attrValues {
+    packages = builtins.attrValues {
       inherit (pkgs)
         julia_18-bin;
     };

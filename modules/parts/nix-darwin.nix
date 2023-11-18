@@ -5,7 +5,7 @@ let
   inherit (lib) types;
 
   cfg = config.parts.darwinConfigurations;
-  configurations = __mapAttrs (_: value: value._darwin) cfg;
+  configurations = builtins.mapAttrs (_: value: value._darwin) cfg;
 
   darwinOpts = { config, name, ... }: {
     options = {

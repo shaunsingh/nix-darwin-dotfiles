@@ -15,7 +15,7 @@
   };
 
   home = {
-    packages = __attrValues {
+    packages = builtins.attrValues {
       inherit (pkgs)
         ripgrep
         difftastic

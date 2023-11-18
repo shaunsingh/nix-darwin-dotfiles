@@ -117,7 +117,7 @@
   };
 
   fonts = {
-    packages = __attrValues {
+    packages = builtins.attrValues {
       inherit (pkgs)
         twemoji-color-font
         sarasa-gothic
