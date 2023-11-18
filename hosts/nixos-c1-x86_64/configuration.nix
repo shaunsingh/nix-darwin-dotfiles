@@ -50,5 +50,9 @@ in
   ];
 
   services.xserver.videoDrivers = [ "nvidia" ];
-  networking.hostName = "shaunsingh-nixos-c1";
+
+  xdg.portal = {
+    enable = true;
+    wlr.enable = true;
+  };
 }

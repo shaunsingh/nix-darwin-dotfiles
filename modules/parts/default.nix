@@ -29,8 +29,8 @@
         hostPlatform = system;
 
         overlays = lib.mkForce [
-          rust-overlay.overlays.default
-          nixpkgs-wayland.overlay
+          inputs.rust-overlay.overlays.default
+          inputs.nixpkgs-wayland.overlay
           self.overlays.default
         ];
       };
@@ -74,6 +74,6 @@
         home-manager = inputs'.home.packages.home-manager.override { path = "${inputs.home}"; };
       };
     };
-
-    formatter = input
+    formatter = inputs.nixpkgs-fmt.defaultPackage.${system};
+  };
 }

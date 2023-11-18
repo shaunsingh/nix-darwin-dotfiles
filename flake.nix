@@ -43,7 +43,7 @@
     };
 
     # language support
-    rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
+    rust-overlay.url = "github:oxalica/rust-overlay";
 
     # gaming
     nix-gaming.url = "github:fufexan/nix-gaming";
@@ -61,6 +61,7 @@
     statix.inputs.nixpkgs.follows = "nixpkgs";
     agenix.inputs.nixpkgs.follows = "nixpkgs";
     base16.inputs.nixpkgs.follows = "nixpkgs";
+    rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
     eww.inputs.nixpkgs.follows = "nixpkgs";
   };
 }
