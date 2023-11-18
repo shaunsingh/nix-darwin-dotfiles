@@ -135,8 +135,8 @@
       gaps.outer = 18;
       defaultWorkspace = "workspace 1";
       keybindings =
-#         let
-#           modifier = "Mod4";
+        let
+          modifier = "Mod4";
 #           concatAttrs = lib.fold (x: y: x // y) { };
 #           tagBinds =
 #             concatAttrs
@@ -146,7 +146,7 @@
 #                   "${modifier}+Shift+${toString i}" = "exec 'swaymsg move container to workspace ${toString i}'";
 #                 })
 #                 (lib.range 0 9));
-#         in
+        in
 #         tagBinds
 #         // 
         {
