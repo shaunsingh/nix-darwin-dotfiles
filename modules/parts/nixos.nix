@@ -7,7 +7,7 @@ let
   cfg = config.parts.nixosConfigurations;
   configurations = __mapAttrs (_: value: value._nixos) cfg;
 
-  nixosOpts = opts@{ config, name, ... }: {
+  nixosOpts = { config, name, ... }: {
     options = {
       server = lib.mkEnableOption "Host is a headless server configuration.";
 

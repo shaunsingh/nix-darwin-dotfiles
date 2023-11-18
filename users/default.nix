@@ -1,4 +1,4 @@
-{ config, lib, inputs, ... }:
+{ ... }:
 {
   # home-manager configurations
   parts.homeConfigurations = {

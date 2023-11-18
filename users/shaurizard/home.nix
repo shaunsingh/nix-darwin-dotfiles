@@ -41,7 +41,7 @@
       "${config.home.homeDirectory}/.local/bin"
     ];
 
-    sessionVariables = with config.colorscheme.colors; {
+    sessionVariables = {
       EDITOR = "nvim";
       BROWSER = "firefox";
       QT_QPA_PLATFORMTHEME = "qt5ct";

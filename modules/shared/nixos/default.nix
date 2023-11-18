@@ -1,4 +1,4 @@
-{ config, lib, pkgs, options, inputs, inputs', system, ... }:
+{ config, lib, pkgs, ... }:
 
 /*
   NixOS configuration

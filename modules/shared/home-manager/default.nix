@@ -1,4 +1,4 @@
-{ config, inputs, inputs', lib, pkgs, system, ... }:
+{ config, inputs, lib, pkgs, ... }:
 
 /*
   home-manager configuration
@@ -151,7 +151,7 @@
     };
     fish = {
       enable = true;
-      shellAliases = with pkgs; {
+      shellAliases = {
         ":q" = "exit";
         git-rebase = "git rebase -i HEAD~2";
         ll = "${pkgs.eza}/bin/eza -lF --color-scale --no-user --no-time --no-permissions --group-directories-first --icons -a";

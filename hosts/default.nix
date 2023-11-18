@@ -1,4 +1,4 @@
-{ inputs, ... }:
+{ ... }:
 
 {
   # nix-darwin configurations
