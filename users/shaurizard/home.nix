@@ -821,8 +821,7 @@
     package = inputs.eww.packages.${system}.eww-wayland;
     configDir =
       let
-        ewwYuck = pkgs.writeText "eww.yuck" (
-          ''
+        ewwYuck = pkgs.writeText "eww.yuck" ''
             (defwidget bar []
               (centerbox :orientation "v"
                          :halign "center"
@@ -936,8 +935,7 @@
                           :anchor "left center")
               :exclusive true
               (bar))
-          ''
-        );
+          '';
 
         ewwScss = pkgs.writeText "eww.scss" (with config.lib.base16.theme; ''
           $baseTR: rgba(13,13,13,0.13);

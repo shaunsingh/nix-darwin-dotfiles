@@ -1,4 +1,4 @@
-{ ... }:
+_:
 
 {
   # nix-darwin configurations
