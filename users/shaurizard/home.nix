@@ -75,7 +75,7 @@
     config = {
       startup = [
         {
-          command = "${pkgs.eww-wayland-git}/bin/eww open bar && ${pkgs.eww-wayland-git}/bin/eww open bar2";
+          command = "${inputs.eww.packages.${system}.eww-wayland}/bin/eww open bar && ${inputs.eww.packages.${system}.eww-wayland}/bin/eww open bar2";
           always = false;
         }
         {
@@ -123,7 +123,7 @@
             concatAttrs
               (map
                 (i: {
-                  "${modifier}+${toString i}" = "exec 'swaymsg workspace ${toString i} && ${pkgs.eww-wayland-git}/bin/eww update active-tag=${toString i}'";
+                  "${modifier}+${toString i}" = "exec 'swaymsg workspace ${toString i} && ${inputs.eww.packages.${system}.eww-wayland}/bin/eww update active-tag=${toString i}'";
                   "${modifier}+Shift+${toString i}" = "exec 'swaymsg move container to workspace ${toString i}'";
                 })
                 (lib.range 0 9));
@@ -818,7 +818,7 @@
   ### -- bar
   programs.eww = {
     enable = true;
-    package = pkgs.eww-wayland-git;
+    package = inputs.eww.packages.${system}.eww-wayland;
     configDir =
       let
         ewwYuck = pkgs.writeText "eww.yuck" (
