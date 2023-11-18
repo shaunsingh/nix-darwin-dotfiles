@@ -11,11 +11,6 @@
   boot = {
     consoleLogLevel = 0;
 
-    initrd = {
-      systemd.enable = true;
-      verbose = false;
-    };
-
     /*
       NOTE: replace this with your desired kernel, see: https://nixos.wiki/wiki/Linux_kernel for reference.
 
@@ -69,7 +64,7 @@
 
       systemd-boot = {
         enable = true;
-        configurationLimit = 3;
+        configurationLimit = 5;
         consoleMode = "max";
         editor = false;
       };
@@ -161,18 +156,6 @@
   };
 
   services = {
-    chrony = {
-      enable = true;
-
-      servers = [
-        "ntp.pagasa.dost.gov.ph"
-        "0.nixos.pool.ntp.org"
-        "1.nixos.pool.ntp.org"
-        "2.nixos.pool.ntp.org"
-        "3.nixos.pool.ntp.org"
-      ];
-    };
-
     journald.extraConfig = lib.mkForce "";
 
     openssh = {
