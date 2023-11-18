@@ -44,7 +44,7 @@ let
 
         modules = config.modules ++ [
           inputs.nix-index-database.hmModules.nix-index
-          inputs.base16.hmModule
+          inputs.nix-colors.homeManagerModule
 
           # Shared configuration across all users
           ../shared/home-manager

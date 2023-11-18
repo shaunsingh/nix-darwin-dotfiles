@@ -12,6 +12,9 @@
     ../../modules/home-manager/wayland/kickoff.nix
   ];
 
+  ### -- colorscheme
+  colorscheme = inputs.nix-colors.lib.schemeFromYAML "oxocarbon-dark" (builtins.readFile ../../../assets/colorschemes/base16-oxocarbon-dark.yaml);
+
   ### -- home
   home = {
     packages = builtins.attrValues {
@@ -53,6 +56,22 @@
       MOZ_DISABLE_RDD_SANDBOX = "1";
       MOZ_GLX_TEST_EARLY_WL_ROUNDTRIP = "1";
     };
+  };
+
+  ### -- tmux
+  tmux = {
+    enable = true;
+    sensibleOnTop = true;
+    extraConfig = with config.colorscheme.colors; ''
+      set -g status-right-length 100
+      set -g status-left-length 100
+      set -g status-left " "
+      set -g status-right " "
+      set -g status-justify left
+      set -g status-style fg=black,bg=default
+      set -g window-status-current-format "#[fg=#${base00},bg=#${base0C}] #I #[fg=#${base05},bg=#${base01}] [#W] #[fg=#${base03},bg=#${base01}]#{s|$HOME|~|;s|.*/||:pane_current_path} "
+      set -g window-status-format "#[fg=#{base00},bg=#{base0F}] #I #[fg=#{base04},bg=#{base01}] [#W] #[fg=#{base03},bg=#{base01}]#{s|$HOME|~|;s|.*/||:pane_current_path} "
+    '';
   };
 
   ### -- sway
@@ -109,7 +128,7 @@
       };
       output = {
         "*" = {
-          background = "#${config.lib.base16.theme.baseDARK-hex} solid_color";
+          background = "#${config.colorscheme.colors.baseDARK} solid_color";
         };
       };
       bars = lib.mkForce [ ];
@@ -164,34 +183,34 @@
           "${modifier}+Shift+c" = "reload";
           "${modifier}+Shift+e" = "exit";
         };
-      colors = with config.lib.base16.theme; {
+      colors = with config.colorscheme.colors; {
         focused = {
-          background = "#${base05-hex}";
-          indicator = "#${base05-hex}";
-          border = "#${base05-hex}";
-          text = "#${base05-hex}";
-          childBorder = "#${base05-hex}";
+          background = "#${base05}";
+          indicator = "#${base05}";
+          border = "#${base05}";
+          text = "#${base05}";
+          childBorder = "#${base05}";
         };
         focusedInactive = {
-          background = "#${base01-hex}";
-          indicator = "#${base01-hex}";
-          border = "#${base01-hex}";
-          text = "#${base01-hex}";
-          childBorder = "#${base01-hex}";
+          background = "#${base01}";
+          indicator = "#${base01}";
+          border = "#${base01}";
+          text = "#${base01}";
+          childBorder = "#${base01}";
         };
         unfocused = {
-          background = "#${base01-hex}";
-          indicator = "#${base01-hex}";
-          border = "#${base01-hex}";
-          text = "#${base01-hex}";
-          childBorder = "#${base01-hex}";
+          background = "#${base01}";
+          indicator = "#${base01}";
+          border = "#${base01}";
+          text = "#${base01}";
+          childBorder = "#${base01}";
         };
         urgent = {
-          background = "#${base0A-hex}";
-          indicator = "#${base0A-hex}";
-          border = "#${base0A-hex}";
-          text = "#${base0A-hex}";
-          childBorder = "#${base0A-hex}";
+          background = "#${base0A}";
+          indicator = "#${base0A}";
+          border = "#${base0A}";
+          text = "#${base0A}";
+          childBorder = "#${base0A}";
         };
       };
     };
@@ -214,12 +233,12 @@
       padding = 54;
       fonts = [ "Liga SFMono Nerd Font" ];
       font_size = 21.0;
-      colors = with config.lib.base16.theme; {
-        background = "#${baseDARK-hex}FF";
-        prompt = "#${base0C-hex}FF";
-        text = "#${base04-hex}FF";
-        text_query = "#${base06-hex}FF";
-        text_selected = "#${base08-hex}FF";
+      colors = with config.colorscheme.colors; {
+        background = "#${baseDARK}FF";
+        prompt = "#${base0C}FF";
+        text = "#${base04}FF";
+        text_query = "#${base06}FF";
+        text_selected = "#${base08}FF";
       };
     };
   };
@@ -411,25 +430,25 @@
       url.launch = "${pkgs.xdg-utils}/bin/xdg-open \${url}";
       tweak.grapheme-shaping = "yes";
       cursor.style = "beam";
-      colors = with config.lib.base16.theme; {
-        background = "${base00-hex}";
-        foreground = "${base06-hex}";
-        regular0 = "${base00-hex}";
-        regular1 = "${base0B-hex}";
-        regular2 = "${base0C-hex}";
-        regular3 = "${base0D-hex}";
-        regular4 = "${base07-hex}";
-        regular5 = "${base0F-hex}";
-        regular6 = "${base09-hex}";
-        regular7 = "${base04-hex}";
-        bright0 = "${base03-hex}";
-        bright1 = "${base0B-hex}";
-        bright2 = "${base0C-hex}";
-        bright3 = "${base0D-hex}";
-        bright4 = "${base07-hex}";
-        bright5 = "${base0F-hex}";
-        bright6 = "${base09-hex}";
-        bright7 = "${base06-hex}";
+      colors = with config.colorscheme.colors; {
+        background = "${base00}";
+        foreground = "${base06}";
+        regular0 = "${base00}";
+        regular1 = "${base0B}";
+        regular2 = "${base0C}";
+        regular3 = "${base0D}";
+        regular4 = "${base07}";
+        regular5 = "${base0F}";
+        regular6 = "${base09}";
+        regular7 = "${base04}";
+        bright0 = "${base03}";
+        bright1 = "${base0B}";
+        bright2 = "${base0C}";
+        bright3 = "${base0D}";
+        bright4 = "${base07}";
+        bright5 = "${base0F}";
+        bright6 = "${base09}";
+        bright7 = "${base06}";
       };
     };
   };
@@ -440,7 +459,7 @@
     package = inputs'.nixpkgs-wayland.packages.dunst.overrideAttrs (old: {
       __contentAddressed = true;
     });
-    settings = with config.lib.base16.theme; {
+    settings = with config.colorscheme.colors; {
       global = {
         # gen settings
         follow = "mouse";
@@ -458,7 +477,7 @@
         frame_width = 0;
         gap_size = 9;
         font = "Liga SFMono Nerd Font 11";
-        format = "<span size='x-large' font_desc='Liga SFMono Nerd Font 9' weight='bold' foreground='#${base04-hex}'>%a</span>\\n%s\\n%b";
+        format = "<span size='x-large' font_desc='Liga SFMono Nerd Font 9' weight='bold' foreground='#${base04}'>%a</span>\\n%s\\n%b";
         show_indicators = false;
         mouse_left_click = "do_action";
         mouse_middle_click = "close_all";
@@ -473,21 +492,21 @@
       # colors
       urgency_low = {
         timeout = 3;
-        background = "#${baseBLEND-hex}";
-        foreground = "#${base04-hex}";
-        highlight = "#${base0E-hex}";
+        background = "#${baseBLEND}";
+        foreground = "#${base04}";
+        highlight = "#${base0E}";
       };
       urgency_normal = {
         timeout = 6;
-        background = "#${baseBLEND-hex}";
-        foreground = "#${base04-hex}";
-        highlight = "#${base08-hex}";
+        background = "#${baseBLEND}";
+        foreground = "#${base04}";
+        highlight = "#${base08}";
       };
       urgency_critical = {
         timeout = 0;
-        background = "#${baseBLEND-hex}";
-        foreground = "#${base04-hex}";
-        highlight = "#${base0C-hex}";
+        background = "#${baseBLEND}";
+        foreground = "#${base04}";
+        highlight = "#${base0C}";
       };
     };
   };
@@ -502,12 +521,12 @@
       else pkgs.firefox;
     profiles =
       let
-        userChrome = with config.lib.base16.theme; ''
+        userChrome = with config.colorscheme.colors; ''
           :root {
-            --srf-primary: #${base00-hex};
-            --srf-secondary: #${base01-hex};
-            --srf-text: #${base04-hex};
-            --srf-accent: #${base0C-hex};
+            --srf-primary: #${base00};
+            --srf-secondary: #${base01};
+            --srf-text: #${base04};
+            --srf-accent: #${base0C};
           }
           window,
           #main-window,
@@ -670,7 +689,7 @@
           }
   
         '';
-        userContent = with config.lib.base16.theme; ''
+        userContent = with config.colorscheme.colors; ''
           :root {
             scrollbar-width: none !important;
           }
@@ -681,7 +700,7 @@
           }
            @-moz-document url("about:newtab"), url("about:home") {
             body {
-              background-color: #${base01-hex} !important;
+              background-color: #${base01} !important;
             }
             .search-wrapper .logo-and-wordmark .logo {
               background-image: url("https://raw.githubusercontent.com/NixOS/nixos-artwork/master/logo/nixos-white.png") !important;
@@ -740,7 +759,7 @@
   ### -- apps
   programs.zathura = {
     enable = true;
-    options = with config.lib.base16.theme; {
+    options = with config.colorscheme.colors; {
       completion-bg = "#${base02}";
       completion-fg = "#${base0C}";
       completion-highlight-bg = "#${base0C}";
@@ -778,31 +797,31 @@
       enable = false;
       discordAlias = true;
       discordPackage = pkgs.discord-canary;
-      css = with config.lib.base16.theme; ''
+      css = with config.colorscheme.colors; ''
         /* monospaced font */
         * { font-family: "Liga SFMono Nerd Font" !important; }
         /* themeing*/
         .theme-dark {
-          --background-primary: #${base00-hex};
-          --background-secondary: #${base01-hex};
-          --background-tertiary: #${base03-hex};
-          --background-secondary-alt: #${base02-hex};
-          --channeltextarea-background: #${base01-hex};
-          --interactive-muted: #${base0A-hex};
-          --background-floating: #${base01-hex};
-          --text-normal: #${base06-hex};
-          --header-primary: #${base05-hex};
-          --interactive-active: #${base0E-hex};
-          --background-accent: #${base01-hex};
+          --background-primary: #${base00};
+          --background-secondary: #${base01};
+          --background-tertiary: #${base03};
+          --background-secondary-alt: #${base02};
+          --channeltextarea-background: #${base01};
+          --interactive-muted: #${base0A};
+          --background-floating: #${base01};
+          --text-normal: #${base06};
+          --header-primary: #${base05};
+          --interactive-active: #${base0E};
+          --background-accent: #${base01};
         }
         .theme-dark .container-1D34oG {
-          background-color: #${base00-hex};
+          background-color: #${base00};
         }
         .categoryHeader-O1zU94, .theme-dark .autocomplete-1vrmpx {
-          background-color: #${base00-hex};
+          background-color: #${base00};
         }
         .theme-dark .selected-1Tbx07 {
-          background-color: #${base02-hex};
+          background-color: #${base02};
         }
         /* minimal looks*/
         [aria-label="Servers sidebar"],
@@ -937,25 +956,25 @@
               (bar))
           '';
 
-        ewwScss = pkgs.writeText "eww.scss" (with config.lib.base16.theme; ''
+        ewwScss = pkgs.writeText "eww.scss" (with config.colorscheme.colors; ''
           $baseTR: rgba(13,13,13,0.13);
-          $base00: #${baseBLEND-hex};
-          $base01: #${base01-hex};
-          $base02: #${base02-hex};
-          $base03: #${base03-hex};
-          $base04: #${base04-hex};
-          $base05: #${base05-hex};
-          $base06: #${base06-hex};
-          $base07: #${base07-hex};
-          $base08: #${base08-hex};
-          $base09: #${base09-hex};
-          $base0A: #${base0A-hex};
-          $base0B: #${base0B-hex};
-          $base0C: #${base0C-hex};
-          $base0D: #${base0D-hex};
-          $base0E: #${base0E-hex};
-          $base0F: #${base0F-hex};
-          $baseIBM: #${baseIBM-hex};
+          $base00: #${baseBLEND};
+          $base01: #${base01};
+          $base02: #${base02};
+          $base03: #${base03};
+          $base04: #${base04};
+          $base05: #${base05};
+          $base06: #${base06};
+          $base07: #${base07};
+          $base08: #${base08};
+          $base09: #${base09};
+          $base0A: #${base0A};
+          $base0B: #${base0B};
+          $base0C: #${base0C};
+          $base0D: #${base0D};
+          $base0E: #${base0E};
+          $base0F: #${base0F};
+          $baseIBM: #${baseIBM};
       
           * {
             all: unset;

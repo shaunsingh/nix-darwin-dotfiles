@@ -32,11 +32,7 @@
 
     ### -- tooling
     # colorscheme
-    base16.url = "github:shaunsingh/base16.nix";
-    base16-oxocarbon = {
-      url = "github:shaunsingh/base16-oxocarbon";
-      flake = false;
-    };
+    nix-colors.url = "github:Misterio77/nix-colors";
 
     # language support
     rust-overlay.url = "github:oxalica/rust-overlay";
