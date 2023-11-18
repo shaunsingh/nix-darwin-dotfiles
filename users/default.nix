@@ -2,14 +2,14 @@
 {
   # home-manager configurations
   parts.homeConfigurations = {
-    "shaunsingh@nix-darwin-aarch64" = {
+    "shaunsingh@m1" = {
       system = "aarch64-darwin";
       stateVersion = "23.05";
 
       modules = [ ./shaunsingh/home.nix ];
     };
 
-    "shaurizard@nixos-c1-x86" = {
+    "shaurizard@c1" = {
       system = "x86_64-linux";
       stateVersion = "23.05";
 
