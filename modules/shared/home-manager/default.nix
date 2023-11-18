@@ -131,25 +131,25 @@
         nix_shell.symbol = " ";
       };
     };
-#     git = {
-#       enable = true;
-#       userName = "shaunsingh";
-#       userEmail = "shaunsingh0207@gmail.com";
-#       ignores = [ "**/.idea/" "**/.vscode/settings.json" "**/.direnv/" "**/.DS_Store" ];
-#       extraConfig = {
-#         pull = { ff = "only"; };
-#         init.defaultBranch = "main";
-#         extraConfig = {
-#           diff.tool = "difftastic";
-#           pager.difftool = true;
-# 
-#           difftool = {
-#             prompt = false;
-#             difftastic.cmd = ''${lib.getExe pkgs.difftastic} "$LOCAL" "$REMOTE"'';
-#           };
-#         };
-#       };
-#     };
+    git = {
+      enable = true;
+      userName = "shaunsingh";
+      userEmail = "shaunsingh0207@gmail.com";
+      ignores = [ "**/.idea/" "**/.vscode/settings.json" "**/.direnv/" "**/.DS_Store" ];
+      extraConfig = {
+        pull = { ff = "only"; };
+        init.defaultBranch = "main";
+        extraConfig = {
+          diff.tool = "difftastic";
+          pager.difftool = true;
+
+          difftool = {
+            prompt = false;
+            difftastic.cmd = ''${lib.getExe pkgs.difftastic} "$LOCAL" "$REMOTE"'';
+          };
+        };
+      };
+    };
     fish = {
       enable = true;
       shellAliases = {

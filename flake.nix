@@ -52,7 +52,6 @@
     home.inputs.nixpkgs.follows = "nixpkgs";
     nixos-wsl.inputs.nixpkgs.follows = "nixpkgs";
     statix.inputs.nixpkgs.follows = "nixpkgs";
-    base16.inputs.nixpkgs.follows = "nixpkgs";
     rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
     eww.inputs.nixpkgs.follows = "nixpkgs";
   };
