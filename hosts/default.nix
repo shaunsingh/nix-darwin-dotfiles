@@ -25,7 +25,6 @@
 #             mode = "0444";
 #           };
 #         }
-
         ./nixos-c1-x86/configuration.nix
       ];
     };

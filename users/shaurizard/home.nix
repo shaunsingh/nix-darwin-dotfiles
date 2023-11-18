@@ -9,7 +9,7 @@
 {
   imports = [
     # Append your custom home-manager modules in this list
-    ../../modules/home-manager/wayland/kickoff.nix ];
+    ../../modules/home-manager/wayland/kickoff.nix
   ];
 
   ### -- home
@@ -26,7 +26,7 @@
         font-manager
         wayland-utils
         xdg_utils
-        spotify
+        spotify;
 
       inherit (inputs'.nixpkgs-wayland.packages)
         grim
@@ -1087,5 +1087,4 @@
           { timeout = 310; command = "swaylock"; }
         ];
       };
-  };
 }
