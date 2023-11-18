@@ -7,6 +7,11 @@
   - Appendix A. Configuration Options: https://nix-community.gitlab.io/home-manager/options.html
 */
 {
+  imports = [
+    # Append your custom home-manager modules in this list
+    ../../modules/home-manager/wayland/kickoff.nix ];
+  ];
+
   ### -- home
   home = {
     packages = __attrValues {
@@ -205,7 +210,6 @@
   services.kanshi.systemdTarget = "sway-session.target";
 
   ### -- launcher
-  imports = [ ./config/kickoff.nix ];
   programs.kickoff = {
     enable = true;
     settings = {

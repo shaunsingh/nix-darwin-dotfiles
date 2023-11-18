@@ -163,7 +163,6 @@
         cp = "${pkgs.xcp}/bin/xcp";
         top = "${pkgs.bottom}/bin/btm";
         cat = "${pkgs.bat}/bin/bat --paging=never";
-        nvim = "${pkgs.neovim-nightly}/bin/nvim --startuptime /tmp/nvim-startuptime";
       };
       shellInit = ''
         set fish_greeting

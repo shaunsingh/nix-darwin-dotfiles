@@ -10,7 +10,7 @@
 
   # NixOS configurations
   parts.nixosConfigurations = {
-    nixos-c1-x86_64 = {
+    nixos-c1-x86 = {
       system = "x86_64-linux";
       stateVersion = "23.05";
 
@@ -26,7 +26,7 @@
 #           };
 #         }
 
-        ./nixos-c1-x86_64/configuration.nix
+        ./nixos-c1-x86/configuration.nix
       ];
     };
   };

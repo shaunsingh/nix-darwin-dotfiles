@@ -12,7 +12,7 @@
         ++ lib.optional config.parts.homeConfigurations."shaurizard@nix-darwin-aarch64".agenix ./shaunsingh/age.nix;
     };
 
-    "shaurizard@nixos-c1-x86_64" = {
+    "shaurizard@nixos-c1-x86" = {
       system = "x86_64-linux";
       stateVersion = "23.05";
 
