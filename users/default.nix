@@ -13,9 +13,7 @@
       system = "x86_64-linux";
       stateVersion = "23.05";
 
-      modules = [
-        ./shaurizard/home.nix
-      ];
+      modules = [ ./shaurizard/home.nix ];
     };
   };
 }
