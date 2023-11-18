@@ -14,7 +14,6 @@
       stateVersion = "23.05";
 
       modules = [
-        inputs.base16.hmModule
         ./shaurizard/home.nix
       ];
     };
