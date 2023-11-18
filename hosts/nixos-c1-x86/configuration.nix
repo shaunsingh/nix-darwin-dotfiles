@@ -16,7 +16,22 @@ in
   imports = [
     # auto generated
     ./hardware-configuration.nix
+
+    # gaming
+    inputs.nix-gaming.nixosModules.steamCompat
   ];
+
+  nixpkgs.config = {
+    allowUnfreePredicate = pkg:
+      builtins.elem (lib.getName pkg) [
+        "nvidia-x11"
+        "nvidia-settings"
+        "nvidia-persistenced"
+        "steam"
+        "steam-original"
+        "steam-run"
+      ];
+  };
 
   boot = {
     kernelModules = [ "amd-pstate" ];
@@ -44,15 +59,31 @@ in
     };
   };
 
-  environment.systemPackages = with pkgs; [
-    glxinfo
-    vulkan-tools
-  ];
-
   services.xserver.videoDrivers = [ "nvidia" ];
 
   xdg.portal = {
     enable = true;
     wlr.enable = true;
   };
+
+  programs = {
+    steam = {
+      enable = true;
+      remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
+      dedicatedServer.openFirewall = true;
+      extraCompatPackages = [
+        inputs.nix-gaming.packages.${pkgs.system}.proton-ge
+      ];
+    };
+    gamescope = {
+      enable = true;
+      capSysNice = true;
+    };
+    gamemode.enable = true;
+  };
+
+  environment.systemPackages = with pkgs; [
+    glxinfo
+    vulkan-tools
+  ];
 }

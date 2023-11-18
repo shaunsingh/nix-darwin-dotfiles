@@ -8,6 +8,10 @@
   - Options Search: https://search.nixos.org/options?channel=unstable
 */
 {
+  imports = [
+    inputs.nix-gaming.nixosModules.pipewireLowLatency
+  ];
+
   boot = {
     consoleLogLevel = 0;
 
@@ -186,14 +190,14 @@
     pipewire = {
       enable = true;
       socketActivation = false;
+      lowLatency.enable = true;
 
+      jack.enable = true;
+      pulse.enable = true;
       alsa = {
         enable = true;
         support32Bit = true;
       };
-
-      jack.enable = true;
-      pulse.enable = true;
     };
   };
 

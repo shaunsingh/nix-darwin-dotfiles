@@ -34,6 +34,11 @@
         wf-recorder
         wl-clipboard
         wlogout;
+
+      inherit (inputs'.nix-gaming.packages)
+        wine-ge
+        wine-discord-ipc-bridge
+        osu-lazer-bin;
     };
 
     sessionPath = [
