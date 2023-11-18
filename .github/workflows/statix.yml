@@ -6,10 +6,10 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3.5.3
       with:
           fetch-depth: 0
-    - uses: cachix/install-nix-action@v17
+    - uses: cachix/install-nix-action@v22
       with:
         install_url: https://github.com/numtide/nix-unstable-installer/releases/download/nix-2.10.0pre20220629_b7eb4ac/install
         extra_nix_config: |
