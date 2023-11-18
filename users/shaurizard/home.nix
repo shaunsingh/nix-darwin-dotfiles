@@ -135,20 +135,21 @@
       gaps.outer = 18;
       defaultWorkspace = "workspace 1";
       keybindings =
-        let
-          modifier = "Mod4";
-          concatAttrs = lib.fold (x: y: x // y) { };
-          tagBinds =
-            concatAttrs
-              (map
-                (i: {
-                  "${modifier}+${toString i}" = "exec 'swaymsg workspace ${toString i} && ${inputs.eww.packages.${system}.eww-wayland}/bin/eww update active-tag=${toString i}'";
-                  "${modifier}+Shift+${toString i}" = "exec 'swaymsg move container to workspace ${toString i}'";
-                })
-                (lib.range 0 9));
-        in
-        tagBinds
-        // {
+#         let
+#           modifier = "Mod4";
+#           concatAttrs = lib.fold (x: y: x // y) { };
+#           tagBinds =
+#             concatAttrs
+#               (map
+#                 (i: {
+#                   "${modifier}+${toString i}" = "exec 'swaymsg workspace ${toString i} && ${inputs.eww.packages.${system}.eww-wayland}/bin/eww update active-tag=${toString i}'";
+#                   "${modifier}+Shift+${toString i}" = "exec 'swaymsg move container to workspace ${toString i}'";
+#                 })
+#                 (lib.range 0 9));
+#         in
+#         tagBinds
+#         // 
+        {
           "${modifier}+Return" = "exec ${pkgs.foot}/bin/foot";
           "${modifier}+d" = "exec ${pkgs.kickoff}/bin/kickoff";
           "${modifier}+p" = "exec ${pkgs.screenshot}/bin/screenshot";

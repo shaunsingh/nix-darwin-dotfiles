@@ -1,5 +1,7 @@
 _:
 {
+  debug = true;
+
   # home-manager configurations
   parts.homeConfigurations = {
     "shaunsingh@m1" = {
