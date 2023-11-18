@@ -31,10 +31,6 @@
     nixpkgs-wayland.url = "github:nix-community/nixpkgs-wayland";
 
     ### -- tooling
-    # secrets 
-    agenix.url = "github:ryantm/agenix";
-    agenix.inputs.darwin.follows = "darwin";
-
     # colorscheme
     base16.url = "github:shaunsingh/base16.nix";
     base16-oxocarbon = {
@@ -59,7 +55,6 @@
     home.inputs.nixpkgs.follows = "nixpkgs";
     nixos-wsl.inputs.nixpkgs.follows = "nixpkgs";
     statix.inputs.nixpkgs.follows = "nixpkgs";
-    agenix.inputs.nixpkgs.follows = "nixpkgs";
     base16.inputs.nixpkgs.follows = "nixpkgs";
     rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
     eww.inputs.nixpkgs.follows = "nixpkgs";

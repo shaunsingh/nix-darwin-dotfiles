@@ -15,16 +15,6 @@
       stateVersion = "23.05";
 
       modules = [
-#        TODO agenix
-#         inputs.agenix.nixosModules.default
-#         {
-#           # NOTE: you should either change this or disable it completely by commenting it out
-#           age.secrets.tokens = {
-#             file = ../secrets/tokens.age;
-#             owner = "moni";
-#             mode = "0444";
-#           };
-#         }
         ./nixos-c1-x86/configuration.nix
       ];
     };

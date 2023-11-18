@@ -27,7 +27,6 @@
         });
 
       inherit (pkgs.gitAndTools) gh;
-      inherit (inputs'.agenix.packages) agenix;
     };
     sessionVariables = {
       MANPAGER = "nvim +Man! -c 'nnoremap i <nop>'";
