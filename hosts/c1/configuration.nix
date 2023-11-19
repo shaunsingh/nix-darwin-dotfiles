@@ -17,18 +17,6 @@ in
     ./hardware-configuration.nix
   ];
 
-  nixpkgs.config = {
-    allowUnfreePredicate = pkg:
-      builtins.elem (lib.getName pkg) [
-        "nvidia-x11"
-        "nvidia-settings"
-        "nvidia-persistenced"
-        "steam"
-        "steam-original"
-        "steam-run"
-      ];
-  };
-
   boot = {
     kernelModules = [ "amd-pstate" ];
 
@@ -47,11 +35,21 @@ in
       package = nvidiaPackage;
       powerManagement.enable = false;
     };
-
     opengl = {
       enable = true;
       driSupport = true;
-      driSupport32Bit = true;
+    };
+  };
+
+  environment = {
+    sessionVariables = {
+      WLR_NO_HARDWARE_CURSORS = "1";
+      WLR_RENDERER = "vulkan";
+      WLR_DRM_NO_ATOMIC = "1";
+      NVD_BACKEND = "direct";
+      LIBVA_DRIVER_NAME = "nvidia";
+      MOZ_DISABLE_RDD_SANDBOX = "1";
+      MOZ_GLX_TEST_EARLY_WL_ROUNDTRIP = "1";
     };
   };
 
@@ -61,24 +59,6 @@ in
     enable = true;
     wlr.enable = true;
   };
-
-  programs = {
-    steam = {
-      enable = true;
-      remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
-      dedicatedServer.openFirewall = true;
-    };
-    gamescope = {
-      enable = true;
-      capSysNice = true;
-    };
-    gamemode.enable = true;
-  };
-
-  environment.systemPackages = with pkgs; [
-    glxinfo
-    vulkan-tools
-  ];
 
   services.greetd = {
     enable = true;

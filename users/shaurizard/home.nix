@@ -26,7 +26,8 @@
         font-manager
         wayland-utils
         xdg_utils
-        spotify;
+        spotify
+        discord-canary;
 
       inherit (inputs'.nixpkgs-wayland.packages)
         grim
@@ -47,27 +48,22 @@
     sessionVariables = {
       EDITOR = "nvim";
       BROWSER = "firefox";
-      QT_QPA_PLATFORMTHEME = "qt5ct";
       RUSTUP_HOME = "${config.home.homeDirectory}/.local/share/rustup";
-      WLR_NO_HARDWARE_CURSORS = "1";
-      NIXOS_OZONE_WL = "1";
-      NVD_BACKEND = "direct";
-      LIBVA_DRIVER_NAME = "nvidia";
-      MOZ_DISABLE_RDD_SANDBOX = "1";
-      MOZ_GLX_TEST_EARLY_WL_ROUNDTRIP = "1";
     };
   };
 
   ### -- sway
   wayland.windowManager.sway = {
     enable = true;
-    systemdIntegration = true;
+    systemd.enable = true;
     extraSessionCommands = ''
+      export NIXOS_OZONE_WL=1
       export XDG_SESSION_DESKTOP=sway
       export SDL_VIDEODRIVER=wayland
-      export QT_QPA_PLATFORM=wayland-egl
+      export QT_QPA_PLATFORMTHEME=qt5ct
       export QT_WAYLAND_DISABLE_WINDOWDECORATION="1"
       export MOZ_ENABLE_WAYLAND=1
+      export MOZ_USE_XINPUT2=1
       export CLUTTER_BACKEND=wayland
       export ECORE_EVAS_ENGINE=wayland-egl
       export ELM_ENGINE=wayland_egl
@@ -83,10 +79,6 @@
         }
         {
           command = "${pkgs.pamixer}/bin/pamixer --set-volume 33";
-          always = false;
-        }
-        {
-          command = "${pkgs.brightnessctl}/bin/brightnessctl s 66%";
           always = false;
         }
       ];
@@ -112,7 +104,7 @@
       };
       output = {
         "*" = {
-          background = "#${config.colorscheme.colors.baseDARK} solid_color";
+          background = "#000000 solid_color";
         };
       };
       bars = lib.mkForce [ ];
@@ -130,21 +122,92 @@
                   "${modifier}+Shift+${toString i}" = "exec 'swaymsg move container to workspace ${toString i}'";
                 })
                 (lib.range 0 9));
+          screenshot = pkgs.writeShellScriptBin "screenshot" ''
+            ${pkgs.grim}/bin/grim -g "$(${pkgs.slurp}/bin/slurp)" - -t png | ${pkgs.wl-clipboard}/bin/wl-copy -t image/png
+          '';
+          ocrScript =
+            let
+              inherit (pkgs) grim libnotify slurp tesseract5 wl-clipboard;
+              _ = pkgs.lib.getExe;
+            in
+            pkgs.writeShellScriptBin "wl-ocr" ''
+              ${_ grim} -g "$(${_ slurp})" -t ppm - | ${_ tesseract5} - - | ${wl-clipboard}/bin/wl-copy
+              ${_ libnotify} "$(${wl-clipboard}/bin/wl-paste)"
+            '';
+          volume = pkgs.writeShellScriptBin "volume" ''
+            #!/bin/sh
+        
+            ${pkgs.pamixer}/bin/pamixer "$@"
+            volume="$(${pkgs.pamixer}/bin/pamixer --get-volume)"
+        
+            if [ $volume = 0 ]; then
+                ${pkgs.libnotify}/bin/notify-send -r 69 \
+                    -a "Volume" \
+                    "Muted" \
+                    -t 888 \
+                    -u low
+            else
+                ${pkgs.libnotify}/bin/notify-send -r 69 \
+                    -a "Volume" "Currently at $volume%" \
+                    -h int:value:"$volume" \
+                    -t 888 \
+                    -u low
+            fi
+        
+            ${inputs.eww.packages.${system}.eww-wayland}/bin/eww update volume-level=$volume
+          '';
+          microphone = pkgs.writeShellScriptBin "microphone" ''
+            #!/bin/sh
+        
+            ${pkgs.pamixer}/bin/pamixer --default-source "$@"
+            mic="$(${pkgs.pamixer}/bin/pamixer --default-source --get-volume-human)"
+        
+            if [ "$mic" = "muted" ]; then
+                ${pkgs.libnotify}/bin/notify-send -r 69 \
+                    -a "Microphone" \
+                    "Muted" \
+                    -t 888 \
+                    -u low
+            else
+              ${pkgs.libnotify}/bin/notify-send -r 69 \
+                    -a "Microphone" "Currently at $mic" \
+                    -h int:value:"$mic" \
+                    -t 888 \
+                    -u low
+            fi
+          '';
+          brightness =
+            let
+              brightnessctl = pkgs.brightnessctl + "/bin/brightnessctl";
+            in
+            pkgs.writeShellScriptBin "brightness" ''
+              #!/bin/sh
+        
+              ${brightnessctl} "$@"
+              brightness=$(echo $(($(${brightnessctl} g) * 100 / $(${brightnessctl} m))))
+        
+              ${pkgs.libnotify}/bin/notify-send -r 69 \
+                  -a "Brightness" "Currently at $brightness%" \
+                  -h int:value:"$brightness" \
+                  -t 888 \
+                  -u low
+        
+              ${inputs.eww.packages.${system}.eww-wayland}/bin/eww update brightness-level=$brightness
+            '';
         in
         tagBinds
         // 
         {
           "${modifier}+Return" = "exec ${pkgs.foot}/bin/foot";
           "${modifier}+d" = "exec ${pkgs.kickoff}/bin/kickoff";
-          "${modifier}+p" = "exec ${pkgs.screenshot}/bin/screenshot";
-          "${modifier}+Shift+p" = "exec ${pkgs.ocrScript}/bin/wl-ocr";
-          "${modifier}+Shift+p" = "exec ${pkgs.grim}/bin/grim -o eDP-1";
-          "${modifier}+v" = "exec ${pkgs.volume}/bin/volume -d 5";
-          "${modifier}+b" = "exec ${pkgs.volume}/bin/volume -i 5";
+          "${modifier}+p" = "exec ${screenshot}/bin/screenshot";
+          "${modifier}+Shift+p" = "exec ${ocrScript}/bin/wl-ocr";
+          "${modifier}+v" = "exec ${volume}/bin/volume -d 5";
+          "${modifier}+b" = "exec ${volume}/bin/volume -i 5";
           "${modifier}+Shift+v" = "exec ${pkgs.playerctl}/bin/playerctl play-pause";
-          "${modifier}+Shift+b" = "exec ${pkgs.volume}/bin/volume -t";
-          "${modifier}+n" = "exec ${pkgs.brightness}/bin/brightness set 5%-";
-          "${modifier}+m" = "exec ${pkgs.brightness}/bin/brightness set 5%+";
+          "${modifier}+Shift+b" = "exec ${volume}/bin/volume -t";
+          "${modifier}+n" = "exec ${brightness}/bin/brightness set 5%-";
+          "${modifier}+m" = "exec ${brightness}/bin/brightness set 5%+";
           "${modifier}+Shift+n" = "exec ${pkgs.playerctl}/bin/playerctl previous";
           "${modifier}+Shift+m" = "exec ${pkgs.playerctl}/bin/playerctl next";
           "${modifier}+q" = "kill";
@@ -219,7 +282,7 @@
       fonts = [ "Liga SFMono Nerd Font" ];
       font_size = 21.0;
       colors = with config.colorscheme.colors; {
-        background = "#${baseDARK}FF";
+        background = "#000000FF";
         prompt = "#${base0C}FF";
         text = "#${base04}FF";
         text_query = "#${base06}FF";
@@ -477,19 +540,19 @@
       # colors
       urgency_low = {
         timeout = 3;
-        background = "#${baseBLEND}";
+        background = "#131313";
         foreground = "#${base04}";
         highlight = "#${base0E}";
       };
       urgency_normal = {
         timeout = 6;
-        background = "#${baseBLEND}";
+        background = "#131313";
         foreground = "#${base04}";
         highlight = "#${base08}";
       };
       urgency_critical = {
         timeout = 0;
-        background = "#${baseBLEND}";
+        background = "#131313";
         foreground = "#${base04}";
         highlight = "#${base0C}";
       };
@@ -770,53 +833,12 @@
       statusbar-bg = "#${base01}";
     };
   };
-  programs = {
-    obs-studio = {
-      enable = true;
-      plugins = with pkgs.obs-studio-plugins; [
-        wlrobs
-        obs-pipewire-audio-capture
-      ];
-    };
-    discocss = {
-      enable = false;
-      discordAlias = true;
-      discordPackage = pkgs.discord-canary;
-      css = with config.colorscheme.colors; ''
-        /* monospaced font */
-        * { font-family: "Liga SFMono Nerd Font" !important; }
-        /* themeing*/
-        .theme-dark {
-          --background-primary: #${base00};
-          --background-secondary: #${base01};
-          --background-tertiary: #${base03};
-          --background-secondary-alt: #${base02};
-          --channeltextarea-background: #${base01};
-          --interactive-muted: #${base0A};
-          --background-floating: #${base01};
-          --text-normal: #${base06};
-          --header-primary: #${base05};
-          --interactive-active: #${base0E};
-          --background-accent: #${base01};
-        }
-        .theme-dark .container-1D34oG {
-          background-color: #${base00};
-        }
-        .categoryHeader-O1zU94, .theme-dark .autocomplete-1vrmpx {
-          background-color: #${base00};
-        }
-        .theme-dark .selected-1Tbx07 {
-          background-color: #${base02};
-        }
-        /* minimal looks*/
-        [aria-label="Servers sidebar"],
-        [class*="chat-"] > [class*="content-"]::before,
-        [class*="repliedMessage-"]::before,
-        ::-webkit-scrollbar,
-        [class*="form-"] [class*="attachWrapper-"],
-        [class*="form-"] [class*="buttons-"],
-      '';
-    };
+  programs.obs-studio = {
+    enable = true;
+    plugins = with pkgs.obs-studio-plugins; [
+      wlrobs
+      obs-pipewire-audio-capture
+    ];
   };
 
   ### -- bar
@@ -943,7 +965,7 @@
 
         ewwScss = pkgs.writeText "eww.scss" (with config.colorscheme.colors; ''
           $baseTR: rgba(13,13,13,0.13);
-          $base00: #${baseBLEND};
+          $base00: #131313;
           $base01: #${base01};
           $base02: #${base02};
           $base03: #${base03};
@@ -959,7 +981,7 @@
           $base0D: #${base0D};
           $base0E: #${base0E};
           $base0F: #${base0F};
-          $baseIBM: #${baseIBM};
+          $baseIBM: #0f62fe;
       
           * {
             all: unset;

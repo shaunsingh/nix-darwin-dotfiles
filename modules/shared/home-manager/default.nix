@@ -12,7 +12,6 @@
       inherit (pkgs)
         bat
         ripgrep
-        difftastic
         nixpkgs-fmt
         nixpkgs-review
         uutils-coreutils;
@@ -83,9 +82,10 @@
     };
 
     starship = {
-      enable = true;
+      enable = false;
       settings = {
         scan_timeout = 10;
+        enableTransience = true;
         # prompt
         format = "$directory$git_branch$git_metrics$nix_shell$package$character";
         add_newline = false;
@@ -118,15 +118,6 @@
       extraConfig = {
         pull = { ff = "only"; };
         init.defaultBranch = "main";
-        extraConfig = {
-          diff.tool = "difftastic";
-          pager.difftool = true;
-
-          difftool = {
-            prompt = false;
-            difftastic.cmd = ''${lib.getExe pkgs.difftastic} "$LOCAL" "$REMOTE"'';
-          };
-        };
       };
     };
     fish = {
