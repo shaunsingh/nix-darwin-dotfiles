@@ -59,15 +59,10 @@
       "net.ipv4.tcp_congestion_control" = "bbr2";
     };
 
-    loader = {
-      efi.canTouchEfiVariables = true;
-
-      systemd-boot = {
-        enable = true;
-        configurationLimit = 5;
-        consoleMode = "max";
-        editor = false;
-      };
+    loader.grub = {
+      enable = true;
+      device = "nodev";
+      useOSProber = true;
     };
   };
 
