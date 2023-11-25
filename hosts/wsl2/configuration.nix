@@ -5,9 +5,19 @@
 
   wsl = {
     enable = true;
-    defaultUser = "shaurizard";
+    defaultUser = "nixos";
     startMenuLaunchers = true;
     wslConf.automount.root = "/mnt";
+  };
+
+  users.users.nixos = {
+    isNormalUser = true;
+    home = "/home/nixos";
+    shell = pkgs.fish;
+
+    extraGroups = [
+      "wheel"
+    ];
   };
 
   hardware.opengl.enable = true;

@@ -17,6 +17,19 @@ in
     ./hardware-configuration.nix
   ];
 
+  users.users.shaurizard = {
+    isNormalUser = true;
+    home = "/home/shaurizard";
+    shell = pkgs.fish;
+
+    extraGroups = [
+      "wheel"
+      "video"
+      "audio"
+      "realtime"
+    ];
+  };
+
   boot = {
     kernelModules = [ "amd-pstate" ];
 

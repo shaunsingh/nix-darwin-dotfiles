@@ -156,19 +156,6 @@
     timeZone = "America/New_York";
   };
 
-  users.users.shaurizard = {
-    isNormalUser = true;
-    home = "/home/shaurizard";
-    shell = pkgs.fish;
-
-    extraGroups = [
-      "wheel"
-      "video"
-      "audio"
-      "realtime"
-    ];
-  };
-
   zramSwap = {
     enable = true;
     memoryPercent = 40;
