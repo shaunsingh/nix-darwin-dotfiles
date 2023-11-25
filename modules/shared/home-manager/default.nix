@@ -85,7 +85,6 @@
       enable = true;
       settings = {
         scan_timeout = 10;
-        enableTransience = true;
         # prompt
         format = "$directory$git_branch$git_metrics$nix_shell$package$character";
         add_newline = false;
@@ -131,11 +130,7 @@
         top = "${pkgs.bottom}/bin/btm";
         cat = "${pkgs.bat}/bin/bat --paging=never";
       };
-      shellInit = ''
-        set fish_greeting
-      '';
     };
-
     eza.enable = true;
     bat.enable = true;
 
