@@ -258,6 +258,24 @@
         "type": "github"
       }
     },
+    "flake-utils_5": {
+      "inputs": {
+        "systems": "systems_4"
+      },
+      "locked": {
+        "lastModified": 1681202837,
+        "narHash": "sha256-H+Rh19JDwRtpVPAWp64F+rlEtxUWBAQW28eAi3SRSzg=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "cfacdce06f30d2b68473a46042957675eebb3401",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
     "home": {
       "inputs": {
         "nixpkgs": [
@@ -607,6 +625,20 @@
         "type": "github"
       }
     },
+    "nixpkgs_4": {
+      "locked": {
+        "lastModified": 1682134069,
+        "narHash": "sha256-TnI/ZXSmRxQDt2sjRYK/8j8iha4B4zP2cnQCZZ3vp7k=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "fd901ef4bf93499374c5af385b2943f5801c0833",
+        "type": "github"
+      },
+      "original": {
+        "id": "nixpkgs",
+        "type": "indirect"
+      }
+    },
     "nur": {
       "locked": {
         "lastModified": 1700286054,
@@ -660,7 +692,8 @@
         "rust-overlay": "rust-overlay",
         "stable": "stable",
         "statix": "statix",
-        "unstable": "unstable"
+        "unstable": "unstable",
+        "vscode-server": "vscode-server"
       }
     },
     "rust-analyzer-src": {
@@ -800,6 +833,21 @@
         "type": "github"
       }
     },
+    "systems_4": {
+      "locked": {
+        "lastModified": 1681028828,
+        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
+        "owner": "nix-systems",
+        "repo": "default",
+        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-systems",
+        "repo": "default",
+        "type": "github"
+      }
+    },
     "treefmt-nix": {
       "inputs": {
         "nixpkgs": [
@@ -835,6 +883,25 @@
         "owner": "nixos",
         "ref": "nixpkgs-unstable",
         "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "vscode-server": {
+      "inputs": {
+        "flake-utils": "flake-utils_5",
+        "nixpkgs": "nixpkgs_4"
+      },
+      "locked": {
+        "lastModified": 1684517665,
+        "narHash": "sha256-SaAr66uCQ8CF75jIr23FZjk1+9Kfwm5sQnwV25206Gs=",
+        "owner": "nix-community",
+        "repo": "nixos-vscode-server",
+        "rev": "1e1358493df6529d4c7bc4cc3066f76fd16d4ae6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "nixos-vscode-server",
         "type": "github"
       }
     }

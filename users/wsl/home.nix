@@ -9,7 +9,10 @@
 {
   home = {
     packages = builtins.attrValues {
-      inherit (pkgs) neofetch;
+      inherit (pkgs) 
+        clang
+        cmake
+        julia;
     };
   };
 }
