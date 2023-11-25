@@ -83,6 +83,7 @@
 
     starship = {
       enable = true;
+      enableFishIntegration = false;
       settings = {
         scan_timeout = 10;
         # prompt
@@ -121,6 +122,11 @@
     };
     fish = {
       enable = true;
+      interactiveShellInit = ''
+        if test "$TERM" != "dumb"
+          eval (${pkgs.starship}/bin/starship init fish)
+        end
+      '';
       shellAliases = {
         ":q" = "exit";
         git-rebase = "git rebase -i HEAD~2";
