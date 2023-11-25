@@ -16,13 +16,4 @@
     git
     home-manager
   ];
-
-  users.users.shaurizard = {
-    isNormalUser = true;
-    home = "/home/shaurizard";
-    shell = pkgs.zsh;
-    extraGroups = [ "wheel" ];
-  };
-
-  programs.zsh.enable = true;
 }
