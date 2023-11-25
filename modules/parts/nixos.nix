@@ -50,10 +50,26 @@ let
           })
         ] ++ lib.optionals config.wsl [
           inputs.nixos-wsl.nixosModules.wsl
+          inputs.vscode-server.nixosModules.default
 
           ({ lib, pkgs, ... }: {
-            wsl.wslConf.network.hostname = name;
+            # needed for vscode-server
+            wsl = { 
+              wslConf.network.hostname = name;
+              extraBin = with pkgs; [
+                { src = "${coreutils}/bin/uname"; }
+                { src = "${coreutils}/bin/dirname"; }
+                { src = "${coreutils}/bin/readlink"; }
+              ];
+            };
+            programs.nix-ld.enable = true;
+            services.vscode-server.enable = true;
             system.build.installBootLoader = lib.mkForce "${pkgs.coreutils}/bin/true";
+            environment.systemPackages = with pkgs; [
+              git
+              wget
+              home-manager
+            ];
           })
         ];
       }

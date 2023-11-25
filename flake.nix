@@ -28,6 +28,7 @@
     darwin.url = "github:lnl7/nix-darwin";
     home.url = "github:nix-community/home-manager";
     nixos-wsl.url = "github:nix-community/nixos-wsl";
+    vscode-server.url = "github:nix-community/nixos-vscode-server";
     nixpkgs-wayland.url = "github:nix-community/nixpkgs-wayland";
 
     ### -- tooling
