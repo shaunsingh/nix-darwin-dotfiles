@@ -14,5 +14,11 @@ _:
 
       modules = [ ./shaurizard/home.nix ];
     };
+
+    "shaurizard@wsl2" = {
+      system = "x86_64-linux";
+      stateVersion = "23.05";
+      modules = [ ./wsl/home.nix ];
+    };
   };
 }

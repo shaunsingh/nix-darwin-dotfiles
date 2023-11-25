@@ -16,5 +16,14 @@ _:
 
       modules = [ ./c1/configuration.nix ];
     };
+    wsl2 = {
+      system = "x86_64-linux";
+      stateVersion = "22.05"; # only change this if you know what you are doing.
+      wsl = true;
+
+      modules = [
+        ./wsl2/configuration.nix
+      ];
+    };
   };
 }
