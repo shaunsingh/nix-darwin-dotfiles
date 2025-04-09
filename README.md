@@ -4,7 +4,7 @@ NixOS config to run the [NYXT](https://nyxt.atlas.engineer/) browser standalone 
 
 For old config, see the [old-nix-darwin](https://github.com/shaunsingh/nix-darwin-dotfiles/tree/old-nix-darwin) branch
 
-<img src="assets/showcase.png" width="690">
+<img src="assets/showcase.png" width="345">
 
 ## Notes
 
