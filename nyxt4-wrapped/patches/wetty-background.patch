@@ -1,0 +1,11 @@
+--- a/src/assets/scss/variables.scss
++++ b/src/assets/scss/variables.scss
+@@ -1,4 +1,4 @@
+-$black: #000;
+-$grey: rgba(0, 0, 0, 0.75);
+-$white: #fff;
+-$lgrey: #ccc;
++$black: #161616;
++$grey: #393939;
++$white: #ffffff;
++$lgrey: #525252;

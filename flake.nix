@@ -1,55 +1,75 @@
 {
-  description = "NixOS/nix-darwin/home-manager configuration using Nix Flakes.";
-  nixConfig.commit-lockfile-summary = "flake: bump inputs";
-
-  outputs = inputs: inputs.parts.lib.mkFlake { inherit inputs; } {
-    systems = [ "aarch64-darwin" "x86_64-linux" ];
-    imports = [ ./modules/parts ./overlays ./hosts ./users ];
-  };
+  description = "flake to run nyxt config as kiosk under asahi/nixOS +gamescope";
 
   inputs = {
-    ### -- nix lang & nixpkgs help
-    nix.url = "github:nixos/nix";
-    nix-index-database.url = "github:Mic92/nix-index-database";
-    nixpkgs-fmt.url = "github:nix-community/nixpkgs-fmt";
-    parts.url = "github:hercules-ci/flake-parts";
-    statix.url = "github:nerdypepper/statix";
-
-    ### -- nixpkgs
-    master.url = "github:nixos/nixpkgs/master";
-    stable.url = "github:nixos/nixpkgs/release-23.05";
-    unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-    nur.url = "github:nix-community/NUR";
-
-    # Default Nixpkgs for packages and modules
-    nixpkgs.follows = "master";
-
-    ### -- platform support
-    darwin.url = "github:lnl7/nix-darwin";
-    home.url = "github:nix-community/home-manager";
-    nixos-wsl.url = "github:nix-community/nixos-wsl";
-    vscode-server.url = "github:nix-community/nixos-vscode-server";
+    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
     nixpkgs-wayland.url = "github:nix-community/nixpkgs-wayland";
 
-    ### -- tooling
-    # colorscheme
-    nix-colors.url = "github:Misterio77/nix-colors";
-
-    # language support
+    home-manager.url = "github:nix-community/home-manager";
     rust-overlay.url = "github:oxalica/rust-overlay";
-
-    # desktop
     eww.url = "github:elkowar/eww";
-    eww.inputs.rust-overlay.follows = "rust-overlay";
 
-    # Minimize duplicate instances of inputs
-    nix.inputs.nixpkgs.follows = "nixpkgs";
-    nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
-    darwin.inputs.nixpkgs.follows = "nixpkgs";
-    home.inputs.nixpkgs.follows = "nixpkgs";
-    nixos-wsl.inputs.nixpkgs.follows = "nixpkgs";
-    statix.inputs.nixpkgs.follows = "nixpkgs";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs";
     rust-overlay.inputs.nixpkgs.follows = "nixpkgs";
     eww.inputs.nixpkgs.follows = "nixpkgs";
+    eww.inputs.rust-overlay.follows = "rust-overlay";
+  };
+  outputs = {
+    self,
+    nixpkgs,
+    home-manager,
+    ...
+  } @ inputs: let
+    inherit (self) outputs;
+  in {
+    nixosConfigurations = {
+      nyxtkiosk = nixpkgs.lib.nixosSystem {
+        specialArgs = {inherit inputs outputs;};
+        modules = [
+          ./configuration.nix
+          home-manager.nixosModules.home-manager
+          ({
+            inputs,
+            lib,
+            config,
+            pkgs,
+            ...
+          }: let
+            flakeInputs = lib.filterAttrs (_: lib.isType "flake") inputs;
+          in {
+            config = {
+              nix = {
+                channel.enable = false;
+                registry = lib.mapAttrs (_: flake: {inherit flake;}) flakeInputs;
+                nixPath = lib.mapAttrsToList (n: _: "${n}=flake:${n}") flakeInputs;
+                settings = {
+                  experimental-features = "nix-command flakes";
+                  flake-registry = "";
+                  trusted-public-keys = [
+                    "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+                    "nixpkgs-wayland.cachix.org-1:3lwxaILxMRkVhehr5StQprHdEo4IrE8sRho9R9HOLYA="
+                  ];
+                  substituters = [
+                    "https://cache.nixos.org"
+                    "https://nixpkgs-wayland.cachix.org"
+                  ];
+                };
+              };
+              nixpkgs = {
+                overlays = [
+                  inputs.nixpkgs-wayland.overlay
+                ];
+                config.allowUnfree = true;
+              };
+              home-manager = {
+                useGlobalPkgs = true;
+                useUserPackages = true;
+                extraSpecialArgs = {inherit inputs outputs;};
+              };
+            };
+          })
+        ];
+      };
+    };
   };
 }

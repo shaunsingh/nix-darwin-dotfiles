@@ -1,0 +1,25 @@
+diff '--color=auto' -rau nyxt-4.0.0-pre-release-4/_build/cl-electron/source/core.lisp nyxt-4.0.0-pre-release-4-patch-core/_build/cl-electron/source/core.lisp
+--- nyxt-4.0.0-pre-release-4/_build/cl-electron/source/core.lisp	2024-12-18 05:43:46.000000000 +0800
++++ nyxt-4.0.0-pre-release-4-patch-core/_build/cl-electron/source/core.lisp	2025-01-26 14:15:12.590977691 +0800
+@@ -41,7 +41,7 @@
+     :documentation "A list of custom schemes (protocols).
+ The slot can only be set before invoking `launch'.")
+    (server-path
+-    (asdf:system-relative-pathname :cl-electron "source/server.js")
++    #P"@cl-electron-server@/source/server.js"
+     :export t
+     :reader t
+     :writer nil
+@@ -117,7 +117,7 @@
+-       (uiop:launch-program `("npm" "run" "start" "--"
++       (uiop:launch-program `("electron"
+                                     ,@(mapcar #'uiop:native-namestring
+                                               (list (server-path interface)
+                                                     (server-socket-path interface))))
+                             :output :interactive
+                             :error-output :interactive
+-                            :directory (asdf:system-source-directory :cl-electron)))
++                            :directory #P"@cl-electron-server@")))
+  ;; Block until the server is listening.
+  (loop until (handler-case (server-running-p interface)
+                (iolib/syscalls:enoent () (sleep 0.1)))

@@ -1,0 +1,8 @@
+--- a/src/assets/scss/terminal.scss
++++ b/src/assets/scss/terminal.scss
+@@ -3,4 +3,5 @@
+   height: 100%;
+   position: relative;
+   width: 100%;
++  padding: 9px 27px 18px 27px;
+ }

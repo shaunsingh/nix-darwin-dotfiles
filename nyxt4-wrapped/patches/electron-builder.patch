@@ -1,0 +1,11 @@
+diff '--color=auto' -rau nyxt-4.0.0-pre-release-4_build/cl-electron/package.json nyxt-4.0.0-pre-release-4-package/_build/cl-electron/package.json
+--- nyxt-4.0.0-pre-release-4_build/cl-electron/package.json	2024-12-18 05:43:46.000000000 +0800
++++ nyxt-4.0.0-pre-release-4/_build/cl-electron/package.json	2025-01-26 16:26:48.461617517 +0800
+@@ -13,7 +13,6 @@
+     },
+     "homepage": "https://github.com/atlas-engineer/cl-electron/",
+     "scripts": {
+-        "postinstall": "sed 's/^#include .nan_scriptorigin\\.h./\\/\\/ #include nan_scriptorigin.h/' ./node_modules/nan/nan.h > ./node_modules/nan/nan.h.new && mv ./node_modules/nan/nan.h.new ./node_modules/nan/nan.h && electron-builder install-app-deps",
+         "start": "electron",
+         "debug": "electron --inspect",
+         "repl": "electron -i",
